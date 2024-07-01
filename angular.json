@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "majestic-warhorse:build:production"
+              "buildTarget": "majestic-warhorse:build:production"
             },
             "development": {
-              "browserTarget": "majestic-warhorse:build:development"
+              "buildTarget": "majestic-warhorse:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "majestic-warhorse:build"
+            "buildTarget": "majestic-warhorse:build"
           }
         },
         "test": {
