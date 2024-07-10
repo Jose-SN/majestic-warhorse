@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { MoveDirection, ClickMode, HoverMode, OutMode, Container, Engine } from "tsparticles-engine";
+import { MoveDirection, ClickMode, HoverMode, OutMode, Container } from "tsparticles-engine";
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'app-particle',
+  standalone: true,
+  imports: [],
+  templateUrl: './particle.component.html',
+  styleUrl: './particle.component.scss'
 })
-export class AppComponent {
-  title = 'majestic-warhorse';
+export class ParticleComponent {
   id = "tsparticles";
   particlesOptions = {
     background: {
@@ -69,7 +70,7 @@ export class AppComponent {
             value: 0.5,
         },
         shape: {
-            type: "circle",
+            type: "polygon",
         },
         size: {
             value: { min: 1, max: 5 },
@@ -77,10 +78,7 @@ export class AppComponent {
     },
     detectRetina: true,
 };
-
 particlesLoaded(container: Container): void {
-    console.log(container);
+  console.log(container);
 }
-
 }
-
