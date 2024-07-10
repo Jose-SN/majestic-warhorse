@@ -1,12 +1,18 @@
 import { Component } from '@angular/core';
-import { MoveDirection, ClickMode, HoverMode, OutMode, Container, Engine } from "tsparticles-engine";
+import { MoveDirection, ClickMode, HoverMode, OutMode, Container, Engine } from "tsparticles-engine";import { PARTICLES_JSON } from './particles/particles-json';
+
+declare var particlesJS: any;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   title = 'majestic-warhorse';
+  ngAfterViewInit() {
+    particlesJS('particles-js', PARTICLES_JSON);
+  }
   id = "tsparticles";
   particlesOptions = {
     background: {
