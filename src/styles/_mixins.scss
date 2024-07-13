@@ -1,0 +1,65 @@
+@mixin font-face($font-family, $file-path, $weight: normal, $style: normal) {
+	@font-face {
+        font-family: $font-family;
+        src:url($file-path+$font-family+'.woff') format('woff');
+        font-weight: $weight;
+        font-style: $style;
+    }
+}
+@include font-face('Archivo-Regular', '../assets/fonts/');
+@include font-face('Archivo-Light', '../assets/fonts/');
+@include font-face('Archivo-Medium', '../assets/fonts/');
+@include font-face('Archivo-Bold', '../assets/fonts/');
+@include font-face('Archivo-SemiBold', '../assets/fonts/');
+@mixin transition($property...){
+	-webkit-transition: $property;
+	-moz-transition: $property;
+	-o-transition: $property;
+	transition: $property;
+}
+@mixin box-shadow($x-axis: 0, $y-axis: 0, $blur: 0, $color){
+  box-shadow: $x-axis  $y-axis $blur $color;
+}
+@mixin border-radius($border...){
+    border-radius: $border;
+}
+@mixin common-margin {
+	margin: 0px;
+	padding: 0;
+}
+@mixin flex($flex, $direction, $justify-content, $align-items) {
+	display: $flex;
+	flex-direction: $direction;
+	justify-content: $justify-content;
+	align-items: $align-items;
+  }
+@mixin gradient(){
+	background: rgb(230,93,63);
+	background: linear-gradient(45deg, rgb(230, 93, 63) 10%, rgba(205,26,167,1) 90%);
+}
+@mixin gradient-course(){
+	background: rgb(230,93,63);
+	background: linear-gradient(180deg, rgb(230, 93, 63) 10%, rgba(205,26,167,1) 90%);
+}
+@mixin button {
+	text-align: center;
+	padding: 15px;           
+	border: none;
+	outline: 0;
+	cursor: pointer;
+	@content;
+}
+@mixin placeholder {
+	&::-webkit-input-placeholder { @content;}
+	&:-moz-placeholder           { @content;}
+	&::-moz-placeholder          { @content;}
+	&:-ms-input-placeholder      { @content;}
+ }
+
+ @mixin user-select($value) {
+	-webkit-user-select: $value; 
+	-moz-user-select: $value; 
+	-ms-user-select: $value; 
+	-o-user-select: $value; 
+	user-select: $value;    
+  }
