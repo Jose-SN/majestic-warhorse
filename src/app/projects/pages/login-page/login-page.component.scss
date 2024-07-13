@@ -1,8 +1,5 @@
+@import '../../../../styles/index';
 
-
-@import "../../../../styles/variables";
-@import "../../../../styles/mixins";
-@import "../../../../styles/reset";
 .login-main-container {
     overflow: hidden;
     position: relative;
@@ -84,7 +81,7 @@
         }
         
         .btn-login {    
-            
+            font-family: $archivo-regular;
             font-size: 1rem;    
             color: var(--white);        
             margin: 25px 0; 
@@ -126,7 +123,7 @@
             gap: 27px;
             margin: 40px 0 35px;
             button {
-                
+                font-family: $archivo-regular;
                 font-size: 0.875rem;      
                 flex: 1;
                 color: var(--bg-blue);
@@ -152,19 +149,19 @@
 @media only screen and (max-width: 1400px) {
     .login-wrapper {
         max-width: 595px;
-        padding: 30px 20px;
+        padding: 40px 20px;
         border-radius: 40px;
         > figure {
             max-width: 185px;
             margin: 0 auto;
         }
         h1 {
-            font-size: 1.563rem;
+            font-size: 2.375rem;
             letter-spacing: 2px;
-            margin: 14px 0 0;
+            margin: 30px 0 0;
         }
         p {
-            margin: 10px 0;
+            margin: 20px 0;
         }
         .form-wrapper {
             margin: 5px auto;
@@ -177,18 +174,24 @@
                         padding: 8px 15px;
                     }
                 }
-                margin-bottom: 15px;  
+                margin-bottom: 15px;
             }
             .btn-login {
-                margin: 10px 0;
+                margin: 25px 0 30px;
+            }
+            a {
+                margin-top: 20px;
             }
         }
         .login-bottom {
             .btn-holder {
-                margin: 5px 0;          
+                margin: 25px 0;          
                 button {
                     padding: 10px 15px;
                 }
+            }
+            p {
+                margin: 30px 0 0;
             }
         }
     }    
@@ -202,14 +205,30 @@
     .login-wrapper {
         padding: 25px;
         @include border-radius(20px);
-        h1, > p {
-            display: none;            
+        h1 {
+            font-size: 1.563rem;  
+            margin: 15px 0 0;          
         }
+        p {
+            font-size: 0.875rem;
+        }
+        h1 , p {
+            margin: 15px 0 0;
+        }        
+        .form-wrapper {
+            margin-top: 10px;
+            .btn-login {
+                margin: 15px 0;
+            }
+        } 
         .login-bottom {
             p {
                 display: block!important;
                 margin: 15px 0 0!important;
             }
-        }
+            .btn-holder {
+                margin: 10px 0 25px;
+            }
+        }       
     }
 }

@@ -1,3 +1,16 @@
+@mixin font-face($font-family, $file-path, $weight: normal, $style: normal) {
+	@font-face {
+        font-family: $font-family;
+        src:url($file-path+$font-family+'.woff') format('woff');
+        font-weight: $weight;
+        font-style: $style;
+    }
+}
+@include font-face('Archivo-Regular', '../assets/fonts/');
+@include font-face('Archivo-Light', '../assets/fonts/');
+@include font-face('Archivo-Medium', '../assets/fonts/');
+@include font-face('Archivo-Bold', '../assets/fonts/');
+@include font-face('Archivo-SemiBold', '../assets/fonts/');
 @mixin transition($property...){
 	-webkit-transition: $property;
 	-moz-transition: $property;
