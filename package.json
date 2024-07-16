@@ -19,12 +19,9 @@
     "@angular/platform-browser-dynamic": "^17.3.11",
     "@angular/router": "^17.3.11",
     "@angular/service-worker": "^17.3.11",
-    "ng-particles": "^3.12.0",
-    "particle.js": "^1.0.7",
     "particles.js": "^2.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "tsparticles-engine": "^2.12.0",
     "zone.js": "~0.14.7"
   },
   "devDependencies": {
