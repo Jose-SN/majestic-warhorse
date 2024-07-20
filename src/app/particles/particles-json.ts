@@ -1,20 +1,20 @@
 export const PARTICLES_JSON = {
   particles: {
     number: {
-      value: 80,
+      value: 100,
       density: {
         enable: true,
         value_area: 800,
       },
     },
     color: {
-      value: '#ffffff',
+      value: '#cd1aa7',
     },
     shape: {
       type: 'circle',
       stroke: {
-        width: 0,
-        color: '#000000',
+        width: 1,
+        color: '#cd1aa7',
       },
       polygon: {
         nb_sides: 5,
@@ -30,7 +30,7 @@ export const PARTICLES_JSON = {
       random: false,
       anim: {
         enable: false,
-        speed: 1,
+        speed: 2,
         opacity_min: 0.1,
         sync: false,
       },
@@ -48,13 +48,13 @@ export const PARTICLES_JSON = {
     line_linked: {
       enable: true,
       distance: 150,
-      color: '#ffffff',
+      color: '#cd1aa7',
       opacity: 0.4,
       width: 1,
     },
     move: {
       enable: true,
-      speed: 6,
+      speed: 8,
       direction: 'none',
       random: false,
       straight: false,
