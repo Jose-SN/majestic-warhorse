@@ -5,12 +5,21 @@
     position: relative;
     height: 100vh;
 }
+app-particle {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
 #particles-js {
     position: absolute;
     top:0;
     left: 0;
     width: 100%;
-    height: 100%
+    height: 100%;
+    z-index: 0;
 }
 .login-container {
     @include flex(flex, null, center, center);
@@ -71,6 +80,10 @@
                     width: 100%;
                     @include border-radius(5px);
                     padding: 12px 15px;
+                    @include transition (all 0.3s ease-in-out);
+                    &:focus {
+                        border-color: var(--bg-mit1);
+                    }
                }
                 
             }        
@@ -134,8 +147,17 @@
                 gap: 15px;
                 background: var(--bg-dark-blue);
                 cursor: pointer;
+                @include transition (all 0.3s ease-in-out);
                 &:first-child {
                     background: transparent!important;
+                }
+                &:hover {
+                   &:first-child {
+                    background: var(--bg-dark-blue)!important;
+                   } 
+                   &:last-child {
+                    background: transparent;
+                   }
                 }
             }
         }

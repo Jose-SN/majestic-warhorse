@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { PARTICLES_JSON } from './particles/particles-json';
 
-declare var particlesJS: any;
 
 @Component({
   selector: 'app-root',
@@ -10,8 +8,6 @@ declare var particlesJS: any;
 })
 export class AppComponent {
   title = 'majestic-warhorse';
-  ngAfterViewInit() {
-    particlesJS('particles-js', PARTICLES_JSON);
-  }
+
 }
 

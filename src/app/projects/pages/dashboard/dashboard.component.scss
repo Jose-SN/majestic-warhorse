@@ -1,0 +1,637 @@
+@import '../../../../styles/index';
+::-webkit-scrollbar {
+    height: 10px; 
+    width: 10px;
+}
+::-webkit-scrollbar-thumb:horizontal{
+    background: var(--bg-shadow);
+    border-radius: 10px;
+}
+.dashboard-container {
+    height: 100%;
+    @include flex(flex,null,null,null);
+}
+.dashboard-left {
+    background: var(--bg-left-panel);
+    max-width: 328px;
+    width: 100%;
+    flex-shrink: 0;
+    padding: 30px;
+    @include flex(flex, column, null, null);
+    .logo-main {
+        margin-bottom: 50px;
+        img {
+            margin: 0 auto;
+        }
+    }
+    .left-navigation {
+        flex-grow: 1
+    }
+    ul {
+        @include common-margin;
+        list-style: none;
+        li {
+            font-size: 1.125rem; 
+            position: relative;  
+            figure {
+                margin-right: 30px;
+            }  
+            a {
+                svg {
+                    width: 30px;
+                    path {
+                        fill: var(--bg-nav-color);
+                    }
+                }
+                color: var(--bg-nav-color);
+                padding: 20px;
+                @include flex(flex,null,null,center);
+                @include border-radius(18px);
+                @include transition(all .3s ease-in-out);                
+                &::before {
+                    content: "";
+                    @include gradient();
+                    width: 100%;
+                    height: 100%;
+                    @include border-radius(18px);
+                    @include transition(all .3s ease-in-out);
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    opacity: 0;
+                    z-index: 0;
+                }
+                &::after {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    right: 28px;
+                    bottom: 0;
+                    margin: auto;
+                    width: 0px;
+                    height: 0px;
+                    border-style: solid;
+                    border-width: 6px 0 6px 7px;
+                    border-color: transparent transparent transparent var(--white);
+                    transform: rotate(0deg);
+                    @include transition(all .2s ease-in-out);
+                    opacity: 0;
+                }
+                &:hover, &.active {
+                    color: var(--white);                    
+                    svg {
+                        width: 30px;
+                        path {
+                            fill: var(--white);
+                        }
+                    }
+                    &::before {
+                        opacity: 1;
+                    }
+                    &::after {
+                        right: 20px;
+                        opacity: 1;
+                    }
+                }
+            }
+            figure,span {
+                position: relative;
+                z-index: 1;
+            }
+        }
+    }
+}
+
+.dashboard-right {
+    flex-grow: 1;
+    padding: 30px 25px;
+    .search-and-profile {
+        gap: 35px;
+        @include flex(flex,null,null,center);
+    }
+    .search-holder {
+        max-width: 1162px;
+        width: 100%;
+        .input-holder {
+            input {
+                font-family: $archivo-regular;
+                font-size: 1rem;
+                color: var(--bg-label);
+                border: 1px solid var(--bg-input-border);
+                background: var(--bg-input);
+                width: 100%;                
+                padding: 12px 15px;
+                @include border-radius(5px);
+                @include transition(all 0.3s ease-in-out);
+                &:focus {
+                    border-color: var(--bg-mit1);
+                }
+            }        
+        }
+    }
+    .profile-area {
+        max-width: 270px;
+        width: 100%;        
+        @include flex(flex,null,null,center);
+        gap: 15px;
+        .country, .notification, .profile {
+            @include border-radius(100%);
+            position: relative;
+        }
+        .country {
+            width: 33px;
+            height: 33px;            
+        }
+        .notification {
+            background: var(--bg-dark-blue);
+            width: 40px;
+            height: 40px;            
+        }
+        .red, .green {
+            &::before {
+                content: "";
+                width: 18px;
+                height: 18px;
+                position: absolute;
+                top: -2px;
+                right: -3px;
+                @include border-radius(100%);
+            }            
+        }
+        .red{
+            &::before {
+                background: var(--bg-notification-red);
+                
+            }
+        }
+        .green{
+            &::before {                
+                background: var(--bg-notification-green);
+            }
+        }
+        .profile {
+            background: var(--bg-blue);
+            width: 44px;
+            height: 44px;
+            @include border-radius(100%);
+            position: relative;
+            &::before {
+                content: "";
+                background: var(--bg-notification-green);
+                width: 12px;
+                height: 12px;
+                position: absolute;
+                bottom: 1px;
+                right: -4px;
+                border-width: 1px;
+                border: 2px solid var(--black);
+                @include border-radius(100%);
+            }
+        }
+    }
+    .title-holder {
+        margin: 20px 0 0;
+        padding: 15px 25px;
+        @include flex(flex,null,space-between, center);
+        @include border-radius(8px);
+        @include box-shadow(2px, 2px, 15px,var(--bg-shadow));  
+        h1 {
+            color: var(--light-blue);
+            letter-spacing: 1.5px;
+        }
+        .data-refreshed-holder {
+            span {
+                font-size: 0.875rem;
+                white-space: nowrap;
+                margin-right: 33px;
+                color: var(--white);
+                display: block;
+            }
+            .refresh-date {
+                font-family: $archivo-medium;
+                font-size: 0.875rem;
+                text-align: center;
+                letter-spacing: 1px;
+                color: var(--white);
+                padding: 15px 46px;
+                @include border-radius(5px);
+                border: 1px solid var(--bg-input-border);
+                background: var(--bg-input);
+            }
+            @include flex(flex,null,center, center);
+        }
+    }
+    .content-area {
+        @include flex(flex,null,space-between, null);
+        gap: 22px;
+        margin: 30px 0 0;
+        .content-left {
+            max-width: 1195px;
+            width: 100%;
+            .scroll-container {
+                max-width: 1195px;
+                width: 100%;
+                position: relative; 
+                height: 220px;                
+            }
+            .content-top {
+                @include flex(flex,null,space-between, null); 
+                position: absolute; 
+                left:0; 
+                top: 0; 
+                width: 1195px; 
+                gap: 18px;
+                .course-detail {
+                    max-width: 282px;
+                    width: 100%;
+                    padding: 24px;
+                    @include border-radius(15px);
+                    @include box-shadow(2px, 2px, 15px,var(--bg-shadow));
+                    position: relative;
+                    overflow: hidden;
+                    .detail-top {
+                        @include flex(flex,null,null, center); 
+                        position: relative;
+                        z-index: 1;
+                        gap: 20px;                        
+                        .icons {   
+                            @include flex(flex,null,center, center);                     
+                            width: 52px;
+                            height: 52px;
+                            @include border-radius(100%);
+                            &.mit1, &.mit2, &.mit3, &.mit4 {
+                                @include transition(all .3s ease-in-out);
+                            }
+                            &.mit1 {
+                                background: var(--bg-mit1);
+                            }
+                            &.mit2 {
+                                background: var(--bg-mit2);
+                            }
+                            &.mit3 {
+                                background: var(--bg-mit3);
+                            }
+                            &.mit4 {
+                                background: var(--bg-mit4);
+                            }
+                        }
+                        .detail-right {
+                            flex-shrink: 0;
+                        }
+                        h2 {
+                            font-family: $archivo-regular;
+                            font-size: 1.375rem;
+                            font-weight: normal;
+                            color: var(--light-blue);
+                            margin-bottom: 10px;
+                            max-width: 196px;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            white-space: nowrap;
+                        }
+                        span {
+                            font-size: 1rem;
+                            color: var(--bg-light-grey);
+                        }
+                    }
+                    .detail-bottom {
+                        @include flex(flex,null,null, null); 
+                        margin-top: 30px;
+                        position: relative;
+                        z-index: 1;
+                        span {
+                            font-size: 1rem;
+                            color: var(--bg-light-grey); 
+                            margin-bottom: 10px;
+                            display: block;
+                        }
+                        .rate {
+                            flex: 1;
+                            .rate-holder {                                
+                                @include flex(flex,null,null, null); 
+                                gap: 10px;
+                                .rate-icon, .rate-content {
+                                    figure {
+                                        width: 18px;
+                                    }
+                                    strong, small {
+                                        color: var(--white);
+                                        font-weight: normal;
+                                        display: block;
+                                    }
+                                    strong {
+                                        font-family: $archivo-medium;
+                                        font-size: 1.563rem;
+                                        line-height: 1.313rem;
+                                    }
+                                    small {
+                                        font-family: $archivo-regular;
+                                        font-size: 0.75rem;
+                                        margin-top: 10px;
+                                    }
+                                } 
+                            }
+                        }
+                        .type {
+                            flex: 1;
+                            strong {
+                                font-family: $archivo-medium;
+                                font-size: 1rem;
+                                font-weight: normal;
+                                color: var(--white);
+                                line-height: 1.5rem;
+                            }
+                        }
+                    }
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        @include gradient-course();
+                        @include border-radius(15px);
+                        @include transition(all .3s ease-in-out);
+                        opacity: 0;
+                        z-index: 0;
+                    }
+                    &::after {
+                        content: "";
+                        background: #FB6959B5;
+                        width: 185px;
+                        height: 185px;
+                        @include border-radius(100%);
+                        position: absolute;
+                        bottom: -90px;
+                        right: -15px;
+                        @include transition(all .35s ease-in-out);
+                        opacity: 0;
+                    }
+                    &:hover {
+                        &::before {
+                            opacity: 1;
+                        } 
+                        &::after {
+                            bottom: -75px;
+                            opacity: 1;
+                        }
+                        .icons {   
+                            &.mit1, &.mit2, &.mit3, &.mit4 {
+                                background: var(--white);
+                            }
+                        }
+                    }
+                }
+            }
+            .courses-wrapper {
+                padding: 30px;
+                @include border-radius(15px);
+                @include box-shadow(2px, 2px, 15px,var(--bg-shadow));
+                margin: 20px 0 0;
+                .course-title {
+                    @include flex(flex,null,space-between, null);
+                    h2 {
+                        font-size: 1.875rem;
+                        color: var(--light-blue);
+                        letter-spacing: 1.5px;
+                    }
+                    a {
+                        font-size: 1.25rem;
+                        color: var(--bg-text-orange);
+                        height: 26px;
+                        position: relative;                        
+                        &::before {
+                            content: "";
+                            width: 0%;
+                            height: 1px;
+                            background: var(--bg-text-orange);
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            margin: auto;
+                            @include transition(all .3s ease-in-out);
+                        }
+                        &:hover {
+                            color: var(--white);
+                            &::before {
+                                width: 100%;
+                            }                            
+                        }
+                    }
+                }                
+                .course-card-holder {
+                    @include flex(flex,null,null, null); 
+                    margin: 15px 0 0;
+                    gap: 15px;
+                    .course-card {
+                        background: var(--bg-left-panel);
+                        flex: 1;
+                        @include border-radius(10px);
+                        border: 1px solid var(--bg-card-border);
+                        @include flex(flex,column,null, null); 
+                        overflow: hidden;
+                        .card-content {
+                            flex: 1;
+                            &:first-child {
+                                background: var(--bg-light-grey);
+                                padding: 25px 25px 0;
+                                figure {
+                                    @include flex(flex,column,flex-end, null);
+                                }
+                            }
+                            &:last-child {
+                                figure {
+                                    margin-top: 20px;
+                                }
+                                padding: 20px;
+                                span {
+                                    font-size: 0.75rem;
+                                    color: var(--bg-light-grey);
+                                }
+                                h3 {
+                                    font-size: 1.125rem;
+                                    color: var(--light-blue);
+                                    font-weight: normal;
+                                    margin: 10px 0 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .content-right {
+            max-width: 320px;
+            width: 100%;  
+            flex-shrink: 0;
+            padding: 28px 20px 20px;
+            @include box-shadow(2px, 2px, 15px,var(--bg-shadow));  
+            @include border-radius(15px); 
+            figure {
+                background: var(--bg-img);
+                width: 110px;
+                height: 110px;
+                @include border-radius(100%); 
+                margin: 0 auto;
+                position: relative;
+                &::before {
+                    content: "";
+                    background: var(--bg-notification-green);
+                    width: 35px;
+                    height: 35px;
+                    position: absolute;
+                    bottom: 1px;
+                    right: -4px;
+                    @include border-radius(100%);
+                } 
+            }
+            span {
+                font-family: $archivo-bold;
+                font-size: 1.5rem;
+                color: var(--light-blue);
+                text-align: center;
+                margin: 20px 0;
+                display: block;
+            }
+            strong {
+                font-size: 0.813rem;
+                font-family: $archivo-semi-bold;
+                background: var(--bg-notification-red);
+                padding: 5px 10px;
+                margin: 10px auto 0;
+                @include border-radius(5px);
+                display: table;
+            }
+            .last-visit {
+                font-family: $archivo-semi-bold;
+                font-size: 0.875rem;
+                color: var(--bg-blue);
+                text-align: center;
+                margin: 20px 0 0;
+            }                 
+        }
+    }
+}
+
+footer {
+    color: var(--bg-grey);
+    line-height: 1.313rem;
+    span {
+        font-size: 0.75rem;
+    }
+}
+
+// @media screen and (max-width:1919px) {
+//     .dashboard-right {
+//         .content-area {
+//             .content-left {
+//                 max-width: 62.24vw;
+//                 .course-detail {
+//                     max-width: 14.688vw;
+//                     .detail-top {
+//                         gap: 1.042vw;
+//                         h2 {
+//                             font-size: 1.146vw;
+//                         }
+//                     }
+//                     .detail-bottom {
+//                         margin-top: 1.563vw;
+//                     }
+//                 }
+//             }
+//         }
+//     }
+
+// }
+
+
+// @media screen and (max-width:1380px) {
+//     .dashboard-left {
+//         max-width: 218px;
+//         width: 100%;
+//         flex-shrink: 0;
+//         ul{
+//             li {
+//                 font-size: 16px;
+//                 a {
+//                     padding: 10px;
+//                 }
+//             }
+//         }
+//         .content-area {
+//             .course-detail {
+//                 max-width: 282px;
+//                 width: 100%;
+//                 padding: 16px;
+//             }
+//             .detail-top {
+//                 gap: 11;
+//             }
+//             h2 {
+//                 font-size: 18px;
+//                 width: 99%;
+//             }
+//             .icons {
+//                 width: 40px;
+//                 height: 40px;
+//             }
+//             .detail-bottom {
+//                 span {
+//                     font-size: 16px;
+//                 }
+//                 .rate-content {
+//                     strong {
+//                         font-size: 20px;
+//                         line-height: 18px;
+//                     }
+//                 }
+//                 .type {
+//                     strong {
+//                         font-size: 13px;
+//                         line-height: 16px;
+//                     }
+//                 }
+//             }
+//             .courses-wrapper {
+//                 .card-content {
+//                     &:last-child {
+//                         span {
+//                             font-size: 14px;
+//                         }
+//                         h3 {
+//                             font-size: 14px;
+//                         }
+//                     }
+//                 }
+//             }
+//             .dashboard-right {
+//                 figure {
+//                     width: 90px;
+//                     height: 90px;
+//                 }
+//                 span {
+//                     font-size: 20px;
+//                 }
+//             }
+//         }
+//     }
+// }
+@media screen and (max-width:1919px) {
+    .scroll-container {
+        height: 240px!important;
+        overflow: hidden;
+        overflow-x: auto;
+    }
+    .content-top {           
+        padding: 10px;
+    }
+   
+}
+@media screen and (min-width:1921px) {
+    .dashboard-right {
+        max-width: 1592px;
+        margin: 0 auto;
+    }
+}
