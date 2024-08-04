@@ -2,7 +2,15 @@ $archivo-regular: 'Archivo-Regular';
 $archivo-light: 'Archivo-Light';
 $archivo-medium: 'Archivo-Medium';
 $archivo-bold: 'Archivo-Bold';
-$archivo-semi-bold: 'Archivo-SemiBold';
+$archivo-semi-bold: 'League-spartan-Bold';
+$league-spartan-regular: 'League-spartan-Regular';
+$league-spartan-light: 'League-spartan-Light';
+$league-spartan-medium: 'League-spartan-Medium';
+$league-spartan-bold: 'League-spartan-Bold';
+$league-spartan-semi-bold: 'League-spartan-SemiBold';
+$poppins-bold: 'Poppins-Bold';
+$poppins-medium: 'Poppins-Medium';
+$poppins-regular: 'Poppins-Regular';
 :root {
     --bg-main: #031123;
     --bg-login: #021732;
@@ -32,4 +40,8 @@ $archivo-semi-bold: 'Archivo-SemiBold';
     --bg-card-border: #35458573;
     --bg-img: #D8D8D8;
     --bg-text-orange: #E25549;
+    --bg-tab-nav: #0C2B57;
+    --bg-tab-active: #06152B;
+    --bg-green: #56D453;
+    --bg-yellow: #FFC258;
 }

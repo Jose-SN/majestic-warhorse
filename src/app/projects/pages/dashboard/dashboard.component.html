@@ -1,7 +1,16 @@
 <section class="dashboard-container">
-    <div class="dashboard-left">
+    <header class="header-small">
+        <figure class="logo-main"><img src="../../../../assets/images/logo-majestic-hourse.svg" alt="Mejestic Hourse"></figure>
+    </header>
+    <div class="dashboard-left" [ngClass]="mobMenu ? 'active' : ''">
         <header>
         <figure class="logo-main"><img src="../../../../assets/images/logo-majestic-hourse.svg" alt="Mejestic Hourse"></figure>
+        <div class="icon-mobile" (click)="triggerMenu()">
+            <div class="menu btn-close" data-menu="11" [ngClass]="mobMenu ? 'open' : ''">
+                <div class="icon-left"></div>
+                <div class="icon-right"></div>
+            </div>
+        </div>
         </header>
         <div class="left-navigation">
             <ul>
@@ -76,20 +85,35 @@
         </footer>
     </div>
     <div class="dashboard-right">
-        <div style="display: flex; flex-direction: column; flex-shrink: 0;">
+        <div class="dashboard-content">            
             <div class="search-and-profile">
+                <div class="icon-mobile" #btnTrigger (click)="mobileMenu()">
+                    <div class="menu btn11" data-menu="11" [ngClass]="mobMenu ? 'open' : ''">
+                        <div class="icon-left"></div>
+                        <div class="icon-right"></div>
+                    </div>
+                </div>
                 <div class="search-holder">
                     <div class="input-holder">
                         <input type="text" placeholder="Search for...">
+                        <button></button>
+                    </div>
+                    <div class="input-holder">
+                        <select>
+                            <option>This Year</option>
+                        </select>
                     </div>
                 </div>
-                <div class="profile-area">
-                    <div class="country">
-                    <figure><img src="../../../../assets/images/icon-us.svg" alt="USA"></figure>
+                <div class="profile-area">                                     
+                    <div class="common-holder">
+                    <figure><img src="../../../../assets/images/icon-notification.svg" alt="Notification"></figure>
                     </div>
-                    <div class="notification red"></div>
-                    <div class="notification green"></div>
-                    <div class="profile"></div>
+                    <div class="common-holder">
+                        <figure><img src="../../../../assets/images/icon-flag.svg" alt="USA"></figure>
+                        </div> 
+                    <div class="profile">
+                        <figure><img src="../../../../assets/images/img-profile.png" alt="Godlee Cheriyan"></figure>
+                    </div>
                 </div>
             </div>
             <div class="title-holder">
@@ -100,10 +124,10 @@
                 </div>
             </div>
         </div>
-        <div style="display: flex; flex-direction: column; flex-grow: 1;">
+        <div class="common-container">
             <div class="content-area">
-                <div class="content-left" style="display: flex; flex-direction: column; height: 100%;">
-                    <div class="scroll-container">
+                <div class="content-left">
+                    <div class="scroll-container overview">
                         <div class="content-top">
                             <div class="course-detail">
                                 <div class="detail-top">                                
@@ -303,59 +327,177 @@
                         </div>
                     </div>
                     <div class="courses-wrapper">
-                        <div class="course-title">
+                        <div class="course-top">
                             <h2>My Courses</h2> 
-                            <a href="javascript:void(0)">View all</a>
+                            <ul>
+                                <li class="active">All</li>
+                                <li>New</li>
+                                <li>Pending</li>
+                                <li>Completed</li>
+                            </ul>
                         </div>
-                        <div class="course-card-holder">
-                            <div class="course-card">
-                                <div class="card-content">
-                                    <figure><img src="../../../../assets/images/img1.png" alt=""></figure>
+                        <div class="scroll-container courses">
+                            <div class="course-card-holder">
+                                <div class="course-card">
+                                    <div class="card-content">
+                                        <figure><img src="../../../../assets/images/img1.png" alt=""></figure>
+                                    </div>
+                                    <div class="card-content">
+                                        <span>A Course by Bessies Cooper</span>
+                                        <h3>Figma for Beginners:<br>Fundamentals of Figma App</h3>
+                                        <figure><img src="../../../../assets/images/img-loader.png" alt=""></figure>
+                                    </div>
                                 </div>
-                                <div class="card-content">
-                                    <span>A Course by Bessies Cooper</span>
-                                    <h3>Figma for Beginners:<br>Fundamentals of Figma App</h3>
-                                    <figure><img src="../../../../assets/images/img-loader.png" alt=""></figure>
+                                <div class="course-card">
+                                    <div class="card-content">
+                                        <figure><img src="../../../../assets/images/img2.png" alt=""></figure>
+                                    </div>
+                                    <div class="card-content">
+                                        <span>A Course by Kristin Watson</span>
+                                        <h3>Mastering Managing<br> Camera for Photographer</h3>
+                                        <figure><img src="../../../../assets/images/img-loader.png" alt=""></figure>
+                                    </div>
+                                </div>
+                                <div class="course-card">
+                                    <div class="card-content">
+                                        <figure><img src="../../../../assets/images/img3.png" alt=""></figure>
+                                    </div>
+                                    <div class="card-content">
+                                        <span>A Course by Guy Hawkins</span>
+                                        <h3>UI/UX Design: Product<br> Development Thinking</h3>
+                                        <figure><img src="../../../../assets/images/img-loader.png" alt=""></figure>
+                                    </div>
+                                </div>
+                                <div class="course-card">
+                                    <div class="card-content">
+                                        <figure><img src="../../../../assets/images/img4.png" alt=""></figure>
+                                    </div>
+                                    <div class="card-content">
+                                        <span>A Course by Wade Warren</span>
+                                        <h3>Complete Web Design With<br>Javascript Course</h3>
+                                        <figure><img src="../../../../assets/images/img-loader.png" alt=""></figure>
+                                    </div>
+                                </div>
+
+                                <div class="course-card">
+                                    <div class="card-content">
+                                        <figure><img src="../../../../assets/images/img1.png" alt=""></figure>
+                                    </div>
+                                    <div class="card-content">
+                                        <span>A Course by Bessies Cooper</span>
+                                        <h3>Figma for Beginners:<br>Fundamentals of Figma App</h3>
+                                        <figure><img src="../../../../assets/images/img-loader.png" alt=""></figure>
+                                    </div>
+                                </div>
+                                <div class="course-card">
+                                    <div class="card-content">
+                                        <figure><img src="../../../../assets/images/img2.png" alt=""></figure>
+                                    </div>
+                                    <div class="card-content">
+                                        <span>A Course by Kristin Watson</span>
+                                        <h3>Mastering Managing<br> Camera for Photographer</h3>
+                                        <figure><img src="../../../../assets/images/img-loader.png" alt=""></figure>
+                                    </div>
+                                </div>
+                                <div class="course-card">
+                                    <div class="card-content">
+                                        <figure><img src="../../../../assets/images/img3.png" alt=""></figure>
+                                    </div>
+                                    <div class="card-content">
+                                        <span>A Course by Guy Hawkins</span>
+                                        <h3>UI/UX Design: Product<br> Development Thinking</h3>
+                                        <figure><img src="../../../../assets/images/img-loader.png" alt=""></figure>
+                                    </div>
+                                </div>
+                                <div class="course-card">
+                                    <div class="card-content">
+                                        <figure><img src="../../../../assets/images/img4.png" alt=""></figure>
+                                    </div>
+                                    <div class="card-content">
+                                        <span>A Course by Wade Warren</span>
+                                        <h3>Complete Web Design With<br>Javascript Course</h3>
+                                        <figure><img src="../../../../assets/images/img-loader.png" alt=""></figure>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="course-card">
-                                <div class="card-content">
-                                    <figure><img src="../../../../assets/images/img2.png" alt=""></figure>
-                                </div>
-                                <div class="card-content">
-                                    <span>A Course by Kristin Watson</span>
-                                    <h3>Mastering Managing<br> Camera for Photographer</h3>
-                                    <figure><img src="../../../../assets/images/img-loader.png" alt=""></figure>
-                                </div>
-                            </div>
-                            <div class="course-card">
-                                <div class="card-content">
-                                    <figure><img src="../../../../assets/images/img3.png" alt=""></figure>
-                                </div>
-                                <div class="card-content">
-                                    <span>A Course by Guy Hawkins</span>
-                                    <h3>UI/UX Design: Product<br> Development Thinking</h3>
-                                    <figure><img src="../../../../assets/images/img-loader.png" alt=""></figure>
-                                </div>
-                            </div>
-                            <div class="course-card">
-                                <div class="card-content">
-                                    <figure><img src="../../../../assets/images/img4.png" alt=""></figure>
-                                </div>
-                                <div class="card-content">
-                                    <span>A Course by Wade Warren</span>
-                                    <h3>Complete Web Design With<br>Javascript Course</h3>
-                                    <figure><img src="../../../../assets/images/img-loader.png" alt=""></figure>
-                                </div>
-                            </div>
-                        </div>
+                        </div>                        
                     </div>
                 </div>
                 <div class="content-right">
-                    <figure></figure>
-                    <span>Maria Smith</span>
-                    <strong>Student</strong>
-                    <div class="last-visit">last visit 02/03/2023</div>
+                    <div class="content-box">
+                        <figure><img src="../../../../assets/images/img-profile.png" alt="Godlee Cheriyan"></figure>
+                        <span>Godlee Cheriyan</span>
+                        <strong>Student</strong>
+                        <ul class="contact-area">
+                            <li><a href="mailto:godleecheriyan@email.com">godleecheriyan&#64;gmail.com</a></li>
+                            <li><a href="tel:+91-9687452365">+91-9687452365</a></li>
+                        </ul>
+                        <div class="status-wrapper">
+                            <div class="status-holder">
+                                <div class="status green">14</div>
+                                <span>Completed</span>
+                            </div>
+                            <div class="status-holder">
+                                <div class="status yellow">06</div>
+                                <span>Pending</span>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="content-box">
+                        <h3>AOG Reading</h3>
+                        <div class="reading-list-wrapper">
+                             <div class="reading-list-content">
+                                <div class="reading-list">
+                                   <figure>
+                                    <img src="../../../../assets/images/img-reading1.png" alt="">
+                                   </figure> 
+                                   <div class="reading-list-right">
+                                    <h4>
+                                        The Emotionally Healthy Leader, ( USA: Zonderva Zonderva Zonderva)
+                                    </h4>
+                                    <span>Cameron Williamson</span>
+                                    <span>Amazon</span>
+                                   </div>
+                                </div>
+                                <div class="reading-list">
+                                    <figure>
+                                     <img src="../../../../assets/images/img-reading1.png" alt="">
+                                    </figure> 
+                                    <div class="reading-list-right">
+                                     <h4>
+                                         The Emotionally Healthy Leader, ( USA: Zonderva Zonderva Zonderva)
+                                     </h4>
+                                     <span>Cameron Williamson</span>
+                                     <span>Amazon</span>
+                                    </div>
+                                 </div>
+                                 <div class="reading-list">
+                                    <figure>
+                                     <img src="../../../../assets/images/img-reading1.png" alt="">
+                                    </figure> 
+                                    <div class="reading-list-right">
+                                     <h4>
+                                         The Emotionally Healthy Leader, ( USA: Zonderva Zonderva Zonderva)
+                                     </h4>
+                                     <span>Cameron Williamson</span>
+                                     <span>Amazon</span>
+                                    </div>
+                                 </div>
+                                 <div class="reading-list">
+                                    <figure>
+                                     <img src="../../../../assets/images/img-reading1.png" alt="">
+                                    </figure> 
+                                    <div class="reading-list-right">
+                                     <h4>
+                                         The Emotionally Healthy Leader, ( USA: Zonderva Zonderva Zonderva)
+                                     </h4>
+                                     <span>Cameron Williamson</span>
+                                     <span>Amazon</span>
+                                    </div>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>                   
                 </div>
             </div>
         </div>
