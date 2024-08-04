@@ -65,7 +65,8 @@ label,p {
 input {
 		@include placeholder{
 			opacity: 1;
-			transition: opacity .25s;}
+			transition: opacity .25s;
+		}
 	&:focus {
 		@include placeholder{
 			opacity: 0;

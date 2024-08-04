@@ -80,7 +80,7 @@ app-particle {
                     width: 100%;
                     @include border-radius(5px);
                     padding: 12px 15px;
-                    @include transition (all 0.3s ease-in-out);
+                    @include transition (all 0.2s ease-in-out);
                     &:focus {
                         border-color: var(--bg-mit1);
                     }
