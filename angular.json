@@ -49,8 +49,18 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "10kb",
+                  "maximumError": "50kb"
+                },
+                {
+                  "type": "allScript",
+                  "maximumWarning": "2mb",
+                  "maximumError": "3mb"
+                },
+                {
+                  "type": "all",
+                  "maximumWarning": "5mb",
+                  "maximumError": "6mb"
                 }
               ],
               "outputHashing": "all"
