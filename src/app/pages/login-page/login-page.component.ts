@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ParticleComponent } from '../../components/particle/particle.component';
+import { ParticleComponent } from 'src/app/particle/particle.component';
 
 @Component({
   selector: 'app-login-page',
