@@ -1,39 +1,46 @@
 <section class="login-main-container">
-    <app-particle></app-particle>    
-    <div id="particles-js"></div>
-    <section class="login-container">
-        <div class="login-wrapper">
-            <figure><img src="../../../assets/images/logo-mejestic-hourse-landing.svg" alt="Mejastic Hourse"></figure>
-            <h1>Welcome back!</h1>
-            <p>Etiam quis quam urna. Aliquam odio erat, accumsan eu nulla in</p>
-            <div class="form-wrapper">
-                <form>
-                    <div class="input-holder">
-                        <label for="username">Email</label>
-                        <input type="text" name="username" placeholder="example@email.com">
-                    </div>
-                    <div class="input-holder">
-                        <label for="password">Password</label>
-                        <input type="password" name="password" placeholder="Enter Your Password (6 characters)">
-                    </div> 
-                    <a href="javascript:void(0)">Forget Password?</a>  
-                    <button class="btn-login" type="submit">Log In</button>
-                </form>
-            </div>
-            <div class="login-bottom">
-                <div class="divider" data-attr="or"></div>
-                    <div class="btn-holder">
-                    <button type="button">
-                        <figure><img src="../../../assets/images/icon-google.svg" alt="Google"></figure>
-                        Google
-                    </button> 
-                    <button type="button">
-                        <figure><img src="../../../assets/images/icon-facebook.svg" alt="Faccebook"></figure>
-                        Facebook
-                    </button> 
-                </div>
-                <p>Don’t You have an account? <a href="javascript:void(0)">Sign Up</a></p>
-            </div>            
+  <app-particle></app-particle>
+  <div id="particles-js"></div>
+  <section class="login-container">
+    <div class="login-wrapper">
+      <figure><img src="../../../assets/images/logo-mejestic-hourse-landing.svg" alt="Mejastic Hourse"></figure>
+      <h1>Welcome back!</h1>
+      <p>Etiam quis quam urna. Aliquam odio erat, accumsan eu nulla in</p>
+      <div class="form-wrapper">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="input-holder">
+            <label for="username">Email</label>
+            <input type="text" name="username" placeholder="example@email.com" formControlName="email" required>
+            @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched){
+            <div>Email is required</div>
+            }
+          </div>
+          <div class="input-holder">
+            <label for="password">Password</label>
+            <input type="password" name="password" placeholder="Enter Your Password (6 characters)"
+              formControlName="password" required>
+            @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched){
+            <div>Password is required</div>
+            }
+          </div>
+          <a href="javascript:void(0)">Forget Password?</a>
+          <button class="btn-login" type="submit">Log In</button>
+        </form>
+      </div>
+      <div class="login-bottom">
+        <div class="divider" data-attr="or"></div>
+        <div class="btn-holder">
+          <button type="button">
+            <figure><img src="../../../assets/images/icon-google.svg" alt="Google"></figure>
+            Google
+          </button>
+          <button type="button">
+            <figure><img src="../../../assets/images/icon-facebook.svg" alt="Faccebook"></figure>
+            Facebook
+          </button>
         </div>
-    </section>
+        <p>Don’t You have an account? <a href="javascript:void(0)">Sign Up</a></p>
+      </div>
+    </div>
+  </section>
 </section>
