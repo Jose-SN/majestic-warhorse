@@ -20,7 +20,10 @@ export class LoginService {
       );
     });
     if (userExist) {
+      this.authService.setLogin = true;
       this.router.navigate(['/userdashboard']);
+    } else {
+      this.authService.setLogin = false;
     }
   }
 }
