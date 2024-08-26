@@ -23,7 +23,7 @@
             <div>Password is required</div>
             }
           </div>
-          <a href="javascript:void(0)">Forget Password?</a>
+          <a (click)="gotoPage('forgetpassword')">Forget Password?</a>
           <button class="btn-login" type="submit">Log In</button>
         </form>
       </div>
@@ -39,7 +39,7 @@
             Facebook
           </button>
         </div>
-        <p>Don’t You have an account? <a href="javascript:void(0)">Sign Up</a></p>
+        <p>Don’t You have an account? <a (click)="gotoPage('signup')">Sign Up</a></p>
       </div>
     </div>
   </section>

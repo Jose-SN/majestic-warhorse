@@ -21,7 +21,8 @@ export class LoginPageComponent {
   public loginForm!: FormGroup;
   constructor(
     private formBuilder: FormBuilder,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private router: Router
   ) {}
   ngOnInit(): void {
     this.loginService.getAllUsers();
@@ -35,5 +36,8 @@ export class LoginPageComponent {
     if (this.loginForm.valid) {
       this.loginService.userLogin(this.loginForm.value);
     }
+  }
+  gotoPage(pageName: string) {
+    this.router.navigate([`/${pageName}`]);
   }
 }
