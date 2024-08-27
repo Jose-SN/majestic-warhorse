@@ -3,7 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { LoginPageComponent } from "./projects/pages/login-page/login-page.component";
+import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { LoginPageComponent } from "./projects/pages/login-page/login-page.compo
         // or after 30 seconds (whichever comes first).
         registrationStrategy: 'registerWhenStable:30000'
     }),
-    LoginPageComponent
+    LoginPageComponent,
+    HttpClientModule
 ],
   providers: [],
   bootstrap: [AppComponent]
