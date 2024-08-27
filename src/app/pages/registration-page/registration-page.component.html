@@ -12,14 +12,14 @@
             <label for="username">Your Name</label>
             <input type="text" name="username" placeholder="example@email.com" formControlName="username">
             @if(isFieldInvalid('username')){
-            <div class="error-message"> Name is required.</div>
+            <span> Name is required.</span>
             }
           </div>
           <div class="input-holder">
             <label for="username">Upload Image</label>
             <input type="file" name="username" placeholder="Upload Image" formControlName="image">
             @if(isFieldInvalid('image')){
-            <div class="error-message">Image is required.</div>
+            <span>Image is required.</span>
             }
           </div>
           <div class="input-holder">
@@ -68,10 +68,10 @@
             <input type="password" name="password" placeholder="Enter Your Password (6 characters)"
               formControlName="confirmPassword">
             @if(isFieldInvalid('confirmPassword')){
-            <div class="error-message">Confirm Password is required.</div>
+            <span>Confirm Password is required.</span>
             }
             @if(isPasswordMismatch()){
-            <div class="error-message">Passwords do not match.</div>
+            <span>Passwords do not match.</span>
             }
           </div>
           <button class="btn-login" type="submit">Get Started</button>

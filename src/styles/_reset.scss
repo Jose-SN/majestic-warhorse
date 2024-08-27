@@ -74,4 +74,35 @@ input {
 	}
 }
 
+.input-holder {
+	span {
+		font-size: 0.75rem;
+		color: red;
+		position: absolute;
+		right: 1px;
+		top: 0;
+	}
+}
+.suggestion-holder {
+	&:empty {
+		display: none;
+	}
+	position: absolute;
+	bottom: auto;
+	right: 0;
+	@include border-radius(5px);
+	border: 1px solid var(--bg-input-border);
+	background: var(--bg-dark-blue);
+	padding: 10px;
+	z-index: 10;
+	span {
+		color: var( --bg-grey);
+		position: static;
+		display: block;
+		&:not(:last-child) {
+			margin-bottom: 5px;
+		}
+	}
+}
+
 
