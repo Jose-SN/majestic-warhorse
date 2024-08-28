@@ -12,7 +12,7 @@
             <label for="username">Email</label>
             <input type="text" name="username" placeholder="example@email.com" formControlName="email" required>
             @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched){
-            <div>Email is required</div>
+            <span>Email is required</span>
             }
           </div>
           <div class="input-holder">
@@ -20,7 +20,7 @@
             <input type="password" name="password" placeholder="Enter Your Password (6 characters)"
               formControlName="password" required>
             @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched){
-            <div>Password is required</div>
+            <span>Password is required</span>
             }
           </div>
           <a (click)="gotoPage('forgetpassword')">Forget Password?</a>
