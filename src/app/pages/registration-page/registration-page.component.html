@@ -38,28 +38,30 @@
           </div>
           <div class="input-holder">
             <label for="password">Password</label>
-            <input type="password" name="password" placeholder="Enter Your Password (6 characters)"
-              formControlName="password">
+            <input type="password" name="password" placeholder="Enter Your Password (6 characters)" formControlName="password">
             @if(isFieldInvalid('password')){
             <div class="error-message">
               @if(getPasswordError('required')){
               <span>Password is required.</span>
               }
-              @if(getPasswordError('minlength')){
-              <span>Password must be at least 6 characters long.</span>
-              }
-              @if(getPasswordError('uppercase')){
-              <span>Password must contain at least one uppercase letter.</span>
-              }
-              @if(getPasswordError('lowercase')){
-              <span>Password must contain at least one lowercase letter.</span>
-              }
-              @if(getPasswordError('number')){
-              <span>Password must contain at least one number.</span>
-              }
-              @if(getPasswordError('special')){
-              <span>Password must contain at least one special character.</span>
-              }
+            </div>
+              <div class="suggestion-holder">
+                @if(getPasswordError('minlength')){
+                  <span>Password must be at least 6 characters long.</span>
+                  }
+                  @if(getPasswordError('uppercase')){
+                  <span>Password must contain at least one uppercase letter.</span>
+                  }
+                  @if(getPasswordError('lowercase')){
+                  <span>Password must contain at least one lowercase letter.</span>
+                  }
+                  @if(getPasswordError('number')){
+                  <span>Password must contain at least one number.</span>
+                  }
+                  @if(getPasswordError('special')){
+                  <span>Password must contain at least one special character.</span>
+                  }
+                            
             </div>
             }
           </div>

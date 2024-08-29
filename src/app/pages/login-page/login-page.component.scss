@@ -65,6 +65,7 @@ app-particle {
     
         .input-holder {
             margin-bottom: 15px;
+            position: relative;
             label {
                 font-size: 0.75rem;
                 color: var(--bg-label);
