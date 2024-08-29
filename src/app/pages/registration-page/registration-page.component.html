@@ -45,24 +45,23 @@
               <span>Password is required.</span>
               }
             </div>
-              <div class="suggestion-holder">
-                @if(getPasswordError('minlength')){
-                  <span>Password must be at least 6 characters long.</span>
-                  }
-                  @if(getPasswordError('uppercase')){
-                  <span>Password must contain at least one uppercase letter.</span>
-                  }
-                  @if(getPasswordError('lowercase')){
-                  <span>Password must contain at least one lowercase letter.</span>
-                  }
-                  @if(getPasswordError('number')){
-                  <span>Password must contain at least one number.</span>
-                  }
-                  @if(getPasswordError('special')){
-                  <span>Password must contain at least one special character.</span>
-                  }
-                            
-            </div>
+            <div class="suggestion-holder" *ngIf="!getPasswordError('required')">
+              @if(getPasswordError('minlength')){
+                <span>Password must be at least 6 characters long.</span>
+                }
+                @if(getPasswordError('uppercase')){
+                <span>Password must contain at least one uppercase letter.</span>
+                }
+                @if(getPasswordError('lowercase')){
+                <span>Password must contain at least one lowercase letter.</span>
+                }
+                @if(getPasswordError('number')){
+                <span>Password must contain at least one number.</span>
+                }
+                @if(getPasswordError('special')){
+                <span>Password must contain at least one special character.</span>
+                }
+              </div> 
             }
           </div>
           <div class="input-holder">
