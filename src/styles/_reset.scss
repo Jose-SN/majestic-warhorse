@@ -84,9 +84,6 @@ input {
 	}
 }
 .suggestion-holder {
-	&:empty {
-		display: none;
-	}
 	position: absolute;
 	bottom: auto;
 	right: 0;

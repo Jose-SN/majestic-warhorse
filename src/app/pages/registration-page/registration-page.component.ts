@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
@@ -10,11 +11,12 @@ import {
 @Component({
   selector: 'app-registration-page',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule,CommonModule],
   templateUrl: './registration-page.component.html',
   styleUrl: './registration-page.component.scss',
 })
 export class RegistrationPageComponent {
+
   public createAccountForm!: FormGroup;
   constructor(private formBuilder: FormBuilder) {
     this.createAccountForm = this.formBuilder.group(
