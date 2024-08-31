@@ -1,20 +1,20 @@
 import { FormGroup } from '@angular/forms';
 
 export class FormValidators {
-  customPasswordValidator(control: any) {
-    const value = control.value;
-    const errors: any = {};
+  customPasswordValidator(control: { [key: string]: string }) {
+    const value = control['value'];
+    const errors: { [key: string]: string } = {};
     if (!/[A-Z]/.test(value)) {
-      errors.uppercase = 'Password must contain at least one uppercase letter.';
+      errors['uppercase'] = 'Password must contain at least one uppercase letter.';
     }
     if (!/[a-z]/.test(value)) {
-      errors.lowercase = 'Password must contain at least one lowercase letter.';
+      errors['lowercase'] = 'Password must contain at least one lowercase letter.';
     }
     if (!/\d/.test(value)) {
-      errors.number = 'Password must contain at least one number.';
+      errors['number'] = 'Password must contain at least one number.';
     }
     if (!/[@$!%*?&]/.test(value)) {
-      errors.special = 'Password must contain at least one special character.';
+      errors['special'] = 'Password must contain at least one special character.';
     }
     return Object.keys(errors)?.length ? errors : null;
   }
@@ -23,10 +23,7 @@ export class FormValidators {
     const confirmPassword = registrationForm?.get('confirmPassword')?.value;
     return password === confirmPassword ? null : { mismatch: true };
   }
-  isFieldInvalid(
-    registrationForm: FormGroup,
-    fieldName: string
-  ): boolean | undefined {
+  isFieldInvalid(registrationForm: FormGroup, fieldName: string): boolean | undefined {
     const field = registrationForm?.get(fieldName);
     return field?.invalid && (field?.touched || field?.dirty);
   }
@@ -38,8 +35,7 @@ export class FormValidators {
   ): boolean | null {
     return (
       registrationForm?.get(confirmPassword)?.value &&
-      registrationForm?.get(password)?.value !==
-        registrationForm?.get(confirmPassword)?.value
+      registrationForm?.get(password)?.value !== registrationForm?.get(confirmPassword)?.value
     );
   }
   getPasswordError(registrationForm: FormGroup, errorName: string): boolean {

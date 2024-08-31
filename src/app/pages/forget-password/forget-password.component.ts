@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -19,13 +17,16 @@ import { FormValidators } from 'src/app/shared/form-validators';
   styleUrl: './forget-password.component.scss',
 })
 export class ForgetPasswordComponent {
-  public isFieldInvalid!: Function;
-  public getPasswordError!: Function;
-  public isPasswordMismatch!: Function;
+  public isFieldInvalid: (arg1: FormGroup, arg2: string) => boolean | undefined;
+  public getPasswordError: (arg1: FormGroup, arg2: string) => boolean;
+  public isPasswordMismatch: (arg1: FormGroup, arg2: string, arg3: string) => boolean | null;
   public resetPasswordForm!: FormGroup;
   private formValidator = new FormValidators();
 
-  constructor(private formGroup: FormBuilder, private router: Router) {
+  constructor(
+    private formGroup: FormBuilder,
+    private router: Router
+  ) {
     this.resetPasswordForm = this.formGroup.group(
       {
         email: ['', [Validators.required, Validators.email]],
@@ -48,6 +49,7 @@ export class ForgetPasswordComponent {
 
   onSubmit() {
     if (this.resetPasswordForm.valid) {
+      //Need to work
     } else {
       console.error('Form is invalid');
       this.resetPasswordForm.markAllAsTouched();
