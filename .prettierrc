@@ -1,0 +1,18 @@
+{
+    "printWidth": 100,                // Limit line length to enhance readability
+    "tabWidth": 2,                    // Set the number of spaces per indentation level
+    "useTabs": false,                 // Indent using spaces instead of tabs
+    "semi": true,                     // Add a semicolon at the end of every statement
+    "singleQuote": true,              // Use single quotes instead of double quotes
+    "trailingComma": "es5",           // Add trailing commas where valid in ES5 (objects, arrays, etc.)
+    "bracketSpacing": true,           // Include spaces between brackets in object literals
+    "arrowParens": "always",          // Include parentheses around a sole arrow function parameter
+    "endOfLine": "lf",                // Enforce consistent line endings (LF)
+    "jsxSingleQuote": true,           // Use single quotes in JSX
+    "quoteProps": "as-needed",        // Only add quotes around object properties where necessary
+    "htmlWhitespaceSensitivity": "css", // Respect the CSS display property for HTML whitespace
+    "vueIndentScriptAndStyle": true,  // Indent script and style tags in Vue files
+    "proseWrap": "preserve",          // Wrap markdown text as-is
+    "embeddedLanguageFormatting": "auto" // Format embedded code if Prettier can automatically identify it
+  }
+  

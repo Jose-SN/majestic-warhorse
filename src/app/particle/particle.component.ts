@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { PARTICLES_JSON } from 'src/app/particles/particles-json';
 
 PARTICLES_JSON
 
-declare var particlesJS: any;
+declare let particlesJS: any;
 @Component({
   selector: 'app-particle',
   standalone: true,
@@ -11,7 +11,7 @@ declare var particlesJS: any;
   templateUrl: './particle.component.html',
   styleUrl: './particle.component.scss'
 })
-export class ParticleComponent {
+export class ParticleComponent implements AfterViewInit {
     ngAfterViewInit() {
         particlesJS('particles-js', PARTICLES_JSON);
       }
