@@ -16,9 +16,9 @@ import { FormValidators } from 'src/app/shared/form-validators';
   styleUrl: './registration-page.component.scss',
 })
 export class RegistrationPageComponent {
-  public isFieldInvalid!: Function;
-  public getPasswordError!: Function;
-  public isPasswordMismatch!: Function;
+  public isFieldInvalid: (arg1: FormGroup, arg2: string) => boolean | undefined;
+  public getPasswordError: (arg1: FormGroup, arg2: string) => boolean;
+  public isPasswordMismatch: (arg1: FormGroup, arg2: string, arg3: string) => boolean | null;
   public createAccountForm!: FormGroup;
   private formValidator = new FormValidators();
   constructor(private formBuilder: FormBuilder) {
@@ -38,9 +38,7 @@ export class RegistrationPageComponent {
         confirmPassword: ['', [Validators.required]],
       },
       {
-        validator: this.formValidator.passwordMatchValidator.bind(
-          this.createAccountForm
-        ),
+        validator: this.formValidator.passwordMatchValidator.bind(this.createAccountForm),
       }
     );
     this.isFieldInvalid = this.formValidator.isFieldInvalid;
@@ -49,6 +47,7 @@ export class RegistrationPageComponent {
   }
   onSubmit() {
     if (this.createAccountForm.valid) {
+      //need to work
     } else {
       console.error('Form is invalid');
     }

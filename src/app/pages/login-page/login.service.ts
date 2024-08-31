@@ -8,16 +8,16 @@ import { Router } from '@angular/router';
 })
 export class LoginService {
   private allUsersList: UserModel[] = [];
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
   async getAllUsers() {
     this.allUsersList = await this.authService.getAllUsers();
   }
   public userLogin(loginInfo: UserLogin) {
     const userExist = this.allUsersList.find((user: UserModel) => {
-      return (
-        user.email === loginInfo.email &&
-        loginInfo.password === '' + user.password
-      );
+      return user.email === loginInfo.email && loginInfo.password === '' + user.password;
     });
     if (userExist) {
       this.authService.setLogin = true;

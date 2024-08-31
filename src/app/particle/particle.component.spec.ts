@@ -8,10 +8,9 @@ describe('ParticleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ParticleComponent]
-    })
-    .compileComponents();
-    
+      imports: [ParticleComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(ParticleComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

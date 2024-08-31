@@ -25,7 +25,10 @@ export class ForgetPasswordComponent {
   public resetPasswordForm!: FormGroup;
   private formValidator = new FormValidators();
 
-  constructor(private formGroup: FormBuilder, private router: Router) {
+  constructor(
+    private formGroup: FormBuilder,
+    private router: Router
+  ) {
     this.resetPasswordForm = this.formGroup.group(
       {
         email: ['', [Validators.required, Validators.email]],
