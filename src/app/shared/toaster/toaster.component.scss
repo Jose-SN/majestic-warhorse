@@ -1,0 +1,74 @@
+::ng-deep snack-bar-container.mat-snack-bar-container {
+  padding: 0px;
+  background: transparent;
+  min-height: 48px;
+  max-height: 48px;
+  border-radius: initial;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.toaster-wrap {
+  height: 48px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  position: relative;
+
+  &.warning {
+    background-color: #f3bb21;
+  }
+
+  &.success {
+    background-color: #3bc429;
+  }
+
+  &.error {
+    background-color: #f03e3e;
+  }
+
+  &.info {
+    background-color: #425fd7;
+  }
+
+  mat-icon.status-icon {
+    color: inherit;
+    width: 22px;
+  }
+
+  .dismiss {
+    mat-icon {
+      width: 13px;
+      display: flex;
+    }
+  }
+
+  .display-data {
+    font-weight: 700;
+    max-width: 300px;
+    line-height: 17px;
+    font-size: 0.95rem;
+  }
+
+  .toast-timer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.14);
+    animation-name: duration;
+  }
+}
+
+@keyframes duration {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
+}

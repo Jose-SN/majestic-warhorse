@@ -1,0 +1,10 @@
+<div class="d-flex toaster-wrap" [ngClass]="toasterInfo['className']">
+  <div class="toast-timer" [ngStyle]="getTimeOut"></div>
+  <div class="d-flex align-items-center gap-2">
+    <mat-icon class="status-icon" [svgIcon]="toasterInfo['svgIcon']" aria-hidden="false"></mat-icon>
+    <div class="display-data">{{ toasterData?.message }}</div>
+  </div>
+  <div class="dismiss">
+    <mat-icon role="button" svgIcon="closeIcon" aria-hidden="false"></mat-icon>
+  </div>
+</div>
