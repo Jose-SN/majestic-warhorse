@@ -14,7 +14,7 @@ export class CommonService {
   constructor(private SnackBar: MatSnackBar) {}
 
   openToaster(toasterData: IToasterModel) {
-    this.SnackBar.openFromComponent(ToasterComponent, {
+    return this.SnackBar.openFromComponent(ToasterComponent, {
       duration: 50000,
       horizontalPosition: 'right',
       verticalPosition: 'top',

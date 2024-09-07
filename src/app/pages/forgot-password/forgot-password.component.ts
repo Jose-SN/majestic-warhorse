@@ -8,15 +8,16 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormValidators } from 'src/app/shared/form-validators';
+import { ForgotPasswordService } from './forgot-password.service';
 
 @Component({
-  selector: 'app-forget-password',
+  selector: 'app-forgot-password',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule],
-  templateUrl: './forget-password.component.html',
-  styleUrl: './forget-password.component.scss',
+  templateUrl: './forgot-password.component.html',
+  styleUrl: './forgot-password.component.scss',
 })
-export class ForgetPasswordComponent {
+export class ForgotPasswordComponent {
   public isFieldInvalid: (arg1: FormGroup, arg2: string) => boolean | undefined;
   public getPasswordError: (arg1: FormGroup, arg2: string) => boolean;
   public isPasswordMismatch: (arg1: FormGroup, arg2: string, arg3: string) => boolean | null;
@@ -25,7 +26,8 @@ export class ForgetPasswordComponent {
 
   constructor(
     private formGroup: FormBuilder,
-    private router: Router
+    private router: Router,
+    private forgotPasswordService: ForgotPasswordService
   ) {
     this.resetPasswordForm = this.formGroup.group(
       {
@@ -49,7 +51,9 @@ export class ForgetPasswordComponent {
 
   onSubmit() {
     if (this.resetPasswordForm.valid) {
-      //Need to work
+      const resetPasswordForm = this.resetPasswordForm.value;
+      delete resetPasswordForm.confirmPassword;
+      this.forgotPasswordService.updatePassword(resetPasswordForm);
     } else {
       console.error('Form is invalid');
       this.resetPasswordForm.markAllAsTouched();
