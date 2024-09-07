@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, lastValueFrom } from 'rxjs';
 import { UserLogin, UserModel } from 'src/app/pages/login-page/model/user-model';
 import { CommonService } from 'src/app/shared/services/common.service';
+import { IPassWordUpdate } from 'src/app/pages/forgot-password/model';
 @Injectable({
   providedIn: 'root',
 })
@@ -27,6 +28,12 @@ export class AuthService {
   loginUser(loginInfo: UserLogin) {
     return this.http
       .post<UserModel>(`${this._apiUrl}user/validate`, loginInfo)
+      .pipe(catchError(this.commonService.handleError));
+  }
+  updatePassword(updatePassword: IPassWordUpdate) {
+    const interceptor: { [key: string]: string } = { responseType: 'text' };
+    return this.http
+      .post<string>(`${this._apiUrl}user/forgot-password`, updatePassword, interceptor)
       .pipe(catchError(this.commonService.handleError));
   }
   logout(): void {
