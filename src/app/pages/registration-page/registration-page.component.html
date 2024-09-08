@@ -26,7 +26,8 @@
           </div>
           <div class="input-holder">
             <label for="username">Upload Image</label>
-            <input type="file" name="username" placeholder="Upload Image" formControlName="image" />
+            <input type="file" name="username" placeholder="Upload Image" formControlName="image"
+            (change)="onFileSelected($event)" />
             @if (isFieldInvalid(createAccountForm, 'image')) {
               <span>Image is required.</span>
             }

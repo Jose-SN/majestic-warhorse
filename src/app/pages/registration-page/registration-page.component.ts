@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { FormValidators } from 'src/app/shared/form-validators';
+import { RegistrationPageService } from './registration-page.service';
 
 @Component({
   selector: 'app-registration-page',
@@ -16,12 +17,15 @@ import { FormValidators } from 'src/app/shared/form-validators';
   styleUrl: './registration-page.component.scss',
 })
 export class RegistrationPageComponent {
-  public isFieldInvalid: (arg1: FormGroup, arg2: string) => boolean | undefined;
   public getPasswordError: (arg1: FormGroup, arg2: string) => boolean;
+  public isFieldInvalid: (arg1: FormGroup, arg2: string) => boolean | undefined;
   public isPasswordMismatch: (arg1: FormGroup, arg2: string, arg3: string) => boolean | null;
   public createAccountForm!: FormGroup;
   private formValidator = new FormValidators();
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    public registrationService: RegistrationPageService
+  ) {
     this.createAccountForm = this.formBuilder.group(
       {
         username: ['', [Validators.required]],
@@ -45,7 +49,14 @@ export class RegistrationPageComponent {
     this.getPasswordError = this.formValidator.getPasswordError;
     this.isPasswordMismatch = this.formValidator.isPasswordMismatch;
   }
+  onFileSelected(event: any): void {
+    const isError = this.registrationService.onFileSelected(event.target.files[0]);
+    if (isError) {
+      this.createAccountForm.get('image')?.setValue('');
+    }
+  }
   onSubmit() {
+    this.createAccountForm.markAllAsTouched();
     if (this.createAccountForm.valid) {
       //need to work
     } else {
