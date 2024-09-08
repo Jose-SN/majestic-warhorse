@@ -31,21 +31,14 @@ export class ForgotPasswordComponent implements OnDestroy {
     private router: Router,
     private forgotPasswordService: ForgotPasswordService
   ) {
-    this.resetPasswordForm = this.formGroup.group(
-      {
-        email: ['', [Validators.required, Validators.email]],
-        password: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(6),
-            this.formValidator.customPasswordValidator,
-          ],
-        ],
-        confirmPassword: ['', [Validators.required]],
-      },
-      { validator: this.formValidator.customPasswordValidator }
-    );
+    this.resetPasswordForm = this.formGroup.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: [
+        '',
+        [Validators.required, Validators.minLength(6), this.formValidator.customPasswordValidator],
+      ],
+      confirmPassword: ['', [Validators.required]],
+    });
     this.isFieldInvalid = this.formValidator.isFieldInvalid;
     this.getPasswordError = this.formValidator.getPasswordError;
     this.isPasswordMismatch = this.formValidator.isPasswordMismatch;
