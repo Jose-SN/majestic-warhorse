@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   FormBuilder,
@@ -9,6 +9,8 @@ import {
 } from '@angular/forms';
 import { ParticleComponent } from 'src/app/particle/particle.component';
 import { LoginService } from './login.service';
+import { AuthService } from 'src/app/services/api-service/auth.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-login-page',
@@ -17,12 +19,14 @@ import { LoginService } from './login.service';
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
 })
-export class LoginPageComponent implements OnInit {
+export class LoginPageComponent implements OnInit, OnDestroy {
   public loginForm!: FormGroup;
+  private destroy$ = new Subject<void>();
   constructor(
     private formBuilder: FormBuilder,
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
   ngOnInit(): void {
     this.loginService.getAllUsers();
@@ -30,14 +34,21 @@ export class LoginPageComponent implements OnInit {
       email: ['', Validators.required],
       password: ['', Validators.required],
     });
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/dashboard']);
+    }
   }
   onSubmit(): void {
     this.loginForm.markAllAsTouched();
     if (this.loginForm.valid) {
-      this.loginService.userLogin(this.loginForm.value);
+      this.loginService.userLogin(this.destroy$, this.loginForm.value);
     }
   }
   gotoPage(pageName: string) {
     this.router.navigate([`/${pageName}`]);
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

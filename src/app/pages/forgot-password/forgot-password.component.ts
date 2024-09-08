@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,6 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { FormValidators } from 'src/app/shared/form-validators';
 import { ForgotPasswordService } from './forgot-password.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-forgot-password',
@@ -17,12 +18,13 @@ import { ForgotPasswordService } from './forgot-password.service';
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
 })
-export class ForgotPasswordComponent {
+export class ForgotPasswordComponent implements OnDestroy {
   public isFieldInvalid: (arg1: FormGroup, arg2: string) => boolean | undefined;
   public getPasswordError: (arg1: FormGroup, arg2: string) => boolean;
   public isPasswordMismatch: (arg1: FormGroup, arg2: string, arg3: string) => boolean | null;
   public resetPasswordForm!: FormGroup;
   private formValidator = new FormValidators();
+  private destroy$ = new Subject<void>();
 
   constructor(
     private formGroup: FormBuilder,
@@ -53,7 +55,7 @@ export class ForgotPasswordComponent {
     if (this.resetPasswordForm.valid) {
       const resetPasswordForm = this.resetPasswordForm.value;
       delete resetPasswordForm.confirmPassword;
-      this.forgotPasswordService.updatePassword(resetPasswordForm);
+      this.forgotPasswordService.updatePassword(this.destroy$, resetPasswordForm);
     } else {
       console.error('Form is invalid');
       this.resetPasswordForm.markAllAsTouched();
@@ -62,5 +64,9 @@ export class ForgotPasswordComponent {
 
   gotToLoginPage() {
     this.router.navigate(['/login']);
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

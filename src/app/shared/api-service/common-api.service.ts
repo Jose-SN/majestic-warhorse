@@ -16,7 +16,7 @@ export class CommonApiService {
   ) {}
   uploadImage(selectedFile: FormData) {
     return this.http
-      .post<any>(`${this._apiUrl}File/upload`,selectedFile)
+      .post<{ [key: string]: string }>(`${this._apiUrl}File/upload`, selectedFile)
       .pipe(catchError(this.commonService.handleError));
   }
 }
