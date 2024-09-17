@@ -7,7 +7,6 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { ParticleComponent } from 'src/app/particle/particle.component';
 import { LoginService } from './login.service';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { Subject } from 'rxjs';
@@ -15,7 +14,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [ParticleComponent, FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
 })

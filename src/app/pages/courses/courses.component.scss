@@ -208,11 +208,11 @@
     margin-right: 15px;
     @include flex(flex, null, flex-end, null);
     h1 {
-        figure {
-            width: 35px;
-            height: 35px;            
-        }
-        @include flex(flex, null, null, center);
+      figure {
+        width: 35px;
+        height: 35px;
+      }
+      @include flex(flex, null, null, center);
     }
     gap: 15px;
     .input-holder {
@@ -263,11 +263,11 @@
       }
     }
     h1 {
-        font-family: $poppins-bold;
-        font-size: 30px;
-        color: var(--white);
-        line-height: 60px;
-        margin-right: auto;
+      font-family: $poppins-bold;
+      font-size: 30px;
+      color: var(--white);
+      line-height: 60px;
+      margin-right: auto;
     }
   }
   .profile-area {
@@ -810,7 +810,7 @@
               @include border-radius(18px);
               @include gradient();
               border: 0;
-              color: #FFF;
+              color: #fff;
               position: absolute;
               right: 0;
               top: 0;
@@ -846,7 +846,7 @@ footer {
 @media screen and (max-width: 1919px) {
   .scroll-container {
     overflow: hidden;
-    overflow-x: auto;    
+    overflow-x: auto;
     &.overview {
       height: 240px !important;
     }

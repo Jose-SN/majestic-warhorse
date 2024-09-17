@@ -6,6 +6,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
+import { ParticleComponent } from './particle/particle.component';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +22,7 @@ import { HttpClientModule } from '@angular/common/http'; // Import HttpClientMod
     }),
     LoginPageComponent,
     HttpClientModule,
+    ParticleComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],
