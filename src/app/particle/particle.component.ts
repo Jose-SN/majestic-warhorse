@@ -13,6 +13,7 @@ declare let particlesJS: any;
 })
 export class ParticleComponent implements AfterViewInit {
   ngAfterViewInit() {
+    console.log('---------------------------');
     particlesJS('particles-js', PARTICLES_JSON);
   }
 }
