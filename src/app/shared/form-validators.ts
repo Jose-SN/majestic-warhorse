@@ -10,12 +10,12 @@ export class FormValidators {
     if (!/[a-z]/.test(value)) {
       errors['lowercase'] = 'Password must contain at least one lowercase letter.';
     }
-    // if (!/\d/.test(value)) {
-    //   errors['number'] = 'Password must contain at least one number.';
-    // }
-    // if (!/[@$!%*?&]/.test(value)) {
-    //   errors['special'] = 'Password must contain at least one special character.';
-    // }
+    if (!/\d/.test(value)) {
+      errors['number'] = 'Password must contain at least one number.';
+    }
+    if (!/[@$!%*?&]/.test(value)) {
+      errors['special'] = 'Password must contain at least one special character.';
+    }
     return Object.keys(errors)?.length ? errors : null;
   }
   passwordMatchValidator(registrationForm: FormGroup) {

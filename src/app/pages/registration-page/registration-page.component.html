@@ -18,7 +18,7 @@
               type="text"
               name="username"
               placeholder="example@email.com"
-              formControlName="username"
+              formControlName="userName"
             />
             @if (isFieldInvalid(createAccountForm, 'username')) {
               <span> Name is required.</span>
@@ -26,7 +26,13 @@
           </div>
           <div class="input-holder">
             <label for="username">Upload Image</label>
-            <input type="file" name="username" placeholder="Upload Image" formControlName="image" />
+            <input
+              type="file"
+              name="username"
+              placeholder="Upload Image"
+              formControlName="image"
+              (change)="onFileSelected($event)"
+            />
             @if (isFieldInvalid(createAccountForm, 'image')) {
               <span>Image is required.</span>
             }

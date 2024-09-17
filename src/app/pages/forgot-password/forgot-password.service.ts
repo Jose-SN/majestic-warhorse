@@ -4,6 +4,7 @@ import { IPassWordUpdate } from './model';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -15,27 +16,31 @@ export class ForgotPasswordService {
     private router: Router
   ) {}
 
-  updatePassword(passwordUpdatePayload: IPassWordUpdate) {
-    this.authService.updatePassword(passwordUpdatePayload).subscribe({
-      next: (passwordUpdated) => {
-        if (passwordUpdated) {
-          this.commonService
-            .openToaster({
-              message: passwordUpdated,
-              messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
-            })
-            .afterDismissed()
-            .subscribe(() => {
-              this.router.navigate([`/login`]);
-            });
-        }
-      },
-      error: () => {
-        this.commonService.openToaster({
-          message: 'Error while updating password.',
-          messageType: TOASTER_MESSAGE_TYPE.ERROR,
-        });
-      },
-    });
+  updatePassword(_destroy$: Subject<void>, passwordUpdatePayload: IPassWordUpdate) {
+    this.authService
+      .updatePassword(passwordUpdatePayload)
+      .pipe(takeUntil(_destroy$))
+      .subscribe({
+        next: (passwordUpdated) => {
+          if (passwordUpdated) {
+            this.commonService
+              .openToaster({
+                message: passwordUpdated,
+                messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+              })
+              .afterDismissed()
+              .pipe(takeUntil(_destroy$))
+              .subscribe(() => {
+                this.router.navigate([`/login`]);
+              });
+          }
+        },
+        error: () => {
+          this.commonService.openToaster({
+            message: 'Error while updating password.',
+            messageType: TOASTER_MESSAGE_TYPE.ERROR,
+          });
+        },
+      });
   }
 }

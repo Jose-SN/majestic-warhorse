@@ -15,7 +15,7 @@ export class CommonService {
 
   openToaster(toasterData: IToasterModel) {
     return this.SnackBar.openFromComponent(ToasterComponent, {
-      duration: 50000,
+      duration: 9000,
       horizontalPosition: 'right',
       verticalPosition: 'top',
       data: {

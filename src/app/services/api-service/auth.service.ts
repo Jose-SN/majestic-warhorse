@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, lastValueFrom } from 'rxjs';
-import { UserLogin, UserModel } from 'src/app/pages/login-page/model/user-model';
+import { UserLogin, UserLoginResponse, UserModel } from 'src/app/pages/login-page/model/user-model';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { IPassWordUpdate } from 'src/app/pages/forgot-password/model';
 @Injectable({
@@ -27,7 +27,7 @@ export class AuthService {
   }
   loginUser(loginInfo: UserLogin) {
     return this.http
-      .post<UserModel>(`${this._apiUrl}user/validate`, loginInfo)
+      .post<UserLoginResponse>(`${this._apiUrl}user/validate`, loginInfo)
       .pipe(catchError(this.commonService.handleError));
   }
   updatePassword(updatePassword: IPassWordUpdate) {

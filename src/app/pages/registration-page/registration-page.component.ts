@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,6 +7,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { FormValidators } from 'src/app/shared/form-validators';
+import { RegistrationPageService } from './registration-page.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-registration-page',
@@ -15,16 +17,21 @@ import { FormValidators } from 'src/app/shared/form-validators';
   templateUrl: './registration-page.component.html',
   styleUrl: './registration-page.component.scss',
 })
-export class RegistrationPageComponent {
-  public isFieldInvalid: (arg1: FormGroup, arg2: string) => boolean | undefined;
+export class RegistrationPageComponent implements OnDestroy {
   public getPasswordError: (arg1: FormGroup, arg2: string) => boolean;
+  public isFieldInvalid: (arg1: FormGroup, arg2: string) => boolean | undefined;
   public isPasswordMismatch: (arg1: FormGroup, arg2: string, arg3: string) => boolean | null;
   public createAccountForm!: FormGroup;
   private formValidator = new FormValidators();
-  constructor(private formBuilder: FormBuilder) {
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private formBuilder: FormBuilder,
+    public registrationService: RegistrationPageService
+  ) {
     this.createAccountForm = this.formBuilder.group(
       {
-        username: ['', [Validators.required]],
+        userName: ['', [Validators.required]],
         image: [null, Validators.required],
         email: ['', [Validators.required, Validators.email]],
         password: [
@@ -45,11 +52,30 @@ export class RegistrationPageComponent {
     this.getPasswordError = this.formValidator.getPasswordError;
     this.isPasswordMismatch = this.formValidator.isPasswordMismatch;
   }
+  onFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const files = target.files as FileList;
+    const isError = this.registrationService.onFileSelected(this.destroy$, files[0]);
+    if (isError) {
+      this.createAccountForm.get('image')?.setValue('');
+    }
+  }
   onSubmit() {
+    this.createAccountForm.markAllAsTouched();
     if (this.createAccountForm.valid) {
-      //need to work
+      this.registrationService
+        .registerUserInfo(this.destroy$, this.createAccountForm.value)
+        .then((clearForms) => {
+          if (clearForms) {
+            this.createAccountForm.reset();
+          }
+        });
     } else {
       console.error('Form is invalid');
     }
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
