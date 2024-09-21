@@ -1,2 +1,4 @@
 <router-outlet></router-outlet>
-<app-particle></app-particle>
+@if (PARTICLE_ROUTES_LIST.includes(activeRouteName)) {
+  <app-particle></app-particle>
+}
