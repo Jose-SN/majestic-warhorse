@@ -1,21 +1,42 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { DashboardSidepanelComponent } from 'src/app/components/dashboard-sidepanel/dashboard-sidepanel.component';
+import { DashboardOverviewComponent } from 'src/app/components/dashboard-overview/dashboard-overview.component';
+import { CoursesComponent } from '../courses/courses.component';
+import { DashboardService } from './dashboard.service';
+import { ISidepanel } from './modal/dashboard-modal';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    DashboardSidepanelComponent,
+    DashboardOverviewComponent,
+    CoursesComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent {
-  public mobMenu: boolean = false;
-  @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
-  triggerMenu() {
-    this.btnTrigger.nativeElement.click();
-    this.mobMenu = false;
+export class DashboardComponent implements OnInit, OnDestroy {
+  public activePanel: string = '';
+  private destroy$ = new Subject<void>();
+  public SIDE_PANEL_LIST: ISidepanel = this.dashboardService.SIDE_PANEL_LIST;
+  constructor(private dashboardService: DashboardService) {
+    this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
   }
-  mobileMenu() {
-    this.mobMenu = !this.mobMenu;
+  ngOnInit(): void {
+    this.dashboardService
+      .getSidePanelChange()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((activePanel: string) => {
+        this.activePanel = activePanel;
+      });
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
