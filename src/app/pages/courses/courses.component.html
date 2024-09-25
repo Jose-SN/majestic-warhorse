@@ -57,97 +57,14 @@
             </div>
             <div class="scroll-container courses">
               <div class="course-card-holder">
-                <div class="course-card">
+                <div class="course-card" *ngFor="let course of courseList$ | async">
                   <div class="card-content">
-                    <figure><img src="../../../assets/images/img1.png" alt="" /></figure>
+                    <figure><img [src]="course.thumbnail" alt="" /></figure>
                   </div>
                   <div class="card-content">
-                    <span>A Course by Bessies Cooper</span>
-                    <h3>Figma for Beginners:<br />Fundamentals of Figma App</h3>
-                    <figure><img src="../../../assets/images/img-loader.png" alt="" /></figure>
-                  </div>
-                </div>
-                <div class="course-card">
-                  <div class="card-content">
-                    <figure><img src="../../../assets/images/img2.png" alt="" /></figure>
-                  </div>
-                  <div class="card-content">
-                    <span>A Course by Kristin Watson</span>
-                    <h3>
-                      Mastering Managing<br />
-                      Camera for Photographer
-                    </h3>
-                    <figure><img src="../../../assets/images/img-loader.png" alt="" /></figure>
-                  </div>
-                </div>
-                <div class="course-card">
-                  <div class="card-content">
-                    <figure><img src="../../../assets/images/img3.png" alt="" /></figure>
-                  </div>
-                  <div class="card-content">
-                    <span>A Course by Guy Hawkins</span>
-                    <h3>
-                      UI/UX Design: Product<br />
-                      Development Thinking
-                    </h3>
-                    <figure><img src="../../../assets/images/img-loader.png" alt="" /></figure>
-                  </div>
-                </div>
-                <div class="course-card">
-                  <div class="card-content">
-                    <figure><img src="../../../assets/images/img4.png" alt="" /></figure>
-                  </div>
-                  <div class="card-content">
-                    <span>A Course by Wade Warren</span>
-                    <h3>Complete Web Design With<br />Javascript Course</h3>
-                    <figure><img src="../../../assets/images/img-loader.png" alt="" /></figure>
-                  </div>
-                </div>
-
-                <div class="course-card">
-                  <div class="card-content">
-                    <figure><img src="../../../assets/images/img1.png" alt="" /></figure>
-                  </div>
-                  <div class="card-content">
-                    <span>A Course by Bessies Cooper</span>
-                    <h3>Figma for Beginners:<br />Fundamentals of Figma App</h3>
-                    <figure><img src="../../../assets/images/img-loader.png" alt="" /></figure>
-                  </div>
-                </div>
-                <div class="course-card">
-                  <div class="card-content">
-                    <figure><img src="../../../assets/images/img2.png" alt="" /></figure>
-                  </div>
-                  <div class="card-content">
-                    <span>A Course by Kristin Watson</span>
-                    <h3>
-                      Mastering Managing<br />
-                      Camera for Photographer
-                    </h3>
-                    <figure><img src=".../../../assets/images/img-loader.png" alt="" /></figure>
-                  </div>
-                </div>
-                <div class="course-card">
-                  <div class="card-content">
-                    <figure><img src="../../../assets/images/img3.png" alt="" /></figure>
-                  </div>
-                  <div class="card-content">
-                    <span>A Course by Guy Hawkins</span>
-                    <h3>
-                      UI/UX Design: Product<br />
-                      Development Thinking
-                    </h3>
-                    <figure><img src="../../../assets/images/img-loader.png" alt="" /></figure>
-                  </div>
-                </div>
-                <div class="course-card">
-                  <div class="card-content">
-                    <figure><img src="../../../assets/images/img4.png" alt="" /></figure>
-                  </div>
-                  <div class="card-content">
-                    <span>A Course by Wade Warren</span>
-                    <h3>Complete Web Design With<br />Javascript Course</h3>
-                    <figure><img src="../../../assets/images/img-loader.png" alt="" /></figure>
+                    <span>A Course by {{ course.author }}</span>
+                    <h3>{{ course.name }}</h3>
+                    <!-- <figure><img src="../../../assets/images/img-loader.png" alt="" /></figure> -->
                   </div>
                 </div>
               </div>
