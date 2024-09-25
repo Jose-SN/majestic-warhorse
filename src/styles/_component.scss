@@ -1,5 +1,6 @@
 @import '../styles/mixins';
-app-dashboard-sidepanel, app-dashboard-overview {
+app-dashboard-sidepanel,
+app-dashboard-overview {
   @include flex(flex, null, null, null);
 }
 app-dashboard-sidepanel {

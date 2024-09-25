@@ -9,6 +9,7 @@ import {
 import { FormValidators } from 'src/app/shared/form-validators';
 import { RegistrationPageService } from './registration-page.service';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registration-page',
@@ -26,6 +27,7 @@ export class RegistrationPageComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(
+    private router: Router,
     private formBuilder: FormBuilder,
     public registrationService: RegistrationPageService
   ) {
@@ -68,6 +70,7 @@ export class RegistrationPageComponent implements OnDestroy {
         .then((clearForms) => {
           if (clearForms) {
             this.createAccountForm.reset();
+            this.router.navigate(['/dashboard']);
           }
         });
     } else {
