@@ -16,7 +16,6 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.activeRouteName = event?.url?.split('/')?.[1]?.toUpperCase();
-        console.log(this.activeRouteName);
       }
     });
   }
