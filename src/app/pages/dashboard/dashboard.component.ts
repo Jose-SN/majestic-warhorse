@@ -7,6 +7,7 @@ import { CoursesComponent } from '../courses/courses.component';
 import { DashboardService } from './dashboard.service';
 import { ISidepanel } from './modal/dashboard-modal';
 import { Subject, takeUntil } from 'rxjs';
+import { CourseOverviewComponent } from "../course-overview/course-overview.component";
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -16,7 +17,8 @@ import { Subject, takeUntil } from 'rxjs';
     DashboardSidepanelComponent,
     DashboardOverviewComponent,
     CoursesComponent,
-  ],
+    CourseOverviewComponent
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })

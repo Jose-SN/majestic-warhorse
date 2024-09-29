@@ -6,3 +6,6 @@ app-dashboard-sidepanel {
   max-width: 328px;
   width: 100%;
 }
+app-dashboard-overview, app-courses, app-course-overview  {
+  flex-grow: 1;
+}
