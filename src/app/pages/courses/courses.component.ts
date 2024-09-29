@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CoursesService } from './courses.service';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ICourseList } from './modal/course-list';
 
 @Component({
@@ -15,7 +15,6 @@ import { ICourseList } from './modal/course-list';
 export class CoursesComponent {
   public mobMenu: boolean = false;
   public courseList$: Observable<ICourseList[]> = of([]);
-  private destroy$ = new Subject<void>();
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(private coursesService: CoursesService) {
     this.courseList$ = this.coursesService.getCourseList();
@@ -26,9 +25,5 @@ export class CoursesComponent {
   }
   mobileMenu() {
     this.mobMenu = !this.mobMenu;
-  }
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

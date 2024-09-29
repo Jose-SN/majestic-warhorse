@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, Observable, Subject, takeUntil } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { CoursesApiService } from 'src/app/services/api-service/courses-api.service';
 import { ICourseList } from './modal/course-list';
 

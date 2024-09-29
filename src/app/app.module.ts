@@ -7,6 +7,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
 import { ParticleComponent } from './particle/particle.component';
+import { ToastrModule } from 'ngx-toastr';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,8 +27,10 @@ import { ParticleComponent } from './particle/particle.component';
     LoginPageComponent,
     HttpClientModule,
     ParticleComponent,
+    ToastrModule.forRoot(),
+    NgxSpinnerModule,
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
