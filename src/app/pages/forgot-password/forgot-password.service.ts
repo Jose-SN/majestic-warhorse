@@ -23,16 +23,13 @@ export class ForgotPasswordService {
       .subscribe({
         next: (passwordUpdated) => {
           if (passwordUpdated) {
-            this.commonService
-              .openToaster({
-                message: passwordUpdated,
-                messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
-              })
-              .afterDismissed()
-              .pipe(takeUntil(_destroy$))
-              .subscribe(() => {
-                this.router.navigate([`/login`]);
-              });
+            this.commonService.openToaster({
+              message: passwordUpdated,
+              messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+            });
+            setTimeout(() => {
+              this.router.navigate([`/login`]);
+            }, 9000);
           }
         },
         error: () => {
