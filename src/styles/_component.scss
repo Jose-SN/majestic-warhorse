@@ -1,9 +1,11 @@
 @import '../styles/mixins';
-app-dashboard-sidepanel,
-app-dashboard-overview {
+app-dashboard-sidepanel, app-dashboard-overview {
   @include flex(flex, null, null, null);
 }
 app-dashboard-sidepanel {
   max-width: 328px;
   width: 100%;
+}
+app-dashboard-overview, app-courses, app-course-overview  {
+  flex-grow: 1;
 }
