@@ -59,11 +59,11 @@
               <div class="course-card-holder">
                 <div class="course-card" *ngFor="let course of courseList$ | async">
                   <div class="card-content">
-                    <figure><img [src]="course.thumbnail" alt="" /></figure>
+                    <figure><img [src]="course.courseThumbnail" alt="" /></figure>
                   </div>
                   <div class="card-content">
                     <span>A Course by {{ course.author }}</span>
-                    <h3>{{ course.name }}</h3>
+                    <h3>{{ course.courseType }}</h3>
                     <!-- <figure><img src="../../../assets/images/img-loader.png" alt="" /></figure> -->
                   </div>
                 </div>

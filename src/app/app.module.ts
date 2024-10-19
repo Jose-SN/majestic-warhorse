@@ -11,6 +11,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
+import { HeaderInterceptors } from './interceptors/header.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,7 +31,14 @@ import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
     ToastrModule.forRoot(),
     NgxSpinnerModule,
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true }],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HeaderInterceptors,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

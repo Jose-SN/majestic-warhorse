@@ -52,7 +52,10 @@ export class RegistrationPageService {
     delete registrationInfo.confirmPassword;
     return new Promise((resolve) => {
       this.registrationApiService
-        .saveUserInfo(registrationInfo)
+        .saveUserInfo({
+          ...registrationInfo,
+          ...{ firstname: registrationInfo.userName, role: 'guest' },
+        })
         .pipe(takeUntil(_destroy$))
         .subscribe({
           next: (userAdded) => {

@@ -5,9 +5,9 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-course-overview',
   standalone: true,
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './course-overview.component.html',
-  styleUrl: './course-overview.component.scss'
+  styleUrl: './course-overview.component.scss',
 })
 export class CourseOverviewComponent {
   public mobMenu: boolean = false;

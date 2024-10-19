@@ -24,12 +24,12 @@ export class ForgotPasswordService {
         next: (passwordUpdated) => {
           if (passwordUpdated) {
             this.commonService.openToaster({
-              message: passwordUpdated,
+              message: 'Password is successfully updated.',
               messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
             });
             setTimeout(() => {
               this.router.navigate([`/login`]);
-            }, 9000);
+            }, 1000);
           }
         },
         error: () => {
