@@ -11,20 +11,8 @@ export class CoursesService {
 
   getCourseList(): Observable<ICourseList[]> {
     return this.coursesApi.getCourseList().pipe(
-      map((courseList) => {
-        let testData: any[] = [];
-        testData = testData.concat(courseList.data);
-        testData = testData.concat(courseList.data);
-        testData = testData.concat(courseList.data);
-        testData = testData.concat(courseList.data);
-        testData = testData.concat(courseList.data);
-        testData = testData.concat(courseList.data);
-        testData = testData.concat(courseList.data);
-        testData = testData.concat(courseList.data);
-        testData = testData.concat(courseList.data);
-        testData = testData.concat(courseList.data);
-        testData = testData.concat(courseList.data);
-        return testData;
+      map((courseList: any) => {
+        return courseList ?? [];
       })
     );
   }

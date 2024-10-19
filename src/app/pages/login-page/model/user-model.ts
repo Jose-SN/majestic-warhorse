@@ -1,10 +1,13 @@
 export interface UserModel {
+  id: string;
+  firstName: string;
+  lastName?: string;
   email: string;
-  fname: string;
-  lname: string;
-  phone: string;
+  password?: string;
   role?: string;
-  password: number | string;
+  creationDate: Date;
+  modificationDate: Date;
+  jwt: string;
 }
 export interface UserLoginResponse {
   success?: boolean;

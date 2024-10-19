@@ -11,6 +11,7 @@ import { TOASTER_MESSAGE_TYPE } from '../toaster/toaster-info';
 })
 export class CommonService {
   public loginedUserInfo!: UserModel;
+  public adminRoleType: string = 'admin';
   constructor(private toastrService: ToastrService) {}
 
   openToaster(toasterData: IToasterModel) {
@@ -40,5 +41,8 @@ export class CommonService {
       errorMessage = `Server error (${error.status}): ${error.message}`;
     }
     return throwError(() => new Error(errorMessage));
+  }
+  public isEmpty(object: { [key: string]: string | number }) {
+    return Object.keys(object).length === 0;
   }
 }

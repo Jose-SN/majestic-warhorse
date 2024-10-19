@@ -17,7 +17,7 @@ export class CoursesApiService {
   ) {}
   getCourseList() {
     return this.http
-      .get<IcourseListResponse>(`${this._apiUrl}/course/get`)
+      .get<IcourseListResponse>(`${this._apiUrl}course/get`)
       .pipe(catchError(this.commonService.handleError));
   }
 }

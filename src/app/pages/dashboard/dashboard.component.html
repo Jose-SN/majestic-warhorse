@@ -7,13 +7,17 @@
   <app-dashboard-sidepanel></app-dashboard-sidepanel>
   @switch (activePanel) {
     @case (SIDE_PANEL_LIST['DASHBOARD_OVERVIEW']) {
-      <app-dashboard-overview></app-dashboard-overview>
+      @if (isAdminLogin) {
+        <app-course-overview></app-course-overview>
+      } @else {
+        <app-dashboard-overview></app-dashboard-overview>
+      }
     }
     @case (SIDE_PANEL_LIST['COURSE_LISTING']) {
       <app-courses></app-courses>
     }
     @default {
-      <div>Work in progress...</div>
+      <app-under-construction></app-under-construction>
     }
   }
 </section>
