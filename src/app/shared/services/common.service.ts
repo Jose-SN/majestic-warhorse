@@ -40,7 +40,4 @@ export class CommonService {
   public isEmpty(object: { [key: string]: string | number }) {
     return Object.keys(object).length === 0;
   }
-  public isEmpty(object: { [key: string]: string | number }) {
-    return Object.keys(object).length === 0;
-  }
 }
