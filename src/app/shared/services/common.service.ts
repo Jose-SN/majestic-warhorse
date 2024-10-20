@@ -33,14 +33,9 @@ export class CommonService {
         break;
     }
   }
-  public handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occurred!';
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `Client-side error: ${error.error.message}`;
-    } else {
-      errorMessage = `Server error (${error.status}): ${error.message}`;
-    }
-    return throwError(() => new Error(errorMessage));
+  public handleError(errorHandler: HttpErrorResponse) {
+    debugger;
+    return throwError(() => errorHandler.error);
   }
   public isEmpty(object: { [key: string]: string | number }) {
     return Object.keys(object).length === 0;
