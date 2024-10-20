@@ -1,0 +1,16 @@
+@import '../../src/styles/index';
+.la-ball-clip-rotate-pulse.la-2x {
+  > div:first-child {
+    color: #cd1aa7 !important;
+  }
+  > div:last-child {
+    color: #ff5c38 !important;
+  }
+}
+
+app-under-construction {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
