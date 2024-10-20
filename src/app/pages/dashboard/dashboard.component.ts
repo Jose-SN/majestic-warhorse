@@ -7,20 +7,21 @@ import { CoursesComponent } from '../courses/courses.component';
 import { DashboardService } from './dashboard.service';
 import { ISidepanel } from './modal/dashboard-modal';
 import { Subject, takeUntil } from 'rxjs';
-import { CourseOverviewComponent } from "../course-overview/course-overview.component";
-import { UnderConstructionComponent } from "../under-construction/under-construction.component";
+import { CourseOverviewComponent } from '../course-overview/course-overview.component';
+import { CommonService } from 'src/app/shared/services/common.service';
+import { UnderConstructionComponent } from 'src/app/components/under-construction/under-construction.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
     FormsModule,
     CommonModule,
-    DashboardSidepanelComponent,
-    DashboardOverviewComponent,
     CoursesComponent,
     CourseOverviewComponent,
-    UnderConstructionComponent
-],
+    DashboardOverviewComponent,
+    UnderConstructionComponent,
+    DashboardSidepanelComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -28,8 +29,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public activePanel: string = '';
   private destroy$ = new Subject<void>();
   public SIDE_PANEL_LIST: ISidepanel = this.dashboardService.SIDE_PANEL_LIST;
-  constructor(private dashboardService: DashboardService) {
+  constructor(
+    private dashboardService: DashboardService,
+    private commonService: CommonService
+  ) {
     this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
+  }
+  get isAdminLogin() {
+    console.log(this.commonService?.loginedUserInfo?.role, this.commonService.adminRoleType);
+    return this.commonService?.loginedUserInfo?.role === this.commonService.adminRoleType;
   }
   ngOnInit(): void {
     this.dashboardService

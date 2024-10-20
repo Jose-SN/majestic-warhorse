@@ -771,7 +771,7 @@
             padding-right: 10px;
             overflow-y: auto;
           }
-          .reading-list {            
+          .reading-list {
             @include flex(flex, row, null, null);
             padding: 10px 76px 10px 10px;
             gap: 15px;

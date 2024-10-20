@@ -10,6 +10,7 @@ import {
 import { LoginService } from './login.service';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { Subject } from 'rxjs';
+import { CommonService } from 'src/app/shared/services/common.service';
 
 @Component({
   selector: 'app-login-page',
@@ -25,7 +26,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private loginService: LoginService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private commonService: CommonService
   ) {}
   ngOnInit(): void {
     this.loginService.getAllUsers();

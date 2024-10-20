@@ -25,10 +25,15 @@ export class LoginService {
       .pipe(takeUntil(_destroy$))
       .subscribe({
         next: (userExist) => {
-          if (userExist?.success) {
+          if (Object.keys(userExist || {}).length) {
             this.authService.setLogin = true;
             this.router.navigate(['/dashboard']);
-            this.commonService.loginedUserInfo = userExist.data;
+            this.commonService.loginedUserInfo = userExist;
+            sessionStorage.setItem(
+              'login_details',
+              JSON.stringify(this.commonService.loginedUserInfo)
+            );
+            sessionStorage.setItem('authToken', userExist.jwt);
           } else {
             this.loginUserFailed();
           }

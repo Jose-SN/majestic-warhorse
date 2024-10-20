@@ -2,8 +2,9 @@ export interface ICourseList {
   name: string;
   author: string;
   autorid: number;
+  courseType: string;
   coursetitle: string;
-  thumbnail: string;
+  courseThumbnail: string;
 }
 export interface IcourseListResponse {
   success?: boolean;

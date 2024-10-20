@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, lastValueFrom } from 'rxjs';
-import { UserLogin, UserLoginResponse, UserModel } from 'src/app/pages/login-page/model/user-model';
+import { UserLogin, UserModel } from 'src/app/pages/login-page/model/user-model';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { IPassWordUpdate } from 'src/app/pages/forgot-password/model';
 @Injectable({
@@ -16,6 +16,10 @@ export class AuthService {
     private commonService: CommonService
   ) {
     this.isAuthenticated = sessionStorage.getItem('isAuthenticated') === 'true';
+    const loginedInfo = sessionStorage.getItem('login_details');
+    if (loginedInfo) {
+      this.commonService.loginedUserInfo = JSON.parse(loginedInfo);
+    }
   }
 
   set setLogin(isLoggedIn: boolean) {
@@ -27,7 +31,7 @@ export class AuthService {
   }
   loginUser(loginInfo: UserLogin) {
     return this.http
-      .post<UserLoginResponse>(`${this._apiUrl}user/validate`, loginInfo)
+      .post<UserModel>(`${this._apiUrl}user/validate`, loginInfo)
       .pipe(catchError(this.commonService.handleError));
   }
   updatePassword(updatePassword: IPassWordUpdate) {
