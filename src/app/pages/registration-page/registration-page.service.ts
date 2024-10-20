@@ -69,8 +69,14 @@ export class RegistrationPageService {
               this.showToasterMessage('Error while saving...', TOASTER_MESSAGE_TYPE.ERROR);
             }
           },
-          error: () => {
-            this.showToasterMessage('Error while saving...', TOASTER_MESSAGE_TYPE.ERROR);
+          error: (errorHandler) => {
+            if (errorHandler?.errors?.length) {
+              errorHandler.errors.forEach((error: { [key: string]: string }) => {
+                this.showToasterMessage(error['msg'], TOASTER_MESSAGE_TYPE.ERROR);
+              });
+            } else {
+              this.showToasterMessage('Error while saving...', TOASTER_MESSAGE_TYPE.ERROR);
+            }
           },
         });
     });
