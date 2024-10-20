@@ -34,7 +34,6 @@ export class CommonService {
     }
   }
   public handleError(errorHandler: HttpErrorResponse) {
-    debugger;
     return throwError(() => errorHandler.error);
   }
   public isEmpty(object: { [key: string]: string | number }) {
