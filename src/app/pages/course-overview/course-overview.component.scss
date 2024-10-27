@@ -338,14 +338,23 @@
         overflow: hidden;
       }
       button {
+        font-family: $archivo-medium;
+        font-size: 0.875rem;
+        color: var(--white);
         width: 211px;
         height: 44px;
         @include border-radius(20px);
         @include gradient();
         border: none;
         cursor: pointer;
+        @include flex(flex, null, center, center);
       }
-      @include flex(flex, null, center, center);
+      & {
+        @include flex(flex, null, center, center);
+      }
+      img {
+        margin-right: 10px;
+      }
     }
   }
   .common-container {
