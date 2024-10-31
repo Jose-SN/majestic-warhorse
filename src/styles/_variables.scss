@@ -11,6 +11,11 @@ $league-spartan-semi-bold: 'League-spartan-SemiBold';
 $poppins-bold: 'Poppins-Bold';
 $poppins-medium: 'Poppins-Medium';
 $poppins-regular: 'Poppins-Regular';
+$poppins-light: 'Poppins-Regular';
+$titilliumWeb-bold: 'TitilliumWeb-Bold';
+$titilliumWeb-semibold: 'TitilliumWeb-SemiBold';
+$titilliumWeb-light: 'TitilliumWeb-Light';
+$titilliumWeb-regular: 'TitilliumWeb-Regular';
 :root {
   --bg-main: #031123;
   --bg-login: #021732;
@@ -52,4 +57,5 @@ $poppins-regular: 'Poppins-Regular';
   --btn-upload: #EB365C;
   --btn-add: #FD7859;
   --bg-publish: #CCEABB40;
+  --bg-time: #35458573;
 }

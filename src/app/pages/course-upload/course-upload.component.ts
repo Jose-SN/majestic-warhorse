@@ -1,15 +1,17 @@
+import { CommonSliderComponent } from './../../components/common-slider/common-slider.component';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-course-upload',
   standalone: true,
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule, CommonModule, CommonSliderComponent],
   templateUrl: './course-upload.component.html',
   styleUrl: './course-upload.component.scss'
 })
 export class CourseUploadComponent {
   public mobMenu: boolean = false;
+  public commonSliderClose = true;
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -17,6 +19,10 @@ export class CourseUploadComponent {
   }
   mobileMenu() {
     this.mobMenu = !this.mobMenu;
+  }  
+
+  commonSlideClose(){
+    this.commonSliderClose = false;
   }
   
 }

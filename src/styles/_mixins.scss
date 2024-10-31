@@ -19,6 +19,10 @@
 @include font-face('Poppins-Bold', '../assets/fonts/');
 @include font-face('Poppins-Medium', '../assets/fonts/');
 @include font-face('Poppins-Regular', '../assets/fonts/');
+@include font-face('TitilliumWeb-Regular', '../assets/fonts/');
+@include font-face('TitilliumWeb-SemiBold', '../assets/fonts/');
+@include font-face('TitilliumWeb-Light', '../assets/fonts/');
+@include font-face('TitilliumWeb-Bold', '../assets/fonts/');
 @mixin transition($property...) {
   -webkit-transition: $property;
   -moz-transition: $property;
