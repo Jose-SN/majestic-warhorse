@@ -201,95 +201,9 @@
         <div class="content-area">
           <div class="content-left">
             <div class="courses-wrapper course-upload">
-                <div class="course-upload-form">
-                    <h5>Enter New Course Details</h5>
-                    <div class="upload-form-holder">
-                        <div class="course-upload-left">
-                            <div class="input-holder">
-                                <label>Title</label>
-                                <input type="text" placeholder="Type here">
-                            </div>
-                            <div calss="input-holder">
-                                <label>Description</label>
-                                <textarea rows="5" cols="45"></textarea>
-                            </div>                        
-                        </div>
-                        <div class="course-upload-right">
-                            <label for="images" class="drop-container" id="dropcontainer">
-                                <span class="drop-title">Upload Cover Image (19:6)</span>
-                                <span>Drop your file here or browse</span>
-                                <input type="file" id="images" accept="image/*">
-                            </label>
-                            <div class="selection-holder">
-                                <div class="input-holder">
-                                  <label>Department</label>
-                                  <select>
-                                    <option>IT</option>
-                                </select>
-                                </div>
-                                <div class="input-holder">
-                                  <label>Year</label>
-                                    <select>
-                                        <option>2001</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>       
-                <div class="course-upload-form">
-                  <h5>Course Content</h5>
-                  <div class="chapter-container">
-                    <div class="input-holder">
-                      <label>Title</label>
-                      <input type="text" placeholder="Type Here" />
-                    </div>
-                    <div class="chapter-right">Loading</div>                    
-                  </div>
-                  <div class="chapter-container">
-                    <div class="input-holder">
-                      <label>Title</label>
-                      <input type="text" placeholder="Type Here" />
-                    </div> 
-                    <div class="chapter-right">
-                      <button>
-                        <img src="../../../assets/images/icon-video.svg" alt="" />
-                        <span>Upload Files</span>
-                      </button>
-                    </div>                     
-                  </div>
-                  <div class="add-button">
-                    <button>
-                      <img src="../../../assets/images/icon-add.svg" />
-                      <span>Upload Files</span>
-                    </button>
-                  </div>
-                </div> 
-                <div class="course-upload-form">
-                  <h5>Other Information</h5>
-                  <div class="other-info">
-                    <div class="input-holder">
-                      <label>Title</label>
-                      <div class="price-holder" data-currency="$">
-                        <input type="text" placeholder="0000" />
-                      </div>
-                    </div>
-                    <div class="input-holder">
-                      <label>Category</label>
-                      <select>
-                        <option>Info</option>
-                    </select>
-                    </div>
-                    <div class="input-holder">
-                      <label>Type</label>
-                      <select>
-                        <option>Type</option>
-                    </select>
-                    </div>
-                    <div class="input-holder">
-                      <button>Submit Course</button>
-                    </div>                    
-                  </div>
+                <div class="slider-wrapper" [class.active]="commonSliderClose">
+                  <button class="btn-slide-close" (click)="commonSlideClose()"><img src="../../../assets/images/icon-close.svg" alt="" /></button>
+                  <app-common-slider></app-common-slider>
                 </div>
             </div>
           </div>
