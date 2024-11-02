@@ -642,13 +642,13 @@
             padding: 15px;
             margin-top: 15px;
             @include flex(flex, null, null, center);
-            &::before {
-              counter-increment: section;
-              content: 'Chapter ' counter(section) ' ';
-              color: rgba($color: #fff, $alpha: 0.2);
-              white-space: nowrap;
-              margin-right: 30px;
-            }
+            // &::before {
+            //   counter-increment: section;
+            //   content: 'Chapter ' counter(section) ' ';
+            //   color: rgba($color: #fff, $alpha: 0.2);
+            //   white-space: nowrap;
+            //   margin-right: 30px;
+            // }
             label {
               font-size: 0.875rem;
               color: var(--white);
