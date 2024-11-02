@@ -17,7 +17,7 @@ export class CourseUploadComponent {
       attachments: [],
       chapterTitle: '',
       fileDetails: [{ name: '', url: '', chapterDescription: '' }],
-    }
+    },
   ];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   triggerMenu() {
@@ -34,11 +34,11 @@ export class CourseUploadComponent {
   addNewVideoList(chapter: any) {
     chapter.fileDetails = chapter.fileDetails.concat({ name: '', url: '', chapterDescription: '' });
   }
-  addNewChapter(){
+  addNewChapter() {
     this.chapterList = this.chapterList.concat({
       attachments: [],
       chapterTitle: '',
       fileDetails: [{ name: '', url: '', chapterDescription: '' }],
-    })
+    });
   }
 }

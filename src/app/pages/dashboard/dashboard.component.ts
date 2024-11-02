@@ -24,7 +24,7 @@ import { CourseUploadComponent } from '../course-upload/course-upload.component'
     UnderConstructionComponent,
     DashboardSidepanelComponent,
     RegistrationPageComponent,
-    CourseUploadComponent
+    CourseUploadComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
