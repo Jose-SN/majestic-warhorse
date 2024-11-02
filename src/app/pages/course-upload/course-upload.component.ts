@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [FormsModule, CommonModule, CommonSliderComponent],
   templateUrl: './course-upload.component.html',
-  styleUrl: './course-upload.component.scss'
+  styleUrl: './course-upload.component.scss',
 })
 export class CourseUploadComponent {
   public mobMenu: boolean = false;
@@ -19,10 +19,9 @@ export class CourseUploadComponent {
   }
   mobileMenu() {
     this.mobMenu = !this.mobMenu;
-  }  
+  }
 
-  commonSlideClose(){
+  commonSlideClose() {
     this.commonSliderClose = false;
   }
-  
 }

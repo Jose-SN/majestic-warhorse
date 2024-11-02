@@ -14,8 +14,14 @@
       }
     }
     @case (SIDE_PANEL_LIST['COURSE_LISTING']) {
-      <!-- <app-under-construction></app-under-construction> -->
       <app-courses></app-courses>
+    }
+    @case (SIDE_PANEL_LIST['ACCOUNT']) {
+      <section class="dashboard-container">
+        <div class="dashboard-right">
+          <app-registration-page></app-registration-page>
+        </div>
+      </section>
     }
     @default {
       <app-under-construction></app-under-construction>

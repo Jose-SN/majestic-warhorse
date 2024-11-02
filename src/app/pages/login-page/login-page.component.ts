@@ -26,11 +26,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private loginService: LoginService,
     private router: Router,
-    private authService: AuthService,
-    private commonService: CommonService
+    private authService: AuthService
   ) {}
   ngOnInit(): void {
-    this.loginService.getAllUsers();
     this.loginForm = this.formBuilder.group({
       email: ['', Validators.required],
       password: ['', Validators.required],
