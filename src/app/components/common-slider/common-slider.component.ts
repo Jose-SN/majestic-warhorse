@@ -5,8 +5,6 @@ import { CourseUploadComponent } from './../../pages/course-upload/course-upload
   standalone: true,
   imports: [CourseUploadComponent],
   templateUrl: './common-slider.component.html',
-  styleUrl: './common-slider.component.scss'
+  styleUrl: './common-slider.component.scss',
 })
-export class CommonSliderComponent {
-
-}
+export class CommonSliderComponent {}

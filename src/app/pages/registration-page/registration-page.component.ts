@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,6 +10,8 @@ import { FormValidators } from 'src/app/shared/form-validators';
 import { RegistrationPageService } from './registration-page.service';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { CommonService } from 'src/app/shared/services/common.service';
+import { UserModel } from '../login-page/model/user-model';
 
 @Component({
   selector: 'app-registration-page',
@@ -18,7 +20,7 @@ import { Router } from '@angular/router';
   templateUrl: './registration-page.component.html',
   styleUrl: './registration-page.component.scss',
 })
-export class RegistrationPageComponent implements OnDestroy {
+export class RegistrationPageComponent implements OnDestroy, OnInit {
   public getPasswordError: (arg1: FormGroup, arg2: string) => boolean;
   public isFieldInvalid: (arg1: FormGroup, arg2: string) => boolean | undefined;
   public isPasswordMismatch: (arg1: FormGroup, arg2: string, arg3: string) => boolean | null;
@@ -29,6 +31,7 @@ export class RegistrationPageComponent implements OnDestroy {
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
+    private commonService: CommonService,
     public registrationService: RegistrationPageService
   ) {
     this.createAccountForm = this.formBuilder.group(
@@ -36,6 +39,7 @@ export class RegistrationPageComponent implements OnDestroy {
         userName: ['', [Validators.required]],
         image: [null, Validators.required],
         email: ['', [Validators.required, Validators.email]],
+        mobileNumber: ['', [Validators.required, Validators.pattern('^\\+?\\d{10,15}$')]],
         password: [
           '',
           [
@@ -54,6 +58,26 @@ export class RegistrationPageComponent implements OnDestroy {
     this.getPasswordError = this.formValidator.getPasswordError;
     this.isPasswordMismatch = this.formValidator.isPasswordMismatch;
   }
+  ngOnInit(): void {
+    if (this.commonService?.loginedUserInfo) {
+      const loginedId = this.commonService.loginedUserInfo?.id;
+      const loginedUser = this.commonService.allUsersList.find(
+        (user: UserModel) => user._id === loginedId
+      );
+      const userFormInfo = {
+        image: '',
+        password: '',
+        confirmPassword: '',
+        email: loginedUser?.email,
+        userName: loginedUser?.firstname,
+        mobileNumber: loginedUser?.phone,
+      };
+      this.createAccountForm.setValue(userFormInfo);
+      this.createAccountForm?.get('email')?.disable();
+      this.createAccountForm.markAllAsTouched();
+    }
+  }
+
   onFileSelected(event: Event): void {
     const target = event.target as HTMLInputElement;
     const files = target.files as FileList;
