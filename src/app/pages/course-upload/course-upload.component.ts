@@ -12,6 +12,13 @@ import { CommonModule } from '@angular/common';
 export class CourseUploadComponent {
   public mobMenu: boolean = false;
   public commonSliderClose = true;
+  public chapterList = [
+    {
+      attachments: [],
+      chapterTitle: '',
+      fileDetails: [{ name: '', url: '', chapterDescription: '' }],
+    }
+  ];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -23,5 +30,15 @@ export class CourseUploadComponent {
 
   commonSlideClose() {
     this.commonSliderClose = false;
+  }
+  addNewVideoList(chapter: any) {
+    chapter.fileDetails = chapter.fileDetails.concat({ name: '', url: '', chapterDescription: '' });
+  }
+  addNewChapter(){
+    this.chapterList = this.chapterList.concat({
+      attachments: [],
+      chapterTitle: '',
+      fileDetails: [{ name: '', url: '', chapterDescription: '' }],
+    })
   }
 }
