@@ -10,6 +10,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { CourseOverviewComponent } from '../course-overview/course-overview.component';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { UnderConstructionComponent } from 'src/app/components/under-construction/under-construction.component';
+import { RegistrationPageComponent } from '../registration-page/registration-page.component';
+import { CourseUploadComponent } from '../course-upload/course-upload.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -21,6 +23,8 @@ import { UnderConstructionComponent } from 'src/app/components/under-constructio
     DashboardOverviewComponent,
     UnderConstructionComponent,
     DashboardSidepanelComponent,
+    RegistrationPageComponent,
+    CourseUploadComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
