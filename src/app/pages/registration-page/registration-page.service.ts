@@ -49,6 +49,7 @@ export class RegistrationPageService {
     registrationInfo: IRegistrationModel
   ): Promise<boolean> {
     registrationInfo.image = this.imageUrl;
+    registrationInfo.phone = registrationInfo.mobileNumber;
     delete registrationInfo.confirmPassword;
     return new Promise((resolve) => {
       this.registrationApiService

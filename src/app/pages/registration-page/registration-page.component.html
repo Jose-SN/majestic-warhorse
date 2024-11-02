@@ -20,7 +20,7 @@
               placeholder="example@email.com"
               formControlName="userName"
             />
-            @if (isFieldInvalid(createAccountForm, 'username')) {
+            @if (isFieldInvalid(createAccountForm, 'userName')) {
               <span> Name is required.</span>
             }
           </div>
@@ -52,6 +52,20 @@
                 }
                 @if (createAccountForm.get('email')?.errors?.['email']) {
                   <span>Please enter a valid email address.</span>
+                }
+              </div>
+            }
+          </div>
+          <div class="input-holder">
+            <label>Mobile</label>
+            <input type="text" placeholder="+44 7975 556677" formControlName="mobileNumber" />
+            @if (isFieldInvalid(createAccountForm, 'mobileNumber')) {
+              <div class="error-message">
+                @if (createAccountForm.get('mobileNumber')?.errors?.['required']) {
+                  <span>Mobile number is required.</span>
+                }
+                @if (createAccountForm.get('mobileNumber')?.errors?.['pattern']) {
+                  <span>Please enter a valid mobile number.</span>
                 }
               </div>
             }

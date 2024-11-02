@@ -19,4 +19,5 @@ export class CourseOverviewComponent {
   mobileMenu() {
     this.mobMenu = !this.mobMenu;
   }
+  openCourseUploadSlider() {}
 }

@@ -8,14 +8,20 @@
   @switch (activePanel) {
     @case (SIDE_PANEL_LIST['DASHBOARD_OVERVIEW']) {
       @if (isAdminLogin) {
-        <app-course-overview></app-course-overview>
+        <app-course-upload style="width: 100%"></app-course-upload>
       } @else {
         <app-dashboard-overview></app-dashboard-overview>
       }
     }
     @case (SIDE_PANEL_LIST['COURSE_LISTING']) {
-      <!-- <app-under-construction></app-under-construction> -->
       <app-courses></app-courses>
+    }
+    @case (SIDE_PANEL_LIST['ACCOUNT']) {
+      <section class="dashboard-container">
+        <div class="dashboard-right">
+          <app-registration-page></app-registration-page>
+        </div>
+      </section>
     }
     @default {
       <app-under-construction></app-under-construction>

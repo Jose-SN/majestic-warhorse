@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from 'src/app/services/api-service/auth.service';
-import { UserLogin, UserModel } from './model/user-model';
+import { UserLogin } from './model/user-model';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
@@ -10,15 +10,11 @@ import { Subject, takeUntil } from 'rxjs';
   providedIn: 'root',
 })
 export class LoginService {
-  private allUsersList: UserModel[] = [];
   constructor(
     private authService: AuthService,
     private router: Router,
     private commonService: CommonService
   ) {}
-  async getAllUsers() {
-    this.allUsersList = await this.authService.getAllUsers();
-  }
   public userLogin(_destroy$: Subject<void>, loginInfo: UserLogin) {
     this.authService
       .loginUser(loginInfo)

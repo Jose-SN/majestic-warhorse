@@ -46,4 +46,10 @@ export class AuthService {
   isLoggedIn(): boolean {
     return this.isAuthenticated;
   }
+  logOutApplication() {
+    this.isAuthenticated = false;
+    this.commonService.allUsersList = [];
+    sessionStorage.removeItem('login_details');
+    sessionStorage.removeItem('isAuthenticated');
+  }
 }

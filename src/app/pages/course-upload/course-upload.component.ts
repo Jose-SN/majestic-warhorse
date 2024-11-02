@@ -2,16 +2,24 @@ import { CommonSliderComponent } from './../../components/common-slider/common-s
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AttachmentAccordionComponent } from 'src/app/components/attachment-accordion/attachment-accordion.component';
 @Component({
   selector: 'app-course-upload',
   standalone: true,
-  imports: [FormsModule, CommonModule, CommonSliderComponent],
+  imports: [FormsModule, CommonModule, CommonSliderComponent, AttachmentAccordionComponent],
   templateUrl: './course-upload.component.html',
-  styleUrl: './course-upload.component.scss'
+  styleUrl: './course-upload.component.scss',
 })
 export class CourseUploadComponent {
   public mobMenu: boolean = false;
   public commonSliderClose = true;
+  public chapterList = [
+    {
+      attachments: [],
+      chapterTitle: '',
+      fileDetails: [{ name: '', url: '', chapterDescription: '' }],
+    },
+  ];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -19,10 +27,19 @@ export class CourseUploadComponent {
   }
   mobileMenu() {
     this.mobMenu = !this.mobMenu;
-  }  
+  }
 
-  commonSlideClose(){
+  commonSlideClose() {
     this.commonSliderClose = false;
   }
-  
+  addNewVideoList(chapter: any) {
+    chapter.fileDetails = chapter.fileDetails.concat({ name: '', url: '', chapterDescription: '' });
+  }
+  addNewChapter() {
+    this.chapterList = this.chapterList.concat({
+      attachments: [],
+      chapterTitle: '',
+      fileDetails: [{ name: '', url: '', chapterDescription: '' }],
+    });
+  }
 }
