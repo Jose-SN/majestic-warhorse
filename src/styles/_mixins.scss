@@ -46,12 +46,12 @@
   align-items: $align-items;
 }
 @mixin gradient() {
-  background: rgb(213,45,135);
-  background: linear-gradient(45deg, rgba(213,45,135,1) 0%, rgba(250,61,65,1) 100%);
+  background: rgb(213, 45, 135);
+  background: linear-gradient(45deg, rgba(213, 45, 135, 1) 0%, rgba(250, 61, 65, 1) 100%);
 }
 @mixin gradient-course() {
   background: rgb(230, 93, 63);
-  background: linear-gradient(180deg, rgb(230, 93, 63) 10%, rgba(213,45,135,1) 90%);
+  background: linear-gradient(180deg, rgb(230, 93, 63) 10%, rgba(213, 45, 135, 1) 90%);
 }
 @mixin button {
   text-align: center;

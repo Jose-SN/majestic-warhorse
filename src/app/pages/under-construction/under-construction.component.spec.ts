@@ -8,10 +8,9 @@ describe('UnderConstructionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UnderConstructionComponent]
-    })
-    .compileComponents();
-    
+      imports: [UnderConstructionComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(UnderConstructionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

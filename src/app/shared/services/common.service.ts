@@ -11,10 +11,13 @@ import { TOASTER_MESSAGE_TYPE } from '../toaster/toaster-info';
 })
 export class CommonService {
   public loginedUserInfo!: UserModel;
+  public allUsersList: UserModel[] = [];
   public adminRoleType: string = 'admin';
   constructor(private toastrService: ToastrService) {}
-
-  openToaster(toasterData: IToasterModel) {
+  set alluserList(userList: UserModel[]) {
+    this.allUsersList = userList;
+  }
+  public openToaster(toasterData: IToasterModel) {
     const commonConfig = {
       timeOut: 5000,
     };

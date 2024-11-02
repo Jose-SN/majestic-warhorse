@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ISidepanel } from './modal/dashboard-modal';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { AuthService } from 'src/app/services/api-service/auth.service';
+import { CommonService } from 'src/app/shared/services/common.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +19,13 @@ export class DashboardService {
   public sidePanelChange: BehaviorSubject<string> = new BehaviorSubject(
     this.SIDE_PANEL_LIST.DASHBOARD_OVERVIEW
   );
-  constructor() {}
+  constructor(
+    private authService: AuthService,
+    private commonService: CommonService
+  ) {}
+  async getAllUsers() {
+    this.commonService.alluserList = await this.authService.getAllUsers();
+  }
   setSidePanelChangeValue(changedpanel: string) {
     this.sidePanelChange.next(changedpanel);
   }
