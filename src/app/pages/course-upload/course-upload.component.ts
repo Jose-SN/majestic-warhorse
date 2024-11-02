@@ -2,10 +2,11 @@ import { CommonSliderComponent } from './../../components/common-slider/common-s
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AttachmentAccordionComponent } from 'src/app/components/attachment-accordion/attachment-accordion.component';
 @Component({
   selector: 'app-course-upload',
   standalone: true,
-  imports: [FormsModule, CommonModule, CommonSliderComponent],
+  imports: [FormsModule, CommonModule, CommonSliderComponent, AttachmentAccordionComponent],
   templateUrl: './course-upload.component.html',
   styleUrl: './course-upload.component.scss',
 })

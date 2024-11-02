@@ -24,6 +24,7 @@ export class FormValidators {
     return password === confirmPassword ? null : { mismatch: true };
   }
   isFieldInvalid(registrationForm: FormGroup, fieldName: string): boolean | undefined {
+    debugger;
     const field = registrationForm?.get(fieldName);
     return field?.invalid && (field?.touched || field?.dirty);
   }
