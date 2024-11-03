@@ -1,12 +1,31 @@
-import { Component } from '@angular/core';
-import { CourseUploadComponent } from './../../pages/course-upload/course-upload.component';
+import {  Component, Output, EventEmitter} from '@angular/core';
+import { AttachmentAccordionComponent } from 'src/app/components/attachment-accordion/attachment-accordion.component';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-common-slider',
   standalone: true,
-  imports: [CourseUploadComponent],
+  imports: [FormsModule, CommonModule, CommonSliderComponent, AttachmentAccordionComponent],
   templateUrl: './common-slider.component.html',
   styleUrl: './common-slider.component.scss'
 })
 export class CommonSliderComponent {
+  public chapterList = [
+    {
+      attachments: [],
+      chapterTitle: '',
+      fileDetails: [{ name: '', url: '', chapterDescription: '' }],
+    },
+  ];
 
+  addNewVideoList(chapter: any) {
+    chapter.fileDetails = chapter.fileDetails.concat({ name: '', url: '', chapterDescription: '' });
+  }
+  addNewChapter() {
+    this.chapterList = this.chapterList.concat({
+      attachments: [],
+      chapterTitle: '',
+      fileDetails: [{ name: '', url: '', chapterDescription: '' }],
+    });
+  }
 }
