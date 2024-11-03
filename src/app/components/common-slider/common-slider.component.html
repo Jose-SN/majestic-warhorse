@@ -1,4 +1,7 @@
-<div class="courses-wrapper course-upload">
+<button class="btn-slide-close">
+  <img src="../../../assets/images/icon-close.svg" alt="" />
+</button>
+<div class="course-form-upload-wrapper">
   <div class="course-upload-form">
     <h5>Enter New Course Details</h5>
     <div class="upload-form-holder">
@@ -36,57 +39,59 @@
     </div>
   </div>
   <div class="course-upload-form">
-    <h5>Course Content</h5>
-    <div class="chapter-container">
-      <div class="input-holder">
-        <label>Title</label>
-        <input type="text" placeholder="Type Here" />
-      </div>
-      <div class="chapter-right">Loading</div>
-    </div>
-    <div class="chapter-container">
-      <div class="input-holder">
-        <label>Title</label>
-        <input type="text" placeholder="Type Here" />
-      </div>
-      <div class="chapter-right">
+    <div class="action-holder">
+      <h5>Course Content</h5>
+      <div class="add-button">
+        <button (click)="addNewChapter()">
+          <img src="../../../assets/images/icon-add.svg" />
+          <span>Add Chapter</span>
+        </button>
         <button>
-          <img src="../../../assets/images/icon-video.svg" alt="" />
-          <span>Upload Files</span>
+          <img src="../../../assets/images/icon-add.svg" />
+          <span>Add Attachment</span>
+        </button>
+        <button>
+          <img src="../../../assets/images/icon-add.svg" class="icon-delete" />
+          <span>Delete</span>
         </button>
       </div>
-    </div>
-    <div class="add-button">
-      <button>
-        <img src="../../../assets/images/icon-add.svg" />
-        <span>Upload Files</span>
-      </button>
-    </div>
-  </div>
-  <div class="course-upload-form">
-    <h5>Other Information</h5>
-    <div class="other-info">
-      <div class="input-holder">
-        <label>Title</label>
-        <div class="price-holder" data-currency="$">
-          <input type="text" placeholder="0000" />
+    </div>                
+    @for (chapter of chapterList; track $index) {
+      <div class="upload-form-holder">
+        <div class="course-upload-left">
+          <div class="input-holder">
+            <label>Title</label>
+            <input type="text" placeholder="Type here" />
+          </div>
+          @for (item of chapter.fileDetails; track $index) {
+            <div calss="input-holder">
+              <label>Video Description</label>
+              <textarea rows="3" cols="45"></textarea>
+                <div class="add-button">
+                  <button>
+                    <img src="../../../assets/images/icon-video.svg" alt="" />
+                    <span>Preview</span>
+                  </button>
+                  <button>
+                    <img src="../../../assets/images/icon-video.svg" alt="" />
+                    <span>Upload Video</span>
+                  </button>
+                  <button (click)="addNewVideoList(chapter)">
+                    <img src="../../../assets/images/icon-add.svg" alt="" />
+                    <span>Add</span>
+                  </button>
+                  <button>
+                    <img src="../../../assets/images/icon-add.svg" class="icon-delete" alt="" />
+                    <span>Delete</span>
+                  </button>
+                </div>                      
+            </div>
+          }
+        </div>
+        <div class="accordion-holder">
+          <app-attachment-accordion></app-attachment-accordion>
         </div>
       </div>
-      <div class="input-holder">
-        <label>Category</label>
-        <select>
-          <option>Info</option>
-        </select>
-      </div>
-      <div class="input-holder">
-        <label>Type</label>
-        <select>
-          <option>Type</option>
-        </select>
-      </div>
-      <div class="input-holder">
-        <button>Submit Course</button>
-      </div>
-    </div>
-  </div>
+    }
+  </div>              
 </div>
