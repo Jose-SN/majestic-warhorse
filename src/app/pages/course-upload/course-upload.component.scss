@@ -188,350 +188,493 @@
 }
 
 .dashboard-right {
-  @include flex(flex, column, null, null);
-  flex-grow: 1;
-  padding: 30px 25px;
-  .search-and-profile {
-    @include flex(flex, null, flex-end, center);
-  }
-  .icon-mobile {
-    width: 37px;
-    height: 27px;
-    flex-shrink: 0;
-    position: relative;
-    @include flex(flex, null, center, center);
-    display: none;
-  }
-  .search-holder {
-    width: 100%;
-    height: 100%;
-    margin-right: 15px;
-    @include flex(flex, null, flex-end, null);
-    h1 {
-      figure {
-        margin-right: 10px;
-      }
-      @include flex(flex, null, null, center);
-    }
-    gap: 15px;
-    .input-holder {
-      position: relative;
-      input {
-        font-family: $archivo-regular;
-        font-size: 1rem;
-        color: var(--bg-label);
-        border: 2px solid var(--bg-input-border);
-        background: var(--bg-input);
-        width: 300px;
-        height: 100%;
-        padding: 12px 50px 12px 15px;
-        @include border-radius(15px);
-        @include transition(all 0.2s ease-in-out);
-        &:focus {
-          border-color: var(--bg-mit1);
-        }
-      }
-      button {
-        background: url(../../../assets/images/icon-search.svg) no-repeat center center;
-        width: 20px;
-        height: 20px;
-        position: absolute;
-        top: 0;
-        right: 20px;
-        bottom: 0;
-        margin: auto;
-        border: none;
-        cursor: pointer;
-      }
-      select {
-        font-family: $archivo-regular;
-        font-size: 1rem;
-        color: var(--white);
-        width: 160px;
-        height: 100%;
-        border: 2px solid var(--bg-input-border);
-        background: transparent url(../../../assets/images/icon-arrow.svg) no-repeat 87% center;
-        @include border-radius(15px);
-        text-indent: 15px;
-        appearance: none;
-        transition: opacity 0.25s;
-        &:focus {
-          outline: none;
-          border-color: var(--bg-mit1);
-        }
-      }
-    }
-    h1 {
-      font-family: $poppins-bold;
-      font-size: 1.875rem;
-      color: var(--white);
-      line-height: 3.75rem;
-      margin-right: auto;
-    }
-  }
-  .profile-area {
-    max-width: fit-content;
-    @include flex(flex, null, flex-end, center);
-    gap: 15px;
-    .common-holder {
-      width: 60px;
-      height: 60px;
-      @include border-radius(15px);
-      border: 2px solid var(--bg-input-border);
-      @include flex(flex, null, center, center);
-      flex-shrink: 0;
-      figure {
-        width: 26px;
-        height: 26px;
-        img {
-          width: 100%;
-        }
-      }
-    }
-    .profile {
-      background: var(--bg-blue);
-      width: 60px;
-      height: 60px;
-      @include border-radius(100%);
-      position: relative;
-      border: 1px solid var(--bg-input-border);
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-  }
-  .title-holder {
-    margin: 20px 0 0;
-    padding: 15px 25px;
-    @include flex(flex, null, space-between, center);
-    @include border-radius(8px);
-    @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
-    h1 {
-      font-family: $poppins-bold;
-      font-weight: normal;
-      font-size: 1.875rem;
-      color: var(--light-blue);
-      letter-spacing: 1.5px;
-    }
-    .data-refreshed-holder {
-      span {
-        font-size: 0.875rem;
-        white-space: nowrap;
-        margin-right: 33px;
-        color: var(--white);
-        display: block;
-      }
-      .refresh-date {
-        font-family: $archivo-medium;
-        font-size: 0.875rem;
-        text-align: center;
-        letter-spacing: 1px;
-        color: var(--white);
-        max-width: 312px;
-        padding: 15px 46px;
-        @include border-radius(5px);
-        border: 1px solid var(--bg-input-border);
-        background: var(--bg-input);
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-      }
-      button {
-        font-family: $archivo-medium;
-        font-size: 0.875rem;
-        color: var(--white);
-        width: 211px;
-        height: 44px;
-        @include border-radius(20px);
-        @include gradient();
-        border: none;
-        cursor: pointer;
-        @include flex(flex, null, center, center);
-      }
-      & {
-        @include flex(flex, null, center, center);
-      }
-      img {
-        margin-right: 10px;
-      }
-    }
-  }
-  .common-container {
     @include flex(flex, column, null, null);
-    height: 100%;
-  }
-  .content-area {
-    @include flex(flex, null, space-between, null);
-    gap: 22px;
     flex-grow: 1;
-    margin: 30px 0 0;
-    .content-left {
-      max-width: 1195px;
+    padding: 30px 25px;
+    .search-and-profile {
+      @include flex(flex, null, flex-end, center);
+    }
+    .icon-mobile {
+      width: 37px;
+      height: 27px;
+      flex-shrink: 0;
+      position: relative;
+      @include flex(flex, null, center, center);
+      display: none;
+    }
+    .search-holder {
       width: 100%;
-      display: flex;
-      flex-direction: column;
       height: 100%;
-      .scroll-container {
-        max-width: 1195px;
-        width: 100%;
-        height: 47vh;
-        position: relative;
-        &.overview {
-          height: 105px;
+      margin-right: 15px;
+      @include flex(flex, null, flex-end, null);
+      h1 {
+        figure {
+          margin-right: 10px;
         }
+        @include flex(flex, null, null, center);
       }
-      .courses-wrapper {
-        padding: 30px;
-        @include border-radius(15px);
-        @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
-        flex-grow: 1;
-        overflow-y: auto;
-        margin: 20px 0 0;
+      gap: 15px;
+      .input-holder {
         position: relative;
-        .scroll-content {
-          width: 100%;
+        input {
+          font-family: $archivo-regular;
+          font-size: 1rem;
+          color: var(--bg-label);
+          border: 2px solid var(--bg-input-border);
+          background: var(--bg-input);
+          width: 300px;
+          height: 100%;
+          padding: 12px 50px 12px 15px;
+          @include border-radius(15px);
+          @include transition(all 0.2s ease-in-out);
+          &:focus {
+            border-color: var(--bg-mit1);
+          }
+        }
+        button {
+          background: url(../../../assets/images/icon-search.svg) no-repeat center center;
+          width: 20px;
+          height: 20px;
           position: absolute;
           top: 0;
-          left: 0;
+          right: 20px;
+          bottom: 0;
+          margin: auto;
+          border: none;
+          cursor: pointer;
         }
-        .courses {
+        select {
+          font-family: $archivo-regular;
+          font-size: 1rem;
+          color: var(--white);
+          width: 160px;
+          height: 100%;
+          border: 2px solid var(--bg-input-border);
+          background: transparent url(../../../assets/images/icon-arrow.svg) no-repeat 87% center;
+          @include border-radius(15px);
+          text-indent: 15px;
+          appearance: none;
+          transition: opacity 0.25s;
+          &:focus {
+            outline: none;
+            border-color: var(--bg-mit1);
+          }
+        }
+      }
+      h1 {
+        font-family: $poppins-bold;
+        font-size: 1.875rem;
+        color: var(--white);
+        line-height: 3.75rem;
+        margin-right: auto;
+      }
+    }
+    .profile-area {
+      max-width: fit-content;
+      @include flex(flex, null, flex-end, center);
+      gap: 15px;
+      .common-holder {
+        width: 60px;
+        height: 60px;
+        @include border-radius(15px);
+        border: 2px solid var(--bg-input-border);
+        @include flex(flex, null, center, center);
+        flex-shrink: 0;
+        figure {
+          width: 26px;
+          height: 26px;
+          img {
+            width: 100%;
+          }
+        }
+      }
+      .profile {
+        background: var(--bg-blue);
+        width: 60px;
+        height: 60px;
+        @include border-radius(100%);
+        position: relative;
+        border: 1px solid var(--bg-input-border);
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+    }
+    .title-holder {
+      margin: 20px 0 0;
+      padding: 15px 25px;
+      @include flex(flex, null, space-between, center);
+      @include border-radius(8px);
+      @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
+      h1 {
+        font-family: $poppins-bold;
+        font-weight: normal;
+        font-size: 1.875rem;
+        color: var(--light-blue);
+        letter-spacing: 1.5px;
+      }
+      .data-refreshed-holder {
+        span {
+          font-size: 0.875rem;
+          white-space: nowrap;
+          margin-right: 33px;
+          color: var(--white);
+          display: block;
+        }
+        .refresh-date {
+          font-family: $archivo-medium;
+          font-size: 0.875rem;
+          text-align: center;
+          letter-spacing: 1px;
+          color: var(--white);
+          max-width: 312px;
+          padding: 15px 46px;
+          @include border-radius(5px);
+          border: 1px solid var(--bg-input-border);
+          background: var(--bg-input);
+          text-overflow: ellipsis;
+          white-space: nowrap;
           overflow: hidden;
-          overflow-y: auto;
         }
-        .course-top {
-          @include flex(flex, null, space-between, null);
-          margin-bottom: 20px;
-          h2 {
-            font-family: $poppins-bold;
-            font-size: 1.875rem;
-            font-weight: normal;
-            color: var(--white);
-            letter-spacing: 1.5px;
+        button {
+            font-family: $archivo-medium;
+            font-size: 0.875rem;
+            color:  var(--white);
+            width: 211px;
+            height: 44px;
+            @include border-radius(20px);
+            @include gradient();
+            border: none;
+            cursor: pointer;
+            @include flex(flex, null, center, center);
           }
-          a {
-            font-size: 1.25rem;
-            color: var(--bg-text-orange);
-            height: 26px;
-            position: relative;
-            &::before {
-              content: '';
-              width: 0%;
-              height: 1px;
-              background: var(--bg-text-orange);
-              position: absolute;
-              bottom: 0;
-              left: 0;
-              right: 0;
-              margin: auto;
-              @include transition(all 0.35s ease-in-out);
-            }
-            &:hover {
-              color: var(--white);
-              &::before {
-                width: 100%;
-              }
-            }
+          & {
+            @include flex(flex, null, center, center);
           }
-          ul {
-            max-width: fit-content;
-            background: var(--bg-tab-nav);
-            list-style: none;
-            margin: 0;
-            padding: 5px;
-            @include border-radius(15px);
-            @include flex(flex, null, null, center);
-            li {
-              font-family: $archivo-light;
-              font-size: 0.875rem;
-              font-weight: normal;
-              @include border-radius(15px);
-              color: var(--white);
-              padding: 15px 24px;
-              cursor: pointer;
-              @include transition(all 0.3s ease-in-out);
-              &.active {
-                background: var(--bg-tab-active);
-              }
-            }
+          img {
+            margin-right: 10px;
           }
-        }
-        .course-card-holder {
+      }
+    }
+    .common-container {
+      @include flex(flex, column, null, null);
+      height: 100%;
+    }
+    .content-area {
+      @include flex(flex, null, space-between, null);
+      gap: 22px;
+      flex-grow: 1;
+      margin: 30px 0 0;
+      .content-left {
+        max-width: 1195px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        position: relative;
+        .scroll-container {
+          max-width: 1195px;
           width: 100%;
-          @include flex(flex, null, null, null);
-          flex-flow: column wrap;
-          flex-direction: row;
-          gap: 15px;
-          &.courses {
-            height: 340px !important;
+          height: 47vh;
+          position: relative;
+          &.overview {
+            height: 105px;
           }
-          .course-card {
-            background: var(--bg-left-panel);
-            max-width: 268px;
-            width: 23.5%;
-            @include border-radius(10px);
-            border: 1px solid var(--bg-card-border);
-            @include flex(flex, column, null, null);
+        }
+        .courses-wrapper {
+          padding: 30px;
+          @include border-radius(15px);
+          @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
+          flex-grow: 1;
+          overflow-y: auto;
+          margin: 20px 0 0;
+          position: relative;
+          .scroll-content {
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+          }
+          .courses {
             overflow: hidden;
-            .card-content {
-              flex: 1;
-              &:first-child {
-                background: var(--bg-light-grey);
-                padding: 25px 25px 0;
-                figure {
-                  @include flex(flex, column, flex-end, null);
+            overflow-y: auto;
+          }
+          .course-top {
+            @include flex(flex, null, space-between, null);
+            margin-bottom: 20px;
+            h2 {
+              font-family: $poppins-bold;
+              font-size: 1.875rem;
+              font-weight: normal;
+              color: var(--white);
+              letter-spacing: 1.5px;
+            }
+            a {
+              font-size: 1.25rem;
+              color: var(--bg-text-orange);
+              height: 26px;
+              position: relative;
+              &::before {
+                content: '';
+                width: 0%;
+                height: 1px;
+                background: var(--bg-text-orange);
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+                @include transition(all 0.35s ease-in-out);
+              }
+              &:hover {
+                color: var(--white);
+                &::before {
+                  width: 100%;
                 }
               }
-              &:last-child {
-                figure {
-                  margin-top: 20px;
-                }
-                padding: 20px;
-                span {
-                  font-family: $league-spartan-light;
-                  font-size: 0.75rem;
-                  color: var(--bg-light-grey);
-                }
-                h3 {
-                  font-family: $league-spartan-regular;
-                  font-size: 1.125rem;
-                  color: var(--light-blue);
-                  line-height: 1.25rem;
-                  font-weight: normal;
-                  margin: 10px 0 0;
+            }
+            ul {
+              max-width: fit-content;
+              background: var(--bg-tab-nav);
+              list-style: none;
+              margin: 0;
+              padding: 5px;
+              @include border-radius(15px);
+              @include flex(flex, null, null, center);
+              li {
+                font-family: $archivo-light;
+                font-size: 0.875rem;
+                font-weight: normal;
+                @include border-radius(15px);
+                color: var(--white);
+                padding: 15px 24px;
+                cursor: pointer;
+                @include transition(all 0.3s ease-in-out);
+                &.active {
+                  background: var(--bg-tab-active);
                 }
               }
             }
           }
+          .course-card-holder {
+            width: 100%;
+            @include flex(flex, null, null, null);
+            flex-flow: column wrap;
+            flex-direction: row;
+            gap: 15px;
+            &.courses {
+              height: 340px !important;
+            }
+            .course-card {
+              background: var(--bg-left-panel);
+              max-width: 268px;
+              width: 23.5%;
+              @include border-radius(10px);
+              border: 1px solid var(--bg-card-border);
+              @include flex(flex, column, null, null);
+              overflow: hidden;
+              .card-content {
+                flex: 1;
+                &:first-child {
+                  background: var(--bg-light-grey);
+                  padding: 25px 25px 0;
+                  figure {
+                    @include flex(flex, column, flex-end, null);
+                  }
+                }
+                &:last-child {
+                  figure {
+                    margin-top: 20px;
+                  }
+                  padding: 20px;
+                  span {
+                    font-family: $league-spartan-light;
+                    font-size: 0.75rem;
+                    color: var(--bg-light-grey);
+                  }
+                  h3 {
+                    font-family: $league-spartan-regular;
+                    font-size: 1.125rem;
+                    color: var(--light-blue);
+                    line-height: 1.25rem;
+                    font-weight: normal;
+                    margin: 10px 0 0;
+                  }
+                }
+              }
+            }
+          }         
         }
-        &.course-upload {
+        &.common-slider {
           margin-top: 0px;
+          padding: 30px;
+          @include border-radius(15px);
+          @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
           overflow: hidden;
         }
-        .course-upload-form {
+        .course-upload-form {            
           counter-reset: section;
-          &:not(:last-child) {
-            margin-bottom: 40px;
+          background: var(--bg-left-panel);
+          @include border-radius(18px);
+          padding: 20px;
+          &:not(:last-child){
+            margin-bottom: 20px;
           }
           h5 {
-            font-size: 16px;
-            font-weight: normal;
-            color: var(--white);
+              font-size: 16px;
+              font-weight: normal;
+             color:  var(--white);
           }
           .upload-form-holder {
-            margin: 20px 0 0;
-            @include flex(flex, null, null, null);
-            gap: 25px;
-            .course-upload-left {
-              flex-grow: 1;
-              .input-holder {
-                margin-bottom: 20px;
+              margin: 20px 0 0;
+              @include flex(flex, null, null, null);
+              gap: 25px;
+              .course-upload-left {
+                  flex-grow: 1;
+                  .input-holder {
+                      margin-bottom: 20px;
+                  }
+                  label {
+                      font-size: 0.785rem;
+                      color:  var(--white); 
+                      margin-bottom: 10px;
+                  }
+                  input {
+                      &[type="text"] {
+                          font-family: $archivo-regular;
+                          font-size: 0.875rem;
+                          color: rgba($color: #fff, $alpha: 0.3);
+                          width: 100%;
+                          background: var(--bg-input);
+                          border: 1px solid var(--bg-border-input);
+                          padding: 11px 10px;
+                          @include border-radius(8px);
+                      }
+                  }
+                  textarea {
+                      font-family: $archivo-regular;
+                      font-size: 0.875rem;
+                      color: rgba($color: #fff, $alpha: 0.3);
+                      width: 100%;
+                      background: var(--bg-input);
+                      padding: 11px 10px;
+                      border: 1px solid var(--bg-border-input);
+                      @include border-radius(8px);
+                  }
+              }
+              .course-upload-right {
+                  max-width: 327px;
+                  width: 100%;
+                  @include flex(flex, column,flex-end, null);
+                  .drop-container {
+                      background: var(--bg-input);
+                      position: relative;
+                      display: flex;
+                      gap: 10px;
+                      flex-direction: column;
+                      justify-content: center;
+                      align-items: center;
+                      height: 100px;
+                      padding: 20px 20px 20px 90px;
+                      border-radius: 10px;
+                      border: 2px dashed var(--border-file);
+                      color: var(--white);
+                      cursor: pointer;
+                      transition: all .2s ease-in-out, border .2s ease-in-out;
+                      position: relative;
+                      span {
+                        &:nth-child(1) {
+                          font-family: $archivo-medium;
+                        }
+                        &:nth-child(2) {
+                          font-family: $archivo-light;
+                          color: var(--bg-blue);
+                        }
+                      }
+                      &::before {
+                        content: "";
+                        width: 56px;
+                        height: 56px;
+                        background: transparent url(../../../assets/images/icon-file-upload.svg) no-repeat center;
+                        position: absolute;
+                        left: 23px;
+                        top: 0;
+                        bottom: 0;
+                        margin: auto;
+                      }
+                      input {
+                          &[type="file"] {
+                              opacity: 0;
+                              position: absolute;
+                          }
+                      }
+                    }
+                    .selection-holder {
+                      @include flex(flex, null,space-between,null);
+                      gap: 20px;                        
+                      .input-holder {
+                          flex: 1;
+                          label {
+                            font-size: 0.875rem;
+                            color: var(--white);
+                            margin: 15px 0;
+                            display: block;                              
+                          }
+                          select {
+                            font-family: $archivo-regular;
+                            font-size: 0.875rem;
+                            color: rgba($color: #fff, $alpha: 0.3);
+                            width: 150px;
+                            height: 40px;
+                            border: 1px solid var(--bg-input-border);
+                            background: transparent url(../../../assets/images/icon-arrow.svg) no-repeat 87% center;
+                            @include border-radius(8px);
+                            text-indent: 10px;
+                            appearance: none;
+                            transition: opacity 0.25s;
+                            &:focus {
+                              outline: none;
+                              border-color: var(--bg-mit1);
+                            }
+                          }
+                      }                        
+                  }
+              }
+              .accordion-holder {
+                max-width: 490px;
+                width: 100%;
+              }
+          }
+          .chapter-container {
+            background: var(--bg-input);
+            @include border-radius(8px);
+            padding: 15px;
+            margin-top: 15px;
+            @include flex(flex,null,null,center);
+              &::before {
+                counter-increment: section;
+                content: "Chapter "  counter(section) " ";
+                color: rgba($color: #FFF, $alpha: 0.2);
+                white-space: nowrap;
+                margin-right: 30px;
               }
               label {
-                font-size: 0.785rem;
-                color: var(--white);
-                margin-bottom: 10px;
+                font-size: 0.875rem;
+                  color: var(--white);
+                  margin: 0 30px 0 0;
+              }
+              .input-holder {
+                max-width: 740px;
+                width: 100%;
+                @include flex(flex,null,null,center);
+              }
+              .chapter-right {
+                flex-grow: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
               }
               input {
-                &[type='text'] {
+                &[type="text"] {
                   font-family: $archivo-regular;
                   font-size: 0.875rem;
                   color: rgba($color: #fff, $alpha: 0.3);
@@ -540,147 +683,12 @@
                   border: 1px solid var(--bg-border-input);
                   padding: 11px 10px;
                   @include border-radius(8px);
-                }
-              }
-              textarea {
-                font-family: $archivo-regular;
-                font-size: 0.875rem;
-                color: rgba($color: #fff, $alpha: 0.3);
-                width: 100%;
-                background: var(--bg-input);
-                padding: 11px 10px;
-                border: 1px solid var(--bg-border-input);
-                @include border-radius(8px);
-              }
-            }
-            .course-upload-right {
-              max-width: 327px;
-              width: 100%;
-              @include flex(flex, column, flex-end, null);
-              .drop-container {
-                background: var(--bg-input);
-                position: relative;
-                display: flex;
-                gap: 10px;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                height: 100px;
-                padding: 20px 20px 20px 90px;
-                border-radius: 10px;
-                border: 2px dashed var(--border-file);
-                color: var(--white);
-                cursor: pointer;
-                transition:
-                  all 0.2s ease-in-out,
-                  border 0.2s ease-in-out;
-                position: relative;
-                span {
-                  &:nth-child(1) {
-                    font-family: $archivo-medium;
-                  }
-                  &:nth-child(2) {
-                    font-family: $archivo-light;
-                    color: var(--bg-blue);
-                  }
-                }
-                &::before {
-                  content: '';
-                  width: 56px;
-                  height: 56px;
-                  background: transparent url(../../../assets/images/icon-file-upload.svg) no-repeat
-                    center;
-                  position: absolute;
-                  left: 23px;
-                  top: 0;
-                  bottom: 0;
-                  margin: auto;
-                }
-                input {
-                  &[type='file'] {
-                    opacity: 0;
-                    position: absolute;
-                  }
-                }
-              }
-              .selection-holder {
-                @include flex(flex, null, space-between, null);
-                gap: 20px;
-                .input-holder {
-                  flex: 1;
-                  label {
-                    font-size: 0.875rem;
-                    color: var(--white);
-                    margin: 15px 0;
-                    display: block;
-                  }
-                  select {
-                    font-family: $archivo-regular;
-                    font-size: 0.875rem;
-                    color: rgba($color: #fff, $alpha: 0.3);
-                    width: 150px;
-                    height: 40px;
-                    border: 1px solid var(--bg-input-border);
-                    background: transparent url(../../../assets/images/icon-arrow.svg) no-repeat 87%
-                      center;
-                    @include border-radius(8px);
-                    text-indent: 10px;
-                    appearance: none;
-                    transition: opacity 0.25s;
-                    &:focus {
-                      outline: none;
-                      border-color: var(--bg-mit1);
-                    }
-                  }
-                }
-              }
-            }
-          }
-          .chapter-container {
-            background: var(--bg-input);
-            @include border-radius(8px);
-            padding: 15px;
-            margin-top: 15px;
-            @include flex(flex, null, null, center);
-            // &::before {
-            //   counter-increment: section;
-            //   content: 'Chapter ' counter(section) ' ';
-            //   color: rgba($color: #fff, $alpha: 0.2);
-            //   white-space: nowrap;
-            //   margin-right: 30px;
-            // }
-            label {
-              font-size: 0.875rem;
-              color: var(--white);
-              margin: 0 30px 0 0;
-            }
-            .input-holder {
-              max-width: 740px;
-              width: 100%;
-              @include flex(flex, null, null, center);
-            }
-            .chapter-right {
-              flex-grow: 1;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            }
-            input {
-              &[type='text'] {
-                font-family: $archivo-regular;
-                font-size: 0.875rem;
-                color: rgba($color: #fff, $alpha: 0.3);
-                width: 100%;
-                background: var(--bg-input);
-                border: 1px solid var(--bg-border-input);
-                padding: 11px 10px;
-                @include border-radius(8px);
               }
             }
             button {
               font-family: $archivo-medium;
               font-size: 0.875rem;
-              color: var(--white);
+              color:  var(--white);
               width: 143px;
               height: 40px;
               background: var(--btn-upload);
@@ -714,9 +722,9 @@
                   position: absolute;
                   left: 0;
                   top: 0;
-                }
-                input {
-                  &[type='text'] {
+                } 
+                input{
+                  &[type="text"] {
                     font-family: $archivo-regular;
                     font-size: 0.875rem;
                     color: rgba($color: #fff, $alpha: 0.3);
@@ -724,10 +732,10 @@
                     background: var(--bg-input);
                     border: 1px solid var(--bg-border-input);
                     padding: 11px 10px 11px 58px;
-                    @include border-radius(8px);
-                  }
+                    @include border-radius(8px);                   
+                  }                  
                 }
-              }
+              } 
               label {
                 font-size: 0.875rem;
                 color: var(--white);
@@ -740,8 +748,7 @@
                 width: 280px;
                 height: 40px;
                 border: 1px solid var(--bg-input-border);
-                background: var(--bg-input) url(../../../assets/images/icon-arrow.svg) no-repeat 93%
-                  center;
+                background: var(--bg-input) url(../../../assets/images/icon-arrow.svg) no-repeat 93% center;
                 @include border-radius(8px);
                 text-indent: 10px;
                 appearance: none;
@@ -750,12 +757,12 @@
                   outline: none;
                   border-color: var(--bg-mit1);
                 }
-              }
-            }
+              }            
+            }  
             button {
               font-family: $archivo-medium;
               font-size: 0.875rem;
-              color: var(--white);
+              color:  var(--white);
               width: 177px;
               height: 40px;
               @include border-radius(8px);
@@ -763,15 +770,22 @@
               cursor: pointer;
               margin-top: 25px;
               @include gradient();
+            }                         
+          }
+          .add-button {
+            button {
+              background: var(--btn-add-upload);
             }
+            margin: 20px 0;
           }
         }
         .add-button {
-          margin-top: 20px;
+          @include flex(flex, null, null, null);
+          gap: 10px;          
           button {
             font-family: $archivo-medium;
             font-size: 0.875rem;
-            color: var(--white);
+            color:  var(--white);
             width: 146px;
             height: 32px;
             background: var(--btn-add);
@@ -784,203 +798,202 @@
               display: block;
             }
           }
-        }
+        }       
       }
-    }
-    .content-right {
-      max-width: 320px;
-      width: 100%;
-      flex-shrink: 0;
-      @include flex(flex, column, null, null);
-      gap: 25px;
-      .content-box {
-        @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
-        @include border-radius(15px);
-        flex: 1;
-        > figure {
-          background: var(--bg-img);
-          width: 110px;
-          height: 110px;
-          @include border-radius(100%);
-          margin: 0 auto;
-          position: relative;
-          &::before {
-            content: '';
-            background: var(--bg-notification-green);
-            width: 35px;
-            height: 35px;
-            position: absolute;
-            bottom: 1px;
-            right: -4px;
+      .content-right {
+        max-width: 320px;
+        width: 100%;
+        flex-shrink: 0;
+        @include flex(flex, column, null, null);
+        gap: 25px;
+        .content-box {
+          @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
+          @include border-radius(15px);
+          flex: 1;
+          > figure {
+            background: var(--bg-img);
+            width: 110px;
+            height: 110px;
             @include border-radius(100%);
+            margin: 0 auto;
+            position: relative;
+            &::before {
+              content: '';
+              background: var(--bg-notification-green);
+              width: 35px;
+              height: 35px;
+              position: absolute;
+              bottom: 1px;
+              right: -4px;
+              @include border-radius(100%);
+            }
           }
-        }
-        > span {
-          font-family: $archivo-bold;
-          font-size: 1.5rem;
-          color: var(--light-blue);
-          text-align: center;
-          margin: 20px 0;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: nowrap;
-          display: block;
-        }
-        strong {
-          font-size: 0.813rem;
-          font-family: $archivo-semi-bold;
-          background: var(--bg-notification-red);
-          padding: 5px 10px;
-          margin: 10px auto 0;
-          @include border-radius(5px);
-          display: table;
-          margin-bottom: 10px;
-        }
-        .contact-area {
-          list-style: none;
-          @include common-margin;
-          li {
+          > span {
+            font-family: $archivo-bold;
+            font-size: 1.5rem;
+            color: var(--light-blue);
             text-align: center;
-            margin-bottom: 5px;
+            margin: 20px 0;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
             display: block;
-            a {
-              font-family: $archivo-regular;
-              font-size: 0.875rem;
-              color: var(--bg-blue);
-              position: relative;
-              @include transition(all 0.3s ease-in-out);
-              &:hover {
+          }
+          strong {
+            font-size: 0.813rem;
+            font-family: $archivo-semi-bold;
+            background: var(--bg-notification-red);
+            padding: 5px 10px;
+            margin: 10px auto 0;
+            @include border-radius(5px);
+            display: table;
+            margin-bottom: 10px;
+          }
+          .contact-area {
+            list-style: none;
+            @include common-margin;
+            li {
+              text-align: center;
+              margin-bottom: 5px;
+              display: block;
+              a {
+                font-family: $archivo-regular;
+                font-size: 0.875rem;
+                color: var(--bg-blue);
+                position: relative;
+                @include transition(all 0.3s ease-in-out);
+                &:hover {
+                  color: var(--white);
+                }
+                &::before {
+                  content: '';
+                  position: absolute;
+                  left: -24px;
+                  top: 2px;
+                }
+              }
+              a[href^='mailto'] {
+                &::before {
+                  width: 16px;
+                  height: 15px;
+                  background: url(../../../assets/images/icon-mail.svg) no-repeat center;
+                }
+              }
+              a[href^='tel'] {
+                &::before {
+                  width: 18px;
+                  height: 18px;
+                  background: url(../../../assets/images/icon-contact.svg) no-repeat center;
+                }
+              }
+            }
+          }
+          .status-wrapper {
+            @include flex(flex, row, space-between, null);
+            margin-top: 20px;
+            .status-holder {
+              @include flex(flex, column, null, center);
+              .status {
+                font-family: $poppins-bold;
+                font-size: 1.5rem;
+                width: 55px;
+                height: 55px;
+                color: var(--white);
+                margin-bottom: 5px;
+                @include flex(flex, column, center, center);
+                @include border-radius(15px);
+                &.green {
+                  background: var(--bg-green);
+                }
+                &.yellow {
+                  background: var(--bg-yellow);
+                }
+              }
+              span {
+                font-family: $poppins-regular;
+                font-size: 0.875rem;
                 color: var(--white);
               }
-              &::before {
-                content: '';
-                position: absolute;
-                left: -24px;
-                top: 2px;
-              }
-            }
-            a[href^='mailto'] {
-              &::before {
-                width: 16px;
-                height: 15px;
-                background: url(../../../assets/images/icon-mail.svg) no-repeat center;
-              }
-            }
-            a[href^='tel'] {
-              &::before {
-                width: 18px;
-                height: 18px;
-                background: url(../../../assets/images/icon-contact.svg) no-repeat center;
-              }
             }
           }
-        }
-        .status-wrapper {
-          @include flex(flex, row, space-between, null);
-          margin-top: 20px;
-          .status-holder {
-            @include flex(flex, column, null, center);
-            .status {
-              font-family: $poppins-bold;
-              font-size: 1.5rem;
-              width: 55px;
-              height: 55px;
-              color: var(--white);
-              margin-bottom: 5px;
-              @include flex(flex, column, center, center);
-              @include border-radius(15px);
-              &.green {
-                background: var(--bg-green);
-              }
-              &.yellow {
-                background: var(--bg-yellow);
-              }
-            }
-            span {
-              font-family: $poppins-regular;
-              font-size: 0.875rem;
-              color: var(--white);
-            }
+          h3 {
+            font-family: $poppins-medium;
+            font-size: 1.25rem;
+            font-weight: normal;
+            color: var(--light-blue);
+            margin: 22px 0 22px 22px;
           }
-        }
-        h3 {
-          font-family: $poppins-medium;
-          font-size: 1.25rem;
-          font-weight: normal;
-          color: var(--light-blue);
-          margin: 22px 0 22px 22px;
-        }
-        .reading-list-wrapper {
-          height: 100%;
-          position: relative;
-          .reading-list-content {
+          .reading-list-wrapper {
             height: 100%;
-            position: relative;
-            overflow-y: auto;
-          }
-          .scroll-content {
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-          }
-          .reading-list {
-            @include flex(flex, row, null, null);
-            padding: 10px 76px 10px 10px;
-            gap: 15px;
-            position: relative;
-            &:not(:last-child) {
-              border-bottom: 1px solid var(--color-blue);
-              margin-bottom: 10px;
+            position: relative;            
+            .reading-list-content {
+              height: 100%;              
+              position: relative;
+              overflow-y: auto;
             }
-            h4 {
-              font-family: $poppins-regular;
-              font-size: 0.938rem;
-              color: var(--light-blue);
-              font-weight: normal;
-              line-height: 18px;
-              margin-bottom: 5px;
-              @include text-ellipsis($lines: 2);
+            .scroll-content {
+              width: 100%;
+              position: absolute;
+              top: 0;
+              left: 0;
             }
-            figure {
-              width: 69px;
-              height: 52px;
-              @include border-radius(8px);
-              overflow: hidden;
-            }
-            span {
-              font-family: $league-spartan-light;
-              font-size: 1rem;
-              color: var(--bg-light-grey);
-              display: block;
+            .reading-list {            
+              @include flex(flex, row, null, null);
+              padding: 10px 76px 10px 10px;
+              gap: 15px;
+              position: relative;
               &:not(:last-child) {
+                border-bottom: 1px solid var(--color-blue);
+                margin-bottom: 10px;
+              }
+              h4 {
+                font-family: $poppins-regular;
+                font-size: 0.938rem;
+                color: var(--light-blue);
+                font-weight: normal;
+                line-height: 18px;
                 margin-bottom: 5px;
+                @include text-ellipsis($lines: 2);
+              }
+              figure {
+                width: 69px;
+                height: 52px;
+                @include border-radius(8px);
+                overflow: hidden;
+              }
+              span {
+                font-family: $league-spartan-light;
+                font-size: 1rem;
+                color: var(--bg-light-grey);
+                display: block;
+                &:not(:last-child) {
+                  margin-bottom: 5px;
+                }
+              }
+              button {
+                font-size: 0.75rem;
+                width: 67px;
+                height: 22px;
+                @include border-radius(8px);
+                background: var(--bg-publish);
+                border: 0;
+                color: #fff;
+                position: absolute;
+                right: 10px;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+                cursor: pointer;
               }
             }
-            button {
-              font-size: 0.75rem;
-              width: 67px;
-              height: 22px;
-              @include border-radius(8px);
-              background: var(--bg-publish);
-              border: 0;
-              color: #fff;
-              position: absolute;
-              right: 10px;
-              top: 0;
-              bottom: 0;
-              margin: auto;
-              cursor: pointer;
-            }
           }
-        }
-        &:last-child {
-          @include flex(flex, column, null, null);
+          &:last-child {
+            @include flex(flex, column, null, null);
+          }
         }
       }
     }
   }
-}
 
 footer {
   color: var(--bg-grey);

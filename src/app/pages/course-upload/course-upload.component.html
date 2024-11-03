@@ -53,12 +53,12 @@
     </div>
     <div class="common-container">
       <div class="content-area">
-        <div class="content-left">
-          <div class="courses-wrapper course-upload">
-            <div class="slider-wrapper" [class.active]="commonSliderClose">
-              <button class="btn-slide-close" (click)="commonSlideClose()">
-                <img src="../../../assets/images/icon-close.svg" alt="" />
-              </button>
+        <div class="content-left common-slider">
+          <div class="slider-wrapper" [class.active]="commonSliderClose">
+            <button class="btn-slide-close" (click)="commonSlideClose()">
+              <img src="../../../assets/images/icon-close.svg" alt="" />
+            </button>
+            <div class="course-form-upload-wrapper">
               <div class="course-upload-form">
                 <h5>Enter New Course Details</h5>
                 <div class="upload-form-holder">
@@ -105,25 +105,29 @@
                         <input type="text" placeholder="Type here" />
                       </div>
                       @for (item of chapter.fileDetails; track $index) {
-                        <div calss="input-  holder">
+                        <div calss="input-holder">
                           <label>Video Description</label>
                           <textarea rows="3" cols="45"></textarea>
-                          <button>
-                            <img src="../../../assets/images/icon-video.svg" alt="" />
-                            <span>Preview</span>
-                          </button>
-                          <button>
-                            <img src="../../../assets/images/icon-video.svg" alt="" />
-                            <span>Upload Video</span>
-                          </button>
-                          <button (click)="addNewVideoList(chapter)">
-                            <img src="../../../assets/images/icon-video.svg" alt="" />
-                            <span>Add</span>
-                          </button>
+                            <div class="add-button">
+                              <button>
+                                <img src="../../../assets/images/icon-video.svg" alt="" />
+                                <span>Preview</span>
+                              </button>
+                              <button>
+                                <img src="../../../assets/images/icon-video.svg" alt="" />
+                                <span>Upload Video</span>
+                              </button>
+                              <button (click)="addNewVideoList(chapter)">
+                                <img src="../../../assets/images/icon-video.svg" alt="" />
+                                <span>Add</span>
+                              </button>
+                            </div>                      
                         </div>
                       }
                     </div>
-                    <app-attachment-accordion></app-attachment-accordion>
+                    <div class="accordion-holder">
+                      <app-attachment-accordion></app-attachment-accordion>
+                    </div>
                   </div>
                 }
               </div>
