@@ -9,7 +9,7 @@ import { IMainCourseInfo } from './model/course-info';
 @Component({
   selector: 'app-course-upload',
   standalone: true,
-  imports: [FormsModule, CommonModule, CommonSliderComponent],
+  imports: [FormsModule, CommonModule, CommonSliderComponent,AttachmentAccordionComponent],
   templateUrl: './course-upload.component.html',
   styleUrl: './course-upload.component.scss',
 })
