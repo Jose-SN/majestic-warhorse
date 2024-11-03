@@ -54,8 +54,8 @@
     <div class="common-container">
       <div class="content-area">
         <div class="content-left common-slider">
-          <div class="slider-wrapper" [class.active]="commonSliderClose">
-            <button class="btn-slide-close" (click)="commonSlideClose()">
+          <div class="slider-wrapper active">
+            <button class="btn-slide-close">
               <img src="../../../assets/images/icon-close.svg" alt="" />
             </button>
             <div class="course-form-upload-wrapper">
@@ -65,18 +65,18 @@
                   <div class="course-upload-left">
                     <div class="input-holder">
                       <label>Title</label>
-                      <input type="text" placeholder="Type here" />
+                      <input type="text" placeholder="Type here" [(ngModel)]="mainCourseInfo.courseTitle" />
                     </div>
                     <div calss="input-holder">
                       <label>Description</label>
-                      <textarea rows="5" cols="45"></textarea>
+                      <textarea rows="5" cols="45" [(ngModel)]="mainCourseInfo.courseDescription"></textarea>
                     </div>
                   </div>
                   <div class="course-upload-right">
                     <label for="images" class="drop-container" id="dropcontainer">
                       <span class="drop-title">Upload Cover Image (19:6)</span>
                       <span>Drop your file here or browse</span>
-                      <input type="file" id="images" accept="image/*" />
+                      <input type="file" id="images" accept="image/*" [(ngModel)]="mainCourseInfo.coverImage"/>
                     </label>
                     <div class="selection-holder">
                       <div class="input-holder">
@@ -97,7 +97,7 @@
               </div>
               <div class="course-upload-form">
                 <h5>Course Content</h5>
-                @for (chapter of chapterList; track $index) {
+                @for (chapter of courseChapterList; track $index) {
                   <div class="upload-form-holder">
                     <div class="course-upload-left">
                       <div class="input-holder">
