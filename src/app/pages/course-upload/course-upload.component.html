@@ -104,7 +104,7 @@
                     <img src="../../../assets/images/icon-add.svg" />
                     <span>Add Attachment</span>
                   </button>
-                  <button>
+                  <button [disabled]="courseChapterList.length <=1" (click)="courseChapterList.splice($index,1)">
                     <img src="../../../assets/images/icon-add.svg" class="icon-delete" />
                     <span>Delete</span>
                   </button>
@@ -114,14 +114,14 @@
                 <div class="course-upload-left">
                   <div class="input-holder">
                     <label>Title</label>
-                    <input type="text" placeholder="Type here" />
+                    <input type="text" placeholder="Type here"  [(ngModel)]="chapter.chapterTitle"/>
                   </div>
-                  @for (item of chapter.fileDetails; track $index) {
+                  @for (videoDetails of chapter.fileDetails; track $index) {
                   <div calss="input-holder">
                     <label>Video Description</label>
-                    <textarea rows="3" cols="45"></textarea>
+                    <textarea rows="3" cols="45" [(ngModel)]="videoDetails.chapterDescription"></textarea>
                     <div class="add-button">
-                      <button>
+                      <button [disabled]="!videoDetails.url">
                         <img src="../../../assets/images/icon-video.svg" alt="" />
                         <span>Preview</span>
                       </button>
@@ -129,11 +129,11 @@
                         <img src="../../../assets/images/icon-video.svg" alt="" />
                         <span>Upload Video</span>
                       </button>
-                      <button (click)="addNewVideoList(chapter)">
+                      <button (click)="addNewVideoList(chapter)" [disabled]="!videoDetails.url">
                         <img src="../../../assets/images/icon-add.svg" alt="" />
                         <span>Add</span>
                       </button>
-                      <button>
+                      <button [disabled]="!videoDetails.url">
                         <img src="../../../assets/images/icon-add.svg" class="icon-delete" alt="" />
                         <span>Delete</span>
                       </button>

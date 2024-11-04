@@ -35,4 +35,7 @@ export class CourseUploadComponent {
   addNewChapter() {
     this.courseChapterList = this.courseChapterList.concat(this.courseUploadService.CHAPTER_INFO);
   }
+  saveButtonClick(){
+    this.courseUploadService.saveCourseDetails({mainCourseInfo:this.mainCourseInfo,chapterInfo:this.courseChapterList})
+  }
 }
