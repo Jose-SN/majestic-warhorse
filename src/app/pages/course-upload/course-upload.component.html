@@ -43,101 +43,110 @@
       </div>
       <div class="title-holder">
         <h1>Upload New Course</h1>
-        <div class="data-refreshed-holder">
+        <!-- <div class="data-refreshed-holder">
           <button>
             <img src="../../../assets/images/icon-upload.svg" alt="Upload" />
             Upload Course
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="common-container">
       <div class="content-area">
         <div class="content-left">
-          <div class="courses-wrapper course-upload">
-            <div class="slider-wrapper" [class.active]="commonSliderClose">
-              <button class="btn-slide-close" (click)="commonSlideClose()">
-                <img src="../../../assets/images/icon-close.svg" alt="" />
-              </button>
-              <div class="course-upload-form">
-                <h5>Enter New Course Details</h5>
-                <div class="upload-form-holder">
-                  <div class="course-upload-left">
-                    <div class="input-holder">
-                      <label>Title</label>
-                      <input type="text" placeholder="Type here" />
-                    </div>
-                    <div calss="input-holder">
-                      <label>Description</label>
-                      <textarea rows="5" cols="45"></textarea>
-                    </div>
+          <div class="course-form-upload-wrapper">
+            <div class="course-upload-form">
+              <h5>Enter New Course Details</h5>
+              <div class="upload-form-holder">
+                <div class="course-upload-left">
+                  <div class="input-holder">
+                    <label>Title</label>
+                    <input type="text" placeholder="Type here" />
                   </div>
-                  <div class="course-upload-right">
-                    <label for="images" class="drop-container" id="dropcontainer">
-                      <span class="drop-title">Upload Cover Image (19:6)</span>
-                      <span>Drop your file here or browse</span>
-                      <input type="file" id="images" accept="image/*" />
-                    </label>
-                    <div class="selection-holder">
-                      <div class="input-holder">
-                        <label>Department</label>
-                        <select>
-                          <option>IT</option>
-                        </select>
-                      </div>
-                      <div class="input-holder">
-                        <label>Year</label>
-                        <select>
-                          <option>2001</option>
-                        </select>
-                      </div>
+                  <div calss="input-holder">
+                    <label>Description</label>
+                    <textarea rows="5" cols="45"></textarea>
+                  </div>
+                </div>
+                <div class="course-upload-right">
+                  <label for="images" class="drop-container" id="dropcontainer">
+                    <span class="drop-title">Upload Cover Image (19:6)</span>
+                    <span>Drop your file here or browse</span>
+                    <input type="file" id="images" accept="image/*" />
+                  </label>
+                  <div class="selection-holder">
+                    <div class="input-holder">
+                      <label>Department</label>
+                      <select>
+                        <option>IT</option>
+                      </select>
+                    </div>
+                    <div class="input-holder">
+                      <label>Year</label>
+                      <select>
+                        <option>2001</option>
+                      </select>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="course-upload-form">
+            </div>
+            @for (chapter of courseChapterList; track $index) {
+            <div class="course-upload-form">
+              <div class="action-holder">
                 <h5>Course Content</h5>
-                @for (chapter of chapterList; track $index) {
-                  <div class="upload-form-holder">
-                    <div class="course-upload-left">
-                      <div class="input-holder">
-                        <label>Title</label>
-                        <input type="text" placeholder="Type here" />
-                      </div>
-                      @for (item of chapter.fileDetails; track $index) {
-                        <div calss="input-  holder">
-                          <label>Video Description</label>
-                          <textarea rows="3" cols="45"></textarea>
-                          <button>
-                            <img src="../../../assets/images/icon-video.svg" alt="" />
-                            <span>Preview</span>
-                          </button>
-                          <button>
-                            <img src="../../../assets/images/icon-video.svg" alt="" />
-                            <span>Upload Video</span>
-                          </button>
-                          <button (click)="addNewVideoList(chapter)">
-                            <img src="../../../assets/images/icon-video.svg" alt="" />
-                            <span>Add</span>
-                          </button>
-                        </div>
-                      }
-                    </div>
-                    <app-attachment-accordion></app-attachment-accordion>
-                  </div>
-                }
+                <div class="add-button">
+                  <button (click)="addNewChapter()">
+                    <img src="../../../assets/images/icon-add.svg" />
+                    <span>Add Chapter</span>
+                  </button>
+                  <button>
+                    <img src="../../../assets/images/icon-add.svg" />
+                    <span>Add Attachment</span>
+                  </button>
+                  <button>
+                    <img src="../../../assets/images/icon-add.svg" class="icon-delete" />
+                    <span>Delete</span>
+                  </button>
+                </div>
               </div>
-              <div class="add-button">
-                <button (click)="addNewChapter()">
-                  <img src="../../../assets/images/icon-add.svg" />
-                  <span>Add Chapter</span>
-                </button>
-                <button>
-                  <img src="../../../assets/images/icon-add.svg" />
-                  <span>Add Attachment</span>
-                </button>
+              <div class="upload-form-holder">
+                <div class="course-upload-left">
+                  <div class="input-holder">
+                    <label>Title</label>
+                    <input type="text" placeholder="Type here" />
+                  </div>
+                  @for (item of chapter.fileDetails; track $index) {
+                  <div calss="input-holder">
+                    <label>Video Description</label>
+                    <textarea rows="3" cols="45"></textarea>
+                    <div class="add-button">
+                      <button>
+                        <img src="../../../assets/images/icon-video.svg" alt="" />
+                        <span>Preview</span>
+                      </button>
+                      <button>
+                        <img src="../../../assets/images/icon-video.svg" alt="" />
+                        <span>Upload Video</span>
+                      </button>
+                      <button (click)="addNewVideoList(chapter)">
+                        <img src="../../../assets/images/icon-add.svg" alt="" />
+                        <span>Add</span>
+                      </button>
+                      <button>
+                        <img src="../../../assets/images/icon-add.svg" class="icon-delete" alt="" />
+                        <span>Delete</span>
+                      </button>
+                    </div>
+                  </div>
+                  }
+                </div>
+                <div class="accordion-holder">
+                  <app-attachment-accordion></app-attachment-accordion>
+                </div>
               </div>
             </div>
+            }
           </div>
         </div>
         <div class="content-right">
