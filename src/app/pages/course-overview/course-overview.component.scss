@@ -191,6 +191,8 @@
   @include flex(flex, column, null, null);
   flex-grow: 1;
   padding: 30px 25px;
+  position: relative;
+  overflow: hidden;
   .search-and-profile {
     @include flex(flex, null, flex-end, center);
   }
@@ -282,6 +284,7 @@
       border: 2px solid var(--bg-input-border);
       @include flex(flex, null, center, center);
       flex-shrink: 0;
+      position: relative;
       figure {
         width: 26px;
         height: 26px;

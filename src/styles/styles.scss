@@ -8,6 +8,7 @@
   }
 }
 app-common-slider {
+  background: var(--bg-main);
   width: 100%;
   height: 100%;
   padding: 30px;
@@ -18,7 +19,8 @@ app-common-slider {
   top: 0;
   right: 0; 
   transform: translateX(100%);
-  transition: all 0.5s ease-out;     
+  transition: all 0.5s ease-out;  
+  z-index: 100;   
   &.active {
     transform: translateX(0);
 } 
