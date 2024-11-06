@@ -24,4 +24,7 @@ export class CourseOverviewComponent {
   openCourseUploadSlider() {
     this.showSliderView = !this.showSliderView;
   }
+  sliderActiveRemove(): void {
+    this.showSliderView = false;
+  }
 }

@@ -1,4 +1,4 @@
-import {  Component} from '@angular/core';
+import {  Component, Output, EventEmitter} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CourseUploadComponent } from 'src/app/pages/course-upload/course-upload.component';
@@ -10,4 +10,9 @@ import { CourseUploadComponent } from 'src/app/pages/course-upload/course-upload
   styleUrl: './common-slider.component.scss'
 })
 export class CommonSliderComponent {
+  @Output() removeClass = new EventEmitter<void>();
+
+  sliderRemoveAction(): void {
+    this.removeClass.emit();
+  }
 }
