@@ -41,7 +41,7 @@
                     <label for="images" class="drop-container" id="dropcontainer">
                       <span class="drop-title">Upload Cover Image (19:6)</span>
                       <span>Drop your file here or browse</span>
-                      <input type="file" id="images" accept="image/*" />
+                      <input type="file" id="images" accept="image/*" (change)="onFileSelected($event,'COVER_IMAGE')" />
                     </label>
                     <div class="selection-holder">
                       <div class="input-holder">
@@ -60,7 +60,7 @@
                   </div>
                 </div>
               </div>
-              @for (chapter of courseChapterList; track $index) {
+              @for (chapter of courseChapterList; track $index; let parentIndex = $index;) {
               <div class="course-upload-form">
                 <div class="action-holder">
                   <h5>Course Content</h5>
@@ -69,11 +69,13 @@
                       <img src="../../../assets/images/icon-add.svg" />
                       <span>Add Chapter</span>
                     </button>
-                    <button>
+                    <input type="file" #attachmentInput (change)="onFileSelected($event,'ATTACHMENT', $index)"
+                      style="display: none;" />
+                    <button (click)="openFileUploadWindow(attachmentInput)">
                       <img src="../../../assets/images/icon-add.svg" />
                       <span>Add Attachment</span>
                     </button>
-                    <button>
+                    <button (click)="courseChapterList.splice($index,1)" [disabled]="courseChapterList.length <= 1">
                       <img src="../../../assets/images/icon-add.svg" class="icon-delete" />
                       <span>Delete</span>
                     </button>
@@ -85,7 +87,11 @@
                       <label>Title</label>
                       <input type="text" placeholder="Type here" />
                     </div>
-                    @for (item of chapter.fileDetails; track $index) {
+                    @for (item of chapter.fileDetails; track $index; let videIndex = $index) {
+                    <div class="input-holder">
+                      <label>Video</label>
+                      <input type="text" placeholder="chapter1.mp4" readonly />
+                    </div>
                     <div calss="input-holder">
                       <label>Video Description</label>
                       <textarea rows="3" cols="45"></textarea>
@@ -94,7 +100,9 @@
                           <img src="../../../assets/images/icon-video.svg" alt="" />
                           <span>Preview</span>
                         </button>
-                        <button>
+                        <input type="file" #videoInput (change)="onFileSelected($event,'VIDEO_FILE',parentIndex, videIndex)"
+                        style="display: none;" />
+                        <button (click)="openFileUploadWindow(videoInput)">
                           <img src="../../../assets/images/icon-video.svg" alt="" />
                           <span>Upload Video</span>
                         </button>
@@ -102,7 +110,8 @@
                           <img src="../../../assets/images/icon-add.svg" alt="" />
                           <span>Add</span>
                         </button>
-                        <button>
+                        <button (click)="chapter.fileDetails.splice($index,1)"
+                          [disabled]="chapter.fileDetails.length <= 1">
                           <img src="../../../assets/images/icon-add.svg" class="icon-delete" alt="" />
                           <span>Delete</span>
                         </button>
@@ -116,6 +125,12 @@
                 </div>
               </div>
               }
+              <div class="add-button">
+                <button (click)="addNewChapter()">
+                  <img src="../../../assets/images/icon-add.svg" />
+                  <span>Save Course</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

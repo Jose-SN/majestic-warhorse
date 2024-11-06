@@ -4,6 +4,8 @@ import { IFileObjectInfo } from './model/file-object-info';
 import { IMainCourseInfo } from './model/course-info';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
+import { Subject, takeUntil } from 'rxjs';
+import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -31,10 +33,107 @@ export class CourseUploadService {
     courseTitle: 'Please Enter Course Title',
     courseDescription: 'Please Enter Course Description',
   };
-  constructor(private commonService: CommonService) {}
+  public MAX_FILE_SIZE: number = 5 * 1024 * 1024; // 5 MB
+  public ALLOWED_FILE_TYPES: string[] = ['image/png', 'image/jpeg', 'image/jpg'];
+  private ALLOWED_DOCUMENT_TYPES: string[] = [
+    'application/pdf', // PDF
+    'application/msword', // DOC
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // DOCX
+    'application/vnd.ms-excel', // XLS
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // XLSX
+    'application/vnd.ms-powerpoint', // PPT
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation', // PPTX
+    'text/plain', // TXT
+  ];
+  private ALLOWED_VIDEO_TYPES: string[] = [
+    'video/mp4', // MP4
+    'video/webm', // WebM
+    'video/ogg', // Ogg
+    'video/avi', // AVI
+    'video/mov', // MOV
+    'video/wmv', // WMV
+    'video/mkv', // MKV
+    'video/x-matroska', // Alternative MKV MIME type
+  ];
+  constructor(
+    private commonService: CommonService,
+    private commonApiService: CommonApiService
+  ) {}
   async saveCourseDetails(courseDetails: ISaveCourse) {
     const isValid = await this.courseSaveValidation(courseDetails);
     console.log('------------------>', isValid);
+  }
+  public onFileUpload(
+    _destroy$: Subject<void>,
+    selectedFile: File,
+    uploadType: string
+  ): Promise<string> {
+    return new Promise(async (resolve) => {
+      if (await this.onFileUploadValidation(selectedFile, uploadType)) {
+        const formData: FormData = new FormData();
+        formData.append('file', selectedFile);
+        this.commonApiService
+          .uploadImage(formData)
+          .pipe(takeUntil(_destroy$))
+          .subscribe({
+            next: (imageUrl) => {
+              resolve(imageUrl?.['url']);
+            },
+            error: () => {
+              this.commonService.openToaster({
+                message: 'Error while uploading file, please re-upload',
+                messageType: TOASTER_MESSAGE_TYPE.ERROR,
+              });
+              resolve('');
+            },
+          });
+      }
+    });
+  }
+  onFileUploadValidation(selectedFile: File, uploadType: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      switch (uploadType) {
+        case 'COVER_IMAGE':
+          if (!this.ALLOWED_FILE_TYPES.includes(selectedFile.type)) {
+            this.commonService.openToaster({
+              message: 'Only PNG and JPEG files are allowed!',
+              messageType: TOASTER_MESSAGE_TYPE.ERROR,
+            });
+            resolve(false);
+            return;
+          }
+          if (selectedFile.size > this.MAX_FILE_SIZE) {
+            this.commonService.openToaster({
+              message: 'File size should not exceed 5MB!',
+              messageType: TOASTER_MESSAGE_TYPE.ERROR,
+            });
+            resolve(false);
+            return;
+          }
+          break;
+        case 'ATTACHMENT':
+          if (!this.ALLOWED_DOCUMENT_TYPES.includes(selectedFile.type)) {
+            this.commonService.openToaster({
+              message: 'Selected file  is not a supported document type',
+              messageType: TOASTER_MESSAGE_TYPE.ERROR,
+            });
+            resolve(false);
+            return;
+          }
+          break;
+        case 'VIDEO_FILE':
+          if (!this.ALLOWED_VIDEO_TYPES.includes(selectedFile.type)) {
+            this.commonService.openToaster({
+              message: 'Selected file is not a supported video type.',
+              messageType: TOASTER_MESSAGE_TYPE.ERROR,
+            });
+            resolve(false);
+            return;
+          }
+          break;
+      }
+      resolve(true);
+    });
   }
   courseSaveValidation(courseDetails: ISaveCourse) {
     return new Promise((resolve) => {
