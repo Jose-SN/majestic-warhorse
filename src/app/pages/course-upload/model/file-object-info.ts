@@ -1,7 +1,7 @@
 export interface IFileObjectInfo {
-  url: string;
+  fileURL: string;
   name: string;
   enableDelete: boolean;
   enablePreview: boolean;
-  chapterDescription: string;
+  description: string;
 }

@@ -20,7 +20,7 @@ export class CourseUploadComponent {
   public mainCourseInfo: IMainCourseInfo;
   public courseChapterList: IChapterInfo[] = [];
   constructor(private courseUploadService: CourseUploadService) {
-    this.mainCourseInfo = this.courseUploadService.MAIN_COURSE_INFO;
+    this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
     this.addNewChapter();
   }
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
@@ -41,7 +41,7 @@ export class CourseUploadComponent {
       ...this.courseUploadService.CHAPTER_INFO,
     });
   }
-  openFileUploadWindow(nativeElement:HTMLElement): void {
+  openFileUploadWindow(nativeElement: HTMLElement): void {
     nativeElement?.click();
   }
   async onFileSelected(
@@ -60,7 +60,7 @@ export class CourseUploadComponent {
     );
     switch (uploadType) {
       case 'COVER_IMAGE':
-        this.mainCourseInfo.coverImage = fileUrl;
+        this.mainCourseInfo.courseCoverImage = fileUrl;
         break;
       case 'ATTACHMENT':
         if ((mainIndex || mainIndex == 0) && this.courseChapterList[mainIndex]) {
@@ -74,17 +74,25 @@ export class CourseUploadComponent {
             (videoDetailsIndex || videoDetailsIndex == 0) &&
             this.courseChapterList[mainIndex].fileDetails[videoDetailsIndex]
           ) {
-            this.courseChapterList[mainIndex].fileDetails[videoDetailsIndex].url = fileUrl;
+            this.courseChapterList[mainIndex].fileDetails[videoDetailsIndex].fileURL = fileUrl;
           }
         }
         break;
     }
   }
-  saveButtonClick() {
-    this.courseUploadService.saveCourseDetails({
-      mainCourseInfo: this.mainCourseInfo,
-      chapterInfo: this.courseChapterList,
-    });
+  async saveButtonClick() {
+    const isCourseUploaded = await this.courseUploadService.saveCourseDetails(
+      {
+        mainCourseInfo: this.mainCourseInfo,
+        chapterInfo: this.courseChapterList,
+      },
+      this.destroy$
+    );
+    if(isCourseUploaded){
+      this.courseChapterList = [];
+      this.addNewChapter();
+      this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
+    }
   }
   ngOnDestroy(): void {
     this.destroy$.next();

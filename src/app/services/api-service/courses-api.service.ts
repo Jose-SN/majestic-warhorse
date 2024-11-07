@@ -20,4 +20,9 @@ export class CoursesApiService {
       .get<IcourseListResponse>(`${this._apiUrl}course/get`)
       .pipe(catchError(this.commonService.handleError));
   }
+  saveCourseDetails(courseUploadPayload:any){
+    return this.http
+    .post<any>(`${this._apiUrl}course/save`, courseUploadPayload)
+    .pipe(catchError(this.commonService.handleError));
+  }
 }

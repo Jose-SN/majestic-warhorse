@@ -11,12 +11,6 @@
       </div>
       <div class="title-holder">
         <h1>Upload New Course</h1>
-        <!-- <div class="data-refreshed-holder">
-          <button>
-            <img src="../../../assets/images/icon-upload.svg" alt="Upload" />
-            Upload Course
-          </button>
-        </div> -->
       </div>
     </div>
     <div class="common-container">
@@ -30,11 +24,11 @@
                   <div class="course-upload-left">
                     <div class="input-holder">
                       <label>Title</label>
-                      <input type="text" placeholder="Type here" />
+                      <input type="text" placeholder="Type here" [(ngModel)]="mainCourseInfo.courseTitle"/>
                     </div>
                     <div calss="input-holder">
                       <label>Description</label>
-                      <textarea rows="5" cols="45"></textarea>
+                      <textarea rows="5" cols="45" [(ngModel)]="mainCourseInfo.courseDescription"></textarea>
                     </div>
                   </div>
                   <div class="course-upload-right">
@@ -85,16 +79,16 @@
                   <div class="course-upload-left">
                     <div class="input-holder">
                       <label>Title</label>
-                      <input type="text" placeholder="Type here" />
+                      <input type="text" placeholder="Type here" [(ngModel)]="chapter.chapterTitle"/>
                     </div>
                     @for (item of chapter.fileDetails; track $index; let videIndex = $index) {
                     <div class="input-holder">
                       <label>Video</label>
-                      <input type="text" placeholder="chapter1.mp4" readonly />
+                      <input type="text" placeholder="chapter1.mp4" readonly [(ngModel)]="item.fileURL"/>
                     </div>
                     <div calss="input-holder">
                       <label>Video Description</label>
-                      <textarea rows="3" cols="45"></textarea>
+                      <textarea rows="3" cols="45" [(ngModel)]="item.description"></textarea>
                       <div class="add-button">
                         <button>
                           <img src="../../../assets/images/icon-video.svg" alt="" />
@@ -126,7 +120,7 @@
               </div>
               }
               <div class="add-button">
-                <button (click)="addNewChapter()">
+                <button (click)="saveButtonClick()">
                   <img src="../../../assets/images/icon-add.svg" />
                   <span>Save Course</span>
                 </button>

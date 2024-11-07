@@ -6,30 +6,31 @@ import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
+import { CoursesApiService } from 'src/app/services/api-service/courses-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CourseUploadService {
   public FILE_OBJECT_INFO: IFileObjectInfo = {
-    url: '',
+    fileURL: '',
     name: '',
     enableDelete: false,
     enablePreview: false,
-    chapterDescription: '',
+    description: '',
   };
   public MAIN_COURSE_INFO: IMainCourseInfo = {
-    coverImage: '',
+    courseCoverImage: '',
     courseTitle: '',
     courseDescription: '',
   };
   public CHAPTER_INFO: IChapterInfo = {
     attachments: [],
     chapterTitle: '',
-    fileDetails: [this.FILE_OBJECT_INFO],
+    fileDetails: [{...this.FILE_OBJECT_INFO}],
   };
   private MESSAGES: { [key: string]: string } = {
-    coverImage: 'Please Upload Course Cover Image',
+    courseCoverImage: 'Please Upload Course Cover Image',
     courseTitle: 'Please Enter Course Title',
     courseDescription: 'Please Enter Course Description',
   };
@@ -57,11 +58,46 @@ export class CourseUploadService {
   ];
   constructor(
     private commonService: CommonService,
+    private courseApi: CoursesApiService,
     private commonApiService: CommonApiService
   ) {}
-  async saveCourseDetails(courseDetails: ISaveCourse) {
+  async saveCourseDetails(courseDetails: ISaveCourse, _destroy$: Subject<void>): Promise<boolean | any> {
     const isValid = await this.courseSaveValidation(courseDetails);
-    console.log('------------------>', isValid);
+    if (isValid) {
+    return  new Promise((resolve) => {
+        this.courseApi
+          .saveCourseDetails({
+            ...courseDetails.mainCourseInfo,
+            ...{
+              chapters: courseDetails.chapterInfo,
+              createdBy: this.commonService.loginedUserInfo.id,
+            },
+          })
+          .pipe(takeUntil(_destroy$))
+          .subscribe({
+            next: (courseSave) => {
+              if (courseSave.success) {
+                this.commonService.openToaster({
+                  message: 'Course Uploaded succesfully',
+                  messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+                });
+                resolve(true);
+              } else {
+                this.commonService.openToaster({
+                  message: 'Error while uploading the course',
+                  messageType: TOASTER_MESSAGE_TYPE.ERROR,
+                });
+              }
+            },
+            error: (error) => {
+              this.commonService.openToaster({
+                message: 'Error while uploading the course',
+                messageType: TOASTER_MESSAGE_TYPE.ERROR,
+              });
+            },
+          });
+      });
+    }
   }
   public onFileUpload(
     _destroy$: Subject<void>,
@@ -157,7 +193,7 @@ export class CourseUploadService {
           return;
         }
         for (let video of chapter.fileDetails) {
-          if (!video.url) {
+          if (!video.fileURL) {
             this.commonService.openToaster({
               message: 'Please Upload Course Video',
               messageType: TOASTER_MESSAGE_TYPE.ERROR,

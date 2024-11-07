@@ -1,5 +1,5 @@
 export interface IMainCourseInfo {
-  coverImage: string;
+  courseCoverImage: string;
   courseTitle: string;
   courseDescription: string;
 }

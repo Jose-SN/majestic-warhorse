@@ -15,7 +15,7 @@ export class CourseUploadService {
     chapterDescription: '',
   };
   public MAIN_COURSE_INFO: IMainCourseInfo = {
-    coverImage: '',
+    courseCoverImage: '',
     courseTitle: '',
     courseDescription: '',
   };
