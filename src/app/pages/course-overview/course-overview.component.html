@@ -59,7 +59,7 @@
     <div class="common-container">
       <div class="content-area">
         <div class="content-left" [ngClass]="{'common-slider':showSliderView}">
-          <app-common-slider  [ngClass]="{'active':showSliderView}"></app-common-slider>
+          <app-common-slider  [ngClass]="{'active':showSliderView}" (removeClass)="sliderActiveRemove()">></app-common-slider>
           <div class="scroll-container overview">
             <div class="content-top">
               <div class="course-detail">
