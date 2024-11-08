@@ -10,7 +10,6 @@ export interface UserModel {
   modificationDate: Date;
   jwt: string;
   phone?: string;
-  firstname?: string;
 }
 export interface UserLoginResponse {
   success?: boolean;

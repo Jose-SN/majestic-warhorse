@@ -5,14 +5,14 @@
         <img src="../../../assets/images/logo-mejestic-hourse-landing.svg" alt="Mejastic Hourse" />
       </figure>
       <h1>Welcome back!</h1>
-      <p>Etiam quis quam urna. Aliquam odio erat, accumsan eu nulla in</p>
+      <!-- <p>Etiam quis quam urna. Aliquam odio erat, accumsan eu nulla in</p> -->
       <div class="form-wrapper">
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
           <div class="input-holder">
-            <label for="username">Email</label>
+            <label for="email">Email</label>
             <input
               type="text"
-              name="username"
+              name="email"
               placeholder="example@email.com"
               formControlName="email"
               required

@@ -13,35 +13,47 @@
       <div class="form-wrapper">
         <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
           <div class="input-holder">
-            <label for="username">Your Name</label>
+            <label for="firstname">Your First Name</label>
             <input
               type="text"
-              name="username"
-              placeholder="example@email.com"
-              formControlName="userName"
+              name="firstname"
+              placeholder="Joe"
+              formControlName="firstName"
             />
-            @if (isFieldInvalid(createAccountForm, 'userName')) {
+            @if (isFieldInvalid(createAccountForm, 'firstName')) {
               <span> Name is required.</span>
             }
           </div>
           <div class="input-holder">
-            <label for="username">Upload Image</label>
+            <label for="lastname">Your Last Name</label>
+            <input
+              type="text"
+              name="lastname"
+              placeholder="Smith"
+              formControlName="lastName"
+            />
+            @if (isFieldInvalid(createAccountForm, 'lastName')) {
+              <span> Name is required.</span>
+            }
+          </div>
+          <div class="input-holder">
+            <label for="file">Upload Image</label>
             <input
               type="file"
-              name="username"
+              name="file"
               placeholder="Upload Image"
-              formControlName="image"
+              formControlName="profileImage"
               (change)="onFileSelected($event)"
             />
-            @if (isFieldInvalid(createAccountForm, 'image')) {
+            @if (isFieldInvalid(createAccountForm, 'profileImage')) {
               <span>Image is required.</span>
             }
           </div>
           <div class="input-holder">
-            <label for="username">Email</label>
+            <label for="email">Email</label>
             <input
               type="text"
-              name="username"
+              name="email"
               placeholder="example@email.com"
               formControlName="email"
             />
@@ -58,13 +70,13 @@
           </div>
           <div class="input-holder">
             <label>Mobile</label>
-            <input type="text" placeholder="+44 7975 556677" formControlName="mobileNumber" />
-            @if (isFieldInvalid(createAccountForm, 'mobileNumber')) {
+            <input type="text" placeholder="+44 9999 999999" formControlName="phone" />
+            @if (isFieldInvalid(createAccountForm, 'phone')) {
               <div class="error-message">
-                @if (createAccountForm.get('mobileNumber')?.errors?.['required']) {
+                @if (createAccountForm.get('phone')?.errors?.['required']) {
                   <span>Mobile number is required.</span>
                 }
-                @if (createAccountForm.get('mobileNumber')?.errors?.['pattern']) {
+                @if (createAccountForm.get('phone')?.errors?.['pattern']) {
                   <span>Please enter a valid mobile number.</span>
                 }
               </div>

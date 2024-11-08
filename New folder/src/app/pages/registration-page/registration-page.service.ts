@@ -48,14 +48,14 @@ export class RegistrationPageService {
     _destroy$: Subject<void>,
     registrationInfo: IRegistrationModel
   ): Promise<boolean> {
-    registrationInfo.image = this.imageUrl;
-    registrationInfo.phone = registrationInfo.mobileNumber;
+    registrationInfo.profileImage = this.imageUrl;
+    registrationInfo.phone = registrationInfo.phone;
     delete registrationInfo.confirmPassword;
     return new Promise((resolve) => {
       this.registrationApiService
         .saveUserInfo({
           ...registrationInfo,
-          ...{ firstname: registrationInfo.userName, role: 'guest' },
+          ...{ role: 'student' },
         })
         .pipe(takeUntil(_destroy$))
         .subscribe({

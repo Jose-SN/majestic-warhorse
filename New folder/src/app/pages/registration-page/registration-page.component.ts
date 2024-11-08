@@ -36,10 +36,11 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   ) {
     this.createAccountForm = this.formBuilder.group(
       {
-        userName: ['', [Validators.required]],
-        image: [null, Validators.required],
+        firstName: ['', [Validators.required]],
+        lastName: ['', []],
+        profileImage: [null, Validators.required],
         email: ['', [Validators.required, Validators.email]],
-        mobileNumber: ['', [Validators.required, Validators.pattern('^\\+?\\d{10,15}$')]],
+        phone: ['', [Validators.required, Validators.pattern('^\\+?\\d{10,15}$')]],
         password: [
           '',
           [
@@ -65,12 +66,13 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
         (user: UserModel) => user._id === loginedId
       );
       const userFormInfo = {
-        image: '',
+        firstName: loginedUser?.firstName,
+        lastName: loginedUser?.lastName,
         password: '',
         confirmPassword: '',
+        profileImage: '',
         email: loginedUser?.email,
-        userName: loginedUser?.firstname,
-        mobileNumber: loginedUser?.phone,
+        phone: loginedUser?.phone,
       };
       this.createAccountForm.setValue(userFormInfo);
       this.createAccountForm?.get('email')?.disable();
@@ -83,7 +85,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     const files = target.files as FileList;
     const isError = this.registrationService.onFileSelected(this.destroy$, files[0]);
     if (isError) {
-      this.createAccountForm.get('image')?.setValue('');
+      this.createAccountForm.get('profileImage')?.setValue('');
     }
   }
   onSubmit() {
