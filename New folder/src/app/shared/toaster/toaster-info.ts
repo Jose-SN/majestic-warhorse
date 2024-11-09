@@ -1,6 +1,0 @@
-export const TOASTER_MESSAGE_TYPE = {
-  INFO: 'INFO',
-  ERROR: 'ERROR',
-  SUCCESS: 'SUCCESS',
-  WARNING: 'WARNING',
-};

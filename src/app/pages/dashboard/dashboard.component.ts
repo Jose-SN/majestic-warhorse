@@ -12,6 +12,8 @@ import { CommonService } from 'src/app/shared/services/common.service';
 import { UnderConstructionComponent } from 'src/app/components/under-construction/under-construction.component';
 import { RegistrationPageComponent } from '../registration-page/registration-page.component';
 import { CourseUploadComponent } from '../course-upload/course-upload.component';
+import { ICourseList } from '../courses/modal/course-list';
+import { CourseDetailsComponent } from '../course-details/course-details.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -25,12 +27,15 @@ import { CourseUploadComponent } from '../course-upload/course-upload.component'
     DashboardSidepanelComponent,
     RegistrationPageComponent,
     CourseUploadComponent,
+    CourseDetailsComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   public activePanel: string = '';
+  public showCourseDetailedView: boolean = false;
+  public selectedCourseInfo: ICourseList = {} as ICourseList;
   private destroy$ = new Subject<void>();
   public SIDE_PANEL_LIST: ISidepanel = this.dashboardService.SIDE_PANEL_LIST;
   constructor(
@@ -40,7 +45,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
   }
   get isAdminLogin() {
-    console.log(this.commonService?.loginedUserInfo?.role, this.commonService.adminRoleType);
     return this.commonService?.loginedUserInfo?.role === this.commonService.adminRoleType;
   }
   ngOnInit(): void {
@@ -50,10 +54,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((activePanel: string) => {
         this.activePanel = activePanel;
+        this.selectedCourseInfo = {} as ICourseList;
+        this.showCourseDetailedView = false;
       });
   }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+  handleCourseDetailsView(showCourseView: { [key: string]: boolean | ICourseList }) {
+    this.selectedCourseInfo = showCourseView['selectedCourse'] as ICourseList;
+    this.showCourseDetailedView = showCourseView['showCourseDetail'] as boolean;
   }
 }

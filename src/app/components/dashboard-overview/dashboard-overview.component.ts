@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from 'New folder/src/app/store/appstate';
+import { CourseUploadService } from 'src/app/pages/course-upload/course-upload.service';
+import { ICourseList } from 'src/app/pages/courses/modal/course-list';
 
 @Component({
   selector: 'app-dashboard-overview',
@@ -13,10 +13,13 @@ import { AppState } from 'New folder/src/app/store/appstate';
 })
 export class DashboardOverviewComponent {
   public mobMenu: boolean = false;
+  public courseLists: ICourseList[] = [];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
-  user$: any;
-
-  constructor(private store: Store<{ user: AppState }>,) {}
+  constructor(
+    private courseUploadService: CourseUploadService
+  ) {
+    this.fetchCourseList();
+  }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
     this.mobMenu = false;
@@ -24,7 +27,7 @@ export class DashboardOverviewComponent {
   mobileMenu() {
     this.mobMenu = !this.mobMenu;
   }
-  ngOnInit() {
-    this.user$ = this.store.select(state => state.user);
+  async fetchCourseList() {
+    this.courseLists = await this.courseUploadService.fetchUploadedCourses();
   }
 }

@@ -57,13 +57,13 @@
             </div>
             <div class="scroll-container courses">
               <div class="course-card-holder">
-                <div class="course-card" *ngFor="let course of courseList$ | async">
+                <div class="course-card" *ngFor="let course of courseList$ | async" (click)="openCourseDetailsPage(course)">
                   <div class="card-content">
-                    <figure><img [src]="course.courseThumbnail" alt="" /></figure>
+                    <figure><img [src]="course.courseCoverImage" alt="" /></figure>
                   </div>
                   <div class="card-content">
-                    <span>A Course by {{ course.author }}</span>
-                    <h3>{{ course.courseType }}</h3>
+                    <span>A Course by {{ course["createdBy"].email }}</span>
+                    <h3>{{ course.courseTitle }}</h3>
                     <!-- <figure><img src="../../../assets/images/img-loader.png" alt="" /></figure> -->
                   </div>
                 </div>
