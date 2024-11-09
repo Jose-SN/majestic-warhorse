@@ -1,0 +1,131 @@
+body,
+html {
+  height: 100vh;
+  @include common-margin;
+}
+* {
+  @include user-select(none);
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: $archivo-regular;
+  height: 100vh;
+  background: var(--bg-main);
+  @include common-margin;
+}
+a,
+a:link,
+a:visited,
+path {
+  outline: none;
+  text-decoration: none;
+  @include transition(all 0.3s ease-in-out);
+}
+img {
+  border: none;
+  margin: 0px;
+  max-width: 100%;
+  display: block;
+  height: auto;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+  @include common-margin;
+}
+form,
+input,
+select,
+textarea,
+p {
+  @include common-margin;
+}
+textarea {
+  resize: none;
+}
+input:focus,
+textarea:focus {
+  outline: none;
+}
+input::-moz-focus-inner {
+  border: 0;
+  @include common-margin;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+time,
+form {
+  display: block;
+  @include common-margin;
+}
+a,
+button,
+div {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  outline: none;
+}
+iframe {
+  display: block;
+}
+label,
+p {
+  @include common-margin;
+  display: block;
+}
+* {
+  box-sizing: border-box;
+}
+input {
+  @include placeholder {
+    opacity: 1;
+    transition: opacity 0.25s;
+  }
+  &:focus {
+    @include placeholder {
+      opacity: 0;
+    }
+  }
+}
+
+.input-holder {
+  span {
+    font-size: 0.75rem;
+    color: red;
+    position: absolute;
+    right: 1px;
+    top: 0;
+  }
+}
+.suggestion-holder {
+  position: absolute;
+  bottom: auto;
+  right: 0;
+  @include border-radius(5px);
+  border: 1px solid var(--bg-input-border);
+  background: var(--bg-dark-blue);
+  padding: 10px;
+  z-index: 10;
+  span {
+    color: var(--bg-grey);
+    position: static;
+    display: block;
+    &:not(:last-child) {
+      margin-bottom: 5px;
+    }
+  }
+}

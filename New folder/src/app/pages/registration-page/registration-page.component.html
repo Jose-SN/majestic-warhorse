@@ -1,0 +1,140 @@
+<section class="login-main-container">
+  <div id="particles-js"></div>
+  <section class="login-container">
+    <div class="login-wrapper">
+      <figure>
+        <img
+          src="../../../../assets/images/logo-mejestic-hourse-landing.svg"
+          alt="Mejastic Hourse"
+        />
+      </figure>
+      <h1>Create An Account</h1>
+      <p>LET'S GET YOU STARTED</p>
+      <div class="form-wrapper">
+        <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
+          <div class="input-holder">
+            <label for="firstname">Your First Name</label>
+            <input
+              type="text"
+              name="firstname"
+              placeholder="Joe"
+              formControlName="firstName"
+            />
+            @if (isFieldInvalid(createAccountForm, 'firstName')) {
+              <span> Name is required.</span>
+            }
+          </div>
+          <div class="input-holder">
+            <label for="lastname">Your Last Name</label>
+            <input
+              type="text"
+              name="lastname"
+              placeholder="Smith"
+              formControlName="lastName"
+            />
+            @if (isFieldInvalid(createAccountForm, 'lastName')) {
+              <span> Name is required.</span>
+            }
+          </div>
+          <div class="input-holder">
+            <label for="file">Upload Image</label>
+            <input
+              type="file"
+              name="file"
+              placeholder="Upload Image"
+              formControlName="profileImage"
+              (change)="onFileSelected($event)"
+            />
+            @if (isFieldInvalid(createAccountForm, 'profileImage')) {
+              <span>Image is required.</span>
+            }
+          </div>
+          <div class="input-holder">
+            <label for="email">Email</label>
+            <input
+              type="text"
+              name="email"
+              placeholder="example@email.com"
+              formControlName="email"
+            />
+            @if (isFieldInvalid(createAccountForm, 'email')) {
+              <div class="error-message">
+                @if (createAccountForm.get('email')?.errors?.['required']) {
+                  <span>Email is required.</span>
+                }
+                @if (createAccountForm.get('email')?.errors?.['email']) {
+                  <span>Please enter a valid email address.</span>
+                }
+              </div>
+            }
+          </div>
+          <div class="input-holder">
+            <label>Mobile</label>
+            <input type="text" placeholder="+44 9999 999999" formControlName="phone" />
+            @if (isFieldInvalid(createAccountForm, 'phone')) {
+              <div class="error-message">
+                @if (createAccountForm.get('phone')?.errors?.['required']) {
+                  <span>Mobile number is required.</span>
+                }
+                @if (createAccountForm.get('phone')?.errors?.['pattern']) {
+                  <span>Please enter a valid mobile number.</span>
+                }
+              </div>
+            }
+          </div>
+          <div class="input-holder">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter Your Password (6 characters)"
+              formControlName="password"
+            />
+            @if (isFieldInvalid(createAccountForm, 'password')) {
+              <div class="error-message">
+                @if (getPasswordError(createAccountForm, 'required')) {
+                  <span>Password is required.</span>
+                }
+              </div>
+              @if (!getPasswordError(createAccountForm, 'required')) {
+                <div class="suggestion-holder">
+                  @if (getPasswordError(createAccountForm, 'minlength')) {
+                    <span>Password must be at least 6 characters long.</span>
+                  }
+                  @if (getPasswordError(createAccountForm, 'uppercase')) {
+                    <span>Password must contain at least one uppercase letter.</span>
+                  }
+                  @if (getPasswordError(createAccountForm, 'lowercase')) {
+                    <span>Password must contain at least one lowercase letter.</span>
+                  }
+                  @if (getPasswordError(createAccountForm, 'number')) {
+                    <span>Password must contain at least one number.</span>
+                  }
+                  @if (getPasswordError(createAccountForm, 'special')) {
+                    <span>Password must contain at least one special character.</span>
+                  }
+                </div>
+              }
+            }
+          </div>
+          <div class="input-holder">
+            <label for="password">Confirm Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter Your Password (6 characters)"
+              formControlName="confirmPassword"
+            />
+            @if (isFieldInvalid(createAccountForm, 'confirmPassword')) {
+              <span>Confirm Password is required.</span>
+            }
+            @if (isPasswordMismatch(createAccountForm, 'password', 'confirmPassword')) {
+              <span>Passwords do not match.</span>
+            }
+          </div>
+          <button class="btn-login" type="submit">Get Started</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</section>
