@@ -10,7 +10,7 @@ export class CoursesService {
   constructor(private coursesApi: CoursesApiService) {}
 
   getCourseList(): Observable<ICourseList[]> {
-    return this.coursesApi.getCourseList().pipe(
+    return this.coursesApi.geAllDetailsCourseList().pipe(
       map((courseList: any) => {
         return courseList ?? [];
       })

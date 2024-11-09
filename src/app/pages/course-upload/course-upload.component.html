@@ -24,7 +24,7 @@
                   <div class="course-upload-left">
                     <div class="input-holder">
                       <label>Title</label>
-                      <input type="text" placeholder="Type here" [(ngModel)]="mainCourseInfo.courseTitle"/>
+                      <input type="text" placeholder="Type here" [(ngModel)]="mainCourseInfo.courseTitle" />
                     </div>
                     <div calss="input-holder">
                       <label>Description</label>
@@ -79,12 +79,12 @@
                   <div class="course-upload-left">
                     <div class="input-holder">
                       <label>Title</label>
-                      <input type="text" placeholder="Type here" [(ngModel)]="chapter.chapterTitle"/>
+                      <input type="text" placeholder="Type here" [(ngModel)]="chapter.chapterTitle" />
                     </div>
                     @for (item of chapter.fileDetails; track $index; let videIndex = $index) {
                     <div class="input-holder">
                       <label>Video</label>
-                      <input type="text" placeholder="chapter1.mp4" readonly [(ngModel)]="item.fileURL"/>
+                      <input type="text" placeholder="chapter1.mp4" readonly [(ngModel)]="item.fileURL" />
                     </div>
                     <div calss="input-holder">
                       <label>Video Description</label>
@@ -94,8 +94,9 @@
                           <img src="../../../assets/images/icon-video.svg" alt="" />
                           <span>Preview</span>
                         </button>
-                        <input type="file" #videoInput (change)="onFileSelected($event,'VIDEO_FILE',parentIndex, videIndex)"
-                        style="display: none;" />
+                        <input type="file" #videoInput
+                          (change)="onFileSelected($event,'VIDEO_FILE',parentIndex, videIndex)"
+                          style="display: none;" />
                         <button (click)="openFileUploadWindow(videoInput)">
                           <img src="../../../assets/images/icon-video.svg" alt="" />
                           <span>Upload Video</span>
@@ -134,116 +135,18 @@
             <div class="reading-list-wrapper">
               <div class="reading-list-content">
                 <div class="scroll-content">
+                  @for (course of lastUpdatedCourse; track $index) {
                   <div class="reading-list">
                     <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
+                      <img [src]="course.courseCoverImage" alt="" />
                     </figure>
                     <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
+                      <h4>{{course.courseTitle}}</h4>
+                      <span>{{course?.chapterDetails?.length}} Chapters</span>
                       <button>Published</button>
                     </div>
                   </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
+                  }
                 </div>
               </div>
             </div>

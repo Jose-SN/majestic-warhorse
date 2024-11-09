@@ -27,7 +27,7 @@ export class CourseUploadService {
   public CHAPTER_INFO: IChapterInfo = {
     attachments: [],
     chapterTitle: '',
-    fileDetails: [{...this.FILE_OBJECT_INFO}],
+    fileDetails: [],
   };
   private MESSAGES: { [key: string]: string } = {
     courseCoverImage: 'Please Upload Course Cover Image',
@@ -61,15 +61,21 @@ export class CourseUploadService {
     private courseApi: CoursesApiService,
     private commonApiService: CommonApiService
   ) {}
-  async saveCourseDetails(courseDetails: ISaveCourse, _destroy$: Subject<void>): Promise<boolean | any> {
+  async saveCourseDetails(
+    courseDetails: ISaveCourse,
+    _destroy$: Subject<void>
+  ): Promise<boolean | any> {
     const isValid = await this.courseSaveValidation(courseDetails);
     if (isValid) {
-    return  new Promise((resolve) => {
+      courseDetails.chapterInfo.forEach((chapterInfo) => {
+        chapterInfo.createdBy = this.commonService.loginedUserInfo.id;
+      })
+      return new Promise((resolve) => {
         this.courseApi
           .saveCourseDetails({
             ...courseDetails.mainCourseInfo,
             ...{
-              chapters: courseDetails.chapterInfo,
+              chapterDetails: courseDetails.chapterInfo,
               createdBy: this.commonService.loginedUserInfo.id,
             },
           })
@@ -205,5 +211,8 @@ export class CourseUploadService {
       }
       resolve(true);
     });
+  }
+  async fetchUploadedCourses() {
+    return await this.courseApi.fetchUploadedCourses();
   }
 }

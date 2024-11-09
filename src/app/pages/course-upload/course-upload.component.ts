@@ -19,9 +19,11 @@ export class CourseUploadComponent {
   private destroy$ = new Subject<void>();
   public mainCourseInfo: IMainCourseInfo;
   public courseChapterList: IChapterInfo[] = [];
+  public lastUpdatedCourse: any = [];
   constructor(private courseUploadService: CourseUploadService) {
     this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
     this.addNewChapter();
+    this.fetchLastUpdatedCourses();
   }
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   triggerMenu() {
@@ -37,9 +39,11 @@ export class CourseUploadComponent {
     });
   }
   addNewChapter() {
-    this.courseChapterList = this.courseChapterList.concat({
-      ...this.courseUploadService.CHAPTER_INFO,
+    const newChapter = { ...this.courseUploadService.CHAPTER_INFO };
+    newChapter.fileDetails = newChapter.fileDetails.concat({
+      ...this.courseUploadService.FILE_OBJECT_INFO,
     });
+    this.courseChapterList = this.courseChapterList.concat(newChapter);
   }
   openFileUploadWindow(nativeElement: HTMLElement): void {
     nativeElement?.click();
@@ -50,7 +54,6 @@ export class CourseUploadComponent {
     mainIndex?: number,
     videoDetailsIndex?: number
   ): Promise<void> {
-    console.log(mainIndex, videoDetailsIndex);
     const target = event.target as HTMLInputElement;
     const files = target.files as FileList;
     const fileUrl = await this.courseUploadService.onFileUpload(
@@ -88,14 +91,18 @@ export class CourseUploadComponent {
       },
       this.destroy$
     );
-    if(isCourseUploaded){
+    if (isCourseUploaded) {
       this.courseChapterList = [];
       this.addNewChapter();
       this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
+      this.fetchLastUpdatedCourses();
     }
   }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+  private async fetchLastUpdatedCourses() {
+    this.lastUpdatedCourse = await this.courseUploadService.fetchUploadedCourses();
   }
 }

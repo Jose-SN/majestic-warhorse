@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CoursesService } from './courses.service';
@@ -14,6 +14,7 @@ import { ICourseList } from './modal/course-list';
 })
 export class CoursesComponent {
   public mobMenu: boolean = false;
+  @Output() emitCourseDetails = new EventEmitter<{ [key: string]: boolean | ICourseList }>();
   public courseList$: Observable<ICourseList[]> = of([]);
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(private coursesService: CoursesService) {
@@ -25,5 +26,8 @@ export class CoursesComponent {
   }
   mobileMenu() {
     this.mobMenu = !this.mobMenu;
+  }
+  openCourseDetailsPage(selectedCourse: ICourseList) {
+    this.emitCourseDetails.emit({ selectedCourse: selectedCourse, showCourseDetail: true });
   }
 }

@@ -2,6 +2,7 @@ import { IMainCourseInfo } from './course-info';
 import { IFileObjectInfo } from './file-object-info';
 
 export interface IChapterInfo {
+  createdBy?: string;
   chapterTitle: string;
   attachments: string[];
   fileDetails: IFileObjectInfo[];
