@@ -19,24 +19,24 @@
             <input type="text" placeholder="Search for..." />
             <button></button>
           </div>
-          <div class="input-holder">
+          <!-- <div class="input-holder">
             <select>
               <option>This Year</option>
             </select>
-          </div>
+          </div> -->
         </div>
         <div class="profile-area">
-          <div class="common-holder">
+          <!-- <div class="common-holder">
             <figure>
               <img src="../../../assets/images/icon-notification.svg" alt="Notification" />
             </figure>
-          </div>
-          <div class="common-holder">
-            <figure><img src="../../../assets/images/icon-flag.svg" alt="USA" /></figure>
+          </div> -->
+          <div class="common-holder" (click)="logOut()">
+            <figure style="width: 35px; height: 35px;"><img src="../../../assets/images/icon-logout.svg" alt="USA" /></figure>
           </div>
           <div class="profile">
             <figure>
-              <img src="../../../assets/images/img-profile.png" alt="Godlee Cheriyan" />
+              <img [src]="profileUrl"/>
             </figure>
           </div>
         </div>
@@ -48,7 +48,7 @@
           <div class="courses-wrapper">
             <div class="course-top">
               <h2>{{selectedCourseInfo.courseTitle}}</h2>
-              <span>{{selectedCourseInfo.courseDescription}}</span>
+              <span>{{activeChapter.chapterTitle}}</span>
             </div>
             <div class="video-wrapper">
               <div class="video-holder">
@@ -59,11 +59,11 @@
                     <div class="bottom-holder">
                       <div class="profile">
                         <figure>
-                          <img src="../../../assets/images/img-profile-video.png" alt="" />
+                          <img [src]="activeChapter?.createdBy?.profileImage" alt="" />
                         </figure>
                         <div class="profile-right">
-                          <span>Olivia Johan</span>
-                          <strong>5 courses</strong>
+                          <span>{{activeChapter?.createdBy?.firstName}} {{activeChapter?.createdBy?.lastName}}</span>
+                          <strong>{{selectedCourseInfo?.chapterDetails?.length}}</strong>
                         </div>
                       </div>
                       <div class="time">
@@ -113,13 +113,9 @@
                   <div class="content-bottom">
                     <div class="scroll-content">
                       <h5>About this course</h5>
-                      <strong>Prototyping is a core skill in user experience design that is a powerful
-                        approach for all designers<br />
-                        and creatives.</strong>
+                      <strong>{{activeVideoDescription}}</strong>
                       <p>
-                        In this class, you'll learn the fundamentals of prototyping to redesigning
-                        how something works for more fluid usability. We'll cover everything you
-                        need to know about how.
+                        {{selectedCourseInfo.courseDescription}}
                       </p>
                     </div>
                   </div>

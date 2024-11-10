@@ -55,7 +55,7 @@ export class RegistrationPageService {
       this.registrationApiService
         .saveUserInfo({
           ...registrationInfo,
-          ...{ role: 'student' },
+          ...{ role: 'guest' },
         })
         .pipe(takeUntil(_destroy$))
         .subscribe({
