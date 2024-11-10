@@ -3,6 +3,9 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CourseUploadService } from 'src/app/pages/course-upload/course-upload.service';
 import { ICourseList } from 'src/app/pages/courses/modal/course-list';
+import { UserModel } from 'src/app/pages/login-page/model/user-model';
+import { AuthService } from 'src/app/services/api-service/auth.service';
+import { CommonService } from 'src/app/shared/services/common.service';
 
 @Component({
   selector: 'app-dashboard-overview',
@@ -14,11 +17,15 @@ import { ICourseList } from 'src/app/pages/courses/modal/course-list';
 export class DashboardOverviewComponent {
   public mobMenu: boolean = false;
   public courseLists: ICourseList[] = [];
+  public loginedUserInfo:UserModel = {} as UserModel;
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
-    private courseUploadService: CourseUploadService
+    private courseUploadService: CourseUploadService,
+    private authService:AuthService,
+    private commonService: CommonService
   ) {
     this.fetchCourseList();
+    this.loginedUserInfo = this.commonService.loginedUserInfo    
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -29,5 +36,8 @@ export class DashboardOverviewComponent {
   }
   async fetchCourseList() {
     this.courseLists = await this.courseUploadService.fetchUploadedCourses();
+  }
+  logOut(){
+    this.authService.logOutApplication();
   }
 }

@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { CoursesService } from './courses.service';
 import { Observable, of } from 'rxjs';
 import { ICourseList } from './modal/course-list';
+import { AuthService } from 'src/app/services/api-service/auth.service';
+import { CommonService } from 'src/app/shared/services/common.service';
 
 @Component({
   selector: 'app-courses',
@@ -13,12 +15,16 @@ import { ICourseList } from './modal/course-list';
   styleUrl: './courses.component.scss',
 })
 export class CoursesComponent {
+  public profileUrl: string = "";
   public mobMenu: boolean = false;
   @Output() emitCourseDetails = new EventEmitter<{ [key: string]: boolean | ICourseList }>();
   public courseList$: Observable<ICourseList[]> = of([]);
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
-  constructor(private coursesService: CoursesService) {
+  constructor(private coursesService: CoursesService,private authService:AuthService,
+    private commonService: CommonService
+  ) {
     this.courseList$ = this.coursesService.getCourseList();
+    this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -29,5 +35,8 @@ export class CoursesComponent {
   }
   openCourseDetailsPage(selectedCourse: ICourseList) {
     this.emitCourseDetails.emit({ selectedCourse: selectedCourse, showCourseDetail: true });
+  }
+  logOut(){
+    this.authService.logOutApplication();
   }
 }

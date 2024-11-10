@@ -26,6 +26,9 @@ export interface CreatedBy {
   email: string;
   phone: string;
   role: string;
+  firstName: string;
+  lastName: string;
+  profileImage:string;
 }
 
 export interface FileDetail {

@@ -10,10 +10,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { CourseOverviewComponent } from '../course-overview/course-overview.component';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { UnderConstructionComponent } from 'src/app/components/under-construction/under-construction.component';
-import { RegistrationPageComponent } from '../registration-page/registration-page.component';
 import { CourseUploadComponent } from '../course-upload/course-upload.component';
 import { ICourseList } from '../courses/modal/course-list';
 import { CourseDetailsComponent } from '../course-details/course-details.component';
+import { EditAccountComponent } from '../edit-account/edit-account.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -25,9 +25,9 @@ import { CourseDetailsComponent } from '../course-details/course-details.compone
     DashboardOverviewComponent,
     UnderConstructionComponent,
     DashboardSidepanelComponent,
-    RegistrationPageComponent,
     CourseUploadComponent,
     CourseDetailsComponent,
+    EditAccountComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',

@@ -24,24 +24,24 @@
             <input type="text" placeholder="Search for..." />
             <button></button>
           </div>
-          <div class="input-holder">
+          <!-- <div class="input-holder">
             <select>
               <option>This Year</option>
             </select>
-          </div>
+          </div> -->
         </div>
         <div class="profile-area">
-          <div class="common-holder">
+          <!-- <div class="common-holder">
             <figure>
               <img src="../../../assets/images/icon-notification.svg" alt="Notification" />
             </figure>
-          </div>
-          <div class="common-holder">
-            <figure><img src="../../../assets/images/icon-flag.svg" alt="USA" /></figure>
+          </div> -->
+          <div class="common-holder" (click)="logOut()">
+            <figure style="width: 35px; height: 35px;"><img src="../../../assets/images/icon-logout.svg" alt="USA" /></figure>
           </div>
           <div class="profile">
             <figure>
-              <img src="../../../assets/images/img-profile.png" alt="Godlee Cheriyan" />
+              <img [src]="profileUrl" />
             </figure>
           </div>
         </div>
