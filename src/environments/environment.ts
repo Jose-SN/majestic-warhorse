@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   apiUrl: 'https://rehobothlondonapi.netlify.app/.netlify/functions/api/',
-  majesticWarhorseApi: 'http://localhost:5000/',
+  majesticWarhorseApi: 'https://35.176.113.63/',
 };
 
 /*
