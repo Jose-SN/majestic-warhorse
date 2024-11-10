@@ -5,6 +5,7 @@ import { catchError, lastValueFrom } from 'rxjs';
 import { UserLogin, UserModel } from 'src/app/pages/login-page/model/user-model';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { IPassWordUpdate } from 'src/app/pages/forgot-password/model';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
@@ -13,6 +14,7 @@ export class AuthService {
   private _apiUrl: string = environment.majesticWarhorseApi;
   constructor(
     private http: HttpClient,
+    private router: Router,
     private commonService: CommonService
   ) {
     this.isAuthenticated = sessionStorage.getItem('isAuthenticated') === 'true';
@@ -51,5 +53,6 @@ export class AuthService {
     this.commonService.allUsersList = [];
     sessionStorage.removeItem('login_details');
     sessionStorage.removeItem('isAuthenticated');
+    this.router.navigate(['/login']);
   }
 }

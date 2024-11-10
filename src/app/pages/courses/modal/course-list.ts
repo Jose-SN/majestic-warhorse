@@ -28,6 +28,7 @@ export interface CreatedBy {
   role: string;
   firstName: string;
   lastName: string;
+  profileImage:string;
 }
 
 export interface FileDetail {

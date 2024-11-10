@@ -6,6 +6,8 @@ import { of } from 'rxjs';
 import { CoursesService } from '../courses/courses.service';
 import { CourseUploadService } from '../course-upload/course-upload.service';
 import { ICourseList } from '../courses/modal/course-list';
+import { AuthService } from 'src/app/services/api-service/auth.service';
+import { CommonService } from 'src/app/shared/services/common.service';
 
 @Component({
   selector: 'app-course-overview',
@@ -16,13 +18,17 @@ import { ICourseList } from '../courses/modal/course-list';
 })
 export class CourseOverviewComponent {
   public mobMenu: boolean = false;
+  public profileUrl:string = "";
   public showSliderView: boolean = false;
   public courseLists: ICourseList[] = [];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
-    private courseUploadService: CourseUploadService
+    private courseUploadService: CourseUploadService,
+    private authService:AuthService,
+    private commonService: CommonService
   ) {
     this.fetchCourseList();
+    this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -39,5 +45,8 @@ export class CourseOverviewComponent {
   }
   async fetchCourseList() {
     this.courseLists = await this.courseUploadService.fetchUploadedCourses();
+  }
+  logOut(){
+    this.authService.logOutApplication();
   }
 }

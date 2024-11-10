@@ -10,6 +10,7 @@ export interface UserModel {
   modificationDate: Date;
   jwt: string;
   phone?: string;
+  profileImage?:string;
 }
 export interface UserLoginResponse {
   success?: boolean;

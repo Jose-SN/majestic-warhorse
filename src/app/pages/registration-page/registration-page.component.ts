@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -12,15 +12,17 @@ import { first, last, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { UserModel } from '../login-page/model/user-model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-registration-page',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './registration-page.component.html',
   styleUrl: './registration-page.component.scss',
 })
 export class RegistrationPageComponent implements OnDestroy, OnInit {
+  @Input() isEditMode: boolean = false;
   public getPasswordError: (arg1: FormGroup, arg2: string) => boolean;
   public isFieldInvalid: (arg1: FormGroup, arg2: string) => boolean | undefined;
   public isPasswordMismatch: (arg1: FormGroup, arg2: string, arg3: string) => boolean | null;
@@ -102,6 +104,9 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     } else {
       console.error('Form is invalid');
     }
+  }
+  navigateLogin() {
+    this.router.navigate(['/login']);
   }
   ngOnDestroy(): void {
     this.destroy$.next();

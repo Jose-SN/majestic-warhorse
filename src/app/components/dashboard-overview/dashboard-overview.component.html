@@ -12,24 +12,24 @@
           <input type="text" placeholder="Search for..." />
           <button></button>
         </div>
-        <div class="input-holder">
+        <!-- <div class="input-holder">
           <select>
             <option>This Year</option>
           </select>
-        </div>
+        </div> -->
       </div>
       <div class="profile-area">
-        <div class="common-holder">
+        <!-- <div class="common-holder">
           <figure>
             <img src="../../../assets/images/icon-notification.svg" alt="Notification" />
           </figure>
-        </div>
-        <div class="common-holder">
-          <figure><img src="../../../assets/images/icon-flag.svg" alt="USA" /></figure>
+        </div> -->
+        <div class="common-holder" (click)="logOut()">
+          <figure style="width: 35px; height: 35px;"><img src="../../../assets/images/icon-logout.svg" alt="USA" /></figure>
         </div>
         <div class="profile">
           <figure>
-            <img src="../../../assets/images/img-profile.png" alt="Godlee Cheriyan" />
+            <img [src]="loginedUserInfo.profileImage" />
           </figure>
         </div>
       </div>
@@ -349,13 +349,13 @@
       <div class="content-right">
         <div class="content-box">
           <figure>
-            <img src="../../../assets/images/img-profile.png" alt="Godlee Cheriyan" />
+            <img [src]="loginedUserInfo.profileImage"/>
           </figure>
-          <span>Godlee Cheriyan</span>
-          <strong>Student</strong>
+          <span>{{loginedUserInfo.firstName}} {{loginedUserInfo.lastName}}</span>
+          <strong>{{loginedUserInfo.role}}</strong>
           <ul class="contact-area">
-            <li><a href="mailto:godleecheriyan@email.com">godleecheriyan&#64;gmail.com</a></li>
-            <li><a href="tel:+91-9687452365">+91-9687452365</a></li>
+            <li><a href="">{{loginedUserInfo.email}}</a></li>
+            <li><a href="">{{loginedUserInfo.phone}}</a></li>
           </ul>
           <div class="status-wrapper">
             <div class="status-holder">
