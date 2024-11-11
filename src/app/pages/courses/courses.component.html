@@ -44,7 +44,9 @@
     </div>
     <div class="common-container">
       <div class="content-area">
-        <div class="content-left">
+        <div class="content-left" [ngClass]="{'common-slider':showSliderView}">
+          <app-common-slider [ngClass]="{'active':showSliderView}"
+          (removeClass)="sliderActiveRemove()">></app-common-slider>
           <div class="courses-wrapper">
             <div class="course-top">
               <h2>Courses List</h2>
@@ -54,6 +56,12 @@
                 <li>Pending</li>
                 <li>Completed</li>
               </ul>
+              <div class="data-refreshed-holder">
+                <button (click)="showSliderView = !showSliderView;">
+                  <img src="../../../assets/images/icon-upload.svg" alt="Upload" />
+                  Upload Course
+                </button>
+              </div>
             </div>
             <div class="scroll-container courses">
               <div class="course-card-holder">
@@ -65,125 +73,6 @@
                     <span>A Course by {{ course["createdBy"].email }}</span>
                     <h3>{{ course.courseTitle }}</h3>
                     <!-- <figure><img src="../../../assets/images/img-loader.png" alt="" /></figure> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="content-right">
-          <div class="content-box">
-            <h3>Teachers</h3>
-            <div class="reading-list-wrapper">
-              <div class="reading-list-content">
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
                   </div>
                 </div>
               </div>
