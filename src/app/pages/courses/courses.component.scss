@@ -191,6 +191,8 @@
   @include flex(flex, column, null, null);
   flex-grow: 1;
   padding: 30px 25px;
+  position: relative;
+  overflow: hidden;
   .search-and-profile {
     @include flex(flex, null, flex-end, center);
   }
