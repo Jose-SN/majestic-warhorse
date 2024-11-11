@@ -38,7 +38,7 @@ export class CoursesComponent {
   openCourseDetailsPage(selectedCourse: ICourseList) {
     this.emitCourseDetails.emit({ selectedCourse: selectedCourse, showCourseDetail: true });
   }
-  logOut(){
+    logOut(){
     this.authService.logOutApplication();
   }
   sliderActiveRemove(): void {
