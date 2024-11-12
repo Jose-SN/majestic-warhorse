@@ -46,21 +46,10 @@
           </div>
         </div>
       </div>
-      <div class="title-holder">
-        <h1>Courses Overview</h1>
-        <div class="data-refreshed-holder">
-          <button (click)="openCourseUploadSlider()">
-            <img src="../../../assets/images/icon-upload.svg" alt="Upload" />
-            Upload Course
-          </button>
-        </div>
-      </div>
     </div>
     <div class="common-container">
       <div class="content-area">
-        <div class="content-left" [ngClass]="{'common-slider':showSliderView}">
-          <app-common-slider [ngClass]="{'active':showSliderView}"
-            (removeClass)="sliderActiveRemove()">></app-common-slider>
+        <div class="content-left">
           <div class="scroll-container overview">
             <div class="content-top">
               <div class="course-detail">
@@ -272,7 +261,7 @@
             </div>
           </div>
           <div class="content-box">
-            <h3>Teachers</h3>
+            <h3>Students</h3>
             <div class="reading-list-wrapper">
               <div class="reading-list-content">
                 <div class="reading-list">

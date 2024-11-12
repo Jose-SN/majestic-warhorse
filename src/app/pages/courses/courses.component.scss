@@ -191,6 +191,8 @@
   @include flex(flex, column, null, null);
   flex-grow: 1;
   padding: 30px 25px;
+  position: relative;
+  overflow: hidden;
   .search-and-profile {
     @include flex(flex, null, flex-end, center);
   }
@@ -1168,5 +1170,48 @@ footer {
         }
       }
     }
+  }
+}
+
+.data-refreshed-holder {
+  span {
+    font-size: 0.875rem;
+    white-space: nowrap;
+    margin-right: 33px;
+    color: var(--white);
+    display: block;
+  }
+  .refresh-date {
+    font-family: $archivo-medium;
+    font-size: 0.875rem;
+    text-align: center;
+    letter-spacing: 1px;
+    color: var(--white);
+    max-width: 312px;
+    padding: 15px 46px;
+    @include border-radius(5px);
+    border: 1px solid var(--bg-input-border);
+    background: var(--bg-input);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  button {
+    font-family: $archivo-medium;
+    font-size: 0.875rem;
+    color: var(--white);
+    width: 211px;
+    height: 44px;
+    @include border-radius(20px);
+    @include gradient();
+    border: none;
+    cursor: pointer;
+    @include flex(flex, null, center, center);
+  }
+  & {
+    @include flex(flex, null, center, center);
+  }
+  img {
+    margin-right: 10px;
   }
 }
