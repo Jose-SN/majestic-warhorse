@@ -12,7 +12,7 @@ import { TOASTER_MESSAGE_TYPE } from '../toaster/toaster-info';
 export class CommonService {
   public loginedUserInfo!: UserModel;
   public allUsersList: UserModel[] = [];
-  public adminRoleType: string = 'admin';
+  public adminRoleType: string[] = ['admin',"teacher"];
   constructor(private toastrService: ToastrService) {}
   set alluserList(userList: UserModel[]) {
     this.allUsersList = userList;

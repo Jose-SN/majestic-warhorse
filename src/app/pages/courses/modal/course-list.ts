@@ -15,7 +15,7 @@ export interface ChapterDetail {
   attachments: string[];
   chapterTitle: string;
   files: string[];
-  createdBy: CreatedBy;
+  createdBy?: CreatedBy;
   creation_date: Date;
   modification_date: Date;
   fileDetails: FileDetail[];

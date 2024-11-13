@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DashboardSidepanelComponent } from 'src/app/components/dashboard-sidepanel/dashboard-sidepanel.component';
@@ -27,7 +27,7 @@ import { EditAccountComponent } from '../edit-account/edit-account.component';
     DashboardSidepanelComponent,
     CourseUploadComponent,
     CourseDetailsComponent,
-    EditAccountComponent
+    EditAccountComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -38,6 +38,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public selectedCourseInfo: ICourseList = {} as ICourseList;
   private destroy$ = new Subject<void>();
   public SIDE_PANEL_LIST: ISidepanel = this.dashboardService.SIDE_PANEL_LIST;
+  @ViewChild(DashboardSidepanelComponent) dashboardSidepanelComponent!: DashboardSidepanelComponent;
+
   constructor(
     private dashboardService: DashboardService,
     private commonService: CommonService
@@ -45,7 +47,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
   }
   get isAdminLogin() {
-    return this.commonService?.loginedUserInfo?.role === this.commonService.adminRoleType;
+    return this.commonService.adminRoleType.includes(
+      this.commonService?.loginedUserInfo?.role ?? ''
+    );
   }
   ngOnInit(): void {
     this.dashboardService.getAllUsers();
@@ -57,12 +61,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.selectedCourseInfo = {} as ICourseList;
         this.showCourseDetailedView = false;
       });
+    this.dashboardService
+      .getCourseDetailsInfo()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((courseInfo: { [key: string]: boolean | ICourseList }) => {
+        this.handleCourseDetailsView(courseInfo);
+      });
   }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
   handleCourseDetailsView(showCourseView: { [key: string]: boolean | ICourseList }) {
+    this.activePanel = this.SIDE_PANEL_LIST['COURSE_LISTING'];
+    this.dashboardSidepanelComponent.activePanel = this.activePanel;
     this.selectedCourseInfo = showCourseView['selectedCourse'] as ICourseList;
     this.showCourseDetailedView = showCourseView['showCourseDetail'] as boolean;
   }

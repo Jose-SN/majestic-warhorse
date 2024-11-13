@@ -17,7 +17,7 @@
       @if(showCourseDetailedView){
         <app-course-detils [selectedCourseInfo]="selectedCourseInfo" style="width: 100%;"></app-course-detils>
       }@else{
-        <app-courses (emitCourseDetails)="handleCourseDetailsView($event)"></app-courses>
+        <app-courses></app-courses>
       }
     }
     @case (SIDE_PANEL_LIST['ACCOUNT']) {

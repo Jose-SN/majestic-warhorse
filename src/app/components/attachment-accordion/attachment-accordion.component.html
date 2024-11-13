@@ -3,27 +3,15 @@
   <button class="accordion" (click)="toggleAccordian($event, 0)">Attachment List</button>
   <div class="panel">
     <div class="panel-content">
+      @for (attachment of attachmentList; track $index) {
       <div class="panel-list">
-        <p> Lorem ipsum dolor sit amet consectetur adipisicing elit</p>
+        <p> {{attachment?.split("majestic-uploads/")?.[1]}}</p>
         <ul>
           <li>Preview</li>
-          <li>Delete</li>
+          <li (click)="attachmentList.splice($index,1)">Delete</li>
         </ul>
       </div>
-      <div class="panel-list">
-        <p> Lorem ipsum dolor sit amet consectetur adipisicing elit</p>
-        <ul>
-          <li>Preview</li>
-          <li>Delete</li>
-        </ul>
-      </div>
-      <div class="panel-list">
-        <p> Lorem ipsum dolor sit amet consectetur adipisicing elit</p>
-        <ul>
-          <li>Preview</li>
-          <li>Delete</li>
-        </ul>
-      </div>
+      }
     </div>
   </div>
 </div>

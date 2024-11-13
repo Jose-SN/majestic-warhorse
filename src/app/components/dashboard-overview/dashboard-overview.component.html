@@ -331,7 +331,7 @@
           <div class="scroll-container courses">
             <div class="course-card-holder">
               @for (course of courseLists; track $index) {
-              <div class="course-card">
+              <div class="course-card" (click)="openCourseDetailsPage(course)">
                 <div class="card-content">
                   <figure><img [src]="course?.courseCoverImage" alt="" /></figure>
                 </div>
