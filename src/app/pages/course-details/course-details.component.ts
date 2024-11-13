@@ -17,6 +17,7 @@ export class CourseDetailsComponent {
   public mobMenu: boolean = false;
   public profileUrl: string = '';
   public activeVideoUrl: string = '';
+  public loginedUserRole: string = "";
   public activeVideoDescription: string = '';
   public activeChapter: ChapterDetail = {} as ChapterDetail;
   @Input() selectedCourseInfo: ICourseList = {} as ICourseList;
@@ -30,6 +31,7 @@ export class CourseDetailsComponent {
   }
   ngOnInit(): void {
     this.setDefaultVideo();
+    this.loginedUserRole = this.commonService?.loginedUserInfo?.role ?? '';
   }
   setDefaultVideo() {
     this.activeChapter = this.selectedCourseInfo?.chapterDetails[0];
@@ -65,5 +67,11 @@ export class CourseDetailsComponent {
   }
   logOut() {
     this.authService.logOutApplication();
+  }
+  downloadVideo(){
+
+  }
+  downloadMaterial(){
+    
   }
 }

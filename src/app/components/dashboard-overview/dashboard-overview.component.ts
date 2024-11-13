@@ -3,6 +3,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CourseUploadService } from 'src/app/pages/course-upload/course-upload.service';
 import { ICourseList } from 'src/app/pages/courses/modal/course-list';
+import { DashboardService } from 'src/app/pages/dashboard/dashboard.service';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
@@ -22,7 +23,8 @@ export class DashboardOverviewComponent {
   constructor(
     private courseUploadService: CourseUploadService,
     private authService:AuthService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private dashboardService: DashboardService
   ) {
     this.fetchCourseList();
     this.loginedUserInfo = this.commonService.loginedUserInfo    
@@ -39,5 +41,11 @@ export class DashboardOverviewComponent {
   }
   logOut(){
     this.authService.logOutApplication();
+  }
+  openCourseDetailsPage(selectedCourse: ICourseList) {
+    this.dashboardService.setCourseDetailsInfo({
+      selectedCourse: selectedCourse,
+      showCourseDetail: true,
+    });
   }
 }

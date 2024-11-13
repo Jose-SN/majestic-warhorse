@@ -59,7 +59,7 @@
                 <div class="action-holder">
                   <h5>Course Content</h5>
                   <div class="add-button">
-                    <button (click)="addNewChapter()">
+                    <button (click)="addNewChapter(true)">
                       <img src="../../../assets/images/icon-add.svg" />
                       <span>Add Chapter</span>
                     </button>
@@ -115,7 +115,7 @@
                     }
                   </div>
                   <div class="accordion-holder">
-                    <app-attachment-accordion></app-attachment-accordion>
+                    <app-attachment-accordion [attachmentList]="chapter.attachments"></app-attachment-accordion>
                   </div>
                 </div>
               </div>
@@ -136,7 +136,7 @@
               <div class="reading-list-content">
                 <div class="scroll-content">
                   @for (course of lastUpdatedCourse; track $index) {
-                  <div class="reading-list">
+                  <div class="reading-list" (click)="handleCourseEdit(course)">
                     <figure>
                       <img [src]="course.courseCoverImage" alt="" />
                     </figure>
