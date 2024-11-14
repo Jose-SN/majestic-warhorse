@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { IAttachmentObjectInfo } from 'src/app/pages/course-upload/model/file-object-info';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-attachment-accordion',
@@ -9,7 +8,6 @@ import { IAttachmentObjectInfo } from 'src/app/pages/course-upload/model/file-ob
   styleUrl: './attachment-accordion.component.scss',
 })
 export class AttachmentAccordionComponent {
-  @Input() attachmentList: IAttachmentObjectInfo[] = [];
   toggleAccordian(event: any, index: any) {
     const element = event.target;
     element.classList.toggle('active');
