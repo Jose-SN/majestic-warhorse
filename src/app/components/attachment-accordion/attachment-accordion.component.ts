@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-attachment-accordion',
@@ -8,7 +8,6 @@ import { Component, Input } from '@angular/core';
   styleUrl: './attachment-accordion.component.scss',
 })
 export class AttachmentAccordionComponent {
-  @Input() attachmentList: string[] = [];
   toggleAccordian(event: any, index: any) {
     const element = event.target;
     element.classList.toggle('active');

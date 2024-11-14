@@ -5,7 +5,7 @@
     <div class="panel-content">
       @for (attachment of attachmentList; track $index) {
       <div class="panel-list">
-        <p> {{attachment?.split("majestic-uploads/")?.[1]}}</p>
+        <p> {{attachment.name}}</p>
         <ul>
           <li>Preview</li>
           <li (click)="attachmentList.splice($index,1)">Delete</li>

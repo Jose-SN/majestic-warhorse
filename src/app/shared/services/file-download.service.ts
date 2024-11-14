@@ -6,12 +6,12 @@ import { Injectable } from '@angular/core';
 })
 export class FileDownloadService {
   constructor(private http: HttpClient) {}
-  downloadFile(url: string, filename: string) {
+  downloadFile(url: string, fileName: string) {
     this.http.get(url, { responseType: 'blob' }).subscribe((blob) => {
       const downloadUrl = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = downloadUrl;
-      a.download = filename;
+      a.download = fileName;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

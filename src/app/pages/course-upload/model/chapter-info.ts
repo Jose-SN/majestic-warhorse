@@ -1,10 +1,10 @@
 import { IMainCourseInfo } from './course-info';
-import { IFileObjectInfo } from './file-object-info';
+import { IAttachmentObjectInfo, IFileObjectInfo } from './file-object-info';
 
 export interface IChapterInfo {
   createdBy?: string;
   chapterTitle: string;
-  attachments: string[];
+  attachments: IAttachmentObjectInfo[];
   fileDetails: IFileObjectInfo[];
 }
 export interface ISaveCourse {

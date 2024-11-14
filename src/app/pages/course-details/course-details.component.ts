@@ -5,6 +5,8 @@ import { ChapterDetail, FileDetail, ICourseList } from '../courses/modal/course-
 import { VideoPlayerComponent } from 'src/app/components/video-player/video-player.component';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
+import { FileDownloadService } from 'src/app/shared/services/file-download.service';
+import { CourseDetailsService } from './course-details.service';
 
 @Component({
   selector: 'app-course-detils',
@@ -17,15 +19,17 @@ export class CourseDetailsComponent {
   public mobMenu: boolean = false;
   public profileUrl: string = '';
   public activeVideoUrl: string = '';
-  public loginedUserRole: string = "";
   public activeVideoDescription: string = '';
+  public activeVideoInfo: FileDetail = {} as FileDetail;
   public activeChapter: ChapterDetail = {} as ChapterDetail;
   @Input() selectedCourseInfo: ICourseList = {} as ICourseList;
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   @ViewChild(VideoPlayerComponent) videoPlayerComponent!: VideoPlayerComponent;
   constructor(
     private authService: AuthService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private fileDownloadService: FileDownloadService,
+    private courseDetailsService: CourseDetailsService
   ) {
     this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
   }
@@ -35,7 +39,7 @@ export class CourseDetailsComponent {
   }
   setDefaultVideo() {
     this.activeChapter = this.selectedCourseInfo?.chapterDetails[0];
-    this.activeVideoUrl = this.selectedCourseInfo?.chapterDetails?.[0]?.fileDetails?.[0]?.fileURL;
+    this.activeVideoInfo = this.selectedCourseInfo?.chapterDetails?.[0]?.fileDetails?.[0];
     this.activeVideoDescription =
       this.selectedCourseInfo?.chapterDetails?.[0]?.fileDetails?.[0]?.description;
   }
@@ -59,7 +63,7 @@ export class CourseDetailsComponent {
     }
   }
   changeVideoUrl(fileDetails: FileDetail) {
-    this.activeVideoUrl = fileDetails.fileURL;
+    this.activeVideoInfo = fileDetails;
     this.activeVideoDescription = fileDetails.description;
   }
   handleStartAssessment() {
@@ -67,11 +71,5 @@ export class CourseDetailsComponent {
   }
   logOut() {
     this.authService.logOutApplication();
-  }
-  downloadVideo(){
-
-  }
-  downloadMaterial(){
-    
   }
 }

@@ -1,3 +1,5 @@
+import { IAttachmentObjectInfo } from "../../course-upload/model/file-object-info";
+
 export interface ICourseList {
   _id: string;
   courseCoverImage: string;
@@ -12,7 +14,7 @@ export interface ICourseList {
 
 export interface ChapterDetail {
   _id: string;
-  attachments: string[];
+  attachments: IAttachmentObjectInfo[];
   chapterTitle: string;
   files: string[];
   createdBy?: CreatedBy;
@@ -37,6 +39,7 @@ export interface FileDetail {
   parentType: string;
   description: string;
   fileURL: string;
+  name?:string;
   createdBy: CreatedBy;
   creation_date: Date;
   modification_date: Date;
