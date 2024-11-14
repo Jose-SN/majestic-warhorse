@@ -83,8 +83,9 @@ export class CourseUploadComponent {
         break;
       case 'ATTACHMENT':
         if ((mainIndex || mainIndex == 0) && this.courseChapterList[mainIndex]) {
-          this.courseChapterList[mainIndex].attachments =
-            this.courseChapterList[mainIndex].attachments.concat(fileUrl);
+          this.courseChapterList[mainIndex].attachments = this.courseChapterList[
+            mainIndex
+          ].attachments.concat({ fileURL: fileUrl, name: files[0].name });
         }
         break;
       case 'VIDEO_FILE':
@@ -124,6 +125,7 @@ export class CourseUploadComponent {
   }
   handleCourseEdit(courseInfo: ICourseList) {
     this.mainCourseInfo = {
+      _id: courseInfo._id,
       courseCoverImage: courseInfo.courseCoverImage,
       courseTitle: courseInfo.courseTitle,
       courseDescription: courseInfo.courseDescription,

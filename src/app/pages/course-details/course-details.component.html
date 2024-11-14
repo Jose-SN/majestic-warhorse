@@ -55,7 +55,7 @@
               <div class="video-holder">
                 <div class="video-left">
                   <!-- <figure><img src="../../../assets/images/img-video.png" alt="" /></figure> -->
-                  <app-video-player [videoUrl]="{url:activeVideoUrl}"></app-video-player>
+                  <app-video-player [videoUrl]="{url:activeVideoInfo.fileURL}" (videoUration)="videoUrationHandler($event)"></app-video-player>
                   <div class="video-bottom">
                     <div class="bottom-holder">
                       <div class="profile">
@@ -75,7 +75,7 @@
                               fill="" />
                           </svg>
                         </figure>
-                        <span>1 hour 42 minutes</span>
+                        <span>{{videoDuration}}</span>
                       </div>
                       <div class="bookmark">
                         <figure>
@@ -86,7 +86,7 @@
                               stroke="#FD7859" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                           </svg>
                         </figure>
-                        <span (click)="downloadVideo()">Download video</span>
+                        <span (click)="downloadMaterial('VIDEO')">Download video</span>
                       </div>
                       <div class="download">
                         <figure>
@@ -107,7 +107,7 @@
                             </defs>
                           </svg>
                         </figure>
-                        <span (click)="downloadMaterial()">Download meterial</span>
+                        <span (click)="downloadMaterial('ATTACHMENT')">Download meterial</span>
                       </div>
                     </div>
                   </div>
@@ -141,7 +141,7 @@
                           <div class="panel-content">
                             @for (item of chapterDetails.attachments; track $index) {
                             <div class="panel-list">
-                              <p> {{item}}</p>
+                              <p> {{item.name}}</p>
                               <ul>
                                 <li>Preview</li>
                                 <li>Download</li>

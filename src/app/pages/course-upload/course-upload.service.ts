@@ -15,8 +15,6 @@ export class CourseUploadService {
   public FILE_OBJECT_INFO: IFileObjectInfo = {
     fileURL: '',
     name: '',
-    enableDelete: false,
-    enablePreview: false,
     description: '',
   };
   public MAIN_COURSE_INFO: IMainCourseInfo = {
