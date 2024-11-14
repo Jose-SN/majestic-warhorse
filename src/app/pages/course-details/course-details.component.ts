@@ -18,7 +18,8 @@ import { CourseDetailsService } from './course-details.service';
 export class CourseDetailsComponent {
   public mobMenu: boolean = false;
   public profileUrl: string = '';
-  public activeVideoUrl: string = '';
+  public videoDuration: string = '';
+  public loginedUserRole: string = '';
   public activeVideoDescription: string = '';
   public activeVideoInfo: FileDetail = {} as FileDetail;
   public activeChapter: ChapterDetail = {} as ChapterDetail;
@@ -71,5 +72,20 @@ export class CourseDetailsComponent {
   }
   logOut() {
     this.authService.logOutApplication();
+  }
+  videoUrationHandler(duration: number) {
+    this.videoDuration = this.courseDetailsService.formatDuration(duration);
+  }
+  downloadMaterial(type: string) {
+    if (type === 'VIDEO') {
+      this.fileDownloadService.downloadFile(
+        this.activeVideoInfo.fileURL,
+        this.activeVideoInfo.name ?? ''
+      );
+    } else {
+      this.activeChapter.attachments.forEach((attachment) => {
+        this.fileDownloadService.downloadFile(attachment.fileURL, attachment.name ?? '');
+      });
+    }
   }
 }
