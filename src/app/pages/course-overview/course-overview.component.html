@@ -137,7 +137,7 @@
             <div class="scroll-container courses">
               <div class="course-card-holder">
                 @for (course of courseLists; track $index) {
-                <div class="course-card">
+                <div class="course-card" (click)="openCourseDetailsPage(course)">
                   <div class="card-content">
                     <figure><img [src]="course.courseCoverImage" alt="" /></figure>
                   </div>
@@ -154,6 +154,7 @@
           </div>
         </div>
         <div class="content-right">
+          @if(["admin"].includes(loginedUserPrivilege)){
           <div class="content-box">
             <h3>Teachers</h3>
             <div class="reading-list-wrapper">
@@ -260,6 +261,8 @@
               </div>
             </div>
           </div>
+          }
+          @if(["admin","teacher"].includes(loginedUserPrivilege)){
           <div class="content-box">
             <h3>Students</h3>
             <div class="reading-list-wrapper">
@@ -377,6 +380,7 @@
               </div>
             </div>
           </div>
+          }
         </div>
       </div>
     </div>

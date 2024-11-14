@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
@@ -11,6 +11,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 export class VideoPlayerComponent {
   public sourceUrl: SafeUrl | undefined;
   @Input() videoUrl!: { [key: string]: string };
+  @Output() videoUration: EventEmitter<number> = new EventEmitter<number>();
   @ViewChild('videoPlayer', { static: true }) videoPlayer!: ElementRef<HTMLVideoElement>;
 
   constructor(protected sanitizer: DomSanitizer) {}
@@ -24,6 +25,10 @@ export class VideoPlayerComponent {
   onPause() {}
   bypassSecurityTrustUrl(url: string) {
     this.sourceUrl = this.sanitizer.bypassSecurityTrustUrl(url);
+  }
+  setVideoDuration(event: Event): void {
+    const video = event.target as HTMLVideoElement;
+    this.videoUration.emit(video.duration);
   }
   ngOnChanges() {
     this.bypassSecurityTrustUrl(this.videoUrl['url']);

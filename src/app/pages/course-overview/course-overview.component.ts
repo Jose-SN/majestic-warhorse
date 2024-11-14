@@ -8,6 +8,7 @@ import { CourseUploadService } from '../course-upload/course-upload.service';
 import { ICourseList } from '../courses/modal/course-list';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
+import { DashboardService } from '../dashboard/dashboard.service';
 
 @Component({
   selector: 'app-course-overview',
@@ -18,17 +19,22 @@ import { CommonService } from 'src/app/shared/services/common.service';
 })
 export class CourseOverviewComponent {
   public mobMenu: boolean = false;
-  public profileUrl:string = "";
+  public profileUrl: string = '';
   public showSliderView: boolean = false;
   public courseLists: ICourseList[] = [];
+  public loginedUserPrivilege: string = '';
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private courseUploadService: CourseUploadService,
-    private authService:AuthService,
-    private commonService: CommonService
+    private authService: AuthService,
+    private commonService: CommonService,
+    private dashboardService: DashboardService
   ) {
     this.fetchCourseList();
     this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
+  }
+  ngOnInit() {
+      this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -46,7 +52,13 @@ export class CourseOverviewComponent {
   async fetchCourseList() {
     this.courseLists = await this.courseUploadService.fetchUploadedCourses();
   }
-  logOut(){
+  logOut() {
     this.authService.logOutApplication();
+  }
+  openCourseDetailsPage(selectedCourse: ICourseList) {
+    this.dashboardService.setCourseDetailsInfo({
+      selectedCourse: selectedCourse,
+      showCourseDetail: true,
+    });
   }
 }

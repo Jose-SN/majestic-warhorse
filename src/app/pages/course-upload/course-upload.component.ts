@@ -7,6 +7,7 @@ import { IChapterInfo } from './model/chapter-info';
 import { CourseUploadService } from './course-upload.service';
 import { IMainCourseInfo } from './model/course-info';
 import { Subject } from 'rxjs';
+import { ICourseList } from '../courses/modal/course-list';
 @Component({
   selector: 'app-course-upload',
   standalone: true,
@@ -19,7 +20,7 @@ export class CourseUploadComponent {
   private destroy$ = new Subject<void>();
   public mainCourseInfo: IMainCourseInfo;
   public courseChapterList: IChapterInfo[] = [];
-  public lastUpdatedCourse: any = [];
+  public lastUpdatedCourse: ICourseList[] = [];
   constructor(private courseUploadService: CourseUploadService) {
     this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
     this.addNewChapter();
@@ -33,17 +34,32 @@ export class CourseUploadComponent {
   mobileMenu() {
     this.mobMenu = !this.mobMenu;
   }
-  addNewVideoList(chapter: IChapterInfo) {
-    chapter.fileDetails = chapter.fileDetails.concat({
-      ...this.courseUploadService.FILE_OBJECT_INFO,
+  async addNewVideoList(chapter: IChapterInfo) {
+    const isValid = await this.courseUploadService.courseSaveValidation({
+      mainCourseInfo: this.mainCourseInfo,
+      chapterInfo: this.courseChapterList,
     });
+    if (isValid) {
+      chapter.fileDetails = chapter.fileDetails.concat({
+        ...this.courseUploadService.FILE_OBJECT_INFO,
+      });
+    }
   }
-  addNewChapter() {
-    const newChapter = { ...this.courseUploadService.CHAPTER_INFO };
-    newChapter.fileDetails = newChapter.fileDetails.concat({
-      ...this.courseUploadService.FILE_OBJECT_INFO,
-    });
-    this.courseChapterList = this.courseChapterList.concat(newChapter);
+  async addNewChapter(isCheckValidaation?: boolean) {
+    let isValid: any = true;
+    if (isCheckValidaation) {
+      isValid = await this.courseUploadService.courseSaveValidation({
+        mainCourseInfo: this.mainCourseInfo,
+        chapterInfo: this.courseChapterList,
+      });
+    }
+    if (isValid) {
+      const newChapter = { ...this.courseUploadService.CHAPTER_INFO };
+      newChapter.fileDetails = newChapter.fileDetails.concat({
+        ...this.courseUploadService.FILE_OBJECT_INFO,
+      });
+      this.courseChapterList = this.courseChapterList.concat(newChapter);
+    }
   }
   openFileUploadWindow(nativeElement: HTMLElement): void {
     nativeElement?.click();
@@ -67,8 +83,9 @@ export class CourseUploadComponent {
         break;
       case 'ATTACHMENT':
         if ((mainIndex || mainIndex == 0) && this.courseChapterList[mainIndex]) {
-          this.courseChapterList[mainIndex].attachments =
-            this.courseChapterList[mainIndex].attachments.concat(fileUrl);
+          this.courseChapterList[mainIndex].attachments = this.courseChapterList[
+            mainIndex
+          ].attachments.concat({ fileURL: fileUrl, name: files[0].name });
         }
         break;
       case 'VIDEO_FILE':
@@ -78,6 +95,7 @@ export class CourseUploadComponent {
             this.courseChapterList[mainIndex].fileDetails[videoDetailsIndex]
           ) {
             this.courseChapterList[mainIndex].fileDetails[videoDetailsIndex].fileURL = fileUrl;
+            this.courseChapterList[mainIndex].fileDetails[videoDetailsIndex].name = files[0].name;
           }
         }
         break;
@@ -104,5 +122,14 @@ export class CourseUploadComponent {
   }
   private async fetchLastUpdatedCourses() {
     this.lastUpdatedCourse = await this.courseUploadService.fetchUploadedCourses();
+  }
+  handleCourseEdit(courseInfo: ICourseList) {
+    this.mainCourseInfo = {
+      _id: courseInfo._id,
+      courseCoverImage: courseInfo.courseCoverImage,
+      courseTitle: courseInfo.courseTitle,
+      courseDescription: courseInfo.courseDescription,
+    };
+    this.courseChapterList = courseInfo.chapterDetails as any;
   }
 }

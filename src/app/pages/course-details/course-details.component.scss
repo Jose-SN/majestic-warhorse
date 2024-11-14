@@ -461,158 +461,6 @@
               }
             }
           }
-          .course-list-holder {
-            position: relative;
-            overflow-y: auto;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            height: 417px;
-          }
-          .courses-list {
-            max-width: 330px;
-            width: 100%;
-
-            .scroll-content {
-              padding: 0 3px 0 0;
-            }
-            ul {
-              list-style: none;
-              @include common-margin();
-              @include flex(flex, column, null, null);
-              gap: 10px;
-              li {
-                background: var(--bg-left-panel);
-                border: 1px solid var(--bg-card-border);
-                width: 100%;
-                height: 48px;
-                padding: 15px;
-                @include flex(flex, null, null, center);
-                @include border-radius(8px);
-                @include transition(all 0.3s ease-in-out);
-                cursor: pointer;
-                figure {
-                  width: 20px;
-                  height: 20px;
-                  margin-right: 10px;
-                }
-                span {
-                  font-family: $titilliumWeb-semibold;
-                  font-size: 0.875rem;
-                  color: var(--white);
-                }
-                strong {
-                  font-family: $archivo-light;
-                  font-weight: normal;
-                  color: rgba($color: #fff, $alpha: 0.4);
-                  position: absolute;
-                  right: 15px;
-                }
-                svg {
-                  path {
-                    fill: var(--bg-time) !important;
-                  }
-                }
-                &.active {
-                  background: var(--bg-orange);
-                  color: var(--white);
-                  svg {
-                    path {
-                      fill: var(--white) !important;
-                    }
-                  }
-                }
-              }
-            }
-            .btn-holder {
-              max-width: 330px;
-              width: 100%;
-              margin-top: 15px;
-              button {
-                font-family: $archivo-medium;
-                font-size: 0.875rem;
-                color: var(--white);
-                width: 100%;
-                height: 50px;
-                @include border-radius(18px);
-                @include gradient();
-                border: none;
-                cursor: pointer;
-                @include flex(flex, null, center, center);
-              }
-            }
-          }
-          .video-bottom {
-            @include flex(flex, null, null, null);
-            gap: 25px;
-            .bottom-holder {
-              @include flex(flex, null, space-between, center);
-              gap: 10px;
-              flex-grow: 1;
-            }
-            margin-top: 15px;
-            .profile {
-              max-width: 174px;
-              width: 100%;
-              @include flex(flex, null, null, center);
-              padding: 0 10px;
-              gap: 15px;
-              figure {
-                width: 50px;
-                height: 50px;
-                @include border-radius(100%);
-                overflow: hidden;
-              }
-              .profile-right {
-                color: var(--white);
-                span {
-                  font-family: $titilliumWeb-regular;
-                  font-size: 1rem;
-                }
-                strong {
-                  font-family: $titilliumWeb-regular;
-                  font-size: 0.75rem;
-                  font-weight: normal;
-                  display: block;
-                }
-              }
-            }
-            .time {
-              @include flex(flex, null, null, center);
-              padding: 0 10px;
-              gap: 10px;
-              svg {
-                path {
-                  fill: var(--btn-add) !important;
-                }
-              }
-              span {
-                font-family: $titilliumWeb-regular;
-                font-size: 0.75rem;
-                color: var(--btn-add);
-              }
-            }
-            .bookmark {
-              @include flex(flex, null, null, center);
-              gap: 10px;
-              padding: 0 10px;
-              span {
-                font-family: $titilliumWeb-regular;
-                font-size: 0.75rem;
-                color: var(--btn-add);
-              }
-            }
-            .download {
-              @include flex(flex, null, null, center);
-              gap: 10px;
-              padding: 0 10px;
-              span {
-                font-family: $titilliumWeb-regular;
-                font-size: 0.75rem;
-                color: var(--btn-add);
-              }
-            }
-          }
         }
       }
     }
@@ -1239,6 +1087,158 @@ label {
       border-bottom: 1px dashed rgba($color: #fff, $alpha: 0.3);
       margin-bottom: 10px;
       padding-bottom: 10px;
+    }
+  }
+}
+.course-list-holder {
+  position: relative;
+  overflow-y: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 417px;
+}
+.courses-list {
+  max-width: 330px;
+  width: 100%;
+
+  .scroll-content {
+    padding: 0 3px 0 0;
+  }
+  ul {
+    list-style: none;
+    @include common-margin();
+    @include flex(flex, column, null, null);
+    gap: 10px;
+    li {
+      background: var(--bg-left-panel);
+      border: 1px solid var(--bg-card-border);
+      width: 100%;
+      height: 48px;
+      padding: 15px;
+      @include flex(flex, null, null, center);
+      @include border-radius(8px);
+      @include transition(all 0.3s ease-in-out);
+      cursor: pointer;
+      figure {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+      }
+      span {
+        font-family: $titilliumWeb-semibold;
+        font-size: 0.875rem;
+        color: var(--white);
+      }
+      strong {
+        font-family: $archivo-light;
+        font-weight: normal;
+        color: rgba($color: #fff, $alpha: 0.4);
+        position: absolute;
+        right: 15px;
+      }
+      svg {
+        path {
+          fill: var(--bg-time) !important;
+        }
+      }
+      &.active {
+        background: var(--bg-orange);
+        color: var(--white);
+        svg {
+          path {
+            fill: var(--white) !important;
+          }
+        }
+      }
+    }
+  }
+  .btn-holder {
+    max-width: 330px;
+    width: 100%;
+    margin-top: 15px;
+    button {
+      font-family: $archivo-medium;
+      font-size: 0.875rem;
+      color: var(--white);
+      width: 100%;
+      height: 50px;
+      @include border-radius(18px);
+      @include gradient();
+      border: none;
+      cursor: pointer;
+      @include flex(flex, null, center, center);
+    }
+  }
+}
+.video-bottom {
+  @include flex(flex, null, null, null);
+  gap: 25px;
+  .bottom-holder {
+    @include flex(flex, null, space-between, center);
+    gap: 10px;
+    flex-grow: 1;
+  }
+  margin-top: 15px;
+  .profile {
+    max-width: 174px;
+    width: 100%;
+    @include flex(flex, null, null, center);
+    padding: 0 10px;
+    gap: 15px;
+    figure {
+      width: 50px;
+      height: 50px;
+      @include border-radius(100%);
+      overflow: hidden;
+    }
+    .profile-right {
+      color: var(--white);
+      span {
+        font-family: $titilliumWeb-regular;
+        font-size: 1rem;
+      }
+      strong {
+        font-family: $titilliumWeb-regular;
+        font-size: 0.75rem;
+        font-weight: normal;
+        display: block;
+      }
+    }
+  }
+  .time {
+    @include flex(flex, null, null, center);
+    padding: 0 10px;
+    gap: 10px;
+    svg {
+      path {
+        fill: var(--btn-add) !important;
+      }
+    }
+    span {
+      font-family: $titilliumWeb-regular;
+      font-size: 0.75rem;
+      color: var(--btn-add);
+    }
+  }
+  .bookmark {
+    @include flex(flex, null, null, center);
+    gap: 10px;
+    padding: 0 10px;
+    span {
+      font-family: $titilliumWeb-regular;
+      font-size: 0.75rem;
+      color: var(--btn-add);
+    }
+  }
+  .download {
+    @include flex(flex, null, null, center);
+    gap: 10px;
+    padding: 0 10px;
+    span {
+      font-family: $titilliumWeb-regular;
+      font-size: 0.75rem;
+      color: var(--btn-add);
     }
   }
 }

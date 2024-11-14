@@ -1,7 +1,9 @@
 export interface IFileObjectInfo {
   fileURL: string;
   name: string;
-  enableDelete: boolean;
-  enablePreview: boolean;
   description: string;
+}
+export interface IAttachmentObjectInfo {
+  fileURL: string;
+  name: string;
 }

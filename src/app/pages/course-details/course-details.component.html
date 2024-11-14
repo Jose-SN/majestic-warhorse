@@ -32,11 +32,12 @@
             </figure>
           </div> -->
           <div class="common-holder" (click)="logOut()">
-            <figure style="width: 35px; height: 35px;"><img src="../../../assets/images/icon-logout.svg" alt="USA" /></figure>
+            <figure style="width: 35px; height: 35px;"><img src="../../../assets/images/icon-logout.svg" alt="USA" />
+            </figure>
           </div>
           <div class="profile">
             <figure>
-              <img [src]="profileUrl"/>
+              <img [src]="profileUrl" />
             </figure>
           </div>
         </div>
@@ -54,7 +55,7 @@
               <div class="video-holder">
                 <div class="video-left">
                   <!-- <figure><img src="../../../assets/images/img-video.png" alt="" /></figure> -->
-                  <app-video-player [videoUrl]="{url:activeVideoUrl}"></app-video-player>
+                  <app-video-player [videoUrl]="{url:activeVideoInfo.fileURL}" (videoUration)="videoUrationHandler($event)"></app-video-player>
                   <div class="video-bottom">
                     <div class="bottom-holder">
                       <div class="profile">
@@ -74,7 +75,7 @@
                               fill="" />
                           </svg>
                         </figure>
-                        <span>1 hour 42 minutes</span>
+                        <span>{{videoDuration}}</span>
                       </div>
                       <div class="bookmark">
                         <figure>
@@ -85,7 +86,7 @@
                               stroke="#FD7859" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                           </svg>
                         </figure>
-                        <span>Download meterial</span>
+                        <span (click)="downloadMaterial('VIDEO')">Download video</span>
                       </div>
                       <div class="download">
                         <figure>
@@ -106,7 +107,7 @@
                             </defs>
                           </svg>
                         </figure>
-                        <span>Download meterial</span>
+                        <span (click)="downloadMaterial('ATTACHMENT')">Download meterial</span>
                       </div>
                     </div>
                   </div>
@@ -134,14 +135,17 @@
                                 fill="" />
                             </svg>
                           </figure>
-                          <span>{{ chapterDetails.chapterTitle }}</span>
-                          <strong>1:49</strong>
+                          <span>Attachments</span>
                         </li>
                         <div class="panel">
                           <div class="panel-content">
-                            @for (item of chapterDetails.fileDetails; track $index) {
-                            <div class="panel-list" (click)="changeVideoUrl(item)">
-                              <p> {{item.description}}</p>
+                            @for (item of chapterDetails.attachments; track $index) {
+                            <div class="panel-list">
+                              <p> {{item.name}}</p>
+                              <ul>
+                                <li>Preview</li>
+                                <li>Download</li>
+                              </ul>
                             </div>
                             }
                           </div>
@@ -150,9 +154,11 @@
                       </ul>
                     </div>
                   </div>
+                  @if(loginedUserRole === 'student'){
                   <div class="btn-holder">
                     <button (click)="handleStartAssessment()">Start Assessment Test</button>
                   </div>
+                  }
                 </div>
               </div>
             </div>
@@ -160,118 +166,39 @@
         </div>
         <div class="content-right">
           <div class="content-box">
-            <h3>Last Submitted</h3>
+            <!-- <h3>Last Submitted</h3> -->
             <div class="reading-list-wrapper">
               <div class="reading-list-content">
                 <div class="scroll-content">
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  <div class="reading-list">
-                    <figure>
-                      <img src="../../../assets/images/img-last-submited.png" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>MIT Year 1 (C24)</h4>
-                      <span>12 Chapters</span>
-                      <button>Published</button>
+                  <div class="courses-list">
+                    <div class="course-list-holder">
+                      <div class="scroll-content accordion-content">
+                        <ul>
+                          @for (chapterDetails of selectedCourseInfo.chapterDetails; track $index) {
+                          <li (click)="openAccordian($event,chapterDetails)"
+                            [ngClass]="{'active': chapterDetails._id === activeChapter._id}">
+                            <figure>
+                              <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  d="M10 20C4.477 20 0 15.523 0 10C0 4.477 4.477 0 10 0C15.523 0 20 4.477 20 10C20 15.523 15.523 20 10 20ZM10 18C12.1217 18 14.1566 17.1571 15.6569 15.6569C17.1571 14.1566 18 12.1217 18 10C18 7.87827 17.1571 5.84344 15.6569 4.34315C14.1566 2.84285 12.1217 2 10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18ZM11 10H15V12H9V5H11V10Z"
+                                  fill="" />
+                              </svg>
+                            </figure>
+                            <span>{{ chapterDetails.chapterTitle }}</span>
+                            <strong>1:49</strong>
+                          </li>
+                          <div class="panel">
+                            <div class="panel-content">
+                              @for (item of chapterDetails.fileDetails; track $index) {
+                              <div class="panel-list" (click)="changeVideoUrl(item)">
+                                <p> {{item.description}}</p>
+                              </div>
+                              }
+                            </div>
+                          </div>
+                          }
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
