@@ -12,6 +12,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
 import { HeaderInterceptors } from './interceptors/header.interceptor';
+import { StarRatingModule } from 'angular-star-rating';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,6 +31,7 @@ import { HeaderInterceptors } from './interceptors/header.interceptor';
     ParticleComponent,
     ToastrModule.forRoot(),
     NgxSpinnerModule,
+    StarRatingModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true },

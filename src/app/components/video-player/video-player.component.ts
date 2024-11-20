@@ -11,24 +11,35 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 export class VideoPlayerComponent {
   public sourceUrl: SafeUrl | undefined;
   @Input() videoUrl!: { [key: string]: string };
-  @Output() videoUration: EventEmitter<number> = new EventEmitter<number>();
+  @Output() videoDuration: EventEmitter<number> = new EventEmitter<number>();
+  @Output() videoStatusUpdate: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('videoPlayer', { static: true }) videoPlayer!: ElementRef<HTMLVideoElement>;
 
   constructor(protected sanitizer: DomSanitizer) {}
+  get getVideoTimeUpdate() {
+    return {
+      duration: this.videoPlayer.nativeElement.duration,
+      currentTime: this.videoPlayer.nativeElement.currentTime,
+    };
+  }
   ngOnInit(): void {
     this.bypassSecurityTrustUrl(this.videoUrl['url']);
   }
   playVideo() {
     this.videoPlayer.nativeElement.play();
   }
-  onPlay() {}
-  onPause() {}
+  onPlay() {
+    this.videoStatusUpdate.emit("PLAY");
+  }
+  onPause() {
+    this.videoStatusUpdate.emit("PAUSE");
+  }
   bypassSecurityTrustUrl(url: string) {
     this.sourceUrl = this.sanitizer.bypassSecurityTrustUrl(url);
   }
   setVideoDuration(event: Event): void {
     const video = event.target as HTMLVideoElement;
-    this.videoUration.emit(video.duration);
+    this.videoDuration.emit(video.duration);
   }
   ngOnChanges() {
     this.bypassSecurityTrustUrl(this.videoUrl['url']);
