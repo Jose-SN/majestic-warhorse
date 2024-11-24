@@ -197,8 +197,8 @@
                             <div class="panel-list">
                               <p> {{item.name}}</p>
                               <ul>
-                                <li>Preview</li>
-                                <li>Download</li>
+                                <li (click)="previewDocument(item)">Preview</li>
+                                <li (click)="downloadFile(item)">Download</li>
                               </ul>
                             </div>
                             }

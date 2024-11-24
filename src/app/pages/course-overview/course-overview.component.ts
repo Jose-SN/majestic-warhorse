@@ -9,6 +9,7 @@ import { ICourseList } from '../courses/modal/course-list';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { DashboardService } from '../dashboard/dashboard.service';
+import { CourseDetailsService } from '../course-details/course-details.service';
 
 @Component({
   selector: 'app-course-overview',
@@ -28,12 +29,13 @@ export class CourseOverviewComponent {
     private courseUploadService: CourseUploadService,
     private authService: AuthService,
     private commonService: CommonService,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private courseDetailsService: CourseDetailsService
   ) {
     this.fetchCourseList();
     this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
   }
-  ngOnInit() {
+  async ngOnInit() {
       this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
   }
   triggerMenu() {
@@ -50,7 +52,24 @@ export class CourseOverviewComponent {
     this.showSliderView = false;
   }
   async fetchCourseList() {
+    await this.courseDetailsService.getCourseStatusList();
     this.courseLists = await this.courseUploadService.fetchUploadedCourses();
+    this.courseLists.forEach((course) => {
+      let completedLessonCount = 0;
+      course.chapterDetails.forEach((chapterDetails,index) => {
+        const chapterCompleted = chapterDetails.fileDetails.every((fileDetails) => {
+         return this.courseDetailsService.courseStatusList.find(
+           (courseStatus) => courseStatus.parentId === fileDetails._id && +courseStatus.percentage === 100
+         );
+        });
+        if(chapterCompleted){
+          completedLessonCount = ((completedLessonCount || 0) + 1);
+        }
+        if (index + 1 === course.chapterDetails.length) {
+          course.chapterCompletedCount = completedLessonCount || 0;
+        }
+      })
+    });
   }
   logOut() {
     this.authService.logOutApplication();

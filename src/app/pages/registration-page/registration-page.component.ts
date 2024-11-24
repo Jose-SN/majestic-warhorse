@@ -120,7 +120,4 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   openDialog(): void {
     this.isDialogOpen = true;
   }
-  onDialogClosed(confirmed: boolean): void {
-    this.isDialogOpen = false;
-  }
 }

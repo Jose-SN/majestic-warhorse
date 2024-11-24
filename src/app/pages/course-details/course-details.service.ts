@@ -34,7 +34,7 @@ export class CourseDetailsService {
         rating: null,
         createdBy: createdId,
         parentId: saveInfo.activeFile._id,
-        parentType: 'Chapter',
+        parentType: 'File',
         percentage:
           saveInfo.courseStatusInfo.percentage !== 100 ? saveInfo.videoPercentage || 0 : 100,
         ...(saveInfo.videoStatusInfo._id && { _id: saveInfo.videoStatusInfo._id }),

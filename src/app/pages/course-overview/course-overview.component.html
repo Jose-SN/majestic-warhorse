@@ -37,7 +37,8 @@
             </figure>
           </div> -->
           <div class="common-holder" (click)="logOut()">
-            <figure style="width: 35px; height: 35px;"><img src="../../../assets/images/icon-logout.svg" alt="USA" /></figure>
+            <figure style="width: 35px; height: 35px;"><img src="../../../assets/images/icon-logout.svg" alt="USA" />
+            </figure>
           </div>
           <div class="profile">
             <figure>
@@ -145,7 +146,10 @@
                     <span>A Course by {{ course["createdBy"].firstName }} {{ course["createdBy"].lastName }}</span>
                     <h3>{{course?.courseTitle}}
                     </h3>
-                    <figure><img src="../../../../assets/images/img-loader.png" alt="" /></figure>
+                    <span>@if(course.chapterDetails.length){
+                      {{course.chapterCompletedCount}}/{{course.chapterDetails.length}} Lessons
+                      }
+                    </span>
                   </div>
                 </div>
                 }
