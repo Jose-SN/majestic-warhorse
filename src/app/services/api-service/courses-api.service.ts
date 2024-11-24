@@ -44,7 +44,7 @@ export class CoursesApiService {
   }
   updateCourseStatus(courseUploadPayload: any) {
     return this.http
-      .post<ICourseStatus>(`${this._apiUrl}status/update`, courseUploadPayload)
+      .put<ICourseStatus>(`${this._apiUrl}status/update`, courseUploadPayload)
       .pipe(catchError(this.commonService.handleError));
   }
   getCourseStatusList() {

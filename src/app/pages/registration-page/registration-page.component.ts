@@ -13,12 +13,11 @@ import { Router } from '@angular/router';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { UserModel } from '../login-page/model/user-model';
 import { CommonModule } from '@angular/common';
-import { CommonDialogComponent } from "../../components/common-dialog/common-dialog.component";
 
 @Component({
   selector: 'app-registration-page',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, CommonDialogComponent],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './registration-page.component.html',
   styleUrl: './registration-page.component.scss',
 })
@@ -119,13 +118,5 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   isDialogOpen = false;
   openDialog(): void {
     this.isDialogOpen = true;
-  }
-  onDialogClosed(confirmed: boolean): void {
-    this.isDialogOpen = false;
-    if (confirmed) {
-      console.log('User confirmed the action');
-    } else {
-      console.log('User canceled the action');
-    }
   }
 }

@@ -37,20 +37,6 @@
                       <span>Drop your file here or browse</span>
                       <input type="file" id="images" accept="image/*" (change)="onFileSelected($event,'COVER_IMAGE')" />
                     </label>
-                    <div class="selection-holder">
-                      <div class="input-holder">
-                        <label>Department</label>
-                        <select>
-                          <option>IT</option>
-                        </select>
-                      </div>
-                      <div class="input-holder">
-                        <label>Year</label>
-                        <select>
-                          <option>2001</option>
-                        </select>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -92,7 +78,7 @@
                       <div class="add-button">
                         <button>
                           <img src="../../../assets/images/icon-video.svg" alt="" />
-                          <span>Preview</span>
+                          <span (click)="previewVideo(item)">Preview</span>
                         </button>
                         <input type="file" #videoInput
                           (change)="onFileSelected($event,'VIDEO_FILE',parentIndex, videIndex)"

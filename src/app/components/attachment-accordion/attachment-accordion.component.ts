@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { IAttachmentObjectInfo } from 'src/app/pages/course-upload/model/file-object-info';
+import { CommonService } from 'src/app/shared/services/common.service';
 
 @Component({
   selector: 'app-attachment-accordion',
@@ -19,5 +20,14 @@ export class AttachmentAccordionComponent {
     } else {
       panel.style.maxHeight = panel.scrollHeight + 'px';
     }
+  }
+  constructor(private commonService: CommonService) {}
+  previewDocument(attachment: IAttachmentObjectInfo) {
+    this.commonService.openPopupModel({
+      url: attachment.fileURL,
+      data: attachment,
+      title: attachment.name,
+      fileType: 'ATTACHMENT',
+    });
   }
 }

@@ -10,6 +10,7 @@ import { CourseDetailsService } from './course-details.service';
 import { ClickEvent, RatingChangeEvent, StarRatingModule } from 'angular-star-rating';
 import { Subject, takeLast, takeUntil } from 'rxjs';
 import { ICourseStatus } from './model/course-status';
+import { IAttachmentObjectInfo } from '../course-upload/model/file-object-info';
 
 @Component({
   selector: 'app-course-detils',
@@ -95,11 +96,12 @@ export class CourseDetailsComponent {
     if (type === 'VIDEO') {
       this.fileDownloadService.downloadFile(
         this.activeVideoInfo.fileURL,
-        this.activeVideoInfo.name ?? ''
+        this.activeVideoInfo.name ?? '',
+        this.destroy$
       );
     } else {
       this.activeChapter.attachments.forEach((attachment) => {
-        this.fileDownloadService.downloadFile(attachment.fileURL, attachment.name ?? '');
+        this.fileDownloadService.downloadFile(attachment.fileURL, attachment.name ?? '',this.destroy$);
       });
     }
   }
@@ -145,6 +147,17 @@ export class CourseDetailsComponent {
     if (videoStatusInfo) {
       this.videoStatusInfo = videoStatusInfo;
     }
+  }
+  previewDocument(attachment: IAttachmentObjectInfo) {
+    this.commonService.openPopupModel({
+      url: attachment.fileURL,
+      data: attachment,
+      title: attachment.name,
+      fileType: 'ATTACHMENT',
+    });
+  }
+  downloadFile(attachment: IAttachmentObjectInfo) {
+    this.fileDownloadService.downloadFile(attachment.fileURL, attachment.name ?? '',this.destroy$);
   }
   ngOnDestroy(): void {
     this.destroy$.next();
