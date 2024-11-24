@@ -122,10 +122,5 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   }
   onDialogClosed(confirmed: boolean): void {
     this.isDialogOpen = false;
-    if (confirmed) {
-      console.log('User confirmed the action');
-    } else {
-      console.log('User canceled the action');
-    }
   }
 }
