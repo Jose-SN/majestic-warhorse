@@ -1,6 +1,7 @@
 import { IAttachmentObjectInfo } from "../../course-upload/model/file-object-info";
 
 export interface ICourseList {
+  chapterCompletedCount: number;
   _id: string;
   courseCoverImage: string;
   courseTitle: string;
@@ -21,6 +22,7 @@ export interface ChapterDetail {
   creation_date: Date;
   modification_date: Date;
   fileDetails: FileDetail[];
+  completedCount: number;
 }
 
 export interface CreatedBy {

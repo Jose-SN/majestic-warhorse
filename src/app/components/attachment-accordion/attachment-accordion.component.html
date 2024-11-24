@@ -7,7 +7,7 @@
       <div class="panel-list">
         <p> {{attachment.name}}</p>
         <ul>
-          <li>Preview</li>
+          <li (click)="previewDocument(attachment)">Preview</li>
           <li (click)="attachmentList.splice($index,1)">Delete</li>
         </ul>
       </div>

@@ -13,6 +13,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
 import { HeaderInterceptors } from './interceptors/header.interceptor';
 import { StarRatingModule } from 'angular-star-rating';
+import { CommonDialogComponent } from './components/common-dialog/common-dialog.component';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,7 +32,8 @@ import { StarRatingModule } from 'angular-star-rating';
     ParticleComponent,
     ToastrModule.forRoot(),
     NgxSpinnerModule,
-    StarRatingModule.forRoot()
+    StarRatingModule.forRoot(),
+    CommonDialogComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true },

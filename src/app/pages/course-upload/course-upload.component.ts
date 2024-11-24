@@ -1,5 +1,4 @@
-import { CommonSliderComponent } from './../../components/common-slider/common-slider.component';
-import { Component, ViewChild, ElementRef, ViewChildren, QueryList, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AttachmentAccordionComponent } from 'src/app/components/attachment-accordion/attachment-accordion.component';
@@ -8,10 +7,12 @@ import { CourseUploadService } from './course-upload.service';
 import { IMainCourseInfo } from './model/course-info';
 import { Subject } from 'rxjs';
 import { ICourseList } from '../courses/modal/course-list';
+import { IFileObjectInfo } from './model/file-object-info';
+import { CommonService } from 'src/app/shared/services/common.service';
 @Component({
   selector: 'app-course-upload',
   standalone: true,
-  imports: [FormsModule, CommonModule, CommonSliderComponent, AttachmentAccordionComponent],
+  imports: [FormsModule, CommonModule, AttachmentAccordionComponent],
   templateUrl: './course-upload.component.html',
   styleUrl: './course-upload.component.scss',
 })
@@ -21,7 +22,10 @@ export class CourseUploadComponent {
   public mainCourseInfo: IMainCourseInfo;
   public courseChapterList: IChapterInfo[] = [];
   public lastUpdatedCourse: ICourseList[] = [];
-  constructor(private courseUploadService: CourseUploadService) {
+  constructor(
+    private courseUploadService: CourseUploadService,
+    private commonService: CommonService
+  ) {
     this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
     this.addNewChapter();
     this.fetchLastUpdatedCourses();
@@ -131,5 +135,13 @@ export class CourseUploadComponent {
       courseDescription: courseInfo.courseDescription,
     };
     this.courseChapterList = courseInfo.chapterDetails as any;
+  }
+  previewVideo(fileDetails: IFileObjectInfo) {
+    this.commonService.openPopupModel({
+      url: fileDetails.fileURL,
+      data: fileDetails,
+      title: fileDetails.name,
+      fileType: 'VIDEO',
+    });
   }
 }

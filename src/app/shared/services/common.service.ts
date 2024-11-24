@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { IToasterModel } from '../toaster/toaster.model';
 import { HttpErrorResponse } from '@angular/common/http';
-import { throwError } from 'rxjs';
+import { Subject, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { TOASTER_MESSAGE_TYPE } from '../toaster/toaster-info';
+import { IModelInfo } from 'src/app/components/common-dialog/model/popupmodel';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,7 @@ export class CommonService {
   public loginedUserInfo!: UserModel;
   public allUsersList: UserModel[] = [];
   public adminRoleType: string[] = ['admin',"teacher"];
+  private openpopupModel$: Subject<any> = new Subject<any>()
   constructor(private toastrService: ToastrService) {}
   set alluserList(userList: UserModel[]) {
     this.allUsersList = userList;
@@ -41,5 +43,11 @@ export class CommonService {
   }
   public isEmpty(object: { [key: string]: string | number }) {
     return Object.keys(object).length === 0;
+  }
+  public openPopupModel(modalInfo:IModelInfo){
+    this.openpopupModel$.next(modalInfo);
+  }
+  public getOpenpopupModelHandle(){
+    return this.openpopupModel$.asObservable();
   }
 }
