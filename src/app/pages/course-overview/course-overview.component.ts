@@ -55,18 +55,18 @@ export class CourseOverviewComponent {
     await this.courseDetailsService.getCourseStatusList();
     this.courseLists = await this.courseUploadService.fetchUploadedCourses();
     this.courseLists.forEach((course) => {
+      let completedLessonCount = 0;
       course.chapterDetails.forEach((chapterDetails,index) => {
         const chapterCompleted = chapterDetails.fileDetails.every((fileDetails) => {
-         const courseStarted = this.courseDetailsService.courseStatusList.find(
+         return this.courseDetailsService.courseStatusList.find(
            (courseStatus) => courseStatus.parentId === fileDetails._id && +courseStatus.percentage === 100
          );
-         return courseStarted
         });
         if(chapterCompleted){
-          chapterDetails.completedCount = ((chapterDetails.completedCount || 0) + 1);
+          completedLessonCount = ((completedLessonCount || 0) + 1);
         }
         if (index + 1 === course.chapterDetails.length) {
-          course.chapterCompletedCount = chapterDetails.completedCount || 0;
+          course.chapterCompletedCount = completedLessonCount || 0;
         }
       })
     });
