@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { IToasterModel } from '../toaster/toaster.model';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -15,7 +15,10 @@ export class CommonService {
   public allUsersList: UserModel[] = [];
   public adminRoleType: string[] = ['admin',"teacher"];
   private openpopupModel$: Subject<any> = new Subject<any>()
-  constructor(private toastrService: ToastrService) {}
+  public onlineStatusChanged = new EventEmitter<boolean>();
+  constructor(private toastrService: ToastrService) {
+    this.initializeStatus();
+  }
   set alluserList(userList: UserModel[]) {
     this.allUsersList = userList;
   }
@@ -52,5 +55,19 @@ export class CommonService {
   }
   transformText(text: string) {
     return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+  
+
+  private initializeStatus() {
+    // Emit the current status on service initialization
+    this.emitOnlineStatus();
+
+    // Listen for online and offline events
+    window.addEventListener('online', () => this.emitOnlineStatus());
+    window.addEventListener('offline', () => this.emitOnlineStatus());
+  }
+
+  private emitOnlineStatus() {
+    this.onlineStatusChanged.emit(navigator.onLine);
   }
 }

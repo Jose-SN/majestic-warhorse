@@ -1,8 +1,8 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { CommonSliderComponent } from 'src/app/components/common-slider/common-slider.component';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { CoursesService } from '../courses/courses.service';
 import { CourseUploadService } from '../course-upload/course-upload.service';
 import { ICourseList } from '../courses/modal/course-list';
@@ -15,11 +15,11 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-course-overview',
   standalone: true,
-  imports: [FormsModule, CommonModule, CommonSliderComponent, AsyncPipe],
+  imports: [FormsModule, CommonModule],
   templateUrl: './course-overview.component.html',
   styleUrl: './course-overview.component.scss',
 })
-export class CourseOverviewComponent {
+export class CourseOverviewComponent implements OnInit, OnDestroy {
   public mobMenu: boolean = false;
   public profileUrl: string = '';
   public showSliderView: boolean = false;
@@ -28,6 +28,10 @@ export class CourseOverviewComponent {
   public dashboardOverview: any = {
     coursesUploaded: 0,
   };
+  public isOnline: boolean = navigator.onLine;
+  private onlineStatusSubscription: Subscription | undefined;  // Mark as possibly undefined
+  public teachersList: any[] = [];
+  public studentsList: any[] = [];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private courseUploadService: CourseUploadService,
@@ -38,10 +42,17 @@ export class CourseOverviewComponent {
     private router: Router,
   ) {
     this.fetchCourseList();
+    this.getTeachersList();
+    this.getSturdentsList();
     this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
   }
-  async ngOnInit() {
-      this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
+  ngOnInit() {
+    this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
+    this.onlineStatusSubscription = this.commonService.onlineStatusChanged.subscribe(
+      (status: boolean) => {
+        this.isOnline = status;
+      }
+    );
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -87,5 +98,16 @@ export class CourseOverviewComponent {
   }
   fetchDashboardOverview() {
     this.dashboardOverview = this.dashboardService.fetchUploadedCourses();
+  }
+  ngOnDestroy(): void {
+    if (this.onlineStatusSubscription) {
+      this.onlineStatusSubscription.unsubscribe();
+    }
+  }
+  getTeachersList() {
+    this.teachersList = this.commonService.allUsersList.filter((user) => user.role === 'teacher');
+  }
+  getSturdentsList() {
+    this.studentsList = this.commonService.allUsersList.filter((user) => user.role === 'student');
   }
 }

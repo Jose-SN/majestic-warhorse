@@ -36,6 +36,9 @@
               <img src="../../../assets/images/icon-notification.svg" alt="Notification" />
             </figure>
           </div> -->
+          <div class="status-icon">
+            <i [class]="isOnline ? 'fas fa-circle online' : 'fas fa-circle offline'" [title]="isOnline ? 'Online' : 'Offline'"></i>
+          </div>
           <div class="common-holder cursor-pointer" (click)="logOut()">
             <figure style="width: 35px; height: 35px;"><img src="../../../assets/images/icon-logout.svg" alt="USA" />
             </figure>
@@ -163,105 +166,17 @@
             <h3>Teachers</h3>
             <div class="reading-list-wrapper">
               <div class="reading-list-content">
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
+                @for (course of teachersList; track $index) {
+                  <div class="reading-list">
+                    <figure>
+                      <img src="{{course?.profileImage}}" alt="" />
+                    </figure>
+                    <div class="reading-list-right">
+                      <h4>{{course?.firstName}} {{course?.lastName}}</h4>
+                      <span>5 courses</span>
+                    </div>
                   </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                  </div>
-                </div>
+                }
               </div>
             </div>
           </div>
@@ -271,116 +186,18 @@
             <h3>Students</h3>
             <div class="reading-list-wrapper">
               <div class="reading-list-content">
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
+                @for (student of studentsList; track $index) {
+                  <div class="reading-list">
+                    <figure>
+                      <img src="{{student?.profileImage}}" alt="" />
+                    </figure>
+                    <div class="reading-list-right">
+                      <h4>{{student?.firstName}} {{student?.lastName}}</h4>
+                      <!-- <span>5 courses</span> -->
+                      <button>View</button>
+                    </div>
                   </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
-                <div class="reading-list">
-                  <figure>
-                    <img src="../../../assets/images/placeholder.png" alt="" />
-                  </figure>
-                  <div class="reading-list-right">
-                    <h4>Stevan Store</h4>
-                    <span>5 courses</span>
-                    <button>View</button>
-                  </div>
-                </div>
+                }
               </div>
             </div>
           </div>
