@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   appVersion: '1.0.0',
   apiUrl: 'https://rehobothlondonapi.netlify.app/.netlify/functions/api/',
-  majesticWarhorseApi: 'https://majesticapi.rehoboth.london/',
+  majesticWarhorseApi: 'http://localhost:5000/'//'https://majesticapi.rehoboth.london/',
 };
 
 /*
