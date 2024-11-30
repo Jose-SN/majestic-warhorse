@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { CourseDetailsService } from '../course-details/course-details.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-course-overview',
@@ -24,13 +25,17 @@ export class CourseOverviewComponent {
   public showSliderView: boolean = false;
   public courseLists: ICourseList[] = [];
   public loginedUserPrivilege: string = '';
+  public dashboardOverview: any = {
+    coursesUploaded: 0,
+  };
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private courseUploadService: CourseUploadService,
     private authService: AuthService,
     private commonService: CommonService,
     private dashboardService: DashboardService,
-    private courseDetailsService: CourseDetailsService
+    private courseDetailsService: CourseDetailsService,
+    private router: Router,
   ) {
     this.fetchCourseList();
     this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
@@ -79,5 +84,8 @@ export class CourseOverviewComponent {
       selectedCourse: selectedCourse,
       showCourseDetail: true,
     });
+  }
+  fetchDashboardOverview() {
+    this.dashboardOverview = this.dashboardService.fetchUploadedCourses();
   }
 }

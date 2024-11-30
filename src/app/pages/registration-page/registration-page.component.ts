@@ -30,7 +30,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   public createAccountForm!: FormGroup;
   private formValidator = new FormValidators();
   private destroy$ = new Subject<void>();
-
+  public isDialogOpen = false;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
@@ -113,10 +113,10 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     this.destroy$.next();
     this.destroy$.complete();
   }
+  onDialogClosed(evt: any) {
+    this.isDialogOpen = false;
+  }
 
-
-
-  isDialogOpen = false;
   openDialog(): void {
     this.isDialogOpen = true;
   }

@@ -14,6 +14,7 @@ import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
 import { HeaderInterceptors } from './interceptors/header.interceptor';
 import { StarRatingModule } from 'angular-star-rating';
 import { CommonDialogComponent } from './components/common-dialog/common-dialog.component';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent],
@@ -42,6 +43,7 @@ import { CommonDialogComponent } from './components/common-dialog/common-dialog.
       useClass: HeaderInterceptors,
       multi: true,
     },
+    DatePipe,
   ],
   bootstrap: [AppComponent],
 })

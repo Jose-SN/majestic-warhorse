@@ -50,4 +50,7 @@ export class CommonService {
   public getOpenpopupModelHandle(){
     return this.openpopupModel$.asObservable();
   }
+  transformText(text: string) {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  }
 }
