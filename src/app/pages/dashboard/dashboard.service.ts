@@ -26,6 +26,7 @@ export class DashboardService {
   public sidePanelChange: BehaviorSubject<string> = new BehaviorSubject(
     this.SIDE_PANEL_LIST.DASHBOARD_OVERVIEW
   );
+  public popupChange: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public courseDetailsInfo: Subject<{ [key: string]: boolean | ICourseList }> = new Subject();
   private _apiUrl: string = environment.majesticWarhorseApi;
   constructor(
@@ -41,6 +42,12 @@ export class DashboardService {
   }
   getSidePanelChange(): Observable<string> {
     return this.sidePanelChange.asObservable();
+  }
+  setPopupChangeValue(changedpopup: boolean) {
+    this.popupChange.next(changedpopup);
+  }
+  getPupupChange(): Observable<boolean> {
+    return this.popupChange.asObservable();
   }
   setCourseDetailsInfo(courseInfo: { [key: string]: boolean | ICourseList }) {
     this.courseDetailsInfo.next(courseInfo);

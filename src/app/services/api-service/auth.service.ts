@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, lastValueFrom } from 'rxjs';
-import { UserLogin, UserModel } from 'src/app/pages/login-page/model/user-model';
+import { UserLogin, UserLoginResponse, UserModel } from 'src/app/pages/login-page/model/user-model';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { IPassWordUpdate } from 'src/app/pages/forgot-password/model';
 import { Router } from '@angular/router';
@@ -59,6 +59,11 @@ export class AuthService {
     const interceptor: { [key: string]: string } = { responseType: 'text' };
     return this.http
       .post<string>(`${this._apiUrl}user/confirm-password`, updatePassword, interceptor)
+      .pipe(catchError(this.commonService.handleError));
+  }
+  public updateUserInfo(userInfo: any) {
+    return this.http
+      .put<UserLoginResponse>(`${this._apiUrl}user/update`, userInfo)
       .pipe(catchError(this.commonService.handleError));
   }
 }

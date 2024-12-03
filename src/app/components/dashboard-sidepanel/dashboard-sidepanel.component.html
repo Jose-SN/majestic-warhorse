@@ -237,6 +237,22 @@
       </li>
     </ul>
   </div>
+  <app-common-dialog *ngIf="showAssigningPopup" [popupModelInfo]="popupModelInfo" [templateRef]="dynamicContentTemplate"></app-common-dialog>
+  
+  <ng-template #dynamicContentTemplate>
+    <div class="input-holder" >
+      <label for="teachers">Select Teachers</label>
+      <input
+        type="text"
+        name="teachers"
+        placeholder="teachers"
+        required
+      />
+    </div>
+    <button class="btn-assign" (click)="assignTeachers()"> Assign Teachers</button>
+
+  </ng-template>
+  
   <footer>
     MAJESTIC WARHORSE<br />
     {{ commonService.transformText(loginedUserPrivilege) }} Dashboard<br />
