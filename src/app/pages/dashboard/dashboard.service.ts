@@ -21,6 +21,7 @@ export class DashboardService {
     TEACHERS_LISTING: 'TEACHERS_LISTING',
     STUDENTS_LISTING: 'STUDENTS_LISTING',
     ASSIGN_TEACHER: 'ASSIGN_TEACHER',
+    TEACHER_APPROVAL: 'TEACHER_APPROVAL',
   };
   public sidePanelChange: BehaviorSubject<string> = new BehaviorSubject(
     this.SIDE_PANEL_LIST.DASHBOARD_OVERVIEW

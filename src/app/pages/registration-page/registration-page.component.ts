@@ -53,6 +53,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
           ],
         ],
         confirmPassword: ['', [Validators.required]],
+        role: ['student', [Validators.required]],
       },
       {
         validator: this.formValidator.passwordMatchValidator.bind(this.createAccountForm),

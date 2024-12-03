@@ -8,4 +8,5 @@ export interface ISidepanel {
   STUDENTS_LISTING: string;
   TEACHERS_LISTING: string;
   ASSIGN_TEACHER: string;
+  TEACHER_APPROVAL: string;
 }
