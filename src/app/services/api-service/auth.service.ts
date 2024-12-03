@@ -55,4 +55,10 @@ export class AuthService {
     sessionStorage.removeItem('isAuthenticated');
     this.router.navigate(['/login']);
   }
+  validateOtp(updatePassword: IPassWordUpdate) {
+    const interceptor: { [key: string]: string } = { responseType: 'text' };
+    return this.http
+      .post<string>(`${this._apiUrl}user/confirm-password`, updatePassword, interceptor)
+      .pipe(catchError(this.commonService.handleError));
+  }
 }

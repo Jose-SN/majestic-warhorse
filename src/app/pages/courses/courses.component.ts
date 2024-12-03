@@ -21,6 +21,8 @@ export class CoursesComponent {
   public mobMenu: boolean = false;
   public showSliderView: boolean = false;
   public courseList$: Observable<ICourseList[]> = of([]);
+  public activeFilterTab: string = 'All';
+  filterList: string[] = ['All', 'New', 'Pending', 'Completed'];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private coursesService: CoursesService,
@@ -49,5 +51,9 @@ export class CoursesComponent {
   }
   sliderActiveRemove(): void {
     this.showSliderView = false;
+  }
+  setActiveFilterTab(filter: string) {
+    this.activeFilterTab = filter;
+    // filter the course list
   }
 }

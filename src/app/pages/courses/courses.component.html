@@ -32,7 +32,7 @@
               <img src="../../../assets/images/icon-notification.svg" alt="Notification" />
             </figure>
           </div> -->
-          <div class="common-holder" (click)="logOut()">
+          <div class="common-holder cursor-pointer" (click)="logOut()">
             <figure style="width: 35px; height: 35px;"><img src="../../../assets/images/icon-logout.svg" alt="USA" /></figure>
           </div>
           <div class="profile">
@@ -52,10 +52,9 @@
             <div class="course-top">
               <h2>Courses List</h2>
               <ul>
-                <li class="active">All</li>
-                <li>New</li>
-                <li>Pending</li>
-                <li>Completed</li>
+                @for (filter of filterList; track $index) {
+                  <li [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}</li>
+                }
               </ul>
               <div class="data-refreshed-holder">
                 <button (click)="showSliderView = !showSliderView;">
