@@ -5,7 +5,11 @@
             <button class="btn-close" (click)="close()">X</button>
         </div>
         <div class="dialog-content">
-            <iframe class="full-width" frameBorder="0" [src]="urlSafe"></iframe>
+            @if (popupModelInfo.isDynamicContent) {
+                <ng-container *ngTemplateOutlet="templateRef"></ng-container>
+            } @else {
+                <iframe class="full-width" frameBorder="0" [src]="urlSafe"></iframe>
+            }
         </div>
     </div>
 </div>

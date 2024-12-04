@@ -1,7 +1,7 @@
 <section class="dashboard-container">
-  <header class="header-small">
-    <figure class="logo-main">
-      <img src="../../../assets/images/logo-majestic-hourse.svg" alt="Mejestic Hourse" />
+  <header class="header-small" (click)="navigateToHome()">
+    <figure class="logo-main cursor-pointer">
+      <img src="../../../assets/images/logo-majestic-hourse.svg" alt="Mejestic Hourse"/>
     </figure>
   </header>
   <app-dashboard-sidepanel></app-dashboard-sidepanel>
@@ -23,6 +23,9 @@
     @case (SIDE_PANEL_LIST['ACCOUNT']) {
       <!-- <app-edit-account style="width: 100%;"></app-edit-account> -->
        <app-questionnaire></app-questionnaire>
+    }
+    @case (SIDE_PANEL_LIST['APPROVAL_PENDING']) {
+      <app-approval-pending></app-approval-pending>
     }
     @default {
       <app-under-construction></app-under-construction>

@@ -12,18 +12,35 @@
       <div class="form-wrapper">
         <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
           <div class="input-holder">
-            <label for="firstname">Your First Name</label>
-            <input type="text" name="firstname" placeholder="Enter First Name" formControlName="firstName" />
-            @if (isFieldInvalid(createAccountForm, 'firstName')) {
-            <span> First Name is required.</span>
-            }
+            <label for="role">Register As</label>
+            <div class="checkbox-holder">
+              <label>
+                <strong>Student</strong>
+                  <input type="radio" name="role" formControlName="role" value="student">
+                  <span class="checkmark"></span>
+              </label>
+              <label>
+                <strong>Teacher</strong>
+                  <input type="radio" name="role" formControlName="role" value="teacher">
+                  <span class="checkmark"></span>
+              </label>
+            </div>
           </div>
-          <div class="input-holder">
-            <label for="lastname">Your Last Name</label>
-            <input type="text" name="lastname" placeholder="Enter Last Name" formControlName="lastName" />
-            @if (isFieldInvalid(createAccountForm, 'lastName')) {
-            <span> LastName is required.</span>
-            }
+          <div class="name-section">
+            <div class="input-holder">
+              <label for="firstname">Your First Name</label>
+              <input type="text" name="firstname" placeholder="Enter First Name" formControlName="firstName" />
+              @if (isFieldInvalid(createAccountForm, 'firstName')) {
+              <span> First Name is required.</span>
+              }
+            </div>
+            <div class="input-holder" style="margin-left: 10px;">
+              <label for="lastname">Your Last Name</label>
+              <input type="text" name="lastname" placeholder="Enter Last Name" formControlName="lastName" />
+              @if (isFieldInvalid(createAccountForm, 'lastName')) {
+              <span> LastName is required.</span>
+              }
+            </div>
           </div>
           <div class="input-holder">
             <label for="profileimage">Upload Image</label>
@@ -109,7 +126,7 @@
       @if(!isEditMode){
       <div class="login-bottom">
         <div class="divider" data-attr="or"></div>
-        <p>Do You have an account? <a (click)="navigateLogin()">Log In</a></p>
+        <p>Do You have an account? <a (click)="navigateLogin()" class="cursor-pointer">Log In</a></p>
       </div>
       }
     </div>

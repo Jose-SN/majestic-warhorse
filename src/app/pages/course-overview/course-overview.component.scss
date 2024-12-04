@@ -1190,3 +1190,47 @@ footer {
     }
   }
 }
+
+.status-icon {
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Online state */
+.online {
+  color: green;
+  animation: pulseGreen 1.5s infinite;
+}
+
+/* Offline state */
+.offline {
+  color: red;
+  animation: pulseRed 1.5s infinite;
+}
+
+@keyframes pulseGreen {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseRed {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
