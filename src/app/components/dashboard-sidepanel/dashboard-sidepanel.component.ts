@@ -46,8 +46,12 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initializeDashboard();
     const assignedTo = this.commonService.loginedUserInfo?.assignedTo;
+    const approved = this.commonService.loginedUserInfo?.approved;
     if (this.loginedUserPrivilege === 'student' && assignedTo?.length === 0) {
       this.showAssigningPopup = true;
+    } else if (this.loginedUserPrivilege === 'teacher' && Boolean(approved) === false) {
+      this.setActivePanel(this.SIDE_PANEL_LIST['APPROVAL_PENDING']);
+      this.dashboardService.setSidePanelChangeValue(this.SIDE_PANEL_LIST['APPROVAL_PENDING']);
     } else {
       this.showAssigningPopup = false;
       this.setActivePanel(this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW']);

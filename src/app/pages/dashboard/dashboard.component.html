@@ -24,6 +24,9 @@
       <!-- <app-edit-account style="width: 100%;"></app-edit-account> -->
        <app-questionnaire></app-questionnaire>
     }
+    @case (SIDE_PANEL_LIST['APPROVAL_PENDING']) {
+      <app-approval-pending></app-approval-pending>
+    }
     @default {
       <app-under-construction></app-under-construction>
     }

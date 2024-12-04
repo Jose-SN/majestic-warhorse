@@ -16,6 +16,7 @@ import { CourseDetailsComponent } from '../course-details/course-details.compone
 import { EditAccountComponent } from '../edit-account/edit-account.component';
 import { QuestionnaireComponent } from '../questionnaire/questionnaire.component';
 import { Router } from '@angular/router';
+import { ApprovalPendingComponent } from '../approval-pending/approval-pending.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -26,6 +27,7 @@ import { Router } from '@angular/router';
     CourseOverviewComponent,
     DashboardOverviewComponent,
     UnderConstructionComponent,
+    ApprovalPendingComponent,
     DashboardSidepanelComponent,
     CourseUploadComponent,
     CourseDetailsComponent,
