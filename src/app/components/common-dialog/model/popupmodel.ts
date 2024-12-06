@@ -3,5 +3,6 @@ export interface IModelInfo {
   url?: string;
   title:string;
   fileType?:string;
+  componentName?: string;
   isDynamicContent?: boolean
 }

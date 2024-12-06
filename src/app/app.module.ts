@@ -15,11 +15,15 @@ import { HeaderInterceptors } from './interceptors/header.interceptor';
 import { StarRatingModule } from 'angular-star-rating';
 import { CommonDialogComponent } from './components/common-dialog/common-dialog.component';
 import { DatePipe } from '@angular/common';
+import { PortalModule } from '@angular/cdk/portal';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
@@ -34,7 +38,9 @@ import { DatePipe } from '@angular/common';
     ToastrModule.forRoot(),
     NgxSpinnerModule,
     StarRatingModule.forRoot(),
-    CommonDialogComponent
+    CommonDialogComponent,
+    PortalModule,
+    NgMultiSelectDropDownModule.forRoot(),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true },

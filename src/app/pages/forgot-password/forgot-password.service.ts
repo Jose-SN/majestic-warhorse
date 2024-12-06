@@ -22,7 +22,7 @@ export class ForgotPasswordService {
       .updatePassword(passwordUpdatePayload)
       .pipe(takeUntil(_destroy$))
       .subscribe({
-        next: (response) => {debugger
+        next: (response) => {
           if (response) {
             resolve(JSON.parse(response));
           }
