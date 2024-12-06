@@ -1,7 +1,6 @@
 <router-outlet></router-outlet>
 @if (PARTICLE_ROUTES_LIST.includes(activeRouteName)) {
-  <app-particle></app-particle>
+<app-particle></app-particle>
 }
 <ngx-spinner size="medium" type="ball-clip-rotate-pulse"></ngx-spinner>
-<app-common-dialog *ngIf="isDialogOpen"
-[popupModelInfo]="popupModelInfo" (closed)="closeModel();"></app-common-dialog>
+<app-common-dialog [ngClass]="{'d-none': !isDialogOpen}" (closed)="closeModel();"></app-common-dialog>

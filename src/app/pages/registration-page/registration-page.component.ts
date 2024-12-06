@@ -13,12 +13,11 @@ import { Router } from '@angular/router';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { UserModel } from '../login-page/model/user-model';
 import { CommonModule } from '@angular/common';
-import { CommonDialogComponent } from "../../components/common-dialog/common-dialog.component";
 
 @Component({
   selector: 'app-registration-page',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, CommonDialogComponent],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './registration-page.component.html',
   styleUrl: './registration-page.component.scss',
 })

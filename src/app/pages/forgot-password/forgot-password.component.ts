@@ -59,14 +59,13 @@ export class ForgotPasswordComponent implements OnDestroy {
     if (this.resetPasswordForm.valid) {
       const resetPasswordForm = this.resetPasswordForm.value;
       delete resetPasswordForm.confirmPassword;
-      // this.forgotPasswordService.updatePassword(this.destroy$, resetPasswordForm);
-      this.forgotPasswordService.updatePassword(this.destroy$, resetPasswordForm).then((data: any) => {debugger
+      this.forgotPasswordService.updatePassword(this.destroy$, resetPasswordForm).then((data: any) => {
         if (data.success) {
           this.commonService.openToaster({
             message: 'An OTP has been sent to your registered email.',
             messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
           });
-          setTimeout(() => {debugger
+          setTimeout(() => {
             this.otpForm.get('email')?.setValue(resetPasswordForm.email);
             this.otpForm.get('email')?.disable();
             this.otpForm.get('userId')?.setValue(data.data.userId);
