@@ -149,6 +149,7 @@
                     <span>A Course by {{ course["createdBy"].firstName }} {{ course["createdBy"].lastName }}</span>
                     <h3>{{course?.courseTitle}}
                     </h3>
+                    <figure><img src="../../../../assets/images/img-loader.png" alt="" /></figure> <!-- Need to Remove -->
                     <span>@if(course.chapterDetails.length){
                       {{course.chapterCompletedCount}}/{{course.chapterDetails.length}} Lessons
                       }
