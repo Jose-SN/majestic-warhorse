@@ -1,9 +1,9 @@
 @import '../../../styles/index';
 
-.login-main-container {
+.registration-wrapper {
   overflow: hidden;
   position: relative;
-  height: 100vh;
+  height: 100%;
 }
 app-particle {
   width: 100vw;
@@ -25,16 +25,17 @@ app-particle {
   @include flex(flex, null, center, center);
   height: 100%;
 }
-.login-wrapper {
+.registration-holder {
   // background: var(--bg-login);
-  max-width: 637px;
+  max-width: 1075px;
   width: 100%;
   padding: 40px 20px;
   @include border-radius(60px);
+  margin: 0 auto;
   position: relative;
   z-index: 1;
   > figure {
-    max-width: 296px;
+    max-width: 185px;
     margin: 0 auto;
   }
   h1 {
@@ -42,7 +43,7 @@ app-particle {
     color: var(--light-blue);
     text-align: center;
     letter-spacing: 4px;
-    margin: 50px 0 0;
+    margin: 25px 0 0;
   }
   p {
     font-size: 0.9375rem;
@@ -59,13 +60,22 @@ app-particle {
     }
   }
   .form-wrapper {
-    max-width: 466px;
-    width: 100%;
-    margin: 25px auto 0;
-
-    .input-holder {
+    .image-holder {
+      width: 150px;
+      height: 150px;
+      @include border-radius(100%);
+      margin: 25px auto;
+      overflow: hidden;
+      border: 10px solid rgba(215,46,132, 0.32);
+    }
+    .input-row {
+      @include flex(flex,null,null,null);
+      gap: 20px;
       margin-bottom: 15px;
+    }
+    .input-holder {
       position: relative;
+      flex: 1;
       label {
         font-size: 0.75rem;
         color: var(--bg-label);
@@ -96,6 +106,7 @@ app-particle {
     a {
       display: table;
       margin: 0 auto;
+      cursor: pointer;
     }
 
     .btn-login {
@@ -169,6 +180,10 @@ app-particle {
     a {
       display: inline-flex;
       margin-left: 10px;
+      cursor: pointer;
+    }
+    p {
+      margin-top: 0;
     }
   }
 }
