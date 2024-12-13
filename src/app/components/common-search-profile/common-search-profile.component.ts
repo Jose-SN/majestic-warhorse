@@ -1,0 +1,24 @@
+import { Component } from '@angular/core';
+import { AuthService } from 'src/app/services/api-service/auth.service';
+import { CommonService } from 'src/app/shared/services/common.service';
+@Component({
+  selector: 'app-search-profile',
+  standalone: true,
+  imports: [],
+  templateUrl: './common-search-profile.component.html',
+  styleUrl: './common-search-profile.component.scss'
+})
+export class CommonSearchProfileComponent {
+  public profileUrl: string = '';
+  constructor(
+    private authService: AuthService,
+    private commonService: CommonService,
+  ) 
+  {
+    this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
+  }
+  logOut() {
+    this.authService.logOutApplication();
+  }
+  
+}

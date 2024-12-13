@@ -11,11 +11,12 @@ import { ClickEvent, RatingChangeEvent, StarRatingModule } from 'angular-star-ra
 import { Subject, takeLast, takeUntil } from 'rxjs';
 import { ICourseStatus } from './model/course-status';
 import { IAttachmentObjectInfo } from '../course-upload/model/file-object-info';
+import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 
 @Component({
   selector: 'app-course-detils',
   standalone: true,
-  imports: [FormsModule, CommonModule, VideoPlayerComponent, StarRatingModule],
+  imports: [FormsModule, CommonModule, VideoPlayerComponent, StarRatingModule, CommonSearchProfileComponent],
   templateUrl: './course-details.component.html',
   styleUrl: './course-details.component.scss',
 })

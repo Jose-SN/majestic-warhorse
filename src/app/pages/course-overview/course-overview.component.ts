@@ -10,11 +10,11 @@ import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { CourseDetailsService } from '../course-details/course-details.service';
-
+import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 @Component({
   selector: 'app-course-overview',
   standalone: true,
-  imports: [FormsModule, CommonModule, CommonSliderComponent, AsyncPipe],
+  imports: [FormsModule, CommonModule, CommonSliderComponent, AsyncPipe, CommonSearchProfileComponent],
   templateUrl: './course-overview.component.html',
   styleUrl: './course-overview.component.scss',
 })
@@ -31,7 +31,8 @@ export class CourseOverviewComponent {
     private commonService: CommonService,
     private dashboardService: DashboardService,
     private courseDetailsService: CourseDetailsService
-  ) {
+  ) 
+  {
     this.fetchCourseList();
     this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
   }

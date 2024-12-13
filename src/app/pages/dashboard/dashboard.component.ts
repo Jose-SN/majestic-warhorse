@@ -15,6 +15,9 @@ import { ICourseList } from '../courses/modal/course-list';
 import { CourseDetailsComponent } from '../course-details/course-details.component';
 import { EditAccountComponent } from '../edit-account/edit-account.component';
 import { QuestionnaireComponent } from '../questionnaire/questionnaire.component';
+import { TeachersListComponent } from '../teachers-list/teachers-list.component';
+import { ApprovalListComponent } from '../approval-list/approval-list.component';
+import { StudentsListComponent } from '../students-list/students-list.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -29,7 +32,10 @@ import { QuestionnaireComponent } from '../questionnaire/questionnaire.component
     CourseUploadComponent,
     CourseDetailsComponent,
     EditAccountComponent,
-    QuestionnaireComponent
+    QuestionnaireComponent,
+    TeachersListComponent,
+    ApprovalListComponent,
+    StudentsListComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
