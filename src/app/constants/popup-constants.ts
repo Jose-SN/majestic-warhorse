@@ -1,0 +1,3 @@
+export const COMPONENT_NAME = {
+  FILE_VIEWER: 'FILE_VIEWER',
+};

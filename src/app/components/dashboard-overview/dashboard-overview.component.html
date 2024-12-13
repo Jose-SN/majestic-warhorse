@@ -24,7 +24,7 @@
             <img src="../../../assets/images/icon-notification.svg" alt="Notification" />
           </figure>
         </div> -->
-        <div class="common-holder" (click)="logOut()">
+        <div class="common-holder cursor-pointer" (click)="logOut()">
           <figure style="width: 35px; height: 35px;"><img src="../../../assets/images/icon-logout.svg" alt="USA" /></figure>
         </div>
         <div class="profile">
@@ -38,7 +38,7 @@
       <h1>Courses Overview</h1>
       <div class="data-refreshed-holder">
         <span>Data Refreshed</span>
-        <div class="refresh-date">September 28, 2023 12:35 PM</div>
+        <div class="refresh-date">{{refreshTime}}</div>
       </div>
     </div>
   </div>
@@ -47,7 +47,7 @@
       <div class="content-left">
         <div class="scroll-container overview">
           <div class="content-top">
-            <div class="course-detail">
+            <div class="course-detail cursor-pointer">
               <div class="detail-top">
                 <div class="icons mit1">
                   <figure>
@@ -112,7 +112,7 @@
                 </div>
               </div>
             </div>
-            <div class="course-detail">
+            <div class="course-detail cursor-pointer">
               <div class="detail-top">
                 <div class="icons mit2">
                   <figure>
@@ -177,7 +177,7 @@
                 </div>
               </div>
             </div>
-            <div class="course-detail">
+            <div class="course-detail cursor-pointer">
               <div class="detail-top">
                 <div class="icons mit3">
                   <figure>
@@ -242,7 +242,7 @@
                 </div>
               </div>
             </div>
-            <div class="course-detail">
+            <div class="course-detail cursor-pointer">
               <div class="detail-top">
                 <div class="icons mit4">
                   <figure>
@@ -322,10 +322,9 @@
           <div class="course-top">
             <h2>My Courses</h2>
             <ul>
-              <li class="active">All</li>
-              <li>New</li>
-              <li>Pending</li>
-              <li>Completed</li>
+              @for (filter of filterList; track $index) {
+                <li [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}</li>
+              }
             </ul>
           </div>
           <div class="scroll-container courses">
@@ -352,7 +351,7 @@
             <img [src]="loginedUserInfo.profileImage"/>
           </figure>
           <span>{{loginedUserInfo.firstName}} {{loginedUserInfo.lastName}}</span>
-          <strong>{{loginedUserInfo.role}}</strong>
+          <strong>{{commonService.transformText(loginedUserInfo.role || '')}}</strong>
           <ul class="contact-area">
             <li><a href="">{{loginedUserInfo.email}}</a></li>
             <li><a href="">{{loginedUserInfo.phone}}</a></li>

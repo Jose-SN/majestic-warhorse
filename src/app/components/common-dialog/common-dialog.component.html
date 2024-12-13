@@ -1,11 +1,11 @@
 <div class="dialog-overlay">
     <div class="dialog-wrapper video" [@dialogAnimation]>
         <div class="dialog-header">
-            <h2>{{popupModelInfo.title}}</h2>
+            <h2>{{title}}</h2>
             <button class="btn-close" (click)="close()">X</button>
         </div>
         <div class="dialog-content">
-            <iframe class="full-width" frameBorder="0" [src]="urlSafe"></iframe>
+            <ng-container #popupContainer></ng-container>
         </div>
     </div>
 </div>

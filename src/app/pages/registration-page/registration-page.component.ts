@@ -13,12 +13,11 @@ import { Router } from '@angular/router';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { UserModel } from '../login-page/model/user-model';
 import { CommonModule } from '@angular/common';
-import { CommonDialogComponent } from "../../components/common-dialog/common-dialog.component";
 
 @Component({
   selector: 'app-registration-page',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, CommonDialogComponent],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './registration-page.component.html',
   styleUrl: './registration-page.component.scss',
 })
@@ -30,7 +29,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   public createAccountForm!: FormGroup;
   private formValidator = new FormValidators();
   private destroy$ = new Subject<void>();
-
+  public isDialogOpen = false;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
@@ -53,6 +52,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
           ],
         ],
         confirmPassword: ['', [Validators.required]],
+        role: ['student', [Validators.required]],
       },
       {
         validator: this.formValidator.passwordMatchValidator.bind(this.createAccountForm),
@@ -113,10 +113,10 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     this.destroy$.next();
     this.destroy$.complete();
   }
+  onDialogClosed(evt: any) {
+    this.isDialogOpen = false;
+  }
 
-
-
-  isDialogOpen = false;
   openDialog(): void {
     this.isDialogOpen = true;
   }

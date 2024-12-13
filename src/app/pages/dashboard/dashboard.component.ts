@@ -18,6 +18,8 @@ import { QuestionnaireComponent } from '../questionnaire/questionnaire.component
 import { TeachersListComponent } from '../teachers-list/teachers-list.component';
 import { ApprovalListComponent } from '../approval-list/approval-list.component';
 import { StudentsListComponent } from '../students-list/students-list.component';
+import { Router } from '@angular/router';
+import { ApprovalPendingComponent } from '../approval-pending/approval-pending.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -28,6 +30,7 @@ import { StudentsListComponent } from '../students-list/students-list.component'
     CourseOverviewComponent,
     DashboardOverviewComponent,
     UnderConstructionComponent,
+    ApprovalPendingComponent,
     DashboardSidepanelComponent,
     CourseUploadComponent,
     CourseDetailsComponent,
@@ -50,7 +53,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private dashboardService: DashboardService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private router: Router,
   ) {
     this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
   }
@@ -60,6 +64,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
   ngOnInit(): void {
+    this.initializeDashboard();
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  handleCourseDetailsView(showCourseView: { [key: string]: boolean | ICourseList }) {
+    this.activePanel = this.SIDE_PANEL_LIST['COURSE_LISTING'];
+    this.dashboardSidepanelComponent.activePanel = this.activePanel;
+    this.selectedCourseInfo = showCourseView['selectedCourse'] as ICourseList;
+    this.showCourseDetailedView = showCourseView['showCourseDetail'] as boolean;
+  }
+  navigateToHome() {
+    this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
+    this.initializeDashboard();
+  }
+  initializeDashboard() {
     this.dashboardService.getAllUsers();
     this.dashboardService
       .getSidePanelChange()
@@ -75,15 +96,5 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe((courseInfo: { [key: string]: boolean | ICourseList }) => {
         this.handleCourseDetailsView(courseInfo);
       });
-  }
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-  handleCourseDetailsView(showCourseView: { [key: string]: boolean | ICourseList }) {
-    this.activePanel = this.SIDE_PANEL_LIST['COURSE_LISTING'];
-    this.dashboardSidepanelComponent.activePanel = this.activePanel;
-    this.selectedCourseInfo = showCourseView['selectedCourse'] as ICourseList;
-    this.showCourseDetailedView = showCourseView['showCourseDetail'] as boolean;
   }
 }

@@ -134,3 +134,32 @@ sudo certbot --nginx
 
 #Set Up Automatic Renewal
 sudo certbot renew --dry-run
+
+
+
+Developer Document
+------------------
+
+Dashboard Overview Backend Logic
+
+ if (isAdmin) {
+    response = {
+        totalTeachers: 0,
+        totalStudents: 0,
+        unassignedStudents: 0,
+        totalViews: 0
+    }
+} else if (isTeacher) {
+    response = {
+        uploadedCourses: 0,
+        assignedStudents: 0,
+        totalDownloads: 0,
+    }
+} else {
+    response = {
+        toalCourses: 0,
+        completedCourses: 0,
+        coursesVisited: 0,
+        taskSubmitted: 0
+    }
+}
