@@ -1,12 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { PARTICLE_ROUTES_LIST } from './constants/common-constant';
 import { CommonService } from './shared/services/common.service';
 import { Subject, takeUntil } from 'rxjs';
 import { IModelInfo } from './components/common-dialog/model/popupmodel';
-import { CommonDialogComponent } from './components/common-dialog/common-dialog.component';
-import { COMPONENT_NAME } from './constants/popup-constants';
-import { FileViwerComponent } from './components/file-viwer/file-viwer.component';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +15,6 @@ export class AppComponent implements OnInit {
   public activeRouteName: string = '';
   public isDialogOpen: boolean = false;
   private destroy$ = new Subject<void>();
-  @ViewChild(CommonDialogComponent) commonDialogComponent!: CommonDialogComponent;
   public popupModelInfo: IModelInfo = {} as IModelInfo;
   public PARTICLE_ROUTES_LIST: string[] = PARTICLE_ROUTES_LIST;
   constructor(
@@ -35,26 +31,15 @@ export class AppComponent implements OnInit {
       .getOpenpopupModelHandle()
       .pipe(takeUntil(this.destroy$))
       .subscribe((modelInfo: IModelInfo) => {
-        this.loadPopupComponent(modelInfo);
+        this.popupModelInfo = modelInfo;
+        this.isDialogOpen = true;
       });
-  }
-  loadPopupComponent(modelInfo: IModelInfo) {
-    this.commonDialogComponent.title = modelInfo.title;
-    let componentName;
-    switch (modelInfo.componentName) {
-      case COMPONENT_NAME.FILE_VIEWER:
-        componentName = FileViwerComponent;
-        break;
-    }
-    this.commonDialogComponent.loadComponent(componentName, { popupModelInfo: modelInfo });
-    this.popupModelInfo = modelInfo;
-    this.isDialogOpen = true;
   }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-  closeModel() {
+  closeModel(){
     this.isDialogOpen = !this.isDialogOpen;
     this.popupModelInfo = {} as IModelInfo;
   }

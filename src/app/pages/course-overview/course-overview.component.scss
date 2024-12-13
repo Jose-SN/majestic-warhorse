@@ -370,15 +370,12 @@
     flex-grow: 1;
     margin: 30px 0 0;
     .content-left {
-      max-width: 1195px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
+      min-width: 1195px;
       height: 100%;
+      @include flex(flex,column,null,null);      
       .scroll-container {
-        max-width: 1195px;
         width: 100%;
-        height: 47vh;
+        height: 100%;
         position: relative;
         &.overview {
           height: 105px;
@@ -386,9 +383,6 @@
       }
       .content-top {
         @include flex(flex, null, space-between, null);
-        position: absolute;
-        left: 0;
-        top: 0;
         width: 100%;
         gap: 18px;
         .course-detail {
@@ -551,6 +545,7 @@
         @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
         flex-grow: 1;
         margin: 20px 0 0;
+        @include flex(flex, column, null, null);
         .courses {
           overflow: hidden;
           overflow-y: auto;
@@ -614,6 +609,7 @@
         }
         .course-card-holder {
           width: 100%;
+          height: 300px;
           @include flex(flex, null, null, null);
           flex-flow: column wrap;
           flex-direction: row;
@@ -629,20 +625,24 @@
             border: 1px solid var(--bg-card-border);
             @include flex(flex, column, null, null);
             overflow: hidden;
-            .card-content {
+            .card-content {             
               flex: 1;
+              min-height: 149px;
+              max-height: 149px;
               &:first-child {
-                background: var(--bg-light-grey);
+                background: var(--bg-light-grey);                
                 padding: 25px 25px 0;
+                overflow: hidden;
                 figure {
                   @include flex(flex, column, flex-end, null);
                 }
               }
               &:last-child {
+                position: relative;
                 figure {
                   margin-top: 20px;
                 }
-                padding: 20px;
+                padding: 20px 20px 40px;
                 span {
                   font-family: $league-spartan-light;
                   font-size: 0.75rem;
@@ -654,7 +654,31 @@
                   color: var(--light-blue);
                   line-height: 1.25rem;
                   font-weight: normal;
+                  min-height: 45px;
+                  max-height: 45px;
                   margin: 10px 0 0;
+                }
+                .loader-holder {
+                  background: var(--white);
+                  width: 100%;
+                  height: 10px;                  
+                  margin-top: 10px;
+                  position: absolute;
+                  bottom: 20px;
+                  left: 0;
+                  max-width: 223px;
+                  width: 100%;
+                  right: 0;
+                  margin: auto;
+                  @include border-radius(10px);
+                  span {
+                    @include gradient();
+                    @include border-radius(10px);
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                  }
                 }
               }
             }
@@ -672,6 +696,8 @@
         @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
         @include border-radius(15px);
         flex: 1;
+        display: flex;
+        flex-direction: column;
         > figure {
           background: var(--bg-img);
           width: 110px;
@@ -783,14 +809,21 @@
           font-size: 1.25rem;
           font-weight: normal;
           color: var(--light-blue);
-          margin-bottom: 10px;
+          padding: 10px 15px;
         }
         .reading-list-wrapper {
           height: 100%;
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          overflow-y: auto;
+          flex-direction: column;
           .reading-list-content {
-            height: 30vh;
+            height: 100%;
             padding-right: 10px;
-            overflow-y: auto;
+            position: absolute;
+            top: 0;
+            width: 100%;
           }
           .reading-list {
             @include flex(flex, row, null, null);
@@ -857,12 +890,12 @@ footer {
   }
 }
 
-@media screen and (min-width: 1921px) {
-  .dashboard-right {
-    max-width: 1592px;
-    margin: 0 auto;
-  }
-}
+// @media screen and (min-width: 1921px) {
+//   .dashboard-right {
+//     max-width: 1592px;
+//     margin: 0 auto;
+//   }
+// }
 
 @media screen and (max-width: 1919px) {
   .scroll-container {
@@ -1188,49 +1221,5 @@ footer {
         }
       }
     }
-  }
-}
-
-.status-icon {
-  font-size: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: transform 0.3s ease-in-out;
-}
-
-/* Online state */
-.online {
-  color: green;
-  animation: pulseGreen 1.5s infinite;
-}
-
-/* Offline state */
-.offline {
-  color: red;
-  animation: pulseRed 1.5s infinite;
-}
-
-@keyframes pulseGreen {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes pulseRed {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
   }
 }

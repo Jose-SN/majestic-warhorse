@@ -222,78 +222,84 @@
 
     .search-and-profile {
         @include flex(flex, null, flex-end, center);
-    }
-
-    .icon-mobile {
+      }
+      .icon-mobile {
         width: 37px;
         height: 27px;
         flex-shrink: 0;
         position: relative;
         @include flex(flex, null, center, center);
         display: none;
-    }
-
-    .search-holder {
-        max-width: 1162px;
+      }
+      .search-holder {
         width: 100%;
         height: 100%;
         margin-right: 15px;
         @include flex(flex, null, flex-end, null);
-        gap: 15px;
-
-        .input-holder {
-            position: relative;
-
-            input {
-                font-family: $archivo-regular;
-                font-size: 1rem;
-                color: var(--bg-label);
-                border: 2px solid var(--bg-input-border);
-                background: var(--bg-input);
-                width: 300px;
-                height: 100%;
-                padding: 12px 50px 12px 15px;
-                @include border-radius(15px);
-                @include transition(all 0.2s ease-in-out);
-
-                &:focus {
-                    border-color: var(--bg-mit1);
-                }
-            }
-
-            button {
-                background: url(../../../assets/images/icon-search.svg) no-repeat center center;
-                width: 20px;
-                height: 20px;
-                position: absolute;
-                top: 0;
-                right: 20px;
-                bottom: 0;
-                margin: auto;
-                border: none;
-                cursor: pointer;
-            }
-
-            select {
-                font-family: $archivo-regular;
-                font-size: 1rem;
-                color: var(--white);
-                width: 160px;
-                height: 100%;
-                border: 2px solid var(--bg-input-border);
-                background: transparent url(../../../assets/images/icon-arrow.svg) no-repeat 87% center;
-                @include border-radius(15px);
-                text-indent: 15px;
-                appearance: none;
-                transition: opacity 0.25s;
-
-                &:focus {
-                    outline: none;
-                    border-color: var(--bg-mit1);
-                }
-            }
+        h1 {
+          figure {
+            width: 35px;
+            height: 35px;
+            margin-right: 10px;
+          }
+          @include flex(flex, null, null, center);
         }
-    }
+        gap: 15px;
+        .input-holder {
+          position: relative;
+          input {
+            font-family: $archivo-regular;
+            font-size: 1rem;
+            color: var(--bg-label);
+            border: 2px solid var(--bg-input-border);
+            background: var(--bg-input);
+            width: 300px;
+            height: 100%;
+            padding: 12px 50px 12px 15px;
+            @include border-radius(15px);
+            @include transition(all 0.2s ease-in-out);
+            &:focus {
+              border-color: var(--bg-mit1);
+            }
+          }
+          button {
+            background: url(../../../assets/images/icon-search.svg) no-repeat center center;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            top: 0;
+            right: 20px;
+            bottom: 0;
+            margin: auto;
+            border: none;
+            cursor: pointer;
+          }
+          select {
+            font-family: $archivo-regular;
+            font-size: 1rem;
+            color: var(--white);
+            width: 160px;
+            height: 100%;
+            border: 2px solid var(--bg-input-border);
+            background: transparent url(../../../assets/images/icon-arrow.svg) no-repeat 87% center;
+            @include border-radius(15px);
+            text-indent: 15px;
+            appearance: none;
+            transition: opacity 0.25s;
+            &:focus {
+              outline: none;
+              border-color: var(--bg-mit1);
+            }
+          }
+        }
+        h1 {
+          font-family: $poppins-bold;
+          font-size: 1.875rem;
+          color: var(--white);
+          line-height: 3.75rem;
+          margin-right: auto;
+        }
+      }
 
     .profile-area {
         max-width: fit-content;
@@ -385,17 +391,14 @@
         margin: 30px 0 0;
 
         .content-left {
-            max-width: 1195px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
+            min-width: 1195px;
+            flex: 1;
+            @include flex(flex, null, null, null);
             height: 100%;
 
             .scroll-container {
-                max-width: 1195px;
                 width: 100%;
                 position: relative;
-
                 &.overview {
                     height: 220px;
                 }
@@ -596,8 +599,6 @@
                 @include border-radius(15px);
                 @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
                 flex-grow: 1;
-                margin: 20px 0 0;
-
                 .courses {
                     height: 331px;
                     overflow: hidden;
@@ -939,12 +940,12 @@ footer {
     }
 }
 
-@media screen and (min-width: 1921px) {
-    .dashboard-right {
-        max-width: 1592px;
-        margin: 0 auto;
-    }
-}
+// @media screen and (min-width: 1921px) {
+//     .dashboard-right {
+//         max-width: 1592px;
+//         margin: 0 auto;
+//     }
+// }
 
 @media screen and (max-width: 1919px) {
     .scroll-container {

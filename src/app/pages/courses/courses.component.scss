@@ -193,6 +193,11 @@
   padding: 30px 25px;
   position: relative;
   overflow: hidden;
+  .dashboard-inner {
+    @include flex(flex, column, null, null);  
+    flex-grow: 1;
+    height: 100%;
+  }
   .search-and-profile {
     @include flex(flex, null, flex-end, center);
   }
@@ -266,9 +271,9 @@
     }
     h1 {
       font-family: $poppins-bold;
-      font-size: 1.875;
+      font-size: 1.875rem;
       color: var(--white);
-      line-height: 3.75;
+      line-height: 3.75rem;
       margin-right: auto;
     }
   }
@@ -351,13 +356,11 @@
     flex-grow: 1;
     margin: 30px 0 0;
     .content-left {
-      max-width: 1195px;
-      width: 100%;
+      flex-grow: 1;
       display: flex;
       flex-direction: column;
       height: 100%;
       .scroll-container {
-        max-width: 1195px;
         width: 100%;
         height: 68vh;
         position: relative;
@@ -604,17 +607,20 @@
           }
           .course-card {
             background: var(--bg-left-panel);
-            max-width: 268px;
-            width: 23.5%;
+            max-width: 280px;
+            width: 19%;
             @include border-radius(10px);
             border: 1px solid var(--bg-card-border);
             @include flex(flex, column, null, null);
             overflow: hidden;
             .card-content {
               flex: 1;
+              min-height: 149px;
+              max-height: 149px;
               &:first-child {
                 background: var(--bg-light-grey);
                 padding: 25px 25px 0;
+                overflow: hidden;
                 figure {
                   @include flex(flex, column, flex-end, null);
                 }

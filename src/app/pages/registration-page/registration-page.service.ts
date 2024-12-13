@@ -54,7 +54,8 @@ export class RegistrationPageService {
     return new Promise((resolve) => {
       this.registrationApiService
         .saveUserInfo({
-          ...registrationInfo
+          ...registrationInfo,
+          ...{ role: 'guest' },
         })
         .pipe(takeUntil(_destroy$))
         .subscribe({

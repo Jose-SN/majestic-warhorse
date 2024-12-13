@@ -17,37 +17,27 @@ export class ForgotPasswordService {
   ) {}
 
   updatePassword(_destroy$: Subject<void>, passwordUpdatePayload: IPassWordUpdate) {
-    return new Promise((resolve, reject) => {
     this.authService
       .updatePassword(passwordUpdatePayload)
       .pipe(takeUntil(_destroy$))
       .subscribe({
-        next: (response) => {
-          if (response) {
-            resolve(JSON.parse(response));
+        next: (passwordUpdated) => {
+          if (passwordUpdated) {
+            this.commonService.openToaster({
+              message: 'Password is successfully updated.',
+              messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+            });
+            setTimeout(() => {
+              this.router.navigate([`/login`]);
+            }, 1000);
           }
         },
-        error: (error) => {
-          reject({success: false, error: error});
+        error: () => {
+          this.commonService.openToaster({
+            message: 'Error while updating password.',
+            messageType: TOASTER_MESSAGE_TYPE.ERROR,
+          });
         },
       });
-    });
-  }
-  validateOtp(_destroy$: Subject<void>, passwordUpdatePayload: IPassWordUpdate) {
-    return new Promise((resolve, reject) => {
-    this.authService
-      .validateOtp(passwordUpdatePayload)
-      .pipe(takeUntil(_destroy$))
-      .subscribe({
-        next: (response) => {
-          if (response) {
-            resolve(response);
-          }
-        },
-        error: (error) => {
-          reject(error);
-        },
-      });
-    });
   }
 }

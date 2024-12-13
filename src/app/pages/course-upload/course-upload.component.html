@@ -33,6 +33,7 @@
                   </div>
                   <div class="course-upload-right">
                     <label for="images" class="drop-container" id="dropcontainer">
+                      <div class="img-holder"></div>
                       <span class="drop-title">Upload Cover Image</span>
                       <span>Drop your file here or browse</span>
                       <input type="file" id="images" accept="image/*" (change)="onFileSelected($event,'COVER_IMAGE')" />
@@ -106,7 +107,7 @@
                 </div>
               </div>
               }
-              <div class="add-button">
+              <div class="add-button save-course">
                 <button (click)="saveButtonClick()">
                   <img src="../../../assets/images/icon-add.svg" />
                   <span>Save Course</span>

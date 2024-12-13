@@ -1,48 +1,7 @@
 <section class="dashboard-container">
   <div class="dashboard-right">
-    <div style="position: relative; width: 100%;height: 100%;">
-    <div class="dashboard-content">
-      <div class="search-and-profile">
-        <div class="icon-mobile" #btnTrigger (click)="mobileMenu()">
-          <div class="menu btn11" data-menu="11" [ngClass]="mobMenu ? 'open' : ''">
-            <div class="icon-left"></div>
-            <div class="icon-right"></div>
-          </div>
-        </div>
-        <div class="search-holder">
-          <h1>
-            <figure>
-              <img src="../../../assets/images/icon-wallet.svg" alt="Courses" />
-            </figure>
-            <span>Courses</span>
-          </h1>
-          <div class="input-holder">
-            <input type="text" placeholder="Search for..." />
-            <button></button>
-          </div>
-          <!-- <div class="input-holder">
-            <select>
-              <option>This Year</option>
-            </select>
-          </div> -->
-        </div>
-        <div class="profile-area">
-          <!-- <div class="common-holder">
-            <figure>
-              <img src="../../../assets/images/icon-notification.svg" alt="Notification" />
-            </figure>
-          </div> -->
-          <div class="common-holder cursor-pointer" (click)="logOut()">
-            <figure style="width: 35px; height: 35px;"><img src="../../../assets/images/icon-logout.svg" alt="USA" /></figure>
-          </div>
-          <div class="profile">
-            <figure>
-              <img [src]="profileUrl"/>
-            </figure>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="dashboard-inner">
+      <app-search-profile></app-search-profile>
     <div class="common-container">
       <div class="content-area">
         <div class="content-left" [ngClass]="{'common-slider':showSliderView}">
@@ -52,9 +11,10 @@
             <div class="course-top">
               <h2>Courses List</h2>
               <ul>
-                @for (filter of filterList; track $index) {
-                  <li [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}</li>
-                }
+                <li class="active">All</li>
+                <li>New</li>
+                <li>Pending</li>
+                <li>Completed</li>
               </ul>
               <div class="data-refreshed-holder">
                 <button (click)="showSliderView = !showSliderView;">
