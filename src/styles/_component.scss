@@ -6,10 +6,11 @@ app-dashboard-overview {
 app-dashboard-sidepanel {
   max-width: 328px;
   width: 100%;
+  flex-shrink: 0;
 }
 app-dashboard-overview,
 app-courses,
-app-course-overview, app-questionnaire {
+app-course-overview, app-questionnaire, app-edit-account, app-teachers-list, app-students-list, app-approval-list, app-course-detils {
   flex-grow: 1;
 }
 app-under-construction {

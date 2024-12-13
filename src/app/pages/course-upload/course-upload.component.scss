@@ -1140,8 +1140,7 @@ footer {
                   color: var(--bg-blue);
                 }
               }
-              &::before {
-                content: "";
+              .img-holder {
                 width: 56px;
                 height: 56px;
                 background: transparent url(../../../assets/images/icon-file-upload.svg) no-repeat center;
@@ -1350,6 +1349,12 @@ footer {
     &:last-child {
       background: var(--bg-delete)!important;
     }   
+  }
+  &.save-course {
+    @include flex(null, null, flex-end, null);
+    button {
+      max-width: 125px;
+    }
   }
 }   
 .action-holder {

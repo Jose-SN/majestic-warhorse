@@ -8,11 +8,12 @@ import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { CommonSliderComponent } from 'src/app/components/common-slider/common-slider.component';
 import { DashboardService } from '../dashboard/dashboard.service';
+import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 
 @Component({
   selector: 'app-courses',
   standalone: true,
-  imports: [FormsModule, CommonModule, CommonSliderComponent],
+  imports: [FormsModule, CommonModule, CommonSliderComponent, CommonSearchProfileComponent],
   templateUrl: './courses.component.html',
   styleUrl: './courses.component.scss',
 })
@@ -21,8 +22,6 @@ export class CoursesComponent {
   public mobMenu: boolean = false;
   public showSliderView: boolean = false;
   public courseList$: Observable<ICourseList[]> = of([]);
-  public activeFilterTab: string = 'All';
-  filterList: string[] = ['All', 'New', 'Pending', 'Completed'];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private coursesService: CoursesService,
@@ -51,9 +50,5 @@ export class CoursesComponent {
   }
   sliderActiveRemove(): void {
     this.showSliderView = false;
-  }
-  setActiveFilterTab(filter: string) {
-    this.activeFilterTab = filter;
-    // filter the course list
   }
 }

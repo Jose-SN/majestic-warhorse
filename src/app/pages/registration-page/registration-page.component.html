@@ -1,47 +1,40 @@
-<section class="login-main-container">
+<!-- <button (click)="openDialog()">Open Dialog</button> -->
+<section class="registration-wrapper">
+  @if(!isEditMode){
   <div id="particles-js"></div>
-  <section class="login-container" [ngClass]="{'align-items-start':isEditMode}">
-    <div class="login-wrapper" [ngClass]="{'padding-top-0':isEditMode}">
-      @if(!isEditMode){
-      <figure>
-        <img src="../../../../assets/images/logo-mejestic-hourse-landing.svg" alt="Mejastic Hourse" />
-      </figure>
-      <h1>Create An Account</h1>
-      <p>LET'S GET YOU STARTED</p>
-      }
-      <div class="form-wrapper">
-        <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
+  }
+  <!-- [ngClass]="{'align-items-start':isEditMode} -->
+  <!--<section class="login-container"></section> -->
+  <div class="registration-holder" [ngClass]="{'padding-top-0':isEditMode}">
+    @if(!isEditMode){
+    <figure>
+      <img src="../../../../assets/images/logo-mejestic-hourse-landing.svg" alt="Mejastic Hourse" />
+    </figure>
+    <h1>Create An Account</h1>
+    <p>LET'S GET YOU STARTED</p>
+    }
+    <div class="form-wrapper">
+      <div class="image-holder">
+        <figure><img src="../../../../assets/images/img-placeholder.jpg" alt="Mejastic Hourse" /></figure>
+      </div>
+      <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
+        <div class="input-row">
           <div class="input-holder">
-            <label for="role">Register As</label>
-            <div class="checkbox-holder">
-              <label>
-                <strong>Student</strong>
-                  <input type="radio" name="role" formControlName="role" value="student">
-                  <span class="checkmark"></span>
-              </label>
-              <label>
-                <strong>Teacher</strong>
-                  <input type="radio" name="role" formControlName="role" value="teacher">
-                  <span class="checkmark"></span>
-              </label>
-            </div>
+            <label for="firstname">Your First Name</label>
+            <input type="text" name="firstname" placeholder="Enter First Name" formControlName="firstName" />
+            @if (isFieldInvalid(createAccountForm, 'firstName')) {
+            <span> First Name is required.</span>
+            }
           </div>
-          <div class="name-section">
-            <div class="input-holder">
-              <label for="firstname">Your First Name</label>
-              <input type="text" name="firstname" placeholder="Enter First Name" formControlName="firstName" />
-              @if (isFieldInvalid(createAccountForm, 'firstName')) {
-              <span> First Name is required.</span>
-              }
-            </div>
-            <div class="input-holder" style="margin-left: 10px;">
-              <label for="lastname">Your Last Name</label>
-              <input type="text" name="lastname" placeholder="Enter Last Name" formControlName="lastName" />
-              @if (isFieldInvalid(createAccountForm, 'lastName')) {
-              <span> LastName is required.</span>
-              }
-            </div>
+          <div class="input-holder">
+            <label for="lastname">Your Last Name</label>
+            <input type="text" name="lastname" placeholder="Enter Last Name" formControlName="lastName" />
+            @if (isFieldInvalid(createAccountForm, 'lastName')) {
+            <span> LastName is required.</span>
+            }
           </div>
+        </div>
+        <div class="input-row">
           <div class="input-holder">
             <label for="profileimage">Upload Image</label>
             <input type="file" name="profileimage" placeholder="Upload Image" formControlName="profileImage"
@@ -64,6 +57,8 @@
             </div>
             }
           </div>
+        </div>
+        <div class="input-row">
           <div class="input-holder">
             <label>Mobile</label>
             <input type="text" placeholder="Enter Mobile Number" formControlName="phone" />
@@ -109,6 +104,8 @@
             }
             }
           </div>
+        </div>
+        <div class="input-row">
           <div class="input-holder">
             <label for="password">Confirm Password</label>
             <input type="password" name="password" placeholder="Enter Your Password (6 characters)"
@@ -120,15 +117,19 @@
             <span>Passwords do not match.</span>
             }
           </div>
-          <button class="btn-login" type="submit"> {{isEditMode ? 'Update Account': 'Get Started'}}</button>
-        </form>
-      </div>
-      @if(!isEditMode){
-      <div class="login-bottom">
-        <div class="divider" data-attr="or"></div>
-        <p>Do You have an account? <a (click)="navigateLogin()" class="cursor-pointer">Log In</a></p>
-      </div>
-      }
+        </div>
+        
+        
+        
+        
+        <button class="btn-login" type="submit"> {{isEditMode ? 'Update Account': 'Get Started'}}</button>
+      </form>
     </div>
-  </section>
+    @if(!isEditMode){
+    <div class="login-bottom">
+      <!-- <div class="divider" data-attr="or"></div> -->
+      <p>Do You have already an account? <a (click)="navigateLogin()">Log In</a></p>
+    </div>
+    }
+  </div>
 </section>

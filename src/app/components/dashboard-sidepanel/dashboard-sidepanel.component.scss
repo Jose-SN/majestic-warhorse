@@ -214,48 +214,6 @@
       }
     }
   }
-  .input-holder {
-    margin: 25px;
-    position: relative;
-    label {
-      font-size: 0.75rem;
-      color: var(--bg-label);
-      margin-bottom: 5px;
-    }
-    input {
-      &[type='text'],
-      &[type='password'],
-      &[type='file'] {
-        font-weight: normal;
-        font-size: 1rem;
-        color: var(--bg-label);
-        border: 1px solid var(--bg-input-border);
-        background: var(--bg-input);
-        width: 100%;
-        @include border-radius(5px);
-        padding: 12px 15px;
-        @include transition(all 0.2s ease-in-out);
-        &:focus {
-          border-color: var(--bg-mit1);
-        }
-      }
-      &[type='file'] {
-        padding: 5px !important;
-      }
-    }
-  }
-  .btn-assign {
-    font-family: $archivo-regular;
-    font-size: 1rem;
-    color: var(--white);
-    margin: 15px 0 25px;
-    @include button();
-    @include box-shadow(2px, 2px, 8px, var(--bg-magento));
-    width: 100%;
-    @include border-radius(50px);
-    @include gradient();
-    border: 1px solid var(--bg-orange);
-  }
 }
 
 .dashboard-right {

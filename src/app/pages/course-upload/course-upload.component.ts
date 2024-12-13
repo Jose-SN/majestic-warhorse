@@ -9,7 +9,6 @@ import { Subject } from 'rxjs';
 import { ICourseList } from '../courses/modal/course-list';
 import { IFileObjectInfo } from './model/file-object-info';
 import { CommonService } from 'src/app/shared/services/common.service';
-import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
 @Component({
   selector: 'app-course-upload',
   standalone: true,
@@ -143,7 +142,6 @@ export class CourseUploadComponent {
       data: fileDetails,
       title: fileDetails.name,
       fileType: 'VIDEO',
-      componentName: COMPONENT_NAME.FILE_VIEWER,
     });
   }
 }

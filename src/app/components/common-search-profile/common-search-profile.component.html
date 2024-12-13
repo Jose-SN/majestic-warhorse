@@ -1,0 +1,41 @@
+<div class="search-and-profile">
+    <div class="icon-mobile" >
+      <div class="menu btn11" data-menu="11">
+        <div class="icon-left"></div>
+        <div class="icon-right"></div>
+      </div>
+    </div>
+    <div class="search-holder">
+      <h1>
+        <figure>
+          <img src="../../../assets/images/icon-home.svg" alt="Home" />
+        </figure>
+        <span>Home</span>
+      </h1>
+      <div class="input-holder">
+        <input type="text" placeholder="Search for..." />
+        <button></button>
+      </div>
+      <!-- <div class="input-holder">
+        <select>
+          <option>This Year</option>
+        </select>
+      </div> -->
+    </div>
+    <div class="profile-area">
+      <div class="common-holder">
+        <figure>
+          <img src="../../../assets/images/icon-notification.svg" alt="Notification" />
+        </figure>
+      </div>      
+      <div class="profile">
+        <figure>
+          <img [src]="profileUrl" />
+        </figure>
+      </div>
+      <div class="logout" (click)="logOut()">
+        <figure><img src="../../../assets/images/icon-logout.svg" alt="USA" />
+        </figure>
+      </div>
+    </div>
+  </div>
