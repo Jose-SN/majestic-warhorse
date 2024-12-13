@@ -12,7 +12,6 @@ import { Subject, takeLast, takeUntil } from 'rxjs';
 import { ICourseStatus } from './model/course-status';
 import { IAttachmentObjectInfo } from '../course-upload/model/file-object-info';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
-import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
 
 @Component({
   selector: 'app-course-detils',
@@ -151,12 +150,11 @@ export class CourseDetailsComponent {
     }
   }
   previewDocument(attachment: IAttachmentObjectInfo) {
-    this.commonService.openPopupModel({ 
+    this.commonService.openPopupModel({
       url: attachment.fileURL,
       data: attachment,
       title: attachment.name,
       fileType: 'ATTACHMENT',
-      componentName: COMPONENT_NAME.FILE_VIEWER,
     });
   }
   downloadFile(attachment: IAttachmentObjectInfo) {

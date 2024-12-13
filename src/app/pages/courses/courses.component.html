@@ -11,9 +11,10 @@
             <div class="course-top">
               <h2>Courses List</h2>
               <ul>
-                @for (filter of filterList; track $index) {
-                  <li [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}</li>
-                }
+                <li class="active">All</li>
+                <li>New</li>
+                <li>Pending</li>
+                <li>Completed</li>
               </ul>
               <div class="data-refreshed-holder">
                 <button (click)="showSliderView = !showSliderView;">

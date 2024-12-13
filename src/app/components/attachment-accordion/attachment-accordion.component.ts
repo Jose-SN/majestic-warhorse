@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
 import { IAttachmentObjectInfo } from 'src/app/pages/course-upload/model/file-object-info';
 import { CommonService } from 'src/app/shared/services/common.service';
 
@@ -25,11 +24,10 @@ export class AttachmentAccordionComponent {
   constructor(private commonService: CommonService) {}
   previewDocument(attachment: IAttachmentObjectInfo) {
     this.commonService.openPopupModel({
+      url: attachment.fileURL,
       data: attachment,
       title: attachment.name,
       fileType: 'ATTACHMENT',
-      url: attachment.fileURL,
-      componentName: COMPONENT_NAME.FILE_VIEWER,
     });
   }
 }
