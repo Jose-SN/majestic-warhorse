@@ -57,7 +57,6 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
       this.commonService.allUsersList.forEach((user) => {
         switch (user.role) {
           case 'teacher':
-            debugger
             this.teachersList = this.teachersList.concat(user);
             break;
           case 'student':
