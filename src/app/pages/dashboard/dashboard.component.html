@@ -21,10 +21,16 @@
       }
     }
     @case (SIDE_PANEL_LIST['ACCOUNT']) {
+      <app-edit-account></app-edit-account>
+    }
+    @case (SIDE_PANEL_LIST['TEACHERS_LISTING']) {
+      <app-teachers-list></app-teachers-list>
+    }
+    @case (SIDE_PANEL_LIST['STUDENTS_LISTING']) {
+      <app-students-list></app-students-list>
+    }
+    @case (SIDE_PANEL_LIST['TEACHER_APPROVAL']) {
       <app-approval-list></app-approval-list>
-      <!-- <app-teachers-list></app-teachers-list> -->
-      <!-- <app-edit-account></app-edit-account> -->
-       <!-- <app-questionnaire></app-questionnaire> -->
     }
     @default {
       <app-under-construction></app-under-construction>

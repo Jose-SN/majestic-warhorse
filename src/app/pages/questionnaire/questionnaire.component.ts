@@ -9,5 +9,7 @@ import { CommonSearchProfileComponent } from 'src/app/components/common-search-p
   styleUrl: './questionnaire.component.scss'
 })
 export class QuestionnaireComponent {
+  seachTextHandler(searchText:string){
 
+  }
 }

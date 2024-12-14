@@ -1,19 +1,37 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {
+  HttpInterceptor,
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpErrorResponse,
+} from '@angular/common/http';
+import { catchError, Observable, throwError } from 'rxjs';
+import { CommonService } from '../shared/services/common.service';
+import { TOASTER_MESSAGE_TYPE } from '../shared/toaster/toaster-info';
 @Injectable()
 export class HeaderInterceptors implements HttpInterceptor {
-  constructor() {}
+  constructor(private commonService: CommonService) {}
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token: string | null = sessionStorage.getItem('authToken');
+    let clonedRequest;
     if (token) {
-      const clonedRequest = req.clone({
+      clonedRequest = req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`,
         },
       });
-      return next.handle(clonedRequest);
     }
-    return next.handle(req);
+    return next.handle(clonedRequest ?? req).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          this.commonService.openToaster({
+            message: `${error?.error?.msg} Please log in again.`,
+            messageType: TOASTER_MESSAGE_TYPE.ERROR,
+          });
+        }
+        return throwError(() => error);
+      })
+    );
   }
 }

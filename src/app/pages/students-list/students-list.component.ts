@@ -7,18 +7,22 @@ import { CommonService } from 'src/app/shared/services/common.service';
 import { CommonSliderComponent } from 'src/app/components/common-slider/common-slider.component';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
+import { UserModel } from '../login-page/model/user-model';
+import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
 
 @Component({
   selector: 'app-students-list',
   standalone: true,
-  imports: [CommonSearchProfileComponent],
+  imports: [CommonSearchProfileComponent,SearchFilterPipe],
   templateUrl: './students-list.component.html',
   styleUrl: './students-list.component.scss'
 })
 export class StudentsListComponent {
   public profileUrl: string = '';
   public mobMenu: boolean = false;
+  public studentList: UserModel[] = [];
   public showSliderView: boolean = false;
+  public searchText:string = "";
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private authService: AuthService,
@@ -26,6 +30,7 @@ export class StudentsListComponent {
     private dashboardService: DashboardService
   ) {
     this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
+    this.studentList = this.commonService.allUsersList.filter((users) => users.role === 'student');
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -40,5 +45,8 @@ export class StudentsListComponent {
   }
   sliderActiveRemove(): void {
     this.showSliderView = false;
+  }
+  seachTextHandler(searchText:string){
+    this.searchText = searchText;
   }
 }

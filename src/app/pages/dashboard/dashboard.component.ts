@@ -29,14 +29,12 @@ import { StudentsListComponent } from '../students-list/students-list.component'
     DashboardOverviewComponent,
     UnderConstructionComponent,
     DashboardSidepanelComponent,
-    CourseUploadComponent,
     CourseDetailsComponent,
     EditAccountComponent,
-    QuestionnaireComponent,
     TeachersListComponent,
     ApprovalListComponent,
     StudentsListComponent
-  ],
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -60,7 +58,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
   ngOnInit(): void {
-    this.dashboardService.getAllUsers();
     this.dashboardService
       .getSidePanelChange()
       .pipe(takeUntil(this.destroy$))

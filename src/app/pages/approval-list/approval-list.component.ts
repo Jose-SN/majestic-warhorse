@@ -41,4 +41,7 @@ export class ApprovalListComponent {
   sliderActiveRemove(): void {
     this.showSliderView = false;
   }
+  seachTextHandler(searchText:string){
+
+  }
 }

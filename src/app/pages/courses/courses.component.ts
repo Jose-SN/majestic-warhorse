@@ -9,11 +9,18 @@ import { CommonService } from 'src/app/shared/services/common.service';
 import { CommonSliderComponent } from 'src/app/components/common-slider/common-slider.component';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
+import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
 
 @Component({
   selector: 'app-courses',
   standalone: true,
-  imports: [FormsModule, CommonModule, CommonSliderComponent, CommonSearchProfileComponent],
+  imports: [
+    FormsModule,
+    CommonModule,
+    CommonSliderComponent,
+    CommonSearchProfileComponent,
+    SearchFilterPipe,
+  ],
   templateUrl: './courses.component.html',
   styleUrl: './courses.component.scss',
 })
@@ -22,6 +29,10 @@ export class CoursesComponent {
   public mobMenu: boolean = false;
   public showSliderView: boolean = false;
   public courseList$: Observable<ICourseList[]> = of([]);
+  public activeFilterTab: string = 'All';
+  public searchText: string = '';
+  public loginedUserPrivilege: string = '';
+  filterList: string[] = ['All', 'New', 'Pending', 'Completed'];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private coursesService: CoursesService,
@@ -31,6 +42,7 @@ export class CoursesComponent {
   ) {
     this.courseList$ = this.coursesService.getCourseList();
     this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
+    this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -50,5 +62,12 @@ export class CoursesComponent {
   }
   sliderActiveRemove(): void {
     this.showSliderView = false;
+  }
+  setActiveFilterTab(filter: string) {
+    this.activeFilterTab = filter;
+    // filter the course list
+  }
+  seachTextHandler(searchText: string) {
+    this.searchText = searchText;
   }
 }

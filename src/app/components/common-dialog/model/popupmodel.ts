@@ -1,6 +1,8 @@
 export interface IModelInfo {
   data: any;
-  url: string;
+  url?: string;
   title:string;
-  fileType:string;
+  fileType?:string;
+  componentName?: string;
+  isDynamicContent?: boolean
 }

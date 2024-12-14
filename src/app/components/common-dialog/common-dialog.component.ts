@@ -1,12 +1,18 @@
-import { Component, EventEmitter, Input, input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Output,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { IModelInfo } from './model/popupmodel';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-common-dialog',
   standalone: true,
-  imports: [],
+  imports: [CommonModule], // Include CommonModule for ngTemplateOutlet and other directives
   templateUrl: './common-dialog.component.html',
   styleUrl: './common-dialog.component.scss',
   animations: [
@@ -20,21 +26,21 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
       ]),
     ]),
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommonDialogComponent {
+  public title: string = '';
   @Output() closed = new EventEmitter<boolean>();
-  @Input() popupModelInfo: IModelInfo = {} as IModelInfo;
-  public urlSafe!: SafeResourceUrl;
-  constructor(private sanitizer: DomSanitizer) {}
-  ngOnInit() {
-    const supportedExtensions = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
-    const fileExtension = this.popupModelInfo.url.split('.').pop()?.toLowerCase();
-    if (fileExtension && supportedExtensions.includes(fileExtension)) {
-      this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(
-        `https://view.officeapps.live.com/op/embed.aspx?src=${this.popupModelInfo.url}`
-      );
-    } else {
-      this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(this.popupModelInfo.url);
+  @ViewChild('popupContainer', { read: ViewContainerRef, static: true })
+  container!: ViewContainerRef;
+
+  loadComponent(component: any, inputs?: { [key: string]: any }) {
+    this.container.clear();
+    const componentRef: any = this.container.createComponent(component);
+    if (inputs) {
+      Object.keys(inputs).forEach((key) => {
+        componentRef.instance[key] = inputs[key];
+      });
     }
   }
   close(): void {
