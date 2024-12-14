@@ -1,8 +1,8 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { CommonSliderComponent } from 'src/app/components/common-slider/common-slider.component';
-import { of } from 'rxjs';
+import { of, Subject, Subscription, takeUntil } from 'rxjs';
 import { CoursesService } from '../courses/courses.service';
 import { CourseUploadService } from '../course-upload/course-upload.service';
 import { ICourseList } from '../courses/modal/course-list';
@@ -10,20 +10,30 @@ import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { CourseDetailsService } from '../course-details/course-details.service';
+import { Router } from '@angular/router';
+import { UserModel } from '../login-page/model/user-model';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
+
 @Component({
   selector: 'app-course-overview',
   standalone: true,
-  imports: [FormsModule, CommonModule, CommonSliderComponent, AsyncPipe, CommonSearchProfileComponent],
+  imports: [FormsModule, CommonModule, CommonSearchProfileComponent],
   templateUrl: './course-overview.component.html',
   styleUrl: './course-overview.component.scss',
 })
-export class CourseOverviewComponent {
+export class CourseOverviewComponent implements OnInit, OnDestroy {
   public mobMenu: boolean = false;
   public profileUrl: string = '';
   public showSliderView: boolean = false;
   public courseLists: ICourseList[] = [];
   public loginedUserPrivilege: string = '';
+  public dashboardOverview: any = {
+    coursesUploaded: 0,
+  };
+  public isOnline: boolean = navigator.onLine;
+  public teachersList: UserModel[] = [];
+  public studentsList: UserModel[] = [];
+  private destroy$ = new Subject<void>();
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private courseUploadService: CourseUploadService,
@@ -31,13 +41,31 @@ export class CourseOverviewComponent {
     private commonService: CommonService,
     private dashboardService: DashboardService,
     private courseDetailsService: CourseDetailsService
-  ) 
-  {
+  ) {
     this.fetchCourseList();
     this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
   }
   async ngOnInit() {
-      this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
+    this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
+    this.commonService.onlineStatusChanged
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((status: boolean) => {
+        this.isOnline = status;
+      });
+      this.commonService.alluserList = await this.authService.getAllUsers();
+    if (this.commonService?.allUsersList.length) {
+      this.commonService.allUsersList.forEach((user) => {
+        switch (user.role) {
+          case 'teacher':
+            debugger
+            this.teachersList = this.teachersList.concat(user);
+            break;
+          case 'student':
+            this.studentsList = this.studentsList.concat(user);
+            break;
+        }
+      });
+    }
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -57,19 +85,20 @@ export class CourseOverviewComponent {
     this.courseLists = await this.courseUploadService.fetchUploadedCourses();
     this.courseLists.forEach((course) => {
       let completedLessonCount = 0;
-      course.chapterDetails.forEach((chapterDetails,index) => {
+      course.chapterDetails.forEach((chapterDetails, index) => {
         const chapterCompleted = chapterDetails.fileDetails.every((fileDetails) => {
-         return this.courseDetailsService.courseStatusList.find(
-           (courseStatus) => courseStatus.parentId === fileDetails._id && +courseStatus.percentage === 100
-         );
+          return this.courseDetailsService.courseStatusList.find(
+            (courseStatus) =>
+              courseStatus.parentId === fileDetails._id && +courseStatus.percentage === 100
+          );
         });
-        if(chapterCompleted){
-          completedLessonCount = ((completedLessonCount || 0) + 1);
+        if (chapterCompleted) {
+          completedLessonCount = (completedLessonCount || 0) + 1;
         }
         if (index + 1 === course.chapterDetails.length) {
           course.chapterCompletedCount = completedLessonCount || 0;
         }
-      })
+      });
     });
   }
   logOut() {
@@ -80,5 +109,12 @@ export class CourseOverviewComponent {
       selectedCourse: selectedCourse,
       showCourseDetail: true,
     });
+  }
+  fetchDashboardOverview() {
+    this.dashboardOverview = this.dashboardService.fetchUploadedCourses();
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

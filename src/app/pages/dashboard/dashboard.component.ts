@@ -58,7 +58,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
   ngOnInit(): void {
-    this.dashboardService.getAllUsers();
     this.dashboardService
       .getSidePanelChange()
       .pipe(takeUntil(this.destroy$))
