@@ -6,11 +6,12 @@ import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { CommonSliderComponent } from 'src/app/components/common-slider/common-slider.component';
 import { DashboardService } from '../dashboard/dashboard.service';
+import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 
 @Component({
   selector: 'app-teachers-list',
   standalone: true,
-  imports: [],
+  imports: [CommonSearchProfileComponent],
   templateUrl: './teachers-list.component.html',
   styleUrl: './teachers-list.component.scss'
 })

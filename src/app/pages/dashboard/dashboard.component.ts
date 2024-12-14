@@ -29,14 +29,12 @@ import { StudentsListComponent } from '../students-list/students-list.component'
     DashboardOverviewComponent,
     UnderConstructionComponent,
     DashboardSidepanelComponent,
-    CourseUploadComponent,
     CourseDetailsComponent,
     EditAccountComponent,
-    QuestionnaireComponent,
     TeachersListComponent,
     ApprovalListComponent,
     StudentsListComponent
-  ],
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
