@@ -166,4 +166,7 @@ export class CourseDetailsComponent {
     this.destroy$.next();
     this.destroy$.complete();
   }
+  seachTextHandler(searchText:string){
+
+  }
 }

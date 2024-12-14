@@ -40,7 +40,7 @@ export class DashboardSidepanelComponent {
     public appService: AppService,
     public authService: AuthService
   ) {
-    // this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
+    this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
     this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
   }
   ngOnDestroy(): void {

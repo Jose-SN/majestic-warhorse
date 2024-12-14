@@ -18,7 +18,7 @@ export class CoursesApiService {
   ) {}
   geAllDetailsCourseList() {
     return this.http
-      .get<IcourseListResponse>(
+      .get<ICourseList[]>(
         `${this._apiUrl}course/get?populateUser=true&populateChapters=true&populateFiles=true`
       )
       .pipe(catchError(this.commonService.handleError));

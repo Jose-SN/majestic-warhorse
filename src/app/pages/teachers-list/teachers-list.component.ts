@@ -8,11 +8,12 @@ import { CommonSliderComponent } from 'src/app/components/common-slider/common-s
 import { DashboardService } from '../dashboard/dashboard.service';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { UserModel } from '../login-page/model/user-model';
+import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
 
 @Component({
   selector: 'app-teachers-list',
   standalone: true,
-  imports: [CommonSearchProfileComponent],
+  imports: [CommonSearchProfileComponent, SearchFilterPipe],
   templateUrl: './teachers-list.component.html',
   styleUrl: './teachers-list.component.scss',
 })
@@ -21,6 +22,7 @@ export class TeachersListComponent {
   public mobMenu: boolean = false;
   public showSliderView: boolean = false;
   public teachersList: UserModel[] = [];
+  public searchText:string = "";
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private authService: AuthService,
@@ -43,5 +45,8 @@ export class TeachersListComponent {
   }
   sliderActiveRemove(): void {
     this.showSliderView = false;
+  }
+  seachTextHandler(searchText: string) {
+    this.searchText = searchText;
   }
 }

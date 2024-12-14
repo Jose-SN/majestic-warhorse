@@ -13,11 +13,14 @@ import { CourseDetailsService } from '../course-details/course-details.service';
 import { Router } from '@angular/router';
 import { UserModel } from '../login-page/model/user-model';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
+import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
 
 @Component({
   selector: 'app-course-overview',
   standalone: true,
-  imports: [FormsModule, CommonModule, CommonSearchProfileComponent],
+  imports: [FormsModule, CommonModule, CommonSearchProfileComponent,
+    SearchFilterPipe
+  ],
   templateUrl: './course-overview.component.html',
   styleUrl: './course-overview.component.scss',
 })
@@ -34,6 +37,7 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
   public teachersList: UserModel[] = [];
   public studentsList: UserModel[] = [];
   private destroy$ = new Subject<void>();
+  public searchText: string = '';
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private courseUploadService: CourseUploadService,
@@ -52,7 +56,7 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
       .subscribe((status: boolean) => {
         this.isOnline = status;
       });
-      this.commonService.alluserList = await this.authService.getAllUsers();
+    this.commonService.alluserList = await this.authService.getAllUsers();
     if (this.commonService?.allUsersList.length) {
       this.commonService.allUsersList.forEach((user) => {
         switch (user.role) {
@@ -96,6 +100,7 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
         }
         if (index + 1 === course.chapterDetails.length) {
           course.chapterCompletedCount = completedLessonCount || 0;
+          course.completionPercent =  `${(completedLessonCount/course.chapterDetails.length)*100}%`
         }
       });
     });
@@ -115,5 +120,8 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+  seachTextHandler(searchText: string) {
+    this.searchText = searchText;
   }
 }

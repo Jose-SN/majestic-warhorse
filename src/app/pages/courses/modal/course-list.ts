@@ -10,6 +10,8 @@ export interface ICourseList {
   createdBy: CreatedBy;
   creation_date: Date;
   modification_date: Date;
+  courseStatusLevel?:string;
+  completionPercent?: string;
   chapterDetails: ChapterDetail[];
 }
 

@@ -5,7 +5,7 @@
     </figure>
   </header>
   <div class="dashboard-right">
-    <app-search-profile></app-search-profile>
+    <app-search-profile pageName="COURSE_OVERVIEW" (seachTextHandler)="seachTextHandler($event)"></app-search-profile>
     <div class="common-container">
       <div class="content-area">
         <div class="content-left">
@@ -93,7 +93,7 @@
 
             <div class="scroll-container courses">
               <div class="course-card-holder">
-                @for (course of courseLists; track $index) {
+                @for (course of courseLists | searchFilter: searchText : 'COURSE'; track $index) {
                 <div class="course-card" (click)="openCourseDetailsPage(course)">
                   <div class="card-content">
                     <figure><img [src]="course.courseCoverImage" alt="" /></figure>
@@ -107,7 +107,7 @@
                       }
                     </span>
                     <div class="loader-holder">
-                      <span style="width: 85%"></span>
+                      <span  [ngStyle]="{width: course.completionPercent}"></span>
                     </div>
                   </div>
                 </div>
