@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CourseUploadService } from 'src/app/pages/course-upload/course-upload.service';
@@ -19,15 +19,20 @@ export class DashboardOverviewComponent {
   public mobMenu: boolean = false;
   public courseLists: ICourseList[] = [];
   public loginedUserInfo:UserModel = {} as UserModel;
+  public refreshTime: string = '';
+  public activeFilterTab: string = 'All';
+  filterList: string[] = ['All', 'New', 'Pending', 'Completed'];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private courseUploadService: CourseUploadService,
     private authService:AuthService,
-    private commonService: CommonService,
-    private dashboardService: DashboardService
+    public commonService: CommonService,
+    private dashboardService: DashboardService,
+    private datePipe: DatePipe
   ) {
     this.fetchCourseList();
-    this.loginedUserInfo = this.commonService.loginedUserInfo    
+    this.loginedUserInfo = this.commonService.loginedUserInfo ?? {};
+    this.getCurrentTime();
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -47,5 +52,14 @@ export class DashboardOverviewComponent {
       selectedCourse: selectedCourse,
       showCourseDetail: true,
     });
+  }
+  getCurrentTime() {
+    const currentDate = new Date();
+    const formattedDate = this.datePipe.transform(currentDate, 'MMMM dd, yyyy hh:mm a');
+    this.refreshTime = formattedDate ?? '';
+  }
+  setActiveFilterTab(filter: string) {
+    this.activeFilterTab = filter;
+    // filter the course list
   }
 }

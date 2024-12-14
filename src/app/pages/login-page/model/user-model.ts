@@ -11,6 +11,8 @@ export interface UserModel {
   jwt: string;
   phone?: string;
   profileImage?:string;
+  assignedTo?:string[];
+  approved?:boolean;
 }
 export interface UserLoginResponse {
   success?: boolean;
