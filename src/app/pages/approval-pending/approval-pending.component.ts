@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, input } from '@angular/core';
 import { CommonSearchProfileComponent } from "../../components/common-search-profile/common-search-profile.component";
 
 @Component({
@@ -9,7 +9,6 @@ import { CommonSearchProfileComponent } from "../../components/common-search-pro
   styleUrl: './approval-pending.component.scss',
 })
 export class ApprovalPendingComponent {
-  seachTextHandler(searchText:string){
-
-  }
+  @Input() infoMessage: string = '';
+  seachTextHandler(searchText: string) {}
 }

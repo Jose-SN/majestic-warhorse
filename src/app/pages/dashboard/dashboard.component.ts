@@ -19,8 +19,9 @@ import { TeachersListComponent } from '../teachers-list/teachers-list.component'
 import { ApprovalListComponent } from '../approval-list/approval-list.component';
 import { StudentsListComponent } from '../students-list/students-list.component';
 import { AssignTeachersComponent } from 'src/app/components/assign-teachers/assign-teachers.component';
-import { ApprovalPendingComponent } from "../approval-pending/approval-pending.component";
+import { ApprovalPendingComponent } from '../approval-pending/approval-pending.component';
 import { StudentTeacherAssignListComponent } from '../student-teacher-assign-list/student-teacher-assign-list.component';
+import { OverlayComponent } from 'src/app/shared/overlay/overlay.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -39,8 +40,9 @@ import { StudentTeacherAssignListComponent } from '../student-teacher-assign-lis
     ApprovalListComponent,
     StudentsListComponent,
     ApprovalPendingComponent,
-    StudentTeacherAssignListComponent
-],
+    StudentTeacherAssignListComponent,
+    OverlayComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -49,6 +51,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public showCourseDetailedView: boolean = false;
   public selectedCourseInfo: ICourseList = {} as ICourseList;
   private destroy$ = new Subject<void>();
+  public infoMessage: string = '';
   public SIDE_PANEL_LIST: ISidepanel = this.dashboardService.SIDE_PANEL_LIST;
   @ViewChild(DashboardSidepanelComponent) dashboardSidepanelComponent!: DashboardSidepanelComponent;
 
@@ -78,12 +81,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe((courseInfo: { [key: string]: boolean | ICourseList }) => {
         this.handleCourseDetailsView(courseInfo);
       });
-      const loginedUserData = this.commonService.loginedUserInfo;
-      if (loginedUserData?.role === 'student' && loginedUserData.assignedTo?.length === 0) {
-        this.activePanel = this.SIDE_PANEL_LIST['ASSIGN_TEACHER'];
-      } else if (loginedUserData?.role === 'teacher' && loginedUserData.approved === false) {
-        this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
-      }
+    const loginedUserData = this.commonService.loginedUserInfo;
+    if (loginedUserData?.role === 'student' && !loginedUserData.assignedTo?.length) {
+      this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
+      this.infoMessage =
+        'You have not been assigned any teachers to view this course. Please contact the admin for assistance';
+    } else if ((loginedUserData?.role === 'teacher' && !loginedUserData.approved) || true) {
+      this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
+      this.infoMessage =
+        'Your request is pending approval from the admin. Please reach out to the admin for assistance.';
+    }
   }
   ngOnDestroy(): void {
     this.destroy$.next();
