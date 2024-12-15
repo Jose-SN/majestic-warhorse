@@ -32,6 +32,9 @@
     @case (SIDE_PANEL_LIST['TEACHER_APPROVAL']) {
       <app-approval-list></app-approval-list>
     }
+    @case (SIDE_PANEL_LIST['APPROVAL_PENDING']) {
+      <app-assign-teachers></app-assign-teachers>
+    }
     @default {
       <app-under-construction></app-under-construction>
     }

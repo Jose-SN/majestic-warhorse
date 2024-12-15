@@ -18,6 +18,7 @@ import { QuestionnaireComponent } from '../questionnaire/questionnaire.component
 import { TeachersListComponent } from '../teachers-list/teachers-list.component';
 import { ApprovalListComponent } from '../approval-list/approval-list.component';
 import { StudentsListComponent } from '../students-list/students-list.component';
+import { AssignTeachersComponent } from 'src/app/components/assign-teachers/assign-teachers.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -28,6 +29,7 @@ import { StudentsListComponent } from '../students-list/students-list.component'
     CourseOverviewComponent,
     DashboardOverviewComponent,
     UnderConstructionComponent,
+    AssignTeachersComponent,
     DashboardSidepanelComponent,
     CourseDetailsComponent,
     EditAccountComponent,
