@@ -20,6 +20,7 @@ import { ApprovalListComponent } from '../approval-list/approval-list.component'
 import { StudentsListComponent } from '../students-list/students-list.component';
 import { AssignTeachersComponent } from 'src/app/components/assign-teachers/assign-teachers.component';
 import { ApprovalPendingComponent } from "../approval-pending/approval-pending.component";
+import { StudentTeacherAssignListComponent } from '../student-teacher-assign-list/student-teacher-assign-list.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -37,7 +38,8 @@ import { ApprovalPendingComponent } from "../approval-pending/approval-pending.c
     TeachersListComponent,
     ApprovalListComponent,
     StudentsListComponent,
-    ApprovalPendingComponent
+    ApprovalPendingComponent,
+    StudentTeacherAssignListComponent
 ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',

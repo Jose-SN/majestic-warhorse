@@ -11,12 +11,6 @@
   background: var(--bg-shadow);
   border-radius: 10px;
 }
-.scroll-content {
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
 .dashboard-container {
   height: 100%;
   @include flex(flex, null, null, null);
@@ -194,9 +188,16 @@
 }
 
 .dashboard-right {
-  @include flex(flex, column, null, null);
+  @include flex(flex, column, null, null);  
   flex-grow: 1;
   padding: 30px 25px;
+  position: relative;
+  overflow: hidden;
+  .dashboard-inner {
+    @include flex(flex, column, null, null);  
+    flex-grow: 1;
+    height: 100%;
+  }
   .search-and-profile {
     @include flex(flex, null, flex-end, center);
   }
@@ -215,6 +216,8 @@
     @include flex(flex, null, flex-end, null);
     h1 {
       figure {
+        width: 35px;
+        height: 35px;
         margin-right: 10px;
       }
       @include flex(flex, null, null, center);
@@ -286,6 +289,7 @@
       border: 2px solid var(--bg-input-border);
       @include flex(flex, null, center, center);
       flex-shrink: 0;
+      position: relative;
       figure {
         width: 26px;
         height: 26px;
@@ -364,310 +368,239 @@
   .common-container {
     @include flex(flex, column, null, null);
     height: 100%;
-  }
-  .content-area {
-    @include flex(flex, null, space-between, null);
-    gap: 22px;
-    flex-grow: 1;
-    margin: 30px 0 0;
-    .content-left {
-      max-width: 1195px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      .scroll-container {
-        max-width: 1195px;
-        width: 100%;
-        height: 47vh;
-        position: relative;
-        &.overview {
-          height: 105px;
-        }
-      }
-      .courses-wrapper {
+    .common-wrapper {
         padding: 30px;
         @include border-radius(15px);
         @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
         flex-grow: 1;
-        overflow-y: auto;
+        margin: 30px 0 0;
+        height: 100%;
         position: relative;
-        .scroll-content {
-          width: 100%;
-          position: absolute;
-          top: 0;
-          left: 0;
-        }
+        @include flex(flex, column, null, null);
         .courses {
           overflow: hidden;
           overflow-y: auto;
         }
         .course-top {
+          @include flex(flex, null, space-between, null);
+          margin-bottom: 20px;
           h2 {
-            font-family: $titilliumWeb-bold;
-            font-size: 2rem;
+            font-family: $poppins-bold;
+            font-size: 1.875rem;
             font-weight: normal;
             color: var(--white);
             letter-spacing: 1.5px;
-            margin-bottom: 10px;
-            span {
-              font-family: $titilliumWeb-light;
-              font-size: 2rem;
-              color: var(--white);
-            }
           }
-          span {
-            font-size: 1rem;
-            color: var(--bg-grey);
-          }
-        }
-        .video-wrapper {
-          margin: 40px 0 0;
-          .video-holder {
-            @include flex(flex, null, null, null);
-            gap: 25px;
-          }
-          .video-left {
-            flex-grow: 1;
-            img {
-              width: 100%;
-            }
-            .content-bottom {
-              margin-top: 20px;
-              position: relative;
-              overflow-y: auto;
-              height: calc(100vh - 830px);
-              h5 {
-                font-size: 0.75rem;
-                line-height: 1.5rem;
-                color: var(--btn-add);
-                margin-bottom: 30px;
-                position: relative;
-              }
-              strong {
-                font-family: $titilliumWeb-regular;
-                font-size: 1rem;
-                line-height: 1.3rem;
-                font-weight: normal;
-                color: var(--white);
-                margin-bottom: 15px;
-                display: block;
-              }
-              p {
-                font-family: $titilliumWeb-light;
-                font-size: 0.875rem;
-                line-height: 1.5rem;
-                color: rgba($color: #ffff, $alpha: 0.5);
-              }
-            }
-            .btn-holder {
-              max-width: 330px;
-              width: 100%;
-              button {
-                font-family: $archivo-medium;
-                font-size: 0.875rem;
-                color: var(--white);
-                width: 100%;
-                height: 50px;
-                @include border-radius(18px);
-                @include gradient();
-                border: none;
-                cursor: pointer;
-                @include flex(flex, null, center, center);
-              }
-            }
-          }
-        }
-      }
-    }
-    .content-right {
-      max-width: 320px;
-      width: 100%;
-      flex-shrink: 0;
-      @include flex(flex, column, null, null);
-      gap: 25px;
-      .content-box {
-        @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
-        @include border-radius(15px);
-        flex: 1;
-        > figure {
-          background: var(--bg-img);
-          width: 110px;
-          height: 110px;
-          @include border-radius(100%);
-          margin: 0 auto;
-          position: relative;
-          &::before {
-            content: '';
-            background: var(--bg-notification-green);
-            width: 35px;
-            height: 35px;
-            position: absolute;
-            bottom: 1px;
-            right: -4px;
-            @include border-radius(100%);
-          }
-        }
-        > span {
-          font-family: $archivo-bold;
-          font-size: 1.5rem;
-          color: var(--light-blue);
-          text-align: center;
-          margin: 20px 0;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: nowrap;
-          display: block;
-        }
-        strong {
-          font-size: 0.813rem;
-          font-family: $archivo-regular;
-          color: var(--white);
-          background: var(--bg-mit4);
-          padding: 5px 10px;
-          margin: 10px auto 0;
-          @include border-radius(5px);
-          display: table;
-          margin-bottom: 10px;
-        }
-        .contact-area {
-          list-style: none;
-          @include common-margin;
-          li {
-            text-align: center;
-            margin-bottom: 5px;
-            display: block;
-            a {
-              font-family: $archivo-regular;
-              font-size: 0.875rem;
-              color: var(--bg-blue);
-              position: relative;
-              @include transition(all 0.3s ease-in-out);
-              &:hover {
-                color: var(--white);
-              }
-              &::before {
-                content: '';
-                position: absolute;
-                left: -24px;
-                top: 2px;
-              }
-            }
-            a[href^='mailto'] {
-              &::before {
-                width: 16px;
-                height: 15px;
-                background: url(../../../assets/images/icon-mail.svg) no-repeat center;
-              }
-            }
-            a[href^='tel'] {
-              &::before {
-                width: 18px;
-                height: 18px;
-                background: url(../../../assets/images/icon-contact.svg) no-repeat center;
-              }
-            }
-          }
-        }
-        .status-wrapper {
-          @include flex(flex, row, space-between, null);
-          margin-top: 20px;
-          .status-holder {
-            @include flex(flex, column, null, center);
-            .status {
-              font-family: $poppins-bold;
-              font-size: 1.5rem;
-              width: 55px;
-              height: 55px;
-              color: var(--white);
-              margin-bottom: 5px;
-              @include flex(flex, column, center, center);
-              @include border-radius(15px);
-              &.green {
-                background: var(--bg-green);
-              }
-              &.yellow {
-                background: var(--bg-yellow);
-              }
-            }
-            span {
-              font-family: $poppins-regular;
-              font-size: 0.875rem;
-              color: var(--white);
-            }
-          }
-        }
-        h3 {
-          font-family: $poppins-medium;
-          font-size: 1.25rem;
-          font-weight: normal;
-          color: var(--light-blue);
-          margin: 15px 0 15px 15px;
-        }
-        .reading-list-wrapper {
-          height: 100%;
-          position: relative;
-          padding: 5px;
-          .reading-list-content {
-            height: 100%;
+          a {
+            font-size: 1.25rem;
+            color: var(--bg-text-orange);
+            height: 26px;
             position: relative;
-            overflow-y: auto;
-            padding: 5px;
-          }
-          .reading-list {
-            @include flex(flex, row, null, null);
-            padding: 10px 76px 10px 10px;
-            gap: 15px;
-            position: relative;
-            &:not(:last-child) {
-              border-bottom: 1px solid var(--color-blue);
-            }
-            h4 {
-              font-family: $poppins-regular;
-              font-size: 0.938rem;
-              color: var(--light-blue);
-              font-weight: normal;
-              line-height: 18px;
-              margin-bottom: 5px;
-              @include text-ellipsis($lines: 2);
-            }
-            figure {
-              width: 69px;
-              height: 52px;
-              @include border-radius(8px);
-              overflow: hidden;
-            }
-            span {
-              font-family: $league-spartan-light;
-              font-size: 1rem;
-              color: var(--bg-light-grey);
-              display: block;
-              &:not(:last-child) {
-                margin-bottom: 5px;
-              }
-            }
-            button {
-              font-size: 0.75rem;
-              width: 67px;
-              height: 22px;
-              @include border-radius(8px);
-              background: var(--bg-publish);
-              border: 0;
-              color: #fff;
+            &::before {
+              content: '';
+              width: 0%;
+              height: 1px;
+              background: var(--bg-text-orange);
               position: absolute;
-              right: 10px;
-              top: 0;
               bottom: 0;
+              left: 0;
+              right: 0;
               margin: auto;
+              @include transition(all 0.35s ease-in-out);
+            }
+            &:hover {
+              color: var(--white);
+              &::before {
+                width: 100%;
+              }
+            }
+          }
+          ul {
+            max-width: fit-content;
+            background: var(--bg-tab-nav);
+            list-style: none;
+            margin: 0;
+            padding: 5px;
+            @include border-radius(15px);
+            @include flex(flex, null, null, center);
+            li {
+              font-family: $archivo-light;
+              font-size: 0.875rem;
+              font-weight: normal;
+              @include border-radius(15px);
+              color: var(--white);
+              padding: 15px 24px;
               cursor: pointer;
+              @include transition(all 0.3s ease-in-out);
+              &.active {
+                background: var(--bg-tab-active);
+              }
             }
           }
         }
-        &:last-child {
-          @include flex(flex, column, null, null);
+        .course-card-holder {
+          width: 100%;
+          height: 300px;
+          @include flex(flex, null, null, null);
+          flex-flow: column wrap;
+          flex-direction: row;
+          gap: 15px;
+          &.courses {
+            height: 340px !important;
+          }
+          .course-card {
+            background: var(--bg-left-panel);
+            max-width: 268px;
+            width: 23.5%;
+            @include border-radius(10px);
+            border: 1px solid var(--bg-card-border);
+            @include flex(flex, column, null, null);
+            overflow: hidden;
+            .card-content {             
+              flex: 1;
+              min-height: 149px;
+              max-height: 149px;
+              &:first-child {
+                background: var(--bg-light-grey);                
+                padding: 25px 25px 0;
+                overflow: hidden;
+                figure {
+                  @include flex(flex, column, flex-end, null);
+                }
+              }
+              &:last-child {
+                position: relative;
+                figure {
+                  margin-top: 20px;
+                }
+                padding: 20px 20px 40px;
+                span {
+                  font-family: $league-spartan-light;
+                  font-size: 0.75rem;
+                  color: var(--bg-light-grey);
+                }
+                h3 {
+                  font-family: $league-spartan-regular;
+                  font-size: 1.125rem;
+                  color: var(--light-blue);
+                  line-height: 1.25rem;
+                  font-weight: normal;
+                  min-height: 45px;
+                  max-height: 45px;
+                  margin: 10px 0 0;
+                }
+                .loader-holder {
+                  background: var(--white);
+                  width: 100%;
+                  height: 10px;                  
+                  margin-top: 10px;
+                  position: absolute;
+                  bottom: 20px;
+                  left: 0;
+                  max-width: 223px;
+                  width: 100%;
+                  right: 0;
+                  margin: auto;
+                  @include border-radius(10px);
+                  span {
+                    @include gradient();
+                    @include border-radius(10px);
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                  }
+                }
+              }
+            }
+          }
         }
+        .list-wrapper {
+          @include flex(flex,column,null,null);
+          flex-direction: row;
+          .list-holder {
+            max-width: 275px;
+            width: 100%;
+            @include border-radius(10px);
+            border: 1px solid var(--bg-card-border);
+          }
+        }
+        
+        .scoll-wrapper {
+            width: 100%;
+            position: relative;
+            height: 100%;
+            .common-list-wrapper {
+              display: flex;
+              flex-flow: column wrap;
+              flex-direction: row;
+              gap: 10px;
+              padding-right: 10px;
+            }
+            .scroll-container {
+                @include flex(flex,column,null,null);
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                overflow: hidden;
+                overflow-y: auto;
+                .common-list {
+                  background: var(--bg-list);
+                  width: 100%;
+                  @include flex(flex, row, space-between, center);                  
+                  gap: 15px;
+                  position: relative;
+                  border: 1px solid var(--bg-input-border);
+                  overflow: hidden;
+                  @include border-radius(15px);
+                  .list-left {
+                    padding: 10px;                    
+                    gap: 10px;
+                    flex-grow: 1;
+                    @include flex(flex, null, null, center);
+                  }
+                  h4 {
+                    font-family: $poppins-regular;
+                    font-size: 0.938rem;
+                    color: var(--light-blue);
+                    font-weight: normal;
+                    line-height: 18px;
+                    margin-bottom: 5px;
+                    @include text-ellipsis($lines: 1);
+                  }
+                  figure {
+                    width: 50px;
+                    height: 50px;
+                    flex-shrink: 0;
+                    @include border-radius(100%);
+                    overflow: hidden;
+                  }                  
+                  .common-list-right {
+                    max-width: 188px;
+                    width: 100%;                    
+                  }
+                  .icon-holder {
+                    background: var(--bg-list-action);
+                    @include flex(flex, null, null, center);
+                    @include border-radius(0 10px 10px 0);
+                    height: 100%;
+                    padding: 10px;
+                    button {
+                      background: transparent;
+                      width: 23px;
+                      height: 23px;
+                      padding: 3px;
+                      border: 0;
+                      cursor: pointer;
+                    }
+                  }
+                }
+            }
+        }
+        
       }
-    }
   }
 }
 
@@ -679,12 +612,12 @@ footer {
   }
 }
 
-@media screen and (min-width: 1921px) {
-  .dashboard-right {
-    max-width: 1592px;
-    margin: 0 auto;
-  }
-}
+// @media screen and (min-width: 1921px) {
+//   .dashboard-right {
+//     max-width: 1592px;
+//     margin: 0 auto;
+//   }
+// }
 
 @media screen and (max-width: 1919px) {
   .scroll-container {
@@ -1011,241 +944,4 @@ footer {
       }
     }
   }
-}
-
-.accordion {
-  font-family: $archivo-regular;
-  font-size: 0.875rem;
-  font-weight: normal;
-  background: var(--bg-input);
-  cursor: pointer;
-  padding: 11px 14px;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;  
-  transition: 0.4s;  
-  border: 1px solid var(--bg-border-input);
-  color: rgba($color: #fff, $alpha: 0.3);
-  @include border-radius(8px);
-}
-.accordion-content {
-  position: relative;
-  &:not(:last-child){
-    margin-bottom: 20px;
-  }
-}
-label {
-  font-size: 0.785rem;
-  color:  var(--white); 
-  margin-bottom: 10px;
-}
-
-.accordion:after {
-  content: '\002B';
-  color: var( --bg-blue);
-  font-weight: bold;
-  float: right;
-  margin-left: 5px;
-}
-
-.panel {
-  width: 100%;
-  background: var(--bg-panel-acco);
-  max-height: 0;
-  overflow: hidden;
-  color: var(--white);
-  position: relative;
-  top: 0;
-  left: 0;
-  @include border-radius(8px);
-  transition: max-height 0.2s ease-out;
-  overflow-y: auto;
-  .panel-content {
-    padding: 15px;
-  }
-  .panel-list {
-    p {
-      font-size: 0.875rem;
-      color: rgba($color: #fff, $alpha: 0.3);
-    }
-    ul {
-      @include common-margin;
-      list-style: none;
-      @include flex(flex, null, null, null);
-      margin: 10px 0 0;
-      li {
-        font-size: 0.785rem;
-        color: var( --white);
-        cursor: pointer;        
-        &:not(:last-child){
-          padding-right: 5px;
-          margin-right: 5px;
-        }
-      }
-    }
-    &:not(:last-child){
-      border-bottom: 1px dashed rgba($color: #fff, $alpha: 0.3);
-      margin-bottom: 10px;
-      padding-bottom: 10px;
-    }
-  }
-}
-.course-list-holder {
-  position: relative;
-  overflow-y: auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;  
-}
-.courses-list {
-  max-width: 330px;
-  width: 100%;
-  background: var(--bg-time);
-  @include border-radius(5px);
-  padding: 5px;
-  margin-bottom: 10px;
-  .scroll-content {
-    padding: 0 3px 0 0;
-  }
-  ul {
-    list-style: none;
-    @include common-margin();
-    @include flex(flex, column, null, null);
-    gap: 5px;
-    li {
-      background: var(--bg-left-panel);
-      border: 1px solid var(--bg-card-border);
-      width: 100%;
-      height: 48px;
-      padding: 15px;
-      @include flex(flex, null, null, center);
-      @include border-radius(8px);
-      @include transition(all 0.3s ease-in-out);
-      cursor: pointer;
-      figure {
-        width: 20px;
-        height: 20px;
-        margin-right: 10px;
-      }
-      span {
-        font-family: $titilliumWeb-semibold;
-        font-size: 0.875rem;
-        color: var(--white);
-      }
-      strong {
-        font-family: $archivo-light;
-        font-weight: normal;
-        color: rgba($color: #fff, $alpha: 0.4);
-        position: absolute;
-        right: 15px;
-      }
-      svg {
-        path {
-          fill: var(--bg-time) !important;
-        }
-      }
-      &.active {
-        background: var(--bg-orange);
-        color: var(--white);
-        svg {
-          path {
-            fill: var(--white) !important;
-          }
-        }
-      }
-    }
-  }  
-}
-.video-bottom {
-  @include flex(flex, null, null, null);
-  gap: 25px;
-  .bottom-holder {
-    max-width: 820px;
-    width: 100%;
-    @include flex(flex, null, space-between, center);
-    gap: 10px;
-  }
-  margin-top: 15px;
-  .profile {
-    max-width: 200px;
-    width: 100%;
-    @include flex(flex, null, null, center);
-    padding: 0 10px;
-    gap: 15px;
-    figure {
-      width: 50px;
-      height: 50px;
-      @include border-radius(100%);
-      overflow: hidden;
-    }
-    .profile-right {
-      width: 115px;
-      color: var(--white);
-      span {
-        font-family: $titilliumWeb-regular;
-        font-size: 1rem;
-        @include text-ellipsis($lines: 1);
-        display: block;
-      }
-      strong {
-        font-family: $titilliumWeb-regular;
-        font-size: 0.75rem;
-        font-weight: normal;
-        display: block;
-      }
-    }
-  }
-  .time {
-    @include flex(flex, null, null, center);
-    padding: 0 10px;
-    gap: 10px;
-    svg {
-      path {
-        fill: var(--btn-add) !important;
-      }
-    }
-    span {
-      font-family: $titilliumWeb-regular;
-      font-size: 0.75rem;
-      color: var(--btn-add);
-    }
-  }
-  .bookmark {
-    @include flex(flex, null, null, center);
-    gap: 10px;
-    padding: 0 10px;
-    span {
-      font-family: $titilliumWeb-regular;
-      font-size: 0.75rem;
-      color: var(--btn-add);
-    }
-  }
-  .download {
-    @include flex(flex, null, null, center);
-    gap: 10px;
-    padding: 0 10px;
-    span {
-      font-family: $titilliumWeb-regular;
-      font-size: 0.75rem;
-      color: var(--btn-add);
-    }
-  }
-}
-.flex-direction-row{
-  flex-direction: row !important;
-}
-.align-center-video {
-  gap: 5px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  svg {
-    path {
-      fill: var(--bg-time) !important;
-    }
-  }
-}
-.full-width{
-  width: 100% !important;
 }

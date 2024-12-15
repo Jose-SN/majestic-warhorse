@@ -13,8 +13,9 @@ import { IModelInfo } from 'src/app/components/common-dialog/model/popupmodel';
 export class CommonService {
   public loginedUserInfo!: UserModel;
   public allUsersList: UserModel[] = [];
-  public adminRoleType: string[] = ['admin',"teacher"];
-  private openpopupModel$: Subject<any> = new Subject<any>()
+  public adminRoleType: string[] = ['admin', 'teacher'];
+  private openpopupModel$: Subject<any> = new Subject<any>();
+  private closePopupModel$: Subject<any> = new Subject<any>();
   public onlineStatusChanged = new EventEmitter<boolean>();
   constructor(private toastrService: ToastrService) {
     this.initializeStatus();
@@ -47,16 +48,22 @@ export class CommonService {
   public isEmpty(object: { [key: string]: string | number }) {
     return Object.keys(object).length === 0;
   }
-  public openPopupModel(modalInfo:IModelInfo){
+  public openPopupModel(modalInfo: IModelInfo) {
     this.openpopupModel$.next(modalInfo);
   }
-  public getOpenpopupModelHandle(){
+  public getOpenpopupModelHandle() {
     return this.openpopupModel$.asObservable();
+  }
+  public closePopupModel(close: boolean) {
+    this.closePopupModel$.next(close);
+  }
+  public closePopupModelHandle() {
+    return this.closePopupModel$.asObservable();
   }
   transformText(text: string) {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
-  
+
   private initializeStatus() {
     // Emit the current status on service initialization
     this.emitOnlineStatus();
@@ -66,5 +73,14 @@ export class CommonService {
   }
   private emitOnlineStatus() {
     this.onlineStatusChanged.emit(navigator.onLine);
+  }
+  formatTime(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${this.paddingZero(hours)}:${this.paddingZero(minutes)}:${this.paddingZero(remainingSeconds)}`;
+  }
+  paddingZero(number: number): string {
+    return number < 10 ? `0${number}` : `${number}`;
   }
 }

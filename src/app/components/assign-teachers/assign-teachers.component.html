@@ -1,37 +1,35 @@
 <section class="dashboard-container">
     <div class="dashboard-right">
         <div class="dashboard-inner">
-          <app-search-profile pageName="ASSIGN_TEACHER" (seachTextHandler)="seachTextHandler($event)"></app-search-profile>
             <div class="common-container">
                 <div class="common-wrapper">
                     <div class="scoll-wrapper">
                         <div class="scroll-container">
                             <div class="common-list-wrapper">
                                 @for (teacher of teachersList; track $index) {
-                                    <label class="common-list" >
-                                        <input type="checkbox" [(ngModel)]="selectedTeachers" [value]="teacher">
-                                        <span></span>
-                                        <div class="list-left">
-                                          <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
-                                          <div class="common-list-right">
-                                            <h4>{{ teacher.firstName }} {{ teacher.lastName }}</h4>                                        
-                                          </div>
-                                        </div> 
-                                        <div class="icon-holder">
-                                          <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
-                                          <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
-                                        </div>                                   
-                                    </label>
+                                <label class="common-list">
+                                    <input type="checkbox" (change)="onTeacherSelect(teacher, $event)">
+                                    <span></span>
+                                    <div class="list-left">
+                                        <figure><img [src]="teacher.profileImage" alt=""></figure>
+                                        <div class="common-list-right">
+                                            <h4>{{ teacher.firstName }} {{ teacher.lastName }}</h4>
+                                        </div>
+                                    </div>
+                                    <div class="icon-holder">
+                                        <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                                        <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                                    </div>
+                                </label>
                                 }
                             </div>
                             <footer>
-                                <button class="btn-assign" type="submit">Assign Teachers</button>
+                                <button class="btn-assign" (click)="handleTeacherAssign()">Assign Teachers</button>
                             </footer>
                         </div>
                     </div>
-                </div>  
+                </div>
             </div>
-        </div>    
+        </div>
     </div>
-  </section>
-  
+</section>

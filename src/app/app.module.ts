@@ -16,7 +16,6 @@ import { StarRatingModule } from 'angular-star-rating';
 import { CommonDialogComponent } from './components/common-dialog/common-dialog.component';
 import { DatePipe } from '@angular/common';
 import { PortalModule } from '@angular/cdk/portal';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -40,7 +39,6 @@ import { FormsModule } from '@angular/forms';
     StarRatingModule.forRoot(),
     CommonDialogComponent,
     PortalModule,
-    NgMultiSelectDropDownModule.forRoot(),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true },

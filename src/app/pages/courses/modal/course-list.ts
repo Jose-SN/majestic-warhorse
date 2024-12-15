@@ -48,6 +48,7 @@ export interface FileDetail {
   createdBy: CreatedBy;
   creation_date: Date;
   modification_date: Date;
+  videoDuration?:string;
 }
 
 export interface IcourseListResponse {

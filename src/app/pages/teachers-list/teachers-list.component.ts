@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { CommonSliderComponent } from 'src/app/components/common-slider/common-slider.component';
@@ -9,6 +9,8 @@ import { DashboardService } from '../dashboard/dashboard.service';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { UserModel } from '../login-page/model/user-model';
 import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
+import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
+import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 
 @Component({
   selector: 'app-teachers-list',
@@ -22,15 +24,19 @@ export class TeachersListComponent {
   public mobMenu: boolean = false;
   public showSliderView: boolean = false;
   public teachersList: UserModel[] = [];
-  public searchText:string = "";
+  public searchText: string = '';
+  private destroy$ = new Subject<void>();
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private authService: AuthService,
     private commonService: CommonService,
+    private commonApiService: CommonApiService,
     private dashboardService: DashboardService
   ) {
     this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
-    this.teachersList = this.commonService.allUsersList.filter((users) => users.role === 'teacher');
+    this.teachersList = this.commonService.allUsersList.filter((users) => {
+      return users.role === 'teacher' && !users.approved;
+    });
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -48,5 +54,26 @@ export class TeachersListComponent {
   }
   seachTextHandler(searchText: string) {
     this.searchText = searchText;
+  }
+  deleteTeacher(deletedTeacher: UserModel) {
+    this.commonApiService.deleteUser(takeUntil(this.destroy$)).subscribe({
+      next: async () => {
+        this.commonService.openToaster({
+          message: `Teacher ${deletedTeacher.firstName} ${deletedTeacher.lastName} successfully deleted`,
+          messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+        });
+        this.commonService.alluserList = await this.authService.getAllUsers();
+      },
+      error: () => {
+        this.commonService.openToaster({
+          message: `Error while deleting Teacher ${deletedTeacher.firstName} ${deletedTeacher.lastName}`,
+          messageType: TOASTER_MESSAGE_TYPE.ERROR,
+        });
+      },
+    });
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
