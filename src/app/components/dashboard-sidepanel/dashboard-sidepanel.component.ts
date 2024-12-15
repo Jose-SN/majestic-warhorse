@@ -52,6 +52,10 @@ export class DashboardSidepanelComponent {
     this.dashboardService.setSidePanelChangeValue(activePanel);
   }
   navigateToHome() {
+    if (this.disableListItems()) return;
     this.setActivePanel(this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW']);
+  }
+  disableListItems() {
+    return this.loginedUserPrivilege === 'student' && this.commonService.loginedUserInfo.assignedTo?.length === 0;
   }
 }
