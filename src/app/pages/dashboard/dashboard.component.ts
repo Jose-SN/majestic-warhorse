@@ -74,6 +74,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe((courseInfo: { [key: string]: boolean | ICourseList }) => {
         this.handleCourseDetailsView(courseInfo);
       });
+      const loginedUserData = this.commonService.loginedUserInfo;
+      if (loginedUserData?.role === 'student' && loginedUserData.assignedTo?.length === 0) {
+        this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
+      }
   }
   ngOnDestroy(): void {
     this.destroy$.next();
