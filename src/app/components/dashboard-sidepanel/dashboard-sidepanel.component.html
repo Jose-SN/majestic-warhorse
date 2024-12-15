@@ -13,7 +13,8 @@
   </header>
   <div class="left-navigation">
     <ul>
-      <li (click)="setActivePanel(SIDE_PANEL_LIST.DASHBOARD_OVERVIEW)">
+      <li (click)="setActivePanel(SIDE_PANEL_LIST.DASHBOARD_OVERVIEW)"
+        [ngClass]="{ disabled : disableListItems() }">
         <a
           [ngClass]="{ active: activePanel === SIDE_PANEL_LIST.DASHBOARD_OVERVIEW }"
           href="javascript:void(0);"
@@ -78,7 +79,8 @@
           <span>CPD</span>
         </a>
       </li> -->
-      <li (click)="setActivePanel(SIDE_PANEL_LIST.ACCOUNT)">
+      <li (click)="setActivePanel(SIDE_PANEL_LIST.ACCOUNT)" 
+        [ngClass]="{ disabled : disableListItems() }">
         <a
           [ngClass]="{ active: activePanel === SIDE_PANEL_LIST.ACCOUNT }"
           href="javascript:void(0);"
@@ -100,7 +102,7 @@
           <span>Account</span>
         </a>
       </li>
-      <li (click)="setActivePanel(SIDE_PANEL_LIST.COURSE_LISTING)">
+      <li (click)="setActivePanel(SIDE_PANEL_LIST.COURSE_LISTING)" [ngClass]="{ disabled : disableListItems() }">
         <a
           [ngClass]="{ active: activePanel === SIDE_PANEL_LIST.COURSE_LISTING }"
           href="javascript:void(0);"

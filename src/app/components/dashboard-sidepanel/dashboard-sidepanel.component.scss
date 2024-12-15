@@ -132,6 +132,10 @@
     @include common-margin;
     list-style: none;
 
+    .disabled {
+      cursor: not-allowed;
+      pointer-events: none;
+    }
     li {
       font-size: 1.125rem;
       position: relative;
