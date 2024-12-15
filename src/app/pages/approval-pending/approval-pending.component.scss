@@ -538,7 +538,6 @@
               padding-right: 10px;
               flex-direction: column-reverse;
               /* justify-content: space-around; */
-              margin-top: 25%;
             }
             .scroll-container {
                 @include flex(flex,column,null,null);
@@ -985,4 +984,10 @@ footer {
       }
     }
   }
+}
+.scroll-container{
+  flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
 }

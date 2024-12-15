@@ -19,4 +19,9 @@ export class CommonApiService {
       .post<{ [key: string]: string }>(`${this._apiUrl}file/upload`, selectedFile)
       .pipe(catchError(this.commonService.handleError));
   }
+  deleteUser(deletePayload: any) {
+    return this.http
+      .delete<{ [key: string]: string }>(`${this._apiUrl}user/delete`, deletePayload)
+      .pipe(catchError(this.commonService.handleError));
+  }
 }

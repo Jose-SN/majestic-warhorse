@@ -10,7 +10,16 @@ app-dashboard-sidepanel {
 }
 app-dashboard-overview,
 app-courses,
-app-course-overview, app-questionnaire, app-edit-account, app-teachers-list, app-students-list, app-approval-list, app-course-detils {
+app-course-overview,
+app-questionnaire,
+app-edit-account,
+app-teachers-list,
+app-students-list,
+app-approval-list,
+app-course-detils,
+app-assign-teachers,
+app-approval-pending,
+app-student-teacher-assign-list {
   flex-grow: 1;
 }
 app-under-construction {

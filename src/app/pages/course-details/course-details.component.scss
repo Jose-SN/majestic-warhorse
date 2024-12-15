@@ -1232,3 +1232,20 @@ label {
     }
   }
 }
+.flex-direction-row{
+  flex-direction: row !important;
+}
+.align-center-video {
+  gap: 5px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  svg {
+    path {
+      fill: var(--bg-time) !important;
+    }
+  }
+}
+.full-width{
+  width: 100% !important;
+}

@@ -13,7 +13,8 @@ import { Router } from '@angular/router';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { UserModel } from '../login-page/model/user-model';
 import { CommonModule } from '@angular/common';
-import { CommonDialogComponent } from "../../components/common-dialog/common-dialog.component";
+import { CommonDialogComponent } from '../../components/common-dialog/common-dialog.component';
+import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 
 @Component({
   selector: 'app-registration-page',
@@ -30,7 +31,8 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   public createAccountForm!: FormGroup;
   private formValidator = new FormValidators();
   private destroy$ = new Subject<void>();
-
+  public isAdminLogin: boolean = false;
+  public profileUrl: string = '../../../../assets/images/img-placeholder.jpg';
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
@@ -71,26 +73,42 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
         (user: UserModel) => user._id === loginedId
       );
       const userFormInfo = {
-        profileImage: '',
         password: '',
+        profileImage: '',
+        status: 'Active',
         confirmPassword: '',
+        role: loginedUser?.role,
         email: loginedUser?.email,
-        firstName: loginedUser?.firstName,
-        lastName: loginedUser?.lastName,
         phone: loginedUser?.phone,
+        lastName: loginedUser?.lastName,
+        firstName: loginedUser?.firstName,
       };
+      this.profileUrl = loginedUser?.profileImage as string;
+      this.registrationService.imageUrl = this.profileUrl;
+      this.isAdminLogin = loginedUser?.role === 'admin';
       this.createAccountForm.setValue(userFormInfo);
       this.createAccountForm?.get('email')?.disable();
+      this.createAccountForm?.get('role')?.disable();
       this.createAccountForm.markAllAsTouched();
+
+      if (this.profileUrl) {
+        this.createAccountForm.get('profileImage')?.clearValidators();
+      }
     }
   }
-
-  onFileSelected(event: Event): void {
+  async onFileSelected(event: Event): Promise<void> {
     const target = event.target as HTMLInputElement;
     const files = target.files as FileList;
-    const isError = this.registrationService.onFileSelected(this.destroy$, files[0]);
-    if (isError) {
+    const successData: { [key: string]: string | boolean } =
+      await this.registrationService.onFileSelected(this.destroy$, files[0]);
+    if (successData['success']) {
+      this.profileUrl = successData['url'] as string;
+    } else {
       this.createAccountForm.get('profileImage')?.setValue('');
+      this.commonService.openToaster({
+        message: 'Error while uploading image, please re-upload',
+        messageType: TOASTER_MESSAGE_TYPE.ERROR,
+      });
     }
   }
   onSubmit() {
@@ -115,8 +133,6 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
-
 
   isDialogOpen = false;
   openDialog(): void {

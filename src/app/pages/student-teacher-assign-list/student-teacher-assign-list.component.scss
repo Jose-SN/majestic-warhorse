@@ -193,6 +193,11 @@
   padding: 30px 25px;
   position: relative;
   overflow: hidden;
+  .dashboard-inner {
+    @include flex(flex, column, null, null);  
+    flex-grow: 1;
+    height: 100%;
+  }
   .search-and-profile {
     @include flex(flex, null, flex-end, center);
   }
@@ -363,188 +368,14 @@
   .common-container {
     @include flex(flex, column, null, null);
     height: 100%;
-  }
-  .content-area {
-    @include flex(flex, null, space-between, null);
-    gap: 22px;
-    flex-grow: 1;
-    margin: 30px 0 0;
-    .content-left {
-      min-width: 1195px;
-      height: 100%;
-      @include flex(flex,column,null,null);      
-      .scroll-container {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        &.overview {
-          height: 105px;
-        }
-      }
-      .content-top {
-        @include flex(flex, null, space-between, null);
-        width: 100%;
-        gap: 18px;
-        .course-detail {
-          max-width: 282px;
-          width: 100%;
-          padding: 24px;
-          @include border-radius(15px);
-          @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
-          position: relative;
-          overflow: hidden;
-          .detail-top {
-            @include flex(flex, null, null, center);
-            position: relative;
-            z-index: 1;
-            gap: 20px;
-            .icons {
-              @include flex(flex, null, center, center);
-              width: 52px;
-              height: 52px;
-              @include border-radius(100%);
-              &.mit1,
-              &.mit2,
-              &.mit3,
-              &.mit4 {
-                @include transition(all 0.3s ease-in-out);
-              }
-              &.mit1 {
-                background: var(--bg-mit1);
-              }
-              &.mit2 {
-                background: var(--bg-mit2);
-              }
-              &.mit3 {
-                background: var(--bg-mit3);
-              }
-              &.mit4 {
-                background: var(--bg-mit4);
-              }
-            }
-            .detail-right {
-              flex-shrink: 0;
-            }
-            h2 {
-              font-family: $league-spartan-regular;
-              font-size: 1.375rem;
-              font-weight: normal;
-              color: var(--light-blue);
-              margin-bottom: 10px;
-              max-width: 196px;
-              text-overflow: ellipsis;
-              overflow: hidden;
-              white-space: nowrap;
-            }
-            span {
-              font-family: $league-spartan-light;
-              font-size: 1rem;
-              color: var(--bg-light-grey);
-            }
-          }
-          .detail-bottom {
-            @include flex(flex, null, null, null);
-            margin-top: 30px;
-            position: relative;
-            z-index: 1;
-            span {
-              font-family: $league-spartan-light;
-              font-size: 1rem;
-              color: var(--bg-light-grey);
-              margin-bottom: 10px;
-              display: block;
-            }
-            .rate {
-              flex: 1;
-              .rate-holder {
-                @include flex(flex, null, null, null);
-                gap: 10px;
-                .rate-icon,
-                .rate-content {
-                  figure {
-                    width: 18px;
-                  }
-                  strong,
-                  small {
-                    font-family: $league-spartan-light;
-                    color: var(--white);
-                    font-weight: normal;
-                    display: block;
-                  }
-                  strong {
-                    font-family: $league-spartan-regular;
-                    font-size: 1.563rem;
-                    line-height: 1.313rem;
-                  }
-                  small {
-                    font-family: $league-spartan-light;
-                    font-size: 0.75rem;
-                    margin-top: 10px;
-                  }
-                }
-              }
-            }
-            .type {
-              flex: 1;
-              strong {
-                font-family: $league-spartan-regular;
-                font-size: 1rem;
-                font-weight: normal;
-                color: var(--white);
-                line-height: 1.5rem;
-              }
-            }
-          }
-          &::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            @include gradient-course();
-            @include border-radius(15px);
-            @include transition(all 0.3s ease-in-out);
-            opacity: 0;
-            z-index: 0;
-          }
-          &::after {
-            content: '';
-            background: #fb6959b5;
-            width: 185px;
-            height: 185px;
-            @include border-radius(100%);
-            position: absolute;
-            bottom: -90px;
-            right: -15px;
-            @include transition(all 0.35s ease-in-out);
-            opacity: 0;
-          }
-          &:hover {
-            &::before {
-              opacity: 1;
-            }
-            &::after {
-              bottom: -75px;
-              opacity: 1;
-            }
-            .icons {
-              &.mit1,
-              &.mit2,
-              &.mit3,
-              &.mit4 {
-                background: var(--white);
-              }
-            }
-          }
-        }
-      }
-      .courses-wrapper {
+    .common-wrapper {
         padding: 30px;
         @include border-radius(15px);
         @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
         flex-grow: 1;
-        margin: 20px 0 0;
+        margin: 30px 0 0;
+        height: 100%;
+        position: relative;
         @include flex(flex, column, null, null);
         .courses {
           overflow: hidden;
@@ -621,7 +452,6 @@
             background: var(--bg-left-panel);
             max-width: 268px;
             width: 23.5%;
-            cursor: pointer;
             @include border-radius(10px);
             border: 1px solid var(--bg-card-border);
             @include flex(flex, column, null, null);
@@ -685,201 +515,92 @@
             }
           }
         }
-      }
-    }
-    .content-right {
-      max-width: 320px;
-      width: 100%;
-      flex-shrink: 0;
-      @include flex(flex, column, null, null);
-      gap: 25px;
-      .content-box {
-        @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
-        @include border-radius(15px);
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        > figure {
-          background: var(--bg-img);
-          width: 110px;
-          height: 110px;
-          @include border-radius(100%);
-          margin: 0 auto;
-          position: relative;
-          &::before {
-            content: '';
-            background: var(--bg-notification-green);
-            width: 35px;
-            height: 35px;
-            position: absolute;
-            bottom: 1px;
-            right: -4px;
-            @include border-radius(100%);
-          }
-        }
-        > span {
-          font-family: $archivo-bold;
-          font-size: 1.5rem;
-          color: var(--light-blue);
-          text-align: center;
-          margin: 20px 0;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: nowrap;
-          display: block;
-        }
-        strong {
-          font-size: 0.813rem;
-          font-family: $archivo-semi-bold;
-          background: var(--bg-notification-red);
-          padding: 5px 10px;
-          margin: 10px auto 0;
-          @include border-radius(5px);
-          display: table;
-          margin-bottom: 10px;
-        }
-        .contact-area {
-          list-style: none;
-          @include common-margin;
-          li {
-            text-align: center;
-            margin-bottom: 5px;
-            display: block;
-            a {
-              font-family: $archivo-regular;
-              font-size: 0.875rem;
-              color: var(--bg-blue);
-              position: relative;
-              @include transition(all 0.3s ease-in-out);
-              &:hover {
-                color: var(--white);
-              }
-              &::before {
-                content: '';
-                position: absolute;
-                left: -24px;
-                top: 2px;
-              }
-            }
-            a[href^='mailto'] {
-              &::before {
-                width: 16px;
-                height: 15px;
-                background: url(../../../assets/images/icon-mail.svg) no-repeat center;
-              }
-            }
-            a[href^='tel'] {
-              &::before {
-                width: 18px;
-                height: 18px;
-                background: url(../../../assets/images/icon-contact.svg) no-repeat center;
-              }
-            }
-          }
-        }
-        .status-wrapper {
-          @include flex(flex, row, space-between, null);
-          margin-top: 20px;
-          .status-holder {
-            @include flex(flex, column, null, center);
-            .status {
-              font-family: $poppins-bold;
-              font-size: 1.5rem;
-              width: 55px;
-              height: 55px;
-              color: var(--white);
-              margin-bottom: 5px;
-              @include flex(flex, column, center, center);
-              @include border-radius(15px);
-              &.green {
-                background: var(--bg-green);
-              }
-              &.yellow {
-                background: var(--bg-yellow);
-              }
-            }
-            span {
-              font-family: $poppins-regular;
-              font-size: 0.875rem;
-              color: var(--white);
-            }
-          }
-        }
-        h3 {
-          font-family: $poppins-medium;
-          font-size: 1.25rem;
-          font-weight: normal;
-          color: var(--light-blue);
-          padding: 10px 15px;
-        }
-        .reading-list-wrapper {
-          height: 100%;
-          position: relative;
-          overflow: hidden;
-          display: flex;
-          overflow-y: auto;
-          flex-direction: column;
-          .reading-list-content {
-            height: 100%;
-            padding-right: 10px;
-            position: absolute;
-            top: 0;
+        .list-wrapper {
+          @include flex(flex,column,null,null);
+          flex-direction: row;
+          .list-holder {
+            max-width: 275px;
             width: 100%;
+            @include border-radius(10px);
+            border: 1px solid var(--bg-card-border);
           }
-          .reading-list {
-            @include flex(flex, row, null, null);
-            padding: 10px 76px 10px 10px;
-            gap: 15px;
+        }
+        
+        .scoll-wrapper {
+            width: 100%;
             position: relative;
-            &:not(:last-child) {
-              border-bottom: 1px solid var(--color-blue);
-              margin-bottom: 10px;
+            height: 100%;
+            .common-list-wrapper {
+              display: flex;
+              flex-flow: column wrap;
+              flex-direction: row;
+              gap: 10px;
+              padding-right: 10px;
             }
-            h4 {
-              font-family: $poppins-regular;
-              font-size: 0.938rem;
-              color: var(--light-blue);
-              font-weight: normal;
-              line-height: 18px;
-              margin-bottom: 5px;
-              @include text-ellipsis($lines: 2);
+            .scroll-container {
+                @include flex(flex,column,null,null);
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                overflow: hidden;
+                overflow-y: auto;
+                .common-list {
+                  background: var(--bg-list);
+                  width: 100%;
+                  @include flex(flex, row, space-between, center);                  
+                  gap: 15px;
+                  position: relative;
+                  border: 1px solid var(--bg-input-border);
+                  overflow: hidden;
+                  @include border-radius(15px);
+                  .list-left {
+                    padding: 10px;                    
+                    gap: 10px;
+                    flex-grow: 1;
+                    @include flex(flex, null, null, center);
+                  }
+                  h4 {
+                    font-family: $poppins-regular;
+                    font-size: 0.938rem;
+                    color: var(--light-blue);
+                    font-weight: normal;
+                    line-height: 18px;
+                    margin-bottom: 5px;
+                    @include text-ellipsis($lines: 1);
+                  }
+                  figure {
+                    width: 50px;
+                    height: 50px;
+                    flex-shrink: 0;
+                    @include border-radius(100%);
+                    overflow: hidden;
+                  }                  
+                  .common-list-right {
+                    max-width: 188px;
+                    width: 100%;                    
+                  }
+                  .icon-holder {
+                    background: var(--bg-list-action);
+                    @include flex(flex, null, null, center);
+                    @include border-radius(0 10px 10px 0);
+                    height: 100%;
+                    padding: 10px;
+                    button {
+                      background: transparent;
+                      width: 23px;
+                      height: 23px;
+                      padding: 3px;
+                      border: 0;
+                      cursor: pointer;
+                    }
+                  }
+                }
             }
-            figure {
-              width: 50px;
-              height: 50px;
-              @include border-radius(100%);
-              overflow: hidden;
-            }
-            span {
-              font-family: $league-spartan-light;
-              font-size: 1rem;
-              color: var(--bg-light-grey);
-              display: block;
-              &:not(:last-child) {
-                margin-bottom: 5px;
-              }
-            }
-            button {
-              width: 67px;
-              height: 22px;
-              @include border-radius(18px);
-              @include gradient();
-              border: 0;
-              color: #fff;
-              position: absolute;
-              right: 0;
-              top: 0;
-              bottom: 0;
-              margin: auto;
-              cursor: pointer;
-            }
-          }
         }
-        &:last-child {
-          @include flex(flex, column, null, null);
-        }
+        
       }
-    }
   }
 }
 
@@ -1223,9 +944,4 @@ footer {
       }
     }
   }
-}
-.lesson-label{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }

@@ -7,6 +7,7 @@ import { IModelInfo } from './components/common-dialog/model/popupmodel';
 import { CommonDialogComponent } from './components/common-dialog/common-dialog.component';
 import { COMPONENT_NAME } from './constants/popup-constants';
 import { FileViwerComponent } from './components/file-viwer/file-viwer.component';
+import { AssignTeachersComponent } from './components/assign-teachers/assign-teachers.component';
 
 @Component({
   selector: 'app-root',
@@ -37,6 +38,12 @@ export class AppComponent implements OnInit {
       .subscribe((modelInfo: IModelInfo) => {
         this.loadPopupComponent(modelInfo);
       });
+    this.commonService
+      .closePopupModelHandle()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((closeModel) => {
+        this.closeModel();
+      });
   }
   loadPopupComponent(modelInfo: IModelInfo) {
     this.commonDialogComponent.title = modelInfo.title;
@@ -44,6 +51,9 @@ export class AppComponent implements OnInit {
     switch (modelInfo.componentName) {
       case COMPONENT_NAME.FILE_VIEWER:
         componentName = FileViwerComponent;
+        break;
+      case COMPONENT_NAME.ASSIGN_TEACHER:
+        componentName = AssignTeachersComponent;
         break;
     }
     this.commonDialogComponent.loadComponent(componentName, { popupModelInfo: modelInfo });

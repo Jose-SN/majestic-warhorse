@@ -9,6 +9,7 @@ export interface ICourseList {
   chapters: string[];
   createdBy: CreatedBy;
   creation_date: Date;
+  averageRating?:number;
   modification_date: Date;
   courseStatusLevel?:string;
   completionPercent?: string;
@@ -47,6 +48,7 @@ export interface FileDetail {
   createdBy: CreatedBy;
   creation_date: Date;
   modification_date: Date;
+  videoDuration?:string;
 }
 
 export interface IcourseListResponse {

@@ -7,17 +7,17 @@
                     <div class="scoll-wrapper">
                         <div class="scroll-container">
                             <div class="common-list-wrapper">
-                              @for (teacher of studentList | searchFilter: searchText : 'USER_LIST';; track $index) {
+                              @for (student of studentList | searchFilter: searchText : 'USER_LIST';; track $index) {
                                 <div class="common-list">
                                   <div class="list-left">
-                                    <figure><img [src]="teacher.profileImage" alt=""></figure>
+                                    <figure><img [src]="student.profileImage" alt=""></figure>
                                     <div class="common-list-right">
-                                      <h4>{{teacher.firstName}} {{teacher.lastName}}</h4>
+                                      <h4>{{student.firstName}} {{student.lastName}}</h4>
                                     </div>
                                   </div>
                                   <div class="icon-holder">
                                     <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
-                                    <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                                    <button (click)="deleteStudent(student)"><img src="../../../assets/images/icon-delete.svg" alt=""></button>
                                   </div>
                                 </div>
                                 }

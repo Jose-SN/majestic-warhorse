@@ -13,11 +13,18 @@ import { ICourseStatus } from './model/course-status';
 import { IAttachmentObjectInfo } from '../course-upload/model/file-object-info';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
+import { VideoDurationService } from 'src/app/shared/services/video-duration.service';
 
 @Component({
   selector: 'app-course-detils',
   standalone: true,
-  imports: [FormsModule, CommonModule, VideoPlayerComponent, StarRatingModule, CommonSearchProfileComponent],
+  imports: [
+    FormsModule,
+    CommonModule,
+    VideoPlayerComponent,
+    StarRatingModule,
+    CommonSearchProfileComponent,
+  ],
   templateUrl: './course-details.component.html',
   styleUrl: './course-details.component.scss',
 })
@@ -33,6 +40,7 @@ export class CourseDetailsComponent {
   public activeChapter: ChapterDetail = {} as ChapterDetail;
   private courseStatusInfo: ICourseStatus = {} as ICourseStatus;
   private videoStatusInfo: ICourseStatus = {} as ICourseStatus;
+  public selectedAttachmentList: any = [];
   @Input() selectedCourseInfo: ICourseList = {} as ICourseList;
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   @ViewChild(VideoPlayerComponent) videoPlayerComponent!: VideoPlayerComponent;
@@ -40,7 +48,8 @@ export class CourseDetailsComponent {
     private authService: AuthService,
     private commonService: CommonService,
     private fileDownloadService: FileDownloadService,
-    private courseDetailsService: CourseDetailsService
+    private courseDetailsService: CourseDetailsService,
+    private videoDurationService:VideoDurationService
   ) {
     this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
   }
@@ -55,7 +64,17 @@ export class CourseDetailsComponent {
       .subscribe(() => {
         this.checkActiveVideoStatus();
       });
+    this.selectedAttachmentList = this.selectedCourseInfo.chapterDetails
+      ?.map((chapter) => chapter.attachments)
+      ?.flat();
+      this.selectedCourseInfo?.chapterDetails?.forEach((chapterDetails) => {
+        chapterDetails?.fileDetails?.forEach(async (fileDetails) => {
+          const time = await this.videoDurationService.getVideoDuration(fileDetails.fileURL);
+          fileDetails.videoDuration = this.commonService.formatTime(time);
+        });
+      });
   }
+  
   setDefaultVideo() {
     this.activeChapter = this.selectedCourseInfo?.chapterDetails[0];
     this.activeVideoInfo = this.selectedCourseInfo?.chapterDetails?.[0]?.fileDetails?.[0];
@@ -70,10 +89,9 @@ export class CourseDetailsComponent {
     this.mobMenu = !this.mobMenu;
   }
 
-  openAccordian(event: any, chapterDetails: ChapterDetail) {
+  openCourseAccordian(event: any, chapterDetails: ChapterDetail) {
     this.activeChapter = chapterDetails;
     const element = event.target;
-    // element.classList.toggle('active'); // need to work
     const panel = element.nextElementSibling;
     if (panel.style.maxHeight) {
       panel.style.maxHeight = null;
@@ -103,7 +121,11 @@ export class CourseDetailsComponent {
       );
     } else {
       this.activeChapter.attachments.forEach((attachment) => {
-        this.fileDownloadService.downloadFile(attachment.fileURL, attachment.name ?? '',this.destroy$);
+        this.fileDownloadService.downloadFile(
+          attachment.fileURL,
+          attachment.name ?? '',
+          this.destroy$
+        );
       });
     }
   }
@@ -151,7 +173,7 @@ export class CourseDetailsComponent {
     }
   }
   previewDocument(attachment: IAttachmentObjectInfo) {
-    this.commonService.openPopupModel({ 
+    this.commonService.openPopupModel({
       url: attachment.fileURL,
       data: attachment,
       title: attachment.name,
@@ -160,13 +182,21 @@ export class CourseDetailsComponent {
     });
   }
   downloadFile(attachment: IAttachmentObjectInfo) {
-    this.fileDownloadService.downloadFile(attachment.fileURL, attachment.name ?? '',this.destroy$);
+    this.fileDownloadService.downloadFile(attachment.fileURL, attachment.name ?? '', this.destroy$);
   }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-  seachTextHandler(searchText:string){
-
+  openAttachmentAccordian(event: any) {
+    const element = event.target;
+    element.classList.toggle('active');
+    const panel = element.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + 'px';
+    }
   }
+  seachTextHandler(searchText: string) {}
 }

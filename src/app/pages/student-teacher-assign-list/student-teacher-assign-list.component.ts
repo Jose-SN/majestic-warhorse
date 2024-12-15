@@ -1,31 +1,30 @@
-import { Component, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { Observable, of, Subject, takeUntil } from 'rxjs';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { UserModel } from '../login-page/model/user-model';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
-import { CommonSliderComponent } from 'src/app/components/common-slider/common-slider.component';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
-import { UserModel } from '../login-page/model/user-model';
 import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
-import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
+import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
+import { Subject, takeUntil } from 'rxjs';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
+import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
 
 @Component({
-  selector: 'app-students-list',
+  selector: 'app-student-teacher-assign-list',
   standalone: true,
   imports: [CommonSearchProfileComponent, SearchFilterPipe],
-  templateUrl: './students-list.component.html',
-  styleUrl: './students-list.component.scss',
+  templateUrl: './student-teacher-assign-list.component.html',
+  styleUrl: './student-teacher-assign-list.component.scss',
 })
-export class StudentsListComponent {
+export class StudentTeacherAssignListComponent {
   public profileUrl: string = '';
   public mobMenu: boolean = false;
   public studentList: UserModel[] = [];
   public showSliderView: boolean = false;
-  public searchText: string = '';
   private destroy$ = new Subject<void>();
+  private editedStudent: UserModel = {} as UserModel;
+  public searchText: string = '';
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private authService: AuthService,
@@ -34,9 +33,20 @@ export class StudentsListComponent {
     private dashboardService: DashboardService
   ) {
     this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
-    this.studentList = this.commonService.allUsersList.filter(
-      (users) => users.role === 'student' && users.approved
-    );
+    this.getStudentList();
+  }
+  ngOnInit() {
+    this.commonService
+      .closePopupModelHandle()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((closeModel) => {
+        this.commonService.allUsersList.forEach((student) => {
+          if (student._id === this.editedStudent._id) {
+            student.approved = true;
+          }
+        });
+        this.getStudentList();
+      });
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -55,6 +65,23 @@ export class StudentsListComponent {
   seachTextHandler(searchText: string) {
     this.searchText = searchText;
   }
+  getStudentList() {
+    this.studentList = this.commonService.allUsersList.filter(
+      (users) => users.role === 'student' && !users.approved
+    );
+  }
+  assignTeacher(selectedStudent: UserModel) {
+    this.editedStudent = selectedStudent;
+    this.commonService.openPopupModel({
+      data: selectedStudent,
+      title: 'Assign Teachers',
+      componentName: COMPONENT_NAME.ASSIGN_TEACHER,
+    });
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   deleteStudent(deletedStudent: UserModel) {
     this.commonApiService.deleteUser(takeUntil(this.destroy$)).subscribe({
       next: async () => {
@@ -71,9 +98,5 @@ export class StudentsListComponent {
         });
       },
     });
-  }
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }
