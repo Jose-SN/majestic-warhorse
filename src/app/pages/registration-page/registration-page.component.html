@@ -20,6 +20,32 @@
       <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
         <div class="input-row">
           <div class="input-holder">
+            <label for="role">Register As</label>
+            <div class="checkbox-holder">
+              <label>
+                <strong>Student</strong>
+                  <input type="radio" name="role" formControlName="role" value="student">
+                  <span class="checkmark"></span>
+              </label>
+              <label>
+                <strong>Teacher</strong>
+                  <input type="radio" name="role" formControlName="role" value="teacher">
+                  <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="input-holder">
+            <label for="profileimage">Upload Image</label>
+            <input type="file" name="profileimage" placeholder="Upload Image" formControlName="profileImage"
+              (change)="onFileSelected($event)" />
+            @if (isFieldInvalid(createAccountForm, 'profileImage')) {
+            <span>Image is required.</span>
+            }
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="input-holder">
             <label for="firstname">Your First Name</label>
             <input type="text" name="firstname" placeholder="Enter First Name" formControlName="firstName" />
             @if (isFieldInvalid(createAccountForm, 'firstName')) {
@@ -35,12 +61,19 @@
           </div>
         </div>
         <div class="input-row">
+          
           <div class="input-holder">
-            <label for="profileimage">Upload Image</label>
-            <input type="file" name="profileimage" placeholder="Upload Image" formControlName="profileImage"
-              (change)="onFileSelected($event)" />
-            @if (isFieldInvalid(createAccountForm, 'profileImage')) {
-            <span>Image is required.</span>
+            <label>Mobile</label>
+            <input type="text" placeholder="Enter Mobile Number" formControlName="phone" />
+            @if (isFieldInvalid(createAccountForm, 'phone')) {
+            <div class="error-message">
+              @if (createAccountForm.get('phone')?.errors?.['required']) {
+              <span>Mobile number is required.</span>
+              }
+              @if (createAccountForm.get('phone')?.errors?.['pattern']) {
+              <span>Please enter a valid mobile number.</span>
+              }
+            </div>
             }
           </div>
           <div class="input-holder">
@@ -59,20 +92,6 @@
           </div>
         </div>
         <div class="input-row">
-          <div class="input-holder">
-            <label>Mobile</label>
-            <input type="text" placeholder="Enter Mobile Number" formControlName="phone" />
-            @if (isFieldInvalid(createAccountForm, 'phone')) {
-            <div class="error-message">
-              @if (createAccountForm.get('phone')?.errors?.['required']) {
-              <span>Mobile number is required.</span>
-              }
-              @if (createAccountForm.get('phone')?.errors?.['pattern']) {
-              <span>Please enter a valid mobile number.</span>
-              }
-            </div>
-            }
-          </div>
           <div class="input-holder">
             <label for="password">Password</label>
             <input type="password" name="password" placeholder="Enter Your Password (6 characters)"
@@ -104,8 +123,7 @@
             }
             }
           </div>
-        </div>
-        <div class="input-row">
+          
           <div class="input-holder">
             <label for="password">Confirm Password</label>
             <input type="password" name="password" placeholder="Enter Your Password (6 characters)"
