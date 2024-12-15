@@ -13,7 +13,8 @@
   </header>
   <div class="left-navigation">
     <ul>
-      <li (click)="setActivePanel(SIDE_PANEL_LIST.DASHBOARD_OVERVIEW)">
+      <li (click)="setActivePanel(SIDE_PANEL_LIST.DASHBOARD_OVERVIEW)"
+        [ngClass]="{ disabled : disableListItems() }">
         <a
           [ngClass]="{ active: activePanel === SIDE_PANEL_LIST.DASHBOARD_OVERVIEW }"
           href="javascript:void(0);"

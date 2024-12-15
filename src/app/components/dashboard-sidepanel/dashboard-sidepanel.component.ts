@@ -56,6 +56,7 @@ export class DashboardSidepanelComponent {
     this.setActivePanel(this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW']);
   }
   disableListItems() {
-    return this.loginedUserPrivilege === 'student' && this.commonService.loginedUserInfo.assignedTo?.length === 0;
+    return this.loginedUserPrivilege === 'student' && this.commonService.loginedUserInfo.assignedTo?.length === 0 || 
+      this.loginedUserPrivilege === 'teacher' && this.commonService.loginedUserInfo.approved === false;
   }
 }

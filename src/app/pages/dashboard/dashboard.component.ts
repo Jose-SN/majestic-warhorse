@@ -19,6 +19,7 @@ import { TeachersListComponent } from '../teachers-list/teachers-list.component'
 import { ApprovalListComponent } from '../approval-list/approval-list.component';
 import { StudentsListComponent } from '../students-list/students-list.component';
 import { AssignTeachersComponent } from 'src/app/components/assign-teachers/assign-teachers.component';
+import { ApprovalPendingComponent } from "../approval-pending/approval-pending.component";
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -35,7 +36,8 @@ import { AssignTeachersComponent } from 'src/app/components/assign-teachers/assi
     EditAccountComponent,
     TeachersListComponent,
     ApprovalListComponent,
-    StudentsListComponent
+    StudentsListComponent,
+    ApprovalPendingComponent
 ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -76,6 +78,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
       const loginedUserData = this.commonService.loginedUserInfo;
       if (loginedUserData?.role === 'student' && loginedUserData.assignedTo?.length === 0) {
+        this.activePanel = this.SIDE_PANEL_LIST['ASSIGN_TEACHER'];
+      } else if (loginedUserData?.role === 'teacher' && loginedUserData.approved === false) {
         this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
       }
   }
