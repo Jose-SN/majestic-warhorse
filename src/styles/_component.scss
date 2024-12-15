@@ -10,7 +10,11 @@ app-dashboard-sidepanel {
 }
 app-dashboard-overview,
 app-courses,
-app-course-overview, app-questionnaire, app-edit-account, app-teachers-list, app-students-list, app-approval-list, app-course-detils {
+app-course-overview, app-questionnaire, app-edit-account, app-teachers-list, app-students-list, app-approval-list, app-course-detils, app-dashboard-sidepanel, 
+app-course-overview, app-registration-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   flex-grow: 1;
 }
 app-under-construction {

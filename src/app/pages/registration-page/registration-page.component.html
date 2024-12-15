@@ -1,11 +1,8 @@
-<!-- <button (click)="openDialog()">Open Dialog</button> -->
-<section class="registration-wrapper">
+<section class="registration-wrapper" [ngClass]="{'edit':!isEditMode}">
   @if(!isEditMode){
   <div id="particles-js"></div>
   }
-  <!-- [ngClass]="{'align-items-start':isEditMode} -->
-  <!--<section class="login-container"></section> -->
-  <div class="registration-holder" [ngClass]="{'padding-top-0':isEditMode}">
+  <div class="registration-holder">
     @if(!isEditMode){
     <figure>
       <img src="../../../../assets/images/logo-mejestic-hourse-landing.svg" alt="Mejastic Hourse" />
