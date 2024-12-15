@@ -32,8 +32,7 @@ export class DashboardService {
   constructor(
     private authService: AuthService,
     private commonService: CommonService,
-    private http: HttpClient,
-
+    private http: HttpClient
   ) {}
   async getAllUsers() {
     this.commonService.alluserList = await this.authService.getAllUsers();
@@ -50,14 +49,17 @@ export class DashboardService {
   getCourseDetailsInfo() {
     return this.courseDetailsInfo.asObservable();
   }
-  fetchUploadedCourses() {
-    let role = this.commonService.loginedUserInfo.role;
-    let queryParam = role === 'admin' ? `isAdmin=true` : role === 'teacher' ? `isTeacher=true` : 'isStudent=true';
+  fetchUploadedCourseCount() {
+    let role: string = this.commonService.loginedUserInfo.role ?? '';
+    const roleInfo: { [key: string]: string } = {
+      admin: 'isAdmin=true',
+      teacher: 'isTeacher=true',
+      student: 'isStudent=true',
+    };
+    let queryParam = role === 'admin' ? `` : role === 'teacher' ? `` : '';
     return lastValueFrom(
       this.http
-        .get<
-          any
-        >(`${this._apiUrl}dashboard/get?${queryParam}`)
+        .get<any>(`${this._apiUrl}dashboard/get?${roleInfo[role]}`)
         .pipe(catchError(this.commonService.handleError))
     );
   }

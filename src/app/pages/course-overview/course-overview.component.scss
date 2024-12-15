@@ -621,6 +621,7 @@
             background: var(--bg-left-panel);
             max-width: 268px;
             width: 23.5%;
+            cursor: pointer;
             @include border-radius(10px);
             border: 1px solid var(--bg-card-border);
             @include flex(flex, column, null, null);
@@ -1222,4 +1223,9 @@ footer {
       }
     }
   }
+}
+.lesson-label{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

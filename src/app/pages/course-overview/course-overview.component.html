@@ -22,8 +22,8 @@
                   </figure>
                 </div>
                 <div class="detail-right">
-                  <h2>15</h2>
-                  <span>Courses Uploaded</span>
+                  <h2>{{dashboardOverview.totalTeachers ?? dashboardOverview.assignedStudents}}</h2>
+                  <span>{{loginedUserPrivilege === 'admin' ? 'Total Teachers': 'Assigned Students'}}</span>
                 </div>
               </div>
             </div>
@@ -39,8 +39,8 @@
                   </figure>
                 </div>
                 <div class="detail-right">
-                  <h2>15</h2>
-                  <span>Total Students</span>
+                  <h2>{{dashboardOverview.totalStudents ?? dashboardOverview.uploadedCourses}}</h2>
+                  <span>{{loginedUserPrivilege === 'admin' ? 'Total Students': 'Uploaded Courses'}}</span>
                 </div>
               </div>
             </div>
@@ -56,35 +56,37 @@
                   </figure>
                 </div>
                 <div class="detail-right">
-                  <h2>15</h2>
-                  <span>Courses Visited</span>
+                  <h2>{{dashboardOverview.unassignedTeachers ?? dashboardOverview.totalDownloads}}</h2>
+                  <span>{{loginedUserPrivilege === 'admin' ? 'Unassigned Teachers': 'Total Downloads'}}</span>
                 </div>
               </div>
             </div>
-            <div class="course-detail">
-              <div class="detail-top">
-                <div class="icons mit4">
-                  <figure>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g clip-path="url(#clip0_18_2703)">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M23.9993 12.0137C23.9993 16.8697 20.0528 20.8562 15.1968 20.8562H7.37109C3.30422 20.8562 0 17.5118 0 13.445C0.100875 8.68208 4.11412 5.46219 8.61511 6.14094C14.5439 -0.277655 24.0987 4.51719 23.9993 12.0137ZM7.35764 7.39841C4.04002 7.39841 1.33777 10.1141 1.33777 13.445C1.33777 16.776 4.04002 19.505 7.37105 19.505H10.5281C9.92611 19.1171 9.36427 18.582 8.86927 18.0737H7.371C4.78912 18.0737 2.68889 15.9734 2.68889 13.3915C2.68889 10.8096 4.78917 8.72277 7.371 8.72277C10.3227 8.86808 10.8289 10.4548 13.1501 12.6558C13.7974 13.2771 14.7007 12.3802 14.1133 11.7193C11.1432 8.59259 10.378 7.56167 7.35764 7.39841ZM22.6481 11.9735C22.6082 5.21398 14.6437 2.21628 10.1134 6.52888C10.5682 6.71614 10.9963 6.93022 11.3976 7.19778C15.4207 4.0573 21.2404 6.79217 21.297 11.9735C21.4504 16.9652 15.1972 20.3485 10.8759 16.2811L7.30411 12.7093C6.66661 12.0995 5.73881 12.9762 6.34092 13.6457L9.92611 17.2443C14.4098 21.6694 22.3959 19.0718 22.6481 11.9735Z"
-                          fill="black" />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_18_2703">
-                          <rect width="24" height="24" fill="white" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </figure>
-                </div>
-                <div class="detail-right">
-                  <h2>15</h2>
-                  <span>Task Submitted</span>
+            @if(loginedUserPrivilege === 'admin'){
+              <div class="course-detail" >
+                <div class="detail-top">
+                  <div class="icons mit4">
+                    <figure>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_18_2703)">
+                          <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M23.9993 12.0137C23.9993 16.8697 20.0528 20.8562 15.1968 20.8562H7.37109C3.30422 20.8562 0 17.5118 0 13.445C0.100875 8.68208 4.11412 5.46219 8.61511 6.14094C14.5439 -0.277655 24.0987 4.51719 23.9993 12.0137ZM7.35764 7.39841C4.04002 7.39841 1.33777 10.1141 1.33777 13.445C1.33777 16.776 4.04002 19.505 7.37105 19.505H10.5281C9.92611 19.1171 9.36427 18.582 8.86927 18.0737H7.371C4.78912 18.0737 2.68889 15.9734 2.68889 13.3915C2.68889 10.8096 4.78917 8.72277 7.371 8.72277C10.3227 8.86808 10.8289 10.4548 13.1501 12.6558C13.7974 13.2771 14.7007 12.3802 14.1133 11.7193C11.1432 8.59259 10.378 7.56167 7.35764 7.39841ZM22.6481 11.9735C22.6082 5.21398 14.6437 2.21628 10.1134 6.52888C10.5682 6.71614 10.9963 6.93022 11.3976 7.19778C15.4207 4.0573 21.2404 6.79217 21.297 11.9735C21.4504 16.9652 15.1972 20.3485 10.8759 16.2811L7.30411 12.7093C6.66661 12.0995 5.73881 12.9762 6.34092 13.6457L9.92611 17.2443C14.4098 21.6694 22.3959 19.0718 22.6481 11.9735Z"
+                            fill="black" />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_18_2703">
+                            <rect width="24" height="24" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                    </figure>
+                  </div>
+                  <div class="detail-right">
+                    <h2>{{dashboardOverview.unassignedStudents}}</h2>
+                    <span>Unassigned Students</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            }
           </div>
           <div class="courses-wrapper">
             <div class="course-top">
@@ -102,7 +104,9 @@
                     <span>A Course by {{ course["createdBy"].firstName }} {{ course["createdBy"].lastName }}</span>
                     <h3>{{course?.courseTitle}}
                     </h3>
-                    <span>@if(course.chapterDetails.length){
+                    <span class="lesson-label">
+                      <star-rating [hoverEnabled]="false" [rating]="course.averageRating" ></star-rating>
+                      @if(course.chapterDetails.length){
                       {{course.chapterCompletedCount}}/{{course.chapterDetails.length}} Lessons
                       }
                     </span>
@@ -150,7 +154,7 @@
                       <div class="reading-list-right">
                         <h4>{{student?.firstName}} {{student?.lastName}}</h4>
                         <!-- <span>5 courses</span> -->
-                        <button>View</button>
+                        <!-- <button>View</button> -->
                       </div>
                     </div>
                   }

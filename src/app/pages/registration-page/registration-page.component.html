@@ -15,23 +15,31 @@
     }
     <div class="form-wrapper">
       <div class="image-holder">
-        <figure><img src="../../../../assets/images/img-placeholder.jpg" alt="Mejastic Hourse" /></figure>
+        <figure><img [src]="profileUrl" alt="Mejastic Hourse" /></figure>
       </div>
       <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
         <div class="input-row">
           <div class="input-holder">
             <label for="role">Register As</label>
             <div class="checkbox-holder">
+              @if(isAdminLogin){
+              <label>
+                <strong>Admin</strong>
+                <input type="radio" name="role" formControlName="role" value="admin">
+                <span class="checkmark"></span>
+              </label>
+              }@else {
               <label>
                 <strong>Student</strong>
-                  <input type="radio" name="role" formControlName="role" value="student">
-                  <span class="checkmark"></span>
+                <input type="radio" name="role" formControlName="role" value="student">
+                <span class="checkmark"></span>
               </label>
               <label>
                 <strong>Teacher</strong>
-                  <input type="radio" name="role" formControlName="role" value="teacher">
-                  <span class="checkmark"></span>
+                <input type="radio" name="role" formControlName="role" value="teacher">
+                <span class="checkmark"></span>
               </label>
+              }
             </div>
           </div>
           
