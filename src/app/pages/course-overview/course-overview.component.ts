@@ -43,13 +43,13 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
   constructor(
     private courseUploadService: CourseUploadService,
     private authService: AuthService,
-    private commonService: CommonService,
+    public commonService: CommonService,
     private dashboardService: DashboardService,
     private courseDetailsService: CourseDetailsService
   ) {
     this.fetchCourseList();
     this.fetchDashboardOverview();
-    this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
+    this.profileUrl = this.commonService.decodeUrl(this.commonService.loginedUserInfo.profileImage ?? '')
   }
   async ngOnInit() {
     this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';

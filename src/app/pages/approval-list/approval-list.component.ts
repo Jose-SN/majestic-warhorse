@@ -32,12 +32,12 @@ export class ApprovalListComponent {
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private authService: AuthService,
-    private commonService: CommonService,
+    public commonService: CommonService,
     private dashboardService: DashboardService,
     private commonApiService: CommonApiService,
     private approveTeacherService: ApproveTeacherService
   ) {
-    this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
+    this.profileUrl = this.commonService.decodeUrl(this.commonService.loginedUserInfo.profileImage ?? '');
     this.getApprovalPendingTeachers();
   }
   triggerMenu() {

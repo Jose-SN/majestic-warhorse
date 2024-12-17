@@ -83,4 +83,8 @@ export class CommonService {
   paddingZero(number: number): string {
     return number < 10 ? `0${number}` : `${number}`;
   }
+  decodeUrl(url: string) {
+    return url.replace(/&#x2F;/g, "/");
+    // return new DOMParser().parseFromString(url, "text/html").documentElement.textContent;
+  }
 }

@@ -10,7 +10,7 @@
                 @for (student of studentList | searchFilter: searchText : 'USER_LIST'; track $index) {
                 <div class="common-list">
                   <div class="list-left">
-                    <figure><img [src]="student.profileImage" alt=""></figure>
+                    <figure><img [src]="commonService.decodeUrl(student.profileImage || '')" alt=""></figure>
                     <div class="common-list-right">
                       <h4>{{student.firstName}} {{student.lastName}}</h4>
                     </div>

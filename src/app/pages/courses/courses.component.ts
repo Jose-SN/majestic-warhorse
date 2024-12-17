@@ -41,7 +41,7 @@ export class CoursesComponent {
     private dashboardService: DashboardService
   ) {
     this.courseList$ = this.coursesService.getCourseList();
-    this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
+    this.profileUrl = this.commonService.decodeUrl(this.commonService.loginedUserInfo.profileImage ?? '')
     this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
   }
   triggerMenu() {

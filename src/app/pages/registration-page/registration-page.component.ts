@@ -83,7 +83,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
         lastName: loginedUser?.lastName,
         firstName: loginedUser?.firstName,
       };
-      this.profileUrl = loginedUser?.profileImage as string;
+      this.profileUrl = this.commonService.decodeUrl(loginedUser?.profileImage ?? '') as string;
       this.registrationService.imageUrl = this.profileUrl;
       this.isAdminLogin = loginedUser?.role === 'admin';
       this.createAccountForm.setValue(userFormInfo);

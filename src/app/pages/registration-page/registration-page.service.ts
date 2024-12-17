@@ -62,7 +62,7 @@ export class RegistrationPageService {
     _destroy$: Subject<void>,
     registrationInfo: IRegistrationModel
   ): Promise<boolean> {
-    registrationInfo.profileImage = encodeURI(this.imageUrl);
+    registrationInfo.profileImage = this.commonService.decodeUrl(encodeURI(this.imageUrl));
     registrationInfo.phone = registrationInfo.phone;
     delete registrationInfo.confirmPassword;
     return new Promise((resolve) => {

@@ -20,7 +20,7 @@
                     <div class="bottom-holder">
                       <div class="profile">
                         <figure>
-                          <img [src]="activeChapter?.createdBy?.profileImage" alt="" />
+                          <img [src]="commonService.decodeUrl(activeChapter?.createdBy?.profileImage ?? '')" alt="" />
                         </figure>
                         <div class="profile-right">
                           <span>{{activeChapter?.createdBy?.firstName}} {{activeChapter?.createdBy?.lastName}}</span>

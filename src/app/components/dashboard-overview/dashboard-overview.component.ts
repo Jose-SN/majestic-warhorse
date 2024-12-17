@@ -32,6 +32,7 @@ export class DashboardOverviewComponent {
   ) {
     this.fetchCourseList();
     this.loginedUserInfo = this.commonService.loginedUserInfo ?? {};
+    this.loginedUserInfo.profileImage = this.commonService.decodeUrl(this.loginedUserInfo.profileImage ?? '')
     this.getCurrentTime();
   }
   triggerMenu() {

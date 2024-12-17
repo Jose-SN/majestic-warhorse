@@ -46,12 +46,12 @@ export class CourseDetailsComponent {
   @ViewChild(VideoPlayerComponent) videoPlayerComponent!: VideoPlayerComponent;
   constructor(
     private authService: AuthService,
-    private commonService: CommonService,
+    public commonService: CommonService,
     private fileDownloadService: FileDownloadService,
     private courseDetailsService: CourseDetailsService,
     private videoDurationService:VideoDurationService
   ) {
-    this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
+    this.profileUrl = this.commonService.decodeUrl(this.commonService.loginedUserInfo.profileImage ?? '');
   }
   async ngOnInit(): Promise<void> {
     this.setDefaultVideo();

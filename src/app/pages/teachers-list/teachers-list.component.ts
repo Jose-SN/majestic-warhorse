@@ -29,11 +29,11 @@ export class TeachersListComponent {
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private authService: AuthService,
-    private commonService: CommonService,
+    public commonService: CommonService,
     private commonApiService: CommonApiService,
     private dashboardService: DashboardService
   ) {
-    this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
+    this.profileUrl = this.commonService.decodeUrl(this.commonService.loginedUserInfo.profileImage ?? '')
     this.teachersList = this.commonService.allUsersList.filter((users) => {
       return users.role === 'teacher' && !users.approved;
     });

@@ -129,7 +129,7 @@
                 @for (course of teachersList; track $index) {
                   <div class="reading-list">
                     <figure>
-                      <img src="{{course?.profileImage}}" alt="" />
+                      <img src="{{commonService.decodeUrl(course?.profileImage ?? '')}}" alt="" />
                     </figure>
                     <div class="reading-list-right">
                       <h4>{{course?.firstName}} {{course?.lastName}}</h4>
