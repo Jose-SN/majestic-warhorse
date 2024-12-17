@@ -24,7 +24,7 @@ export class DashboardService {
     TEACHER_APPROVAL: 'TEACHER_APPROVAL',
     APPROVAL_PENDING: 'APPROVAL_PENDING',
   };
-  public sidePanelChange: BehaviorSubject<string> = new BehaviorSubject(
+  public sidePanelChange$: BehaviorSubject<string> = new BehaviorSubject(
     this.SIDE_PANEL_LIST.DASHBOARD_OVERVIEW
   );
   public courseDetailsInfo: Subject<{ [key: string]: boolean | ICourseList }> = new Subject();
@@ -38,10 +38,10 @@ export class DashboardService {
     this.commonService.alluserList = await this.authService.getAllUsers();
   }
   setSidePanelChangeValue(changedpanel: string) {
-    this.sidePanelChange.next(changedpanel);
+    this.sidePanelChange$.next(changedpanel);
   }
   getSidePanelChange(): Observable<string> {
-    return this.sidePanelChange.asObservable();
+    return this.sidePanelChange$.asObservable();
   }
   setCourseDetailsInfo(courseInfo: { [key: string]: boolean | ICourseList }) {
     this.courseDetailsInfo.next(courseInfo);

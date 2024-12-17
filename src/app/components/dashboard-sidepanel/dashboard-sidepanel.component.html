@@ -147,7 +147,7 @@
           <span>Teachers</span>
         </a>
       </li>
-      <li *ngIf="loginedUserPrivilege === 'admin'" (click)="setActivePanel(SIDE_PANEL_LIST.STUDENTS_LISTING)">
+      <li *ngIf="['admin', 'teacher'].includes(loginedUserPrivilege)" (click)="setActivePanel(SIDE_PANEL_LIST.STUDENTS_LISTING)">
         <a
           [ngClass]="{ active: activePanel === SIDE_PANEL_LIST.STUDENTS_LISTING }"
           href="javascript:void(0);"

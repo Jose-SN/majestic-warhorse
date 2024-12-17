@@ -10,7 +10,7 @@
       <div class="content-area">
         <div class="content-left">
           <div class="content-top">
-            <div class="course-detail">
+            <div class="course-detail cursor-pointer" (click)="dashboardService.setSidePanelChangeValue(loginedUserPrivilege === 'admin' ? SIDE_PANEL_LIST.TEACHERS_LISTING : SIDE_PANEL_LIST.STUDENTS_LISTING)">
               <div class="detail-top">
                 <div class="icons mit1">
                   <figure>
@@ -27,7 +27,7 @@
                 </div>
               </div>
             </div>
-            <div class="course-detail">
+            <div class="course-detail cursor-pointer" (click)="dashboardService.setSidePanelChangeValue(loginedUserPrivilege === 'admin' ? SIDE_PANEL_LIST.STUDENTS_LISTING : SIDE_PANEL_LIST.COURSE_LISTING)">
               <div class="detail-top">
                 <div class="icons mit2">
                   <figure>
@@ -44,7 +44,7 @@
                 </div>
               </div>
             </div>
-            <div class="course-detail">
+            <div class="course-detail cursor-pointer">
               <div class="detail-top">
                 <div class="icons mit3">
                   <figure>
@@ -94,7 +94,7 @@
             </div>
 
             <div class="scroll-container courses">
-              <div class="course-card-holder">
+              <div class="course-card-holder" *ngIf="courseLists.length > 0">
                 @for (course of courseLists | searchFilter: searchText : 'COURSE'; track $index) {
                 <div class="course-card" (click)="openCourseDetailsPage(course)">
                   <div class="card-content">
@@ -116,6 +116,9 @@
                   </div>
                 </div>
                 }
+              </div>
+              <div class="no-records" *ngIf="courseLists.length == 0">
+                <p>No records found</p>
               </div>
             </div>
           </div>
@@ -149,7 +152,7 @@
                   @for (student of studentsList; track $index) {
                     <div class="reading-list">
                       <figure>
-                        <img src="{{student?.profileImage}}" alt="" />
+                        <img src="{{ commonService.decodeUrl(student?.profileImage ?? '')}}" alt="" />
                       </figure>
                       <div class="reading-list-right">
                         <h4>{{student?.firstName}} {{student?.lastName}}</h4>

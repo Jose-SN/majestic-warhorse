@@ -42,6 +42,9 @@ export class DashboardSidepanelComponent {
   ) {
     this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
     this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
+    this.dashboardService.sidePanelChange$.pipe(takeUntil(this.destroy$)).subscribe((activePanel: string) => {
+      this.activePanel = activePanel;
+    })
   }
   ngOnDestroy(): void {
     this.destroy$.next();

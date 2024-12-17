@@ -15,6 +15,7 @@ import { UserModel } from '../login-page/model/user-model';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
 import { StarRatingModule } from 'angular-star-rating';
+import { ISidepanel } from '../dashboard/modal/dashboard-modal';
 
 @Component({
   selector: 'app-course-overview',
@@ -39,12 +40,13 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
   public studentsList: UserModel[] = [];
   private destroy$ = new Subject<void>();
   public searchText: string = '';
+  public SIDE_PANEL_LIST: ISidepanel = this.dashboardService.SIDE_PANEL_LIST;
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private courseUploadService: CourseUploadService,
     private authService: AuthService,
     public commonService: CommonService,
-    private dashboardService: DashboardService,
+    public dashboardService: DashboardService,
     private courseDetailsService: CourseDetailsService
   ) {
     this.fetchCourseList();
