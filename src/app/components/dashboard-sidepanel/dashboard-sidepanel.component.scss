@@ -475,22 +475,8 @@ footer {
     z-index: 100;
     transform: translateX(-100%);
     @include transition(transform, 0.3s ease-in-out);
-
     &.active {
       transform: translateX(0);
-    }
-  }
-
-  .dashboard-right {
-    .icon-mobile {
-      position: absolute;
-      right: 30px;
-      top: 40px;
-      display: block !important;
-    }
-
-    .search-holder {
-      padding-right: 55px;
     }
   }
 }

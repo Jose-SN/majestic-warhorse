@@ -12,7 +12,6 @@ import { ISidepanel } from 'src/app/pages/dashboard/modal/dashboard-modal';
   styleUrl: './dashboard-sidepanel.component.scss',
 })
 export class DashboardSidepanelComponent {
-  public mobMenu: boolean = false;
   public activePanel: string = '';
   public SIDE_PANEL_LIST: ISidepanel = this.dashboardService.SIDE_PANEL_LIST;
   constructor(private dashboardService: DashboardService) {

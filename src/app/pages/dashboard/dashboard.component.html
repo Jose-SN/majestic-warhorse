@@ -1,16 +1,11 @@
 <section class="dashboard-container">
-  <header class="header-small">
-    <figure class="logo-main">
-      <img src="../../../assets/images/logo-majestic-hourse.svg" alt="Mejestic Hourse" />
-    </figure>
-  </header>
-  <div class="dashboard-left" [ngClass]="mobMenu ? 'active' : ''">
+  <div class="dashboard-left" [ngClass]="{'active': isMobileNav}">
     <app-dashboard-sidepanel></app-dashboard-sidepanel>
   </div>
   <div class="dashboard-right">
-  <app-search-profile></app-search-profile>
+  <app-search-profile (mobNavchild)="btnMobileMenu()"></app-search-profile>
   <div class="common-container">
-  @switch (activePanel) {
+   @switch (activePanel) {
     @case (SIDE_PANEL_LIST['DASHBOARD_OVERVIEW']) {
       @if (isAdminLogin) {
         <app-course-overview></app-course-overview>
@@ -26,15 +21,15 @@
       }
     }
     @case (SIDE_PANEL_LIST['ACCOUNT']) {
-      <app-approval-list></app-approval-list>
-      <!-- <app-teachers-list></app-teachers-list> -->
+     <!-- <app-approval-list></app-approval-list> -->
+       <!--<app-teachers-list></app-teachers-list> -->
       <!-- <app-edit-account></app-edit-account> -->
-       <!-- <app-questionnaire></app-questionnaire> -->
+       <!-- <app-questionnaire></app-questionnaire>  -->
     }
     @default {
       <app-under-construction></app-under-construction>
     }
-  }
+  } 
   </div>
 </div>  
 </section>

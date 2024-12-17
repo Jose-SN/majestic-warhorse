@@ -10,76 +10,6 @@
     @include flex(flex, column, null, null);
     height: 100%;
   }
-  .header-small {
-    display: none;
-  }
-  .btn-close {
-    @include btn(null, null);
-    width: 30px;
-    height: 26px;
-    transform: scale(0.8);
-    .icon-left {
-      @include icon(4px, 15px);
-      top: 11px;
-
-      &:before {
-        @include icon-before(4px, 15px, -10px);
-      }
-
-      &:after {
-        @include icon-after(4px, 15px, 10px);
-      }
-
-      &:hover {
-        cursor: pointer;
-      }
-    }
-
-    .icon-right {
-      @include icon(4px, 15px);
-      top: 11px;
-      left: 15px;
-
-      &:before {
-        @include icon-before(4px, 15px, -10px);
-      }
-
-      &:after {
-        @include icon-after(4px, 15px, 10px);
-      }
-    }
-
-    &.open {
-      .icon-left {
-        transition-duration: 0.5s;
-        background: transparent;
-
-        &:before {
-          transform: rotateZ(45deg) scaleX(1.4) translate(2px, 2px);
-        }
-
-        &:after {
-          transform: rotateZ(-45deg) scaleX(1.4) translate(2px, -2px);
-        }
-      }
-
-      .icon-right {
-        transition-duration: 0.5s;
-        background: transparent;
-
-        &:before {
-          transform: rotateZ(-45deg) scaleX(1.4) translate(-2px, 2px);
-        }
-
-        &:after {
-          transform: rotateZ(45deg) scaleX(1.4) translate(-2px, -2px);
-        }
-      }
-    }
-    &:hover {
-      cursor: pointer;
-    }
-  }
 }
 .dashboard-left {
   background: var(--bg-left-panel);
@@ -221,9 +151,6 @@
   }
 }
 @media screen and (max-width: 1300px) {
-  .dashboard-container {
-    height: auto;
-  }
   .dashboard-right {
     .content-area {
       .content-left {
@@ -323,29 +250,13 @@
       transform: translateX(0);
     }
   }
-  .dashboard-right {
-    .icon-mobile {
-      position: absolute;
-      right: 30px;
-      top: 40px;
-      display: block !important;
-    }
-    .search-holder {
-      padding-right: 55px;
-    }
-  }
 }
 
 @media screen and (max-width: 768px) {
-  .header-small {
-    margin-top: 20px;
-    display: block !important;
-    figure {
-      max-width: 233px;
-      width: 100%;
-      margin: 0 auto;
-    }
+  .dashboard-container {
+    @include flex(flex,column,null,null);
   }
+
   .dashboard-left {
     height: 100%;
     position: fixed;
