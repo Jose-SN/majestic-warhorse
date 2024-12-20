@@ -21,7 +21,7 @@
           </div>
           }
         </div>
-        <div class="scroll-container courses">
+        <div class="scroll-container">
           <div class="course-card-holder" *ngIf="courseList$ | async as courseList">
             <ng-container
               *ngFor="let course of courseList | searchFilter: searchText : 'COURSE' : activeFilterTab as filteredList">
