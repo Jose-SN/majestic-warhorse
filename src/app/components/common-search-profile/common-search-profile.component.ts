@@ -10,17 +10,21 @@ import { CommonService } from 'src/app/shared/services/common.service';
   styleUrl: './common-search-profile.component.scss',
 })
 export class CommonSearchProfileComponent {
-  public searchText: string = '';
+  public mobMenu: boolean = false;
   public profileUrl: string = '';
-  @Input() pageName: string = '';
-  @Output() seachTextHandler: EventEmitter<string> = new EventEmitter<string>();
+  @Output() mobNavchild = new EventEmitter<void>();
   constructor(
     private authService: AuthService,
-    private commonService: CommonService
-  ) {
-    this.profileUrl = this.commonService.decodeUrl(this.commonService.loginedUserInfo.profileImage ?? '');
+    private commonService: CommonService,
+  ) 
+  {
+    this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
   }
   logOut() {
     this.authService.logOutApplication();
+  }
+  
+  btnMob() {
+    this.mobNavchild.emit();
   }
 }
