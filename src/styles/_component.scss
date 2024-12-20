@@ -19,7 +19,12 @@ app-approval-list,
 app-course-detils,
 app-assign-teachers,
 app-approval-pending,
-app-student-teacher-assign-list {
+app-student-teacher-assign-list,
+app-course-overview, app-questionnaire, app-edit-account, app-teachers-list, app-students-list, app-approval-list, app-course-detils, app-dashboard-sidepanel, 
+app-course-overview, app-registration-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   flex-grow: 1;
 }
 app-under-construction {

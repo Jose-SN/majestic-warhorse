@@ -1,192 +1,88 @@
-<section class="dashboard-container">
-  <div class="dashboard-right">
-    <app-search-profile pageName="COURSE_DETAILS" (seachTextHandler)="seachTextHandler($event)"></app-search-profile>
-    <div class="common-container">
-      <div class="content-area">
-        <div class="content-left">
-          <div class="courses-wrapper">
-            <div class="course-top">
-              <h2>{{selectedCourseInfo.courseTitle}}</h2>
-              <span>{{activeChapter.chapterTitle}}</span>
-            </div>
-            <div class="video-wrapper">
-              <div class="video-holder">
-                <div class="video-left">
-                  <!-- <figure><img src="../../../assets/images/img-video.png" alt="" /></figure> -->
-                  <app-video-player [videoUrl]="{url:activeVideoInfo.fileURL}" 
-                  (videoDuration)="videoDurationHandler($event)"
-                  (videoStatusUpdate)="videoStatusUpdateHandler($event)"></app-video-player>
-                  <div class="video-bottom">
-                    <div class="bottom-holder">
-                      <div class="profile">
-                        <figure>
-                          <img [src]="commonService.decodeUrl(activeChapter?.createdBy?.profileImage ?? '')" alt="" />
-                        </figure>
-                        <div class="profile-right">
-                          <span>{{activeChapter?.createdBy?.firstName}} {{activeChapter?.createdBy?.lastName}}</span>
-                          <strong>{{selectedCourseInfo?.chapterDetails?.length}}</strong>
-                        </div>
-                      </div>
-                      <div class="time">
-                        <figure>
-                          <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                              d="M10 20C4.477 20 0 15.523 0 10C0 4.477 4.477 0 10 0C15.523 0 20 4.477 20 10C20 15.523 15.523 20 10 20ZM10 18C12.1217 18 14.1566 17.1571 15.6569 15.6569C17.1571 14.1566 18 12.1217 18 10C18 7.87827 17.1571 5.84344 15.6569 4.34315C14.1566 2.84285 12.1217 2 10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18ZM11 10H15V12H9V5H11V10Z"
-                              fill="" />
-                          </svg>
-                        </figure>
-                        <span>{{videoDuration}}</span>
-                      </div>
-                      <div class="bookmark">
-                        <figure>
-                          <svg width="14" height="18" viewBox="0 0 14 18" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                              d="M12.8337 16.5L7.00033 12.3333L1.16699 16.5V3.16667C1.16699 2.72464 1.34259 2.30072 1.65515 1.98816C1.96771 1.67559 2.39163 1.5 2.83366 1.5H11.167C11.609 1.5 12.0329 1.67559 12.3455 1.98816C12.6581 2.30072 12.8337 2.72464 12.8337 3.16667V16.5Z"
-                              stroke="#FD7859" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                          </svg>
-                        </figure>
-                        <span (click)="downloadMaterial('VIDEO')">Download video</span>
-                      </div>
-                      <div class="download">
-                        <figure>
-                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0_387_625)">
-                              <path d="M17.5 6.66675V17.5001H2.5V6.66675" stroke="#FD7859" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                              <path d="M19.1663 2.5H0.833008V6.66667H19.1663V2.5Z" stroke="#FD7859" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                              <path d="M8.33301 10H11.6663" stroke="#FD7859" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            </g>
-                            <defs>
-                              <clipPath id="clip0_387_625">
-                                <rect width="20" height="20" fill="white" />
-                              </clipPath>
-                            </defs>
-                          </svg>
-                        </figure>
-                        <span (click)="downloadMaterial('ATTACHMENT')">Download meterial</span>
-                      </div>
-                      <div class="rating">
-                        <star-rating [hoverEnabled]="true"  (starClickChange)="updateVideoStatus($event)"
-                          [rating]="videoRating"></star-rating>
-                      </div>                      
-                    </div>
-                    @if(loginedUserRole === 'student'){
-                      <div class="btn-holder">
-                        <button (click)="handleStartAssessment()">Start Assessment Test</button>
-                      </div>
-                      }
-                  </div>
-                  <div class="content-bottom">
-                    <div class="scroll-content">
-                      <h5>About this course</h5>
-                      <strong>{{activeVideoDescription}}</strong>
-                      <p>
-                        {{selectedCourseInfo.courseDescription}}
-                      </p>
-                    </div>
+<div class="content-area">
+  <div class="content-left">
+    <div class="courses-wrapper">
+      <div class="course-top">
+        <h2>{{selectedCourseInfo.courseTitle}}</h2>
+        <span>{{activeChapter.chapterTitle}}</span>
+      </div>
+      <div class="video-wrapper">
+        <div class="video-holder">
+          <div class="video-left">
+            <!-- <figure><img src="../../../assets/images/img-video.png" alt="" /></figure> -->
+            <app-video-player [videoUrl]="{url:activeVideoInfo.fileURL}" 
+            (videoDuration)="videoDurationHandler($event)"
+            (videoStatusUpdate)="videoStatusUpdateHandler($event)"></app-video-player>
+            <div class="video-bottom">
+              <div class="bottom-holder">
+                <div class="profile">
+                  <figure>
+                    <img [src]="activeChapter?.createdBy?.profileImage" alt="" />
+                  </figure>
+                  <div class="profile-right">
+                    <span>{{activeChapter?.createdBy?.firstName}} {{activeChapter?.createdBy?.lastName}}</span>
+                    <strong>{{selectedCourseInfo?.chapterDetails?.length}}</strong>
                   </div>
                 </div>
+                <div class="time">
+                  <figure>
+                    <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M10 20C4.477 20 0 15.523 0 10C0 4.477 4.477 0 10 0C15.523 0 20 4.477 20 10C20 15.523 15.523 20 10 20ZM10 18C12.1217 18 14.1566 17.1571 15.6569 15.6569C17.1571 14.1566 18 12.1217 18 10C18 7.87827 17.1571 5.84344 15.6569 4.34315C14.1566 2.84285 12.1217 2 10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18ZM11 10H15V12H9V5H11V10Z"
+                        fill="" />
+                    </svg>
+                  </figure>
+                  <span>{{videoDuration}}</span>
+                </div>
+                <div class="bookmark">
+                  <figure>
+                    <svg width="14" height="18" viewBox="0 0 14 18" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M12.8337 16.5L7.00033 12.3333L1.16699 16.5V3.16667C1.16699 2.72464 1.34259 2.30072 1.65515 1.98816C1.96771 1.67559 2.39163 1.5 2.83366 1.5H11.167C11.609 1.5 12.0329 1.67559 12.3455 1.98816C12.6581 2.30072 12.8337 2.72464 12.8337 3.16667V16.5Z"
+                        stroke="#FD7859" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </figure>
+                  <span (click)="downloadMaterial('VIDEO')">Download video</span>
+                </div>
+                <div class="download">
+                  <figure>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <g clip-path="url(#clip0_387_625)">
+                        <path d="M17.5 6.66675V17.5001H2.5V6.66675" stroke="#FD7859" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M19.1663 2.5H0.833008V6.66667H19.1663V2.5Z" stroke="#FD7859" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M8.33301 10H11.6663" stroke="#FD7859" stroke-width="2" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_387_625">
+                          <rect width="20" height="20" fill="white" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </figure>
+                  <span (click)="downloadMaterial('ATTACHMENT')">Download meterial</span>
+                </div>
+                <div class="rating">
+                  <star-rating [hoverEnabled]="true"  (starClickChange)="updateVideoStatus($event)"
+                    [rating]="videoRating"></star-rating>
+                </div>                      
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="content-right">
-          <div class="content-box">
-            <!-- <h3>Last Submitted</h3> -->
-            <div class="reading-list-wrapper">
-              <div class="reading-list-content">
-                <div class="scroll-content">
-                  <div class="courses-list">
-                    <div class="course-list-holder">
-                      <div class="scroll-content accordion-content">
-                        <ul>
-                          @for (chapterDetails of selectedCourseInfo.chapterDetails; track $index) {
-                          <li (click)="openCourseAccordian($event,chapterDetails)"
-                            [ngClass]="{'active': chapterDetails._id === activeChapter._id}">
-                            <figure>
-                              <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" >
-                                <path d="M0 0h48v48H0z" fill="none"/>
-                                <g id="Shopicon">
-                                  <rect x="16.002" y="22.002" width="25.997" height="4"/>
-                                  <rect x="16.002" y="11.995" width="25.997" height="4"/>
-                                  <rect x="16.002" y="32.008" width="25.997" height="4"/>
-                                  <rect x="6" y="12" width="4" height="4"/>
-                                  <rect x="6" y="22.006" width="4" height="4"/>
-                                  <rect x="6" y="32.013" width="4" height="4"/>
-                                </g>
-                                </svg>
-                            </figure>
-                            <span>
-                              {{ chapterDetails.chapterTitle }}</span>
-                            <!-- <strong>1:49</strong> -->
-                          </li>
-                          <div class="panel">
-                            <div class="panel-content">
-                              @for (item of chapterDetails.fileDetails; track $index) {
-                              <div class="panel-list" (click)="changeVideoUrl(item)">
-                                <p class="align-center-video">
-                                <figure>
-                                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M18 3H6C3.79086 3 2 4.79086 2 7V17C2 19.2091 3.79086 21 6 21H18C20.2091 21 22 19.2091 22 17V7C22 4.79086 20.2091 3 18 3Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M10.28 8.03994C9.19003 8.42994 9 10.5199 9 12.0399C9 13.5599 9.19003 15.5999 10.28 16.0399C11.37 16.4799 16 13.7499 16 12.0399C16 10.3299 11.44 7.61994 10.28 8.03994Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </figure>
-                               <span class="full-width">{{item.description}}</span> 
-                               <strong>{{item.videoDuration}}</strong>
-                                </p>
-                              </div>
-                              }
-                            </div>
-                          </div>
-                          }
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="courses-list">
-                  <div class="course-list-holder">
-                    <div class="scroll-content accordion-content">
-                      <ul>
-                        <li (click)="openAttachmentAccordian($event)">
-                          <figure>
-                            <svg width="20" height="20" viewBox="-8 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                              xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-                              <defs>
-                              </defs>
-                              <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-                                <g id="Icon-Set" sketch:type="MSLayerGroup" transform="translate(-212.000000, -151.000000)" fill="#000000">
-                                  <path
-                                    d="M226,155 L226,175 C226,178.313 223.313,181 220,181 C216.687,181 214,178.313 214,175 L214,157 C214,154.791 215.791,153 218,153 C220.209,153 222,154.791 222,157 L222,175 C222,176.104 221.104,177 220,177 C218.896,177 218,176.104 218,175 L218,159 L216,159 L216,175 C216,177.209 217.791,179 220,179 C222.209,179 224,177.209 224,175 L224,157 C224,153.687 221.313,151 218,151 C214.687,151 212,153.687 212,157 L212,176 C212.493,179.945 215.921,183 220,183 C224.079,183 227.507,179.945 228,176 L228,155 L226,155"
-                                    id="attachment" sketch:type="MSShapeGroup">
-                                  </path>
-                                </g>
-                              </g>
-                            </svg>
-                          </figure>
-                          <span>Attachments</span>
-                        </li>
-                        <div class="panel">
-                          <div class="panel-content">
-                            @for (item of selectedAttachmentList; track $index) {
-                            <div class="panel-list">
-                              <p> {{item.name}}</p>
-                              <ul class="flex-direction-row">
-                                <li (click)="previewDocument(item)">Preview</li>
-                                <li (click)="downloadFile(item)">Download</li>
-                              </ul>
-                            </div>
-                            }
-                          </div>
-                        </div>
-                      </ul>
-                    </div>
-                  </div>
-                  </div>
+              @if(loginedUserRole === 'student'){
+                <div class="btn-holder">
+                  <button (click)="handleStartAssessment()">Start Assessment Test</button>
                 </div>
+                }
+            </div>
+            <div class="content-bottom">
+              <div class="scroll-content">
+                <h5>About this course</h5>
+                <strong>{{activeVideoDescription}}</strong>
+                <p>
+                  {{selectedCourseInfo.courseDescription}}
+                </p>
               </div>
             </div>
           </div>
@@ -194,4 +90,80 @@
       </div>
     </div>
   </div>
-</section>
+  <div class="content-right">
+    <div class="content-box">
+      <!-- <h3>Last Submitted</h3> -->
+      <div class="reading-list-wrapper">
+        <div class="reading-list-content">
+          <div class="scroll-content">
+            <div class="courses-list">
+              <div class="course-list-holder">
+                <div class="scroll-content accordion-content">
+                  <ul>
+                    @for (chapterDetails of selectedCourseInfo.chapterDetails; track $index) {
+                    <li (click)="openAccordian($event,chapterDetails)"
+                      [ngClass]="{'active': chapterDetails._id === activeChapter._id}">
+                      <figure>
+                        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M10 20C4.477 20 0 15.523 0 10C0 4.477 4.477 0 10 0C15.523 0 20 4.477 20 10C20 15.523 15.523 20 10 20ZM10 18C12.1217 18 14.1566 17.1571 15.6569 15.6569C17.1571 14.1566 18 12.1217 18 10C18 7.87827 17.1571 5.84344 15.6569 4.34315C14.1566 2.84285 12.1217 2 10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18ZM11 10H15V12H9V5H11V10Z"
+                            fill="" />
+                        </svg>
+                      </figure>
+                      <span>{{ chapterDetails.chapterTitle }}</span>
+                      <strong>1:49</strong>
+                    </li>
+                    <div class="panel">
+                      <div class="panel-content">
+                        @for (item of chapterDetails.fileDetails; track $index) {
+                        <div class="panel-list" (click)="changeVideoUrl(item)">
+                          <p> {{item.description}}</p>
+                        </div>
+                        }
+                      </div>
+                    </div>
+                    }
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="courses-list">
+            <div class="course-list-holder">
+              <div class="scroll-content accordion-content">
+                <ul>
+                  @for (chapterDetails of selectedCourseInfo.chapterDetails; track $index) {
+                  <li (click)="openAccordian($event,chapterDetails)"
+                    [ngClass]="{'active': chapterDetails._id === activeChapter._id}">
+                    <figure>
+                      <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M10 20C4.477 20 0 15.523 0 10C0 4.477 4.477 0 10 0C15.523 0 20 4.477 20 10C20 15.523 15.523 20 10 20ZM10 18C12.1217 18 14.1566 17.1571 15.6569 15.6569C17.1571 14.1566 18 12.1217 18 10C18 7.87827 17.1571 5.84344 15.6569 4.34315C14.1566 2.84285 12.1217 2 10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18ZM11 10H15V12H9V5H11V10Z"
+                          fill="" />
+                      </svg>
+                    </figure>
+                    <span>Attachments</span>
+                  </li>
+                  <div class="panel">
+                    <div class="panel-content">
+                      @for (item of chapterDetails.attachments; track $index) {
+                      <div class="panel-list">
+                        <p> {{item.name}}</p>
+                        <ul>
+                          <li (click)="previewDocument(item)">Preview</li>
+                          <li (click)="downloadFile(item)">Download</li>
+                        </ul>
+                      </div>
+                      }
+                    </div>
+                  </div>
+                  }
+                </ul>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

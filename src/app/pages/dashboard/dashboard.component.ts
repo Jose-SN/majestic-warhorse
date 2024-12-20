@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DashboardSidepanelComponent } from 'src/app/components/dashboard-sidepanel/dashboard-sidepanel.component';
@@ -22,6 +22,7 @@ import { AssignTeachersComponent } from 'src/app/components/assign-teachers/assi
 import { ApprovalPendingComponent } from '../approval-pending/approval-pending.component';
 import { StudentTeacherAssignListComponent } from '../student-teacher-assign-list/student-teacher-assign-list.component';
 import { OverlayComponent } from 'src/app/shared/overlay/overlay.component';
+import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -42,11 +43,13 @@ import { OverlayComponent } from 'src/app/shared/overlay/overlay.component';
     ApprovalPendingComponent,
     StudentTeacherAssignListComponent,
     OverlayComponent,
+    CommonSearchProfileComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  public mobMenu: boolean = false;
   public activePanel: string = '';
   public showCourseDetailedView: boolean = false;
   public selectedCourseInfo: ICourseList = {} as ICourseList;
@@ -54,7 +57,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public infoMessage: string = '';
   public SIDE_PANEL_LIST: ISidepanel = this.dashboardService.SIDE_PANEL_LIST;
   @ViewChild(DashboardSidepanelComponent) dashboardSidepanelComponent!: DashboardSidepanelComponent;
-
+  @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private dashboardService: DashboardService,
     private commonService: CommonService

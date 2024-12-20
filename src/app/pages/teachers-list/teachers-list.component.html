@@ -1,31 +1,608 @@
-<section class="dashboard-container">
-  <div class="dashboard-right">
-    <div class="dashboard-inner">
-      <app-search-profile pageName="TEACHERS_LIST" (seachTextHandler)="seachTextHandler($event)"></app-search-profile>
-      <div class="common-container">
-        <div class="common-wrapper">
-          <div class="scoll-wrapper">
-            <div class="scroll-container">
-              <div class="common-list-wrapper">
-                @for (teacher of teachersList | searchFilter: searchText : 'USER_LIST'; track $index) {
-                <div class="common-list">
-                  <div class="list-left">
-                    <figure><img [src]="commonService.decodeUrl(teacher.profileImage ?? '')" alt=""></figure>
-                    <div class="common-list-right">
-                      <h4>{{teacher.firstName}} {{teacher.lastName}}</h4>
-                    </div>
-                  </div>
-                  <div class="icon-holder">
-                    <!-- <button><img src="../../../assets/images/icon-edit.svg" alt=""></button> -->
-                    <button><img src="../../../assets/images/icon-delete.svg" alt="" (click)="deleteTeacher(teacher)"></button>
-                  </div>
+<div class="common-wrapper">
+  <div class="scoll-wrapper">
+      <div class="scroll-container">
+          <div class="common-list-wrapper">
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
                 </div>
-                }
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
+              </div>
+            </div>
+            <div class="common-list">
+              <figure><img src="../../../assets/images/placeholder.png" alt=""></figure>
+              <div class="common-list-right">
+                <h4>Stevan Store Williams</h4>
+                <div class="icon-holder">
+                  <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+                  <button><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
       </div>
-    </div>
   </div>
-</section>
+</div>  

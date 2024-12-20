@@ -4,7 +4,12 @@
       <img src="../../../assets/images/logo-majestic-hourse.svg" alt="Mejestic Hourse" />
     </figure>
   </header>
-  <app-dashboard-sidepanel></app-dashboard-sidepanel>
+  <div class="dashboard-left" [ngClass]="mobMenu ? 'active' : ''">
+    <app-dashboard-sidepanel></app-dashboard-sidepanel>
+  </div>
+  <div class="dashboard-right">
+  <app-search-profile></app-search-profile>
+  <div class="common-container">
   @switch (activePanel) {
     @case (SIDE_PANEL_LIST['DASHBOARD_OVERVIEW']) {
       @if (isAdminLogin) {
