@@ -1,7 +1,8 @@
 <div class="content-area">
   <div class="content-left">
     <div class="content-top">
-      <div class="course-detail">
+      <div class="course-detail cursor-pointer"
+        (click)="dashboardService.setSidePanelChangeValue(loginedUserPrivilege === 'admin' ? SIDE_PANEL_LIST.TEACHERS_LISTING : SIDE_PANEL_LIST.STUDENTS_LISTING)">
         <div class="detail-top">
           <div class="icons mit1">
             <figure>
@@ -13,12 +14,13 @@
             </figure>
           </div>
           <div class="detail-right">
-            <h2>15</h2>
-            <span>Courses Uploaded</span>
+            <h2>{{dashboardOverview.totalTeachers ?? dashboardOverview.assignedStudents}}</h2>
+            <span>{{loginedUserPrivilege === 'admin' ? 'Total Teachers': 'Assigned Students'}}</span>
           </div>
         </div>
       </div>
-      <div class="course-detail">
+      <div class="course-detail cursor-pointer"
+        (click)="dashboardService.setSidePanelChangeValue(loginedUserPrivilege === 'admin' ? SIDE_PANEL_LIST.STUDENTS_LISTING : SIDE_PANEL_LIST.COURSE_LISTING)">
         <div class="detail-top">
           <div class="icons mit2">
             <figure>
@@ -30,12 +32,12 @@
             </figure>
           </div>
           <div class="detail-right">
-            <h2>15</h2>
-            <span>Total Students</span>
+            <h2>{{dashboardOverview.totalStudents ?? dashboardOverview.uploadedCourses}}</h2>
+            <span>{{loginedUserPrivilege === 'admin' ? 'Total Students': 'Uploaded Courses'}}</span>
           </div>
         </div>
       </div>
-      <div class="course-detail">
+      <div class="course-detail cursor-pointer">
         <div class="detail-top">
           <div class="icons mit3">
             <figure>
@@ -47,11 +49,12 @@
             </figure>
           </div>
           <div class="detail-right">
-            <h2>15</h2>
-            <span>Courses Visited</span>
+            <h2>{{dashboardOverview.unassignedTeachers ?? dashboardOverview.totalDownloads}}</h2>
+            <span>{{loginedUserPrivilege === 'admin' ? 'Unassigned Teachers': 'Total Downloads'}}</span>
           </div>
         </div>
       </div>
+      @if(loginedUserPrivilege === 'admin'){
       <div class="course-detail">
         <div class="detail-top">
           <div class="icons mit4">
@@ -71,11 +74,12 @@
             </figure>
           </div>
           <div class="detail-right">
-            <h2>15</h2>
-            <span>Task Submitted</span>
+            <h2>{{dashboardOverview.unassignedStudents}}</h2>
+            <span>Unassigned Students</span>
           </div>
         </div>
       </div>
+      }
     </div>
     <div class="courses-wrapper">
       <div class="course-top">
@@ -83,8 +87,8 @@
       </div>
 
       <div class="scroll-container courses">
-        <div class="course-card-holder">
-          @for (course of courseLists; track $index) {
+        <div class="course-card-holder" *ngIf="courseLists.length > 0">
+          @for (course of courseLists | searchFilter: searchText : 'COURSE'; track $index) {
           <div class="course-card" (click)="openCourseDetailsPage(course)">
             <div class="card-content">
               <figure><img [src]="course.courseCoverImage" alt="" /></figure>
@@ -93,15 +97,21 @@
               <span>A Course by {{ course["createdBy"].firstName }} {{ course["createdBy"].lastName }}</span>
               <h3>{{course?.courseTitle}}
               </h3>
-              <span>@if(course.chapterDetails.length){
+              <span class="lesson-label">
+                <star-rating [hoverEnabled]="false" [rating]="course.averageRating"></star-rating>
+                @if(course.chapterDetails.length){
                 {{course.chapterCompletedCount}}/{{course.chapterDetails.length}} Lessons
                 }
               </span>
               <div class="loader-holder">
-                <span style="width: 85%"></span>
+                <span [ngStyle]="{width: course.completionPercent}"></span>
               </div>
             </div>
-            }
+          </div>
+          }
+        </div>
+        <div class="no-records" *ngIf="courseLists.length == 0">
+          <p>No records found</p>
         </div>
       </div>
     </div>
@@ -112,105 +122,17 @@
       <h3>Teachers</h3>
       <div class="reading-list-wrapper">
         <div class="reading-list-content">
+          @for (course of teachersList; track $index) {
           <div class="reading-list">
             <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
+              <img src="{{commonService.decodeUrl(course?.profileImage ?? '')}}" alt="" />
             </figure>
             <div class="reading-list-right">
-              <h4>Stevan Store</h4>
+              <h4>{{course?.firstName}} {{course?.lastName}}</h4>
               <span>5 courses</span>
             </div>
           </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-            </div>
-          </div>
+          }
         </div>
       </div>
     </div>
@@ -220,116 +142,18 @@
       <h3>Students</h3>
       <div class="reading-list-wrapper">
         <div class="reading-list-content">
+          @for (student of studentsList; track $index) {
           <div class="reading-list">
             <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
+              <img src="{{ commonService.decodeUrl(student?.profileImage ?? '')}}" alt="" />
             </figure>
             <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-              <button>View</button>
+              <h4>{{student?.firstName}} {{student?.lastName}}</h4>
+              <!-- <span>5 courses</span> -->
+              <!-- <button>View</button> -->
             </div>
           </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-              <button>View</button>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-              <button>View</button>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-              <button>View</button>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-              <button>View</button>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-              <button>View</button>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-              <button>View</button>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-              <button>View</button>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-              <button>View</button>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-              <button>View</button>
-            </div>
-          </div>
-          <div class="reading-list">
-            <figure>
-              <img src="../../../assets/images/placeholder.png" alt="" />
-            </figure>
-            <div class="reading-list-right">
-              <h4>Stevan Store</h4>
-              <span>5 courses</span>
-              <button>View</button>
-            </div>
-          </div>
+          }
         </div>
       </div>
     </div>

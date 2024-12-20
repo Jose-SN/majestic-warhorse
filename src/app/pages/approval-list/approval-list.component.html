@@ -1,8 +1,6 @@
 <section class="dashboard-container">
   <div class="dashboard-right">
     <div class="dashboard-inner">
-      <app-search-profile pageName="APPROVAL_PENDING"
-        (seachTextHandler)="seachTextHandler($event)"></app-search-profile>
       <div class="common-container">
         <div class="common-wrapper">
           <div class="scoll-wrapper">
@@ -20,12 +18,13 @@
                   </div>
                   <div class="icon-holder">
                     <!-- <button><img src="../../../assets/images/icon-edit.svg" alt=""></button> -->
-                    <button (click)="deleteTeacher(teacher)"><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+                    <button (click)="deleteTeacher(teacher)"><img src="../../../assets/images/icon-delete.svg"
+                        alt=""></button>
                   </div>
                 </label>
                 }
               </div>
-              <div class="save-button-container">
+              <div class="submit-holder">
                 <button class="btn-assign" (click)="approveTeachers()">Approve Teacher</button>
               </div>
             </div>
