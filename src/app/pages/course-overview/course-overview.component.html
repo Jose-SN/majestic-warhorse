@@ -1,7 +1,8 @@
 <div class="content-area">
   <div class="content-left">
     <div class="content-top">
-      <div class="course-detail cursor-pointer"
+      <div class="total-assessment">
+        <div class="course-detail cursor-pointer"
         (click)="dashboardService.setSidePanelChangeValue(loginedUserPrivilege === 'admin' ? SIDE_PANEL_LIST.TEACHERS_LISTING : SIDE_PANEL_LIST.STUDENTS_LISTING)">
         <div class="detail-top">
           <div class="icons mit1">
@@ -80,6 +81,7 @@
         </div>
       </div>
       }
+      </div>
     </div>
     <div class="courses-wrapper">
       <div class="course-top">
@@ -98,10 +100,14 @@
               <h3>{{course?.courseTitle}}
               </h3>
               <span class="lesson-label">
+                <div class="lesson-holder">
                 <star-rating [hoverEnabled]="false" [rating]="course.averageRating"></star-rating>
-                @if(course.chapterDetails.length){
-                {{course.chapterCompletedCount}}/{{course.chapterDetails.length}} Lessons
-                }
+                <span>Lessons
+                  @if(course.chapterDetails.length){
+                    {{course.chapterCompletedCount}}/{{course.chapterDetails.length}} 
+                    }
+                </span>
+                </div>                
               </span>
               <div class="loader-holder">
                 <span [ngStyle]="{width: course.completionPercent}"></span>

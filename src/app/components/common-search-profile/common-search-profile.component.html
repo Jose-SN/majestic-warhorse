@@ -4,36 +4,36 @@
       <img src="../../../assets/images/icon-home.svg" alt="Home" />
     </figure>
     <span>Home</span>
-  </h1>
-  <div class="search-left">
-    <div class="search-holder">
-      <div class="input-holder">
-        <input type="text" placeholder="Search for..." />
-        <button></button>
-      </div>
-      <!-- <div class="input-holder">
+  </h1>    
+    <div class="search-left">      
+      <div class="search-holder">        
+        <div class="input-holder">
+          <input type="text" placeholder="Search for..." />
+          <button></button>
+        </div>
+        <!-- <div class="input-holder">
           <select>
             <option>This Year</option>
           </select>
         </div> -->
-    </div>
-    <div class="profile-area">
-      <div class="common-holder">
-        <figure>
-          <img src="../../../assets/images/icon-notification.svg" alt="Notification" />
-        </figure>
       </div>
-      <div class="profile">
-        <figure>
-          <img [src]="profileUrl" />
-        </figure>
-        <ul>
-          <li (click)="logOut()">Logout</li>
-          <li>Logout</li>
-          <li>Settings</li>
-        </ul>
+      <div class="profile-area">
+        <div class="common-holder">
+          <figure>
+            <img src="../../../assets/images/icon-notification.svg" alt="Notification" />
+          </figure>
+        </div>      
+        <div class="profile">
+          <figure>
+            <img [src]="profileUrl" />
+          </figure>
+          <ul>
+            <li (click)="logOut()">Logout</li>
+            <li>Logout</li>
+            <li>Settings</li>
+          </ul>
+        </div>
       </div>
     </div>
+    <div class="icon-mobile" (click)="btnMob()"></div>
   </div>
-  <div class="icon-mobile" (click)="btnMob()"></div>
-</div>

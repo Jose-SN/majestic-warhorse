@@ -49,7 +49,7 @@ import { CommonSearchProfileComponent } from 'src/app/components/common-search-p
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  public mobMenu: boolean = false;
+  public isMobileNav = false;
   public activePanel: string = '';
   public showCourseDetailedView: boolean = false;
   public selectedCourseInfo: ICourseList = {} as ICourseList;
@@ -57,7 +57,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public infoMessage: string = '';
   public SIDE_PANEL_LIST: ISidepanel = this.dashboardService.SIDE_PANEL_LIST;
   @ViewChild(DashboardSidepanelComponent) dashboardSidepanelComponent!: DashboardSidepanelComponent;
-  @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private dashboardService: DashboardService,
     private commonService: CommonService
@@ -104,5 +103,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.dashboardSidepanelComponent.activePanel = this.activePanel;
     this.selectedCourseInfo = showCourseView['selectedCourse'] as ICourseList;
     this.showCourseDetailedView = showCourseView['showCourseDetail'] as boolean;
+  }
+  btnMobileMenu() {
+    this.isMobileNav = !this.isMobileNav;
   }
 }

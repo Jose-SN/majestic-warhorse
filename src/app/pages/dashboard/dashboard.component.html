@@ -1,9 +1,9 @@
 <section class="dashboard-container">
-  <div class="dashboard-left" [ngClass]="mobMenu ? 'active' : ''">
+  <div class="dashboard-left" [ngClass]="{'active': isMobileNav}">
     <app-dashboard-sidepanel></app-dashboard-sidepanel>
   </div>
   <div class="dashboard-right">
-  <app-search-profile></app-search-profile>
+  <app-search-profile (mobNavchild)="btnMobileMenu()"></app-search-profile>
   <div class="common-container">
   @switch (activePanel) {
     @case (SIDE_PANEL_LIST['DASHBOARD_OVERVIEW']) {
