@@ -1,10 +1,10 @@
 <section class="dashboard-container">
-  <header class="header-small">
-    <figure class="logo-main">
-      <img src="../../../assets/images/logo-majestic-hourse.svg" alt="Mejestic Hourse" />
-    </figure>
-  </header>
-  <app-dashboard-sidepanel></app-dashboard-sidepanel>
+  <div class="dashboard-left" [ngClass]="{'active': isMobileNav}">
+    <app-dashboard-sidepanel></app-dashboard-sidepanel>
+  </div>
+  <div class="dashboard-right">
+  <app-search-profile (mobNavchild)="btnMobileMenu()"></app-search-profile>
+  <div class="common-container">
   @switch (activePanel) {
     @case (SIDE_PANEL_LIST['DASHBOARD_OVERVIEW']) {
       @if (isAdminLogin) {
@@ -48,4 +48,6 @@
   @if(activePanel === SIDE_PANEL_LIST['APPROVAL_PENDING']){
     <app-overlay style="margin-left: -5%;"></app-overlay>
   }
+  </div>
+</div>  
 </section>

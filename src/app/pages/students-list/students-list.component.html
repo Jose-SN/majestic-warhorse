@@ -1,32 +1,22 @@
-<section class="dashboard-container">
-    <div class="dashboard-right">
-        <div class="dashboard-inner">
-          <app-search-profile pageName="STUDENTS_LIST" (seachTextHandler)="seachTextHandler($event)"></app-search-profile>
-            <div class="common-container">
-                <div class="common-wrapper">
-                    <div class="scoll-wrapper">
-                        <div class="scroll-container">
-                            <div class="common-list-wrapper">
-                              @for (student of studentList | searchFilter: searchText : 'USER_LIST';; track $index) {
-                                <div class="common-list">
-                                  <div class="list-left">
-                                    <figure><img [src]="commonService.decodeUrl(student.profileImage)" alt=""></figure>
-                                    <div class="common-list-right">
-                                      <h4>{{student.firstName}} {{student.lastName}}</h4>
-                                    </div>
-                                  </div>
-                                  <div class="icon-holder">
-                                    <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
-                                    <button (click)="deleteStudent(student)"><img src="../../../assets/images/icon-delete.svg" alt=""></button>
-                                  </div>
-                                </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>  
+<div class="common-wrapper">
+  <div class="scoll-wrapper">
+    <div class="scroll-container">
+      <div class="common-list-wrapper">
+        @for (student of studentList | searchFilter: searchText : 'USER_LIST';; track $index) {
+        <div class="common-list">
+          <div class="list-left">
+            <figure><img [src]="commonService.decodeUrl(student.profileImage)" alt=""></figure>
+            <div class="common-list-right">
+              <h4>{{student.firstName}} {{student.lastName}}</h4>
             </div>
-        </div>    
+          </div>
+          <div class="icon-holder">
+            <button><img src="../../../assets/images/icon-edit.svg" alt=""></button>
+            <button (click)="deleteStudent(student)"><img src="../../../assets/images/icon-delete.svg" alt=""></button>
+          </div>
+        </div>
+        }
+      </div>
     </div>
-  </section>
-  
+  </div>
+</div>

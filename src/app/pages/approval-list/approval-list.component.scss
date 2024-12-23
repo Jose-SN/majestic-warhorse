@@ -1,650 +1,146 @@
 @import '../../../styles/index';
-::-webkit-scrollbar {
-  height: 10px;
-  width: 10px;
-}
-::-webkit-scrollbar-thumb:horizontal {
-  background: var(--bg-shadow);
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:vertical {
-  background: var(--bg-shadow);
-  border-radius: 10px;
-}
-.dashboard-container {
-  height: 100%;
-  @include flex(flex, null, null, null);
-  .dashboard-content {
-    @include flex(flex, column, null, null);
-  }
-  .header-small {
-    display: none;
-  }
-  .btn-close {
-    @include btn(null, null);
-    width: 30px;
-    height: 26px;
-    transform: scale(0.8);
-    .icon-left {
-      @include icon(4px, 15px);
-      top: 11px;
 
-      &:before {
-        @include icon-before(4px, 15px, -10px);
-      }
-
-      &:after {
-        @include icon-after(4px, 15px, 10px);
-      }
-
-      &:hover {
-        cursor: pointer;
-      }
-    }
-
-    .icon-right {
-      @include icon(4px, 15px);
-      top: 11px;
-      left: 15px;
-
-      &:before {
-        @include icon-before(4px, 15px, -10px);
-      }
-
-      &:after {
-        @include icon-after(4px, 15px, 10px);
-      }
-    }
-
-    &.open {
-      .icon-left {
-        transition-duration: 0.5s;
-        background: transparent;
-
-        &:before {
-          transform: rotateZ(45deg) scaleX(1.4) translate(2px, 2px);
-        }
-
-        &:after {
-          transform: rotateZ(-45deg) scaleX(1.4) translate(2px, -2px);
-        }
-      }
-
-      .icon-right {
-        transition-duration: 0.5s;
-        background: transparent;
-
-        &:before {
-          transform: rotateZ(-45deg) scaleX(1.4) translate(-2px, 2px);
-        }
-
-        &:after {
-          transform: rotateZ(45deg) scaleX(1.4) translate(-2px, -2px);
-        }
-      }
-    }
-    &:hover {
-      cursor: pointer;
-    }
-  }
-}
-.dashboard-left {
-  background: var(--bg-left-panel);
-  max-width: 328px;
-  width: 100%;
-  flex-shrink: 0;
+.common-wrapper {
   padding: 30px;
+  @include border-radius(15px);
+  @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
+  flex-grow: 1;
+  margin: 30px 0 0;
+  height: 100%;
+  position: relative;
   @include flex(flex, column, null, null);
-  .logo-main {
-    margin-bottom: 50px;
-    img {
-      margin: 0 auto;
-    }
-  }
-  .left-navigation {
-    flex-grow: 1;
-  }
-  header {
-    @include flex(flex, null, null, null);
-    gap: 22px;
-    .icon-mobile {
-      display: none;
-    }
-  }
-  ul {
-    @include common-margin;
-    list-style: none;
-    li {
-      font-size: 1.125rem;
-      position: relative;
-      figure {
-        margin-right: 30px;
-      }
-      a {
-        svg {
-          width: 30px;
-          path {
-            fill: var(--bg-nav-color);
-          }
-        }
-        color: var(--bg-nav-color);
-        padding: 20px;
-        @include flex(flex, null, null, center);
-        @include border-radius(18px);
-        @include transition(all 0.3s ease-in-out);
-        &::before {
-          content: '';
-          @include gradient();
-          width: 100%;
-          height: 100%;
-          @include border-radius(18px);
-          @include transition(all 0.3s ease-in-out);
-          position: absolute;
-          top: 0;
-          left: 0;
-          opacity: 0;
-          z-index: 0;
-        }
-        &::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          right: 28px;
-          bottom: 0;
-          margin: auto;
-          width: 0px;
-          height: 0px;
-          border-style: solid;
-          border-width: 6px 0 6px 7px;
-          border-color: transparent transparent transparent var(--white);
-          transform: rotate(0deg);
-          @include transition(all 0.2s ease-in-out);
-          opacity: 0;
-        }
-        &:hover,
-        &.active {
-          color: var(--white);
-          svg {
-            path {
-              fill: var(--white);
-            }
-          }
-          &::before {
-            opacity: 1;
-          }
-          &::after {
-            right: 20px;
-            opacity: 1;
-          }
-        }
-      }
-      figure,
-      span {
-        position: relative;
-        z-index: 1;
-      }
-    }
+}
+
+.list-wrapper {
+  @include flex(flex,column,null,null);
+  flex-direction: row;
+  .list-holder {
+    max-width: 275px;
+    width: 100%;
+    @include border-radius(10px);
+    border: 1px solid var(--bg-card-border);
   }
 }
 
-.dashboard-right {
-  @include flex(flex, column, null, null);  
-  flex-grow: 1;
-  padding: 30px 25px;
-  position: relative;
-  overflow: hidden;
-  .dashboard-inner {
-    @include flex(flex, column, null, null);  
-    flex-grow: 1;
-    height: 100%;
-  }
-  .search-and-profile {
-    @include flex(flex, null, flex-end, center);
-  }
-  .icon-mobile {
-    width: 37px;
-    height: 27px;
-    flex-shrink: 0;
-    position: relative;
-    @include flex(flex, null, center, center);
-    display: none;
-  }
-  .search-holder {
+.scoll-wrapper {
     width: 100%;
+    position: relative;
     height: 100%;
-    margin-right: 15px;
-    @include flex(flex, null, flex-end, null);
-    h1 {
-      figure {
-        width: 35px;
-        height: 35px;
-        margin-right: 10px;
-      }
-      @include flex(flex, null, null, center);
+    margin-bottom: 25px;
+    .common-list-wrapper {
+      display: flex;
+      flex-flow: column wrap;
+      flex-direction: row;
+      gap: 10px;
+      padding-right: 10px;
     }
-    gap: 15px;
-    .input-holder {
-      position: relative;
-      input {
-        font-family: $archivo-regular;
-        font-size: 1rem;
-        color: var(--bg-label);
-        border: 2px solid var(--bg-input-border);
-        background: var(--bg-input);
-        width: 300px;
+    .scroll-container {
+        @include flex(flex,column,null,null);
+        width: 100%;
         height: 100%;
-        padding: 12px 50px 12px 15px;
-        @include border-radius(15px);
-        @include transition(all 0.2s ease-in-out);
-        &:focus {
-          border-color: var(--bg-mit1);
-        }
-      }
-      button {
-        background: url(../../../assets/images/icon-search.svg) no-repeat center center;
-        width: 20px;
-        height: 20px;
         position: absolute;
         top: 0;
-        right: 20px;
-        bottom: 0;
-        margin: auto;
-        border: none;
-        cursor: pointer;
-      }
-      select {
-        font-family: $archivo-regular;
-        font-size: 1rem;
-        color: var(--white);
-        width: 160px;
-        height: 100%;
-        border: 2px solid var(--bg-input-border);
-        background: transparent url(../../../assets/images/icon-arrow.svg) no-repeat 87% center;
-        @include border-radius(15px);
-        text-indent: 15px;
-        appearance: none;
-        transition: opacity 0.25s;
-        &:focus {
-          outline: none;
-          border-color: var(--bg-mit1);
-        }
-      }
-    }
-    h1 {
-      font-family: $poppins-bold;
-      font-size: 1.875rem;
-      color: var(--white);
-      line-height: 3.75rem;
-      margin-right: auto;
-    }
-  }
-  .profile-area {
-    max-width: fit-content;
-    @include flex(flex, null, flex-end, center);
-    gap: 15px;
-    .common-holder {
-      width: 60px;
-      height: 60px;
-      @include border-radius(15px);
-      border: 2px solid var(--bg-input-border);
-      @include flex(flex, null, center, center);
-      flex-shrink: 0;
-      position: relative;
-      figure {
-        width: 26px;
-        height: 26px;
-        img {
-          width: 100%;
-        }
-      }
-    }
-    .profile {
-      background: var(--bg-blue);
-      width: 60px;
-      height: 60px;
-      @include border-radius(100%);
-      position: relative;
-      border: 1px solid var(--bg-input-border);
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-  }
-  .title-holder {
-    margin: 20px 0 0;
-    padding: 15px 25px;
-    @include flex(flex, null, space-between, center);
-    @include border-radius(8px);
-    @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
-    h1 {
-      font-family: $poppins-bold;
-      font-weight: normal;
-      font-size: 1.875rem;
-      color: var(--light-blue);
-      letter-spacing: 1.5px;
-    }
-    .data-refreshed-holder {
-      span {
-        font-size: 0.875rem;
-        white-space: nowrap;
-        margin-right: 33px;
-        color: var(--white);
-        display: block;
-      }
-      .refresh-date {
-        font-family: $archivo-medium;
-        font-size: 0.875rem;
-        text-align: center;
-        letter-spacing: 1px;
-        color: var(--white);
-        max-width: 312px;
-        padding: 15px 46px;
-        @include border-radius(5px);
-        border: 1px solid var(--bg-input-border);
-        background: var(--bg-input);
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        left: 0;
         overflow: hidden;
-      }
-      button {
-        font-family: $archivo-medium;
-        font-size: 0.875rem;
-        color: var(--white);
-        width: 211px;
-        height: 44px;
-        @include border-radius(20px);
-        @include gradient();
-        border: none;
-        cursor: pointer;
-        @include flex(flex, null, center, center);
-      }
-      & {
-        @include flex(flex, null, center, center);
-      }
-      img {
-        margin-right: 10px;
-      }
-    }
-  }
-  .common-container {
-    @include flex(flex, column, null, null);
-    height: 100%;
-    .common-wrapper {
-        padding: 30px;
-        @include border-radius(15px);
-        @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
-        flex-grow: 1;
-        margin: 30px 0 0;
-        height: 100%;
-        position: relative;
-        @include flex(flex, column, null, null);
-        .courses {
-          overflow: hidden;
-          overflow-y: auto;
-        }
-        .course-top {
-          @include flex(flex, null, space-between, null);
-          margin-bottom: 20px;
-          h2 {
-            font-family: $poppins-bold;
-            font-size: 1.875rem;
-            font-weight: normal;
-            color: var(--white);
-            letter-spacing: 1.5px;
-          }
-          a {
-            font-size: 1.25rem;
-            color: var(--bg-text-orange);
-            height: 26px;
-            position: relative;
-            &::before {
-              content: '';
-              width: 0%;
-              height: 1px;
-              background: var(--bg-text-orange);
-              position: absolute;
-              bottom: 0;
-              left: 0;
-              right: 0;
-              margin: auto;
-              @include transition(all 0.35s ease-in-out);
-            }
-            &:hover {
-              color: var(--white);
-              &::before {
-                width: 100%;
-              }
-            }
-          }
-          ul {
-            max-width: fit-content;
-            background: var(--bg-tab-nav);
-            list-style: none;
-            margin: 0;
-            padding: 5px;
-            @include border-radius(15px);
-            @include flex(flex, null, null, center);
-            li {
-              font-family: $archivo-light;
-              font-size: 0.875rem;
-              font-weight: normal;
-              @include border-radius(15px);
-              color: var(--white);
-              padding: 15px 24px;
-              cursor: pointer;
-              @include transition(all 0.3s ease-in-out);
-              &.active {
-                background: var(--bg-tab-active);
-              }
-            }
-          }
-        }
-        .course-card-holder {
+        overflow-y: auto;
+        .common-list {
+          background: var(--bg-list);
           width: 100%;
-          height: 300px;
-          @include flex(flex, null, null, null);
-          flex-flow: column wrap;
-          flex-direction: row;
+          @include flex(flex, row, null, null);
           gap: 15px;
-          &.courses {
-            height: 340px !important;
-          }
-          .course-card {
-            background: var(--bg-left-panel);
-            max-width: 268px;
-            width: 23.5%;
-            @include border-radius(10px);
-            border: 1px solid var(--bg-card-border);
-            @include flex(flex, column, null, null);
-            overflow: hidden;
-            .card-content {             
-              flex: 1;
-              min-height: 149px;
-              max-height: 149px;
-              &:first-child {
-                background: var(--bg-light-grey);                
-                padding: 25px 25px 0;
-                overflow: hidden;
-                figure {
-                  @include flex(flex, column, flex-end, null);
-                }
-              }
-              &:last-child {
-                position: relative;
-                figure {
-                  margin-top: 20px;
-                }
-                padding: 20px 20px 40px;
-                span {
-                  font-family: $league-spartan-light;
-                  font-size: 0.75rem;
-                  color: var(--bg-light-grey);
-                }
-                h3 {
-                  font-family: $league-spartan-regular;
-                  font-size: 1.125rem;
-                  color: var(--light-blue);
-                  line-height: 1.25rem;
-                  font-weight: normal;
-                  min-height: 45px;
-                  max-height: 45px;
-                  margin: 10px 0 0;
-                }
-                .loader-holder {
-                  background: var(--white);
-                  width: 100%;
-                  height: 10px;                  
-                  margin-top: 10px;
-                  position: absolute;
-                  bottom: 20px;
-                  left: 0;
-                  max-width: 223px;
-                  width: 100%;
-                  right: 0;
-                  margin: auto;
-                  @include border-radius(10px);
-                  span {
-                    @include gradient();
-                    @include border-radius(10px);
-                    height: 100%;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                  }
-                }
-              }
-            }
-          }
+          position: relative;
+          border: 1px solid var(--bg-input-border);
+          overflow: hidden;
+          cursor: pointer;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          @include border-radius(15px);
+          input {
+            position: absolute;
+            opacity: 0;
+            height: 0;
+            width: 0;
         }
-        .list-wrapper {
-          @include flex(flex,column,null,null);
-          flex-direction: row;
-          .list-holder {
-            max-width: 275px;
-            width: 100%;
-            @include border-radius(10px);
-            border: 1px solid var(--bg-card-border);
-          }
+       span {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 0;
         }
-        
-        .scoll-wrapper {
-            width: 100%;
+        input:checked ~ span {
+            background-color: var(--bg-list-active);                      
+          }
+          h4 {
+            font-family: $poppins-regular;
+            font-size: 0.938rem;
+            color: var(--light-blue);
+            font-weight: normal;
+            line-height: 18px;
+            margin-bottom: 5px;
+            @include text-ellipsis($lines: 1);
             position: relative;
+            z-index: 1;
+          }
+          .list-left {
+            padding: 10px;                    
+            gap: 10px;
+            flex-grow: 1;
+            @include flex(flex, null, null, center);
+            position: relative;
+            z-index: 1;
+          }
+          figure {
+            width: 50px;
+            height: 50px;
+            @include border-radius(100%);
+            overflow: hidden;                    
+          }                  
+          .common-list-right {
+            width: 100%;                    
+          }
+          .icon-holder {
+            background: var(--bg-shadow);
+            @include flex(flex, null, null, center);
+            @include border-radius(0 10px 10px 0);
             height: 100%;
-            .common-list-wrapper {
-              display: flex;
-              flex-flow: column wrap;
-              flex-direction: row;
-              gap: 10px;
-              padding-right: 10px;
+            padding: 10px;
+            border-left: 1px solid var(--bg-input-border);
+            position: relative;
+            z-index: 1;
+            button {
+              background: transparent;
+              width: 23px;
+              height: 23px;
+              padding: 3px;
+              border: 0;
+              cursor: pointer;
             }
-            .scroll-container {
-                @include flex(flex,column,null,null);
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                top: 0;
-                left: 0;
-                overflow: hidden;
-                overflow-y: auto;
-                .common-list {
-                  background: var(--bg-list);
-                  width: 100%;
-                  @include flex(flex, row, null, null);
-                  gap: 15px;
-                  position: relative;
-                  border: 1px solid var(--bg-input-border);
-                  overflow: hidden;
-                  cursor: pointer;
-                  -webkit-user-select: none;
-                  -moz-user-select: none;
-                  -ms-user-select: none;
-                  user-select: none;
-                  @include border-radius(15px);
-                  input {
-                    position: absolute;
-                    opacity: 0;
-                    height: 0;
-                    width: 0;
-                }
-               span {
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                width: 100%;
-                z-index: 0;
-                }
-                input:checked ~ span {
-                    background-color: var(--bg-list-active);                      
-                  }
-                  h4 {
-                    font-family: $poppins-regular;
-                    font-size: 0.938rem;
-                    color: var(--light-blue);
-                    font-weight: normal;
-                    line-height: 18px;
-                    margin-bottom: 5px;
-                    @include text-ellipsis($lines: 1);
-                    position: relative;
-                    z-index: 1;
-                  }
-                  .list-left {
-                    padding: 10px;                    
-                    gap: 10px;
-                    flex-grow: 1;
-                    @include flex(flex, null, null, center);
-                    position: relative;
-                    z-index: 1;
-                  }
-                  figure {
-                    width: 50px;
-                    height: 50px;
-                    @include border-radius(100%);
-                    overflow: hidden;                    
-                  }                  
-                  .common-list-right {
-                    width: 100%;                    
-                  }
-                  .icon-holder {
-                    background: var(--bg-list-action);
-                    @include flex(flex, null, null, center);
-                    @include border-radius(0 10px 10px 0);
-                    height: 100%;
-                    padding: 10px;
-                    position: relative;
-                    z-index: 1;
-                    button {
-                      background: transparent;
-                      width: 23px;
-                      height: 23px;
-                      padding: 3px;
-                      border: 0;
-                      cursor: pointer;
-                    }
-                  }
-                }
-            }
+          }
         }
-        
-      }
-  }
+    }
 }
-
-footer {
-  color: var(--bg-grey);
-  line-height: 1.313rem;
-  span {
-    font-size: 0.75rem;
+.submit-holder {
+  button {
+    font-family: $archivo-medium;
+    font-size: 0.875rem;
+    color:  var(--white);
+    width: 180px;
+    height: 40px;
+    @include border-radius(20px);
+    @include gradient();
+    border: none;
+    cursor: pointer;
+    @include flex(flex, null, center, center);
   }
+  & {
+      @include flex(flex, null, flex-end, null);
+  }
+    
 }
-
-// @media screen and (min-width: 1921px) {
-//   .dashboard-right {
-//     max-width: 1592px;
-//     margin: 0 auto;
-//   }
-// }
-
 @media screen and (max-width: 1919px) {
   .scroll-container {
     overflow: hidden;
@@ -970,29 +466,4 @@ footer {
       }
     }
   }
-}
-.btn-assign {
-  font-family: $archivo-regular;
-  font-size: 1rem;
-  color: var(--white);
-  margin: 25px 0;
-  @include button();
-  @include box-shadow(2px, 2px, 8px, var(--bg-magento));
-  width: 100%;
-  @include border-radius(50px);
-  @include gradient();
-  border: 1px solid var(--bg-orange);
-  width: 20%;
-}
-footer {
-color: var(--bg-grey);
-line-height: 1.313rem;
-span {
-  font-size: 0.75rem;
-}
-}
-.save-button-container{
-  display: flex;
-  align-items: center;
-  justify-content: end;
 }

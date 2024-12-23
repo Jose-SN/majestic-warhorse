@@ -1,10 +1,5 @@
 @import '../../../styles/index';
 
-.registration-wrapper {
-  overflow: hidden;
-  position: relative;
-  height: 100%;
-}
 app-particle {
   width: 100vw;
   height: 100vh;
@@ -21,14 +16,22 @@ app-particle {
   height: 100%;
   z-index: 0;
 }
-.login-container {
-  @include flex(flex, null, center, center);
-  height: 100%;
+.registration-wrapper {
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 2px 2px 15px var(--bg-shadow);
 }
+
+.edit {
+  padding:0;
+  box-shadow: none;
+}
+
 .registration-holder {
-  // background: var(--bg-login);
-  max-width: 60%;
+  max-width: 1075px;
   width: 100%;
+  height: 100%;
+  margin: 0 auto;
   padding: 40px 20px;
   @include border-radius(60px);
   margin: 0 auto;

@@ -1,62 +1,57 @@
-<section class="dashboard-container">
-  <div class="dashboard-right">
-    <div class="dashboard-inner">
-      <app-search-profile pageName="COURSE_PAGE" (seachTextHandler)="seachTextHandler($event)"></app-search-profile>
-    <div class="common-container">
-      <div class="content-area">
-        <div class="content-left" [ngClass]="{'common-slider':showSliderView}">
-          <app-common-slider [ngClass]="{'active':showSliderView}"
-          (removeClass)="sliderActiveRemove()">></app-common-slider>
-          <div class="courses-wrapper">
-            <div class="course-top">
-              <h2>Courses List</h2>
-              <ul>
-                @for (filter of filterList; track $index) {
-                  <li [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}</li>
-                }
-              </ul>
-              @if(["admin","teacher"].includes(loginedUserPrivilege)){
-                <div class="data-refreshed-holder">
-                  <button (click)="showSliderView = !showSliderView;">
-                    <img src="../../../assets/images/icon-upload.svg" alt="Upload" />
-                    Upload Course
-                  </button>
+<div class="dashboard-inner">
+  <div class="content-area">
+    <div class="content-left" [ngClass]="{'common-slider':showSliderView}">
+      <app-common-slider [ngClass]="{'active':showSliderView}"
+        (removeClass)="sliderActiveRemove()">></app-common-slider>
+      <div class="courses-wrapper">
+        <div class="course-top">
+          <h2>Courses List</h2>
+          <ul>
+            @for (filter of filterList; track $index) {
+            <li [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}
+            </li>
+            }
+          </ul>
+          @if(["admin","teacher"].includes(loginedUserPrivilege)){
+          <div class="data-refreshed-holder">
+            <button (click)="showSliderView = !showSliderView;">
+              <img src="../../../assets/images/icon-upload.svg" alt="Upload" />
+              Upload Course
+            </button>
+          </div>
+          }
+        </div>
+        <div class="scroll-container">
+          <div class="course-card-holder" *ngIf="courseList$ | async as courseList">
+            <ng-container
+              *ngFor="let course of courseList | searchFilter: searchText : 'COURSE' : activeFilterTab as filteredList">
+              <div class="course-card" *ngIf="filteredList.length > 0; else noRecords"
+                (click)="openCourseDetailsPage(course)">
+                <div class="card-content">
+                  <figure><img [src]="course.courseCoverImage" alt="" /></figure>
                 </div>
-              }
-            </div>
-            <div class="scroll-container courses">
-              <div class="course-card-holder" *ngIf="courseList$ | async as courseList">
-                <ng-container
-                  *ngFor="let course of courseList | searchFilter: searchText : 'COURSE' : activeFilterTab as filteredList">
-                  <div class="course-card" *ngIf="filteredList.length > 0; else noRecords" (click)="openCourseDetailsPage(course)">
-                    <div class="card-content">
-                      <figure><img [src]="course.courseCoverImage" alt="" /></figure>
-                    </div>
-                    <div class="card-content">
-                      <span>A Course by {{ course["createdBy"].firstName }} {{ course["createdBy"].lastName }}</span>
-                      <h3>{{ course.courseTitle }}</h3>
-                      <span>@if(course.chapterDetails.length){
-                        {{course.chapterCompletedCount}}/{{course.chapterDetails.length}} Lessons
-                        }
-                      </span>
-                      <div class="loader-holder">
-                        <span  [ngStyle]="{width: course.completionPercent}"></span>
-                      </div>
-                    </div>
+                <div class="card-content">
+                  <span>A Course by {{ course["createdBy"].firstName }} {{ course["createdBy"].lastName }}</span>
+                  <h3>{{ course.courseTitle }}</h3>
+                  <span>@if(course.chapterDetails.length){
+                    {{course.chapterCompletedCount}}/{{course.chapterDetails.length}} Lessons
+                    }
+                  </span>
+                  <div class="loader-holder">
+                    <span [ngStyle]="{width: course.completionPercent}"></span>
                   </div>
-                  <ng-template #noRecords>
-                    <p class="no-records">No records found</p>
-                  </ng-template>
-                </ng-container>
-                <div *ngIf="!courseList.length">
-                  <p class="no-records">No records found</p>
                 </div>
               </div>
+              <ng-template #noRecords>
+                <p class="no-records">No records found</p>
+              </ng-template>
+            </ng-container>
+            <div *ngIf="!courseList.length">
+              <p class="no-records">No records found</p>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  </div>
-</section>
+</div>
