@@ -37,8 +37,16 @@ export class ApprovalListComponent {
     private commonApiService: CommonApiService,
     private approveTeacherService: ApproveTeacherService
   ) {
-    this.profileUrl = this.commonService.decodeUrl(this.commonService.loginedUserInfo.profileImage ?? '');
+    this.profileUrl = this.commonService.decodeUrl(
+      this.commonService.loginedUserInfo.profileImage ?? ''
+    );
     this.getApprovalPendingTeachers();
+    this.commonService
+      .getCommonSearchText()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((searchText) => {
+        this.searchText = searchText;
+      });
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -53,9 +61,6 @@ export class ApprovalListComponent {
   }
   sliderActiveRemove(): void {
     this.showSliderView = false;
-  }
-  seachTextHandler(searchText: string) {
-    this.searchText = searchText;
   }
   onTeacherSelect(teacher: UserModel, currentTarget: any) {
     const isChecked = currentTarget.checked;

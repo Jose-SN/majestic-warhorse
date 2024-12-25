@@ -54,10 +54,12 @@ export class CourseDetailsService {
     } else {
       service = this.courseApiService.saveCourseStatus.bind(this.courseApiService);
     }
-    service(statusPayload)
+   return new Promise((resolve) => {
+      service(statusPayload)
       .pipe(takeUntil(destroy$))
       .subscribe({
         next: (success) => {
+          resolve(success)
           if (!saveInfo.isVideo) {
             this.commonService.openToaster({
               message: 'Succesfully updated the status of the Course',
@@ -67,12 +69,14 @@ export class CourseDetailsService {
           this.getCourseStatusList();
         },
         error: (error) => {
+          resolve(error)
           this.commonService.openToaster({
             message: 'Error while updating the status of the course',
             messageType: TOASTER_MESSAGE_TYPE.ERROR,
           });
         },
       });
+    })
   }
   async getCourseStatusList() {
     this.courseStatusList = await this.courseApiService.getCourseStatusList();

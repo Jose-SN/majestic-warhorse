@@ -2,7 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { IToasterModel } from '../toaster/toaster.model';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Subject, throwError } from 'rxjs';
+import { BehaviorSubject, Subject, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { TOASTER_MESSAGE_TYPE } from '../toaster/toaster-info';
 import { IModelInfo } from 'src/app/components/common-dialog/model/popupmodel';
@@ -16,6 +16,7 @@ export class CommonService {
   public adminRoleType: string[] = ['admin', 'teacher'];
   private openpopupModel$: Subject<any> = new Subject<any>();
   private closePopupModel$: Subject<any> = new Subject<any>();
+  private commonSearchText: Subject<string> = new BehaviorSubject('');
   public onlineStatusChanged = new EventEmitter<boolean>();
   constructor(private toastrService: ToastrService) {
     this.initializeStatus();
@@ -84,7 +85,13 @@ export class CommonService {
     return number < 10 ? `0${number}` : `${number}`;
   }
   decodeUrl(url: string) {
-    return url.replace(/&#x2F;/g, "/");
+    return url.replace(/&#x2F;/g, '/');
     // return new DOMParser().parseFromString(url, "text/html").documentElement.textContent;
+  }
+  setCommonSearchText(searchText: string) {
+    this.commonSearchText.next(searchText);
+  }
+  getCommonSearchText(){
+    return this.commonSearchText.asObservable();
   }
 }

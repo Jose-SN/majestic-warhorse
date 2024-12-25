@@ -37,6 +37,12 @@ export class StudentsListComponent {
     this.studentList = this.commonService.allUsersList.filter(
       (users) => users.role === 'student' && users.approved
     );
+    this.commonService
+    .getCommonSearchText()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((searchText) => {
+      this.searchText = searchText;
+    });
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -51,9 +57,6 @@ export class StudentsListComponent {
   }
   sliderActiveRemove(): void {
     this.showSliderView = false;
-  }
-  seachTextHandler(searchText: string) {
-    this.searchText = searchText;
   }
   deleteStudent(deletedStudent: UserModel) {
     this.commonApiService.deleteUser(takeUntil(this.destroy$)).subscribe({

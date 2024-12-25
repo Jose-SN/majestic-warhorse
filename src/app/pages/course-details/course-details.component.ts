@@ -14,6 +14,7 @@ import { IAttachmentObjectInfo } from '../course-upload/model/file-object-info';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
 import { VideoDurationService } from 'src/app/shared/services/video-duration.service';
+import { DashboardService } from '../dashboard/dashboard.service';
 
 @Component({
   selector: 'app-course-detils',
@@ -41,6 +42,7 @@ export class CourseDetailsComponent {
   private courseStatusInfo: ICourseStatus = {} as ICourseStatus;
   private videoStatusInfo: ICourseStatus = {} as ICourseStatus;
   public selectedAttachmentList: any = [];
+  public showQuestionAnswer: boolean = false;
   @Input() selectedCourseInfo: ICourseList = {} as ICourseList;
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   @ViewChild(VideoPlayerComponent) videoPlayerComponent!: VideoPlayerComponent;
@@ -49,9 +51,12 @@ export class CourseDetailsComponent {
     public commonService: CommonService,
     private fileDownloadService: FileDownloadService,
     private courseDetailsService: CourseDetailsService,
-    private videoDurationService:VideoDurationService
+    private videoDurationService: VideoDurationService,
+    private dashboardService: DashboardService
   ) {
-    this.profileUrl = this.commonService.decodeUrl(this.commonService.loginedUserInfo.profileImage ?? '');
+    this.profileUrl = this.commonService.decodeUrl(
+      this.commonService.loginedUserInfo.profileImage ?? ''
+    );
   }
   async ngOnInit(): Promise<void> {
     this.setDefaultVideo();
@@ -67,14 +72,15 @@ export class CourseDetailsComponent {
     this.selectedAttachmentList = this.selectedCourseInfo.chapterDetails
       ?.map((chapter) => chapter.attachments)
       ?.flat();
-      this.selectedCourseInfo?.chapterDetails?.forEach((chapterDetails) => {
-        chapterDetails?.fileDetails?.forEach(async (fileDetails) => {
-          const time = await this.videoDurationService.getVideoDuration(fileDetails.fileURL);
-          fileDetails.videoDuration = this.commonService.formatTime(time);
-        });
+    this.selectedCourseInfo?.chapterDetails?.forEach((chapterDetails) => {
+      chapterDetails?.fileDetails?.forEach(async (fileDetails) => {
+        const time = await this.videoDurationService.getVideoDuration(fileDetails.fileURL);
+        fileDetails.videoDuration = this.commonService.formatTime(time);
       });
+    });
+    // this.checkAssesmentView();
   }
-  
+
   setDefaultVideo() {
     this.activeChapter = this.selectedCourseInfo?.chapterDetails[0];
     this.activeVideoInfo = this.selectedCourseInfo?.chapterDetails?.[0]?.fileDetails?.[0];
@@ -104,7 +110,7 @@ export class CourseDetailsComponent {
     this.activeVideoDescription = fileDetails.description;
   }
   handleStartAssessment() {
-    this.videoPlayerComponent.playVideo();
+    this.dashboardService.setSidePanelChangeValue(this.dashboardService.SIDE_PANEL_LIST.ASSESMENT);
   }
   logOut() {
     this.authService.logOutApplication();
@@ -134,13 +140,13 @@ export class CourseDetailsComponent {
       this.updateVideoStatus(undefined, true);
     }
   }
-  updateVideoStatus(event?: ClickEvent, isVideo?: boolean) {
+  async updateVideoStatus(event?: ClickEvent, isVideo?: boolean) {
     if (event?.rating) {
       this.videoRating = event?.rating;
     }
     const videoTimeInfo = this.videoPlayerComponent.getVideoTimeUpdate;
     const videoPercentage = (videoTimeInfo.currentTime / videoTimeInfo.duration) * 100;
-    this.courseDetailsService.saveCourseRating(
+    await this.courseDetailsService.saveCourseRating(
       {
         isVideo: isVideo,
         videoPercentage: videoPercentage,
@@ -152,6 +158,9 @@ export class CourseDetailsComponent {
       },
       this.destroy$
     );
+    // setTimeout(() => {
+    //   this.checkAssesmentView();
+    // },5000);
   }
   checkActiveVideoStatus() {
     const courseStatusInfo = this.courseDetailsService.courseStatusList.find(
@@ -198,5 +207,23 @@ export class CourseDetailsComponent {
       panel.style.maxHeight = panel.scrollHeight + 'px';
     }
   }
-  seachTextHandler(searchText: string) {}
+  checkAssesmentView() {
+    let completedLessonCount: number = 0;
+    this.selectedCourseInfo.chapterDetails.forEach((chapterDetails, index) => {
+      const chapterCompleted = chapterDetails.fileDetails.every((fileDetails) => {
+        return this.courseDetailsService.courseStatusList.find(
+          (courseStatus) =>
+            courseStatus.parentId === fileDetails._id && +courseStatus.percentage === 100
+        );
+      });
+      if (chapterCompleted) {
+        completedLessonCount = (completedLessonCount || 0) + 1;
+      }
+      if (index + 1 === this.selectedCourseInfo.chapterDetails.length) {
+        if (completedLessonCount === this.selectedCourseInfo.chapterDetails.length) {
+          this.showQuestionAnswer = true;
+        }
+      }
+    });
+  }
 }

@@ -67,19 +67,24 @@ export class CourseUploadService {
     if (isValid) {
       courseDetails.chapterInfo.forEach((chapterInfo) => {
         chapterInfo.createdBy = this.commonService.loginedUserInfo.id;
-      })
+      });
+      let courseSaveApi: any;
+      if (courseDetails.mainCourseInfo._id) {
+        courseSaveApi = this.courseApi.updateCourseDetails.bind(this.courseApi);
+      } else {
+        courseSaveApi = this.courseApi.saveCourseDetails.bind(this.courseApi);
+      }
       return new Promise((resolve) => {
-        this.courseApi
-          .saveCourseDetails({
-            ...courseDetails.mainCourseInfo,
-            ...{
-              chapterDetails: courseDetails.chapterInfo,
-              createdBy: this.commonService.loginedUserInfo.id,
-            },
-          })
+        courseSaveApi({
+          ...courseDetails.mainCourseInfo,
+          ...{
+            chapterDetails: courseDetails.chapterInfo,
+            createdBy: this.commonService.loginedUserInfo.id,
+          },
+        })
           .pipe(takeUntil(_destroy$))
           .subscribe({
-            next: (courseSave) => {
+            next: (courseSave: { success: any }) => {
               if (courseSave.success) {
                 this.commonService.openToaster({
                   message: 'Course Uploaded succesfully',
@@ -93,7 +98,7 @@ export class CourseUploadService {
                 });
               }
             },
-            error: (error) => {
+            error: () => {
               this.commonService.openToaster({
                 message: 'Error while uploading the course',
                 messageType: TOASTER_MESSAGE_TYPE.ERROR,
