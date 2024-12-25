@@ -10,5 +10,4 @@ import { CommonSearchProfileComponent } from "../../components/common-search-pro
 })
 export class ApprovalPendingComponent {
   @Input() infoMessage: string = '';
-  seachTextHandler(searchText: string) {}
 }

@@ -28,6 +28,11 @@ export class CoursesApiService {
       .post<any>(`${this._apiUrl}course/save`, courseUploadPayload)
       .pipe(catchError(this.commonService.handleError));
   }
+  updateCourseDetails(courseUploadPayload: any) {
+    return this.http
+      .put<any>(`${this._apiUrl}course/update`, courseUploadPayload)
+      .pipe(catchError(this.commonService.handleError));
+  }
   fetchUploadedCourses() {
     return lastValueFrom(
       this.http

@@ -10,4 +10,5 @@ export interface ISidepanel {
   ASSIGN_TEACHER: string;
   TEACHER_APPROVAL: string;
   APPROVAL_PENDING: string;
+  ASSESMENT: string;
 }

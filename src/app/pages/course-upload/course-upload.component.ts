@@ -115,10 +115,7 @@ export class CourseUploadComponent {
       this.destroy$
     );
     if (isCourseUploaded) {
-      this.courseChapterList = [];
-      this.addNewChapter();
-      this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
-      this.fetchLastUpdatedCourses();
+      this.clearPage();
     }
   }
   ngOnDestroy(): void {
@@ -145,5 +142,11 @@ export class CourseUploadComponent {
       fileType: 'VIDEO',
       componentName: COMPONENT_NAME.FILE_VIEWER,
     });
+  }
+  clearPage() {
+    this.courseChapterList = [];
+    this.addNewChapter();
+    this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
+    this.fetchLastUpdatedCourses();
   }
 }

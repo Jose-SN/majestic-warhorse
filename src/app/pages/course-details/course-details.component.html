@@ -67,7 +67,7 @@
                     [rating]="videoRating"></star-rating>
                 </div>
               </div>
-              @if(loginedUserRole === 'student'){
+              @if(loginedUserRole === 'student' && showQuestionAnswer){
               <div class="btn-holder">
                 <button (click)="handleStartAssessment()">Start Assessment Test</button>
               </div>
@@ -133,7 +133,7 @@
                                 stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                           </figure>
-                          <span class="full-width">{{item.description}}</span>
+                          <span class="full-width">{{item.name}}</span>
                           <strong>{{item.videoDuration}}</strong>
                           </p>
                         </div>

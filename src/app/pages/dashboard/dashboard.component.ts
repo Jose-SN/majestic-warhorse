@@ -43,7 +43,8 @@ import { CommonSearchProfileComponent } from 'src/app/components/common-search-p
     ApprovalPendingComponent,
     StudentTeacherAssignListComponent,
     OverlayComponent,
-    CommonSearchProfileComponent
+    CommonSearchProfileComponent,
+    QuestionnaireComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
