@@ -7,6 +7,7 @@ import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
 import { CoursesApiService } from 'src/app/services/api-service/courses-api.service';
+import { HttpEventType } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -111,7 +112,8 @@ export class CourseUploadService {
   public onFileUpload(
     _destroy$: Subject<void>,
     selectedFile: File,
-    uploadType: string
+    uploadType: string,
+    progressBarInfo: any = {}
   ): Promise<string> {
     return new Promise(async (resolve) => {
       if (await this.onFileUploadValidation(selectedFile, uploadType)) {
@@ -121,8 +123,14 @@ export class CourseUploadService {
           .uploadImage(formData)
           .pipe(takeUntil(_destroy$))
           .subscribe({
-            next: (imageUrl) => {
-              resolve(imageUrl?.['url']);
+            next: (event: any) => {
+              if (event.type === HttpEventType.UploadProgress && event.total) {
+                progressBarInfo.completedPercentage = Math.round(
+                  (100 * event.loaded) / event.total
+                );
+              } else if (event.type === HttpEventType.Response) {
+                resolve(event?.body?.['url']);
+              }
             },
             error: () => {
               this.commonService.openToaster({
