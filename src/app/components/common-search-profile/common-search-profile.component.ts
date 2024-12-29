@@ -5,7 +5,7 @@ import { CommonService } from 'src/app/shared/services/common.service';
 @Component({
   selector: 'app-search-profile',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './common-search-profile.component.html',
   styleUrl: './common-search-profile.component.scss'
 })
