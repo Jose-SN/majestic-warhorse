@@ -9,7 +9,7 @@ import { CommonService } from 'src/app/shared/services/common.service';
   styleUrl: './common-search-profile.component.scss'
 })
 export class CommonSearchProfileComponent {
-  public mobMenu: boolean = false;
+  public isMobileNav = false;
   public profileUrl: string = '';
   @Output() mobNavchild = new EventEmitter<void>();
   constructor(
@@ -25,5 +25,6 @@ export class CommonSearchProfileComponent {
   
   btnMob() {
     this.mobNavchild.emit();
+    this.isMobileNav = !this.isMobileNav;
   }
 }

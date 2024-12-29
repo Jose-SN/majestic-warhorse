@@ -271,7 +271,6 @@
             background: var(--bg-left-panel);
             max-width: 268px;
             width: 23.5%;
-            height: max-content;
             @include border-radius(10px);
             border: 1px solid var(--bg-card-border);
             @include flex(flex, column, null, null);
@@ -314,6 +313,7 @@
                   min-height: 45px;
                   max-height: 45px;
                   margin: 10px 0 0;
+                  @include text-ellipsis($lines: 1);
                 }
                 .loader-holder {
                   background: var(--white);
@@ -507,6 +507,11 @@
               height: 50px;
               @include border-radius(100%);
               overflow: hidden;
+              img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+              }
             }
             span {
               font-family: $league-spartan-light;
@@ -590,19 +595,7 @@
     }
   }
 }
-// @media screen and (max-width: 1554px) {
-//   .content-area {
-//     .content-left {
-//       .courses-wrapper {
-//         .course-card-holder {
-//           .course-card {
-//             width: 44%;
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
+
 @media screen and (max-width: 1280px) {
   .content-area {
     .content-left {
@@ -629,12 +622,12 @@
   .content-left {
     .courses-wrapper {
       .scroll-container {
-        height: 500px;
+        height: 500px;      
       }
       .course-card-holder {
         position: static;
         .course-card {
-          width: 31.5%;
+          width: 32%; 
           .card-content {
             &:last-child {
               .loader-holder {
@@ -660,8 +653,9 @@
 
 @media screen and (max-width: 880px) {
   .content-area {
+    margin-top: 0;
     @include flex(flex, column, null, null);
-    .content-left {
+    .content-left {      
       .courses-wrapper {
         .scroll-container {
           height: 500px;

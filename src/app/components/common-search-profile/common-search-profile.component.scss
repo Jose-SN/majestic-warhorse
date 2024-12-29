@@ -153,9 +153,46 @@
         }
       }
     }
+    .btn6{
+      @include btn(15px, 35px);
+      transform: scale(0.5);
+      display: none;      
+      .icon {
+        @include icon(4px, 60px);
+        
+        &:before{
+          @include icon-before(4px, 60px, -22px);
+        }
+        
+        &:after{
+          @include icon-after(4px, 60px, 21px);
+        }
+      }
+      
+      &.open {
+        .icon {
+          transition-duration: 0.5s;
+          transform: rotateZ(180deg);
+          
+          &:before{
+            transform: rotateZ(45deg) scaleX(0.75) translate(20px, -6px);
+          }
+    
+          &:after{
+            transform: rotateZ(-45deg) scaleX(0.75) translate(20px, 6px);
+          }
+        }
+      }
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
   
   @media screen and (max-width: 1024px) {
+    .btn6{
+      display: block!important;    
+    }
     .dashboard-left {
       height: 100%;
       padding: 30px 10px;
@@ -182,7 +219,7 @@
 
   } 
   
-  @media screen and (max-width: 880px) {
+  @media screen and (max-width: 768px) {
     .search-and-profile {
       @include flex(flex,column,center,null);
       h1 {

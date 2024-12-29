@@ -53,8 +53,7 @@
   .dashboard-container {
     display: block;
     .common-container {
-      display: block;
-      height: auto;
+     height: min-content;
     }
   }
   .dashboard-left {
@@ -73,7 +72,7 @@
   .dashboard-right {
     @include flex(flex,column,null,null);
     height: 100%;
-    overflow: auto;
+    overflow-y: auto;
   }
 }
 
@@ -88,6 +87,7 @@
     }
   }
   .dashboard-left {
+    max-width: 255px;
     height: 100%;
     position: fixed;
     left: 0;
