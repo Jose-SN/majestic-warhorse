@@ -59,6 +59,9 @@
               <div class="input-holder">
                 <label>Video</label>
                 <input type="text" placeholder="chapter1.mp4" readonly [(ngModel)]="item.fileURL" />
+                @if(item.completedPercentage && +item.completedPercentage !== 100){
+                  <progress-bar [progress]="item.completedPercentage || '0'" [color]="'#488aff'"></progress-bar>
+                  }
               </div>
               <div calss="input-holder">
                 <label>Video Description</label>
