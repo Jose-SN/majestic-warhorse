@@ -7,6 +7,7 @@ import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
 import { CoursesApiService } from 'src/app/services/api-service/courses-api.service';
+import { HttpEventType } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -67,19 +68,24 @@ export class CourseUploadService {
     if (isValid) {
       courseDetails.chapterInfo.forEach((chapterInfo) => {
         chapterInfo.createdBy = this.commonService.loginedUserInfo.id;
-      })
+      });
+      let courseSaveApi: any;
+      if (courseDetails.mainCourseInfo._id) {
+        courseSaveApi = this.courseApi.updateCourseDetails.bind(this.courseApi);
+      } else {
+        courseSaveApi = this.courseApi.saveCourseDetails.bind(this.courseApi);
+      }
       return new Promise((resolve) => {
-        this.courseApi
-          .saveCourseDetails({
-            ...courseDetails.mainCourseInfo,
-            ...{
-              chapterDetails: courseDetails.chapterInfo,
-              createdBy: this.commonService.loginedUserInfo.id,
-            },
-          })
+        courseSaveApi({
+          ...courseDetails.mainCourseInfo,
+          ...{
+            chapterDetails: courseDetails.chapterInfo,
+            createdBy: this.commonService.loginedUserInfo.id,
+          },
+        })
           .pipe(takeUntil(_destroy$))
           .subscribe({
-            next: (courseSave) => {
+            next: (courseSave: { success: any }) => {
               if (courseSave.success) {
                 this.commonService.openToaster({
                   message: 'Course Uploaded succesfully',
@@ -93,7 +99,7 @@ export class CourseUploadService {
                 });
               }
             },
-            error: (error) => {
+            error: () => {
               this.commonService.openToaster({
                 message: 'Error while uploading the course',
                 messageType: TOASTER_MESSAGE_TYPE.ERROR,
@@ -106,7 +112,8 @@ export class CourseUploadService {
   public onFileUpload(
     _destroy$: Subject<void>,
     selectedFile: File,
-    uploadType: string
+    uploadType: string,
+    progressBarInfo: any = {}
   ): Promise<string> {
     return new Promise(async (resolve) => {
       if (await this.onFileUploadValidation(selectedFile, uploadType)) {
@@ -116,8 +123,14 @@ export class CourseUploadService {
           .uploadImage(formData)
           .pipe(takeUntil(_destroy$))
           .subscribe({
-            next: (imageUrl) => {
-              resolve(imageUrl?.['url']);
+            next: (event: any) => {
+              if (event.type === HttpEventType.UploadProgress && event.total) {
+                progressBarInfo.completedPercentage = Math.round(
+                  (100 * event.loaded) / event.total
+                );
+              } else if (event.type === HttpEventType.Response) {
+                resolve(event?.body?.['url']);
+              }
             },
             error: () => {
               this.commonService.openToaster({

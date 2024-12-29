@@ -8,7 +8,7 @@
     <div class="search-left">      
       <div class="search-holder">        
         <div class="input-holder">
-          <input type="text" placeholder="Search for..." />
+          <input type="text" placeholder="Search for..." [(ngModel)]="searchText" (input)="setInputSearch()"/>
           <button></button>
         </div>
         <!-- <div class="input-holder">

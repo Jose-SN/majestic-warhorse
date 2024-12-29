@@ -10,10 +10,11 @@ import { ICourseList } from '../courses/modal/course-list';
 import { IFileObjectInfo } from './model/file-object-info';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
+import { ProgressBarComponent } from 'src/app/shared/progress-bar/progress-bar.component';
 @Component({
   selector: 'app-course-upload',
   standalone: true,
-  imports: [FormsModule, CommonModule, AttachmentAccordionComponent],
+  imports: [FormsModule, CommonModule, AttachmentAccordionComponent, ProgressBarComponent],
   templateUrl: './course-upload.component.html',
   styleUrl: './course-upload.component.scss',
 })
@@ -77,10 +78,23 @@ export class CourseUploadComponent {
   ): Promise<void> {
     const target = event.target as HTMLInputElement;
     const files = target.files as FileList;
+    let uploadObjectItem: any = {};
+    if (uploadType === 'VIDEO_FILE') {
+      if ((mainIndex || mainIndex == 0) && this.courseChapterList[mainIndex]) {
+        if (
+          (videoDetailsIndex || videoDetailsIndex == 0) &&
+          this.courseChapterList[mainIndex].fileDetails[videoDetailsIndex]
+        ) {
+          uploadObjectItem = this.courseChapterList[mainIndex].fileDetails[videoDetailsIndex];
+          uploadObjectItem.completedPercentage = '0';
+        }
+      }
+    }
     const fileUrl = await this.courseUploadService.onFileUpload(
       this.destroy$,
       files[0],
-      uploadType
+      uploadType,
+      uploadObjectItem
     );
     switch (uploadType) {
       case 'COVER_IMAGE':
@@ -115,10 +129,7 @@ export class CourseUploadComponent {
       this.destroy$
     );
     if (isCourseUploaded) {
-      this.courseChapterList = [];
-      this.addNewChapter();
-      this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
-      this.fetchLastUpdatedCourses();
+      this.clearPage();
     }
   }
   ngOnDestroy(): void {
@@ -145,5 +156,11 @@ export class CourseUploadComponent {
       fileType: 'VIDEO',
       componentName: COMPONENT_NAME.FILE_VIEWER,
     });
+  }
+  clearPage() {
+    this.courseChapterList = [];
+    this.addNewChapter();
+    this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
+    this.fetchLastUpdatedCourses();
   }
 }
