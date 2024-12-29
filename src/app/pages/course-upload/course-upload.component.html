@@ -1,141 +1,129 @@
-<section class="dashboard-container">
-  <div class="dashboard-right">
-    <div class="dashboard-content">
-      <div class="title-holder">
-        <h1>Upload New Course</h1>
-      </div>
-    </div>
-    <div class="common-container">
-      <div class="content-area">
-        <div class="content-left">
-          <div class="course-outer-area">
-            <div class="course-form-upload-wrapper">
-              <div class="course-upload-form">
-                <h5>Enter New Course Details</h5>
-                <div class="upload-form-holder">
-                  <div class="course-upload-left">
-                    <div class="input-holder">
-                      <label>Title</label>
-                      <input type="text" placeholder="Type here" [(ngModel)]="mainCourseInfo.courseTitle" />
-                    </div>
-                    <div calss="input-holder">
-                      <label>Description</label>
-                      <textarea rows="5" cols="45" [(ngModel)]="mainCourseInfo.courseDescription"></textarea>
-                    </div>
-                  </div>
-                  <div class="course-upload-right">
-                    <label for="images" class="drop-container" id="dropcontainer">
-                      <img class="img-holder" [src]="mainCourseInfo.courseCoverImage|| '../../../assets/images/icon-file-upload.svg'" />
-                      <span class="drop-title">Upload Cover Image</span>
-                      <span>Drop your file here or browse</span>
-                      <input type="file" id="images" accept="image/*" (change)="onFileSelected($event,'COVER_IMAGE')" />
-                    </label>
-                  </div>
-                </div>
+<div class="search-and-profile">
+  <h1>Upload New Course</h1>
+</div>
+<div class="content-area">
+  <div class="content-left">
+    <div class="course-outer-area">
+      <div class="course-form-upload-wrapper">
+        <div class="course-upload-form">
+          <h5>Enter New Course Details</h5>
+          <div class="upload-form-holder">
+            <div class="course-upload-left">
+              <div class="input-holder">
+                <label>Title</label>
+                <input type="text" placeholder="Type here" [(ngModel)]="mainCourseInfo.courseTitle" />
               </div>
-              @for (chapter of courseChapterList; track $index; let parentIndex = $index;) {
-              <div class="course-upload-form">
-                <div class="action-holder">
-                  <h5>Course Content</h5>
-                  <div class="add-button">
-                    <button (click)="addNewChapter(true)">
-                      <img src="../../../assets/images/icon-add.svg" />
-                      <span>Add Chapter</span>
-                    </button>
-                    <input type="file" #attachmentInput (change)="onFileSelected($event,'ATTACHMENT', $index)"
-                      style="display: none;" />
-                    <button (click)="openFileUploadWindow(attachmentInput)">
-                      <img src="../../../assets/images/icon-add.svg" />
-                      <span>Add Attachment</span>
-                    </button>
-                    <button (click)="courseChapterList.splice($index,1)" [disabled]="courseChapterList.length <= 1">
-                      <img src="../../../assets/images/icon-add.svg" class="icon-delete" />
-                      <span>Delete</span>
-                    </button>
-                  </div>
-                </div>
-                <div class="upload-form-holder">
-                  <div class="course-upload-left">
-                    <div class="input-holder">
-                      <label>Title</label>
-                      <input type="text" placeholder="Type here" [(ngModel)]="chapter.chapterTitle" />
-                    </div>
-                    @for (item of chapter.fileDetails; track $index; let videIndex = $index) {
-                    <div class="input-holder">
-                      <label>Video</label>
-                      <input type="text" placeholder="chapter1.mp4" readonly [(ngModel)]="item.fileURL" />
-                      @if(item.completedPercentage && +item.completedPercentage !== 100){
-                      <progress-bar [progress]="item.completedPercentage || '0'" [color]="'#488aff'"></progress-bar>
-                      }
-                    </div>
-                    <div calss="input-holder">
-                      <label>Video Description</label>
-                      <textarea rows="3" cols="45" [(ngModel)]="item.description"></textarea>
-                      <div class="add-button">
-                        <button>
-                          <img src="../../../assets/images/icon-video.svg" alt="" />
-                          <span (click)="previewVideo(item)">Preview</span>
-                        </button>
-                        <input type="file" #videoInput
-                          (change)="onFileSelected($event,'VIDEO_FILE',parentIndex, videIndex)"
-                          style="display: none;" />
-                        <button (click)="openFileUploadWindow(videoInput)">
-                          <img src="../../../assets/images/icon-video.svg" alt="" />
-                          <span>Upload Video</span>
-                        </button>
-                        <button (click)="addNewVideoList(chapter)">
-                          <img src="../../../assets/images/icon-add.svg" alt="" />
-                          <span>Add</span>
-                        </button>
-                        <button (click)="chapter.fileDetails.splice($index,1)"
-                          [disabled]="chapter.fileDetails.length <= 1">
-                          <img src="../../../assets/images/icon-add.svg" class="icon-delete" alt="" />
-                          <span>Delete</span>
-                        </button>
-                      </div>
-                    </div>
-                    }
-                  </div>
-                  <div class="accordion-holder">
-                    <app-attachment-accordion [attachmentList]="chapter.attachments"></app-attachment-accordion>
-                  </div>
-                </div>
+              <div calss="input-holder">
+                <label>Description</label>
+                <textarea rows="5" cols="45" [(ngModel)]="mainCourseInfo.courseDescription"></textarea>
               </div>
-              }
-              <div class="add-button save-course">
-                <button (click)="clearPage()"><span>Clear</span></button>
-                <button (click)="saveButtonClick()">
-                  <img src="../../../assets/images/icon-add.svg" />
-                  <span>Save Course</span>
-                </button>
-              </div>
+            </div>
+            <div class="course-upload-right">
+              <label for="images" class="drop-container" id="dropcontainer">
+                <div class="img-holder"></div>
+                <span class="drop-title">Upload Cover Image</span>
+                <span>Drop your file here or browse</span>
+                <input type="file" id="images" accept="image/*" (change)="onFileSelected($event,'COVER_IMAGE')" />
+              </label>
             </div>
           </div>
         </div>
-        <div class="content-right">
-          <div class="content-box">
-            <h3>Last Submitted</h3>
-            <div class="reading-list-wrapper">
-              <div class="reading-list-content">
-                <div class="scroll-content">
-                  @for (course of lastUpdatedCourse; track $index) {
-                  <div class="reading-list" (click)="handleCourseEdit(course)">
-                    <figure>
-                      <img [src]="course.courseCoverImage" alt="" />
-                    </figure>
-                    <div class="reading-list-right">
-                      <h4>{{course.courseTitle}}</h4>
-                      <span>{{course?.chapterDetails?.length}} Chapters</span>
-                      <button>Published</button>
-                    </div>
-                  </div>
-                  }
+        @for (chapter of courseChapterList; track $index; let parentIndex = $index;) {
+        <div class="course-upload-form">
+          <div class="action-holder">
+            <h5>Course Content</h5>
+            <div class="add-button">
+              <button (click)="addNewChapter(true)">
+                <img src="../../../assets/images/icon-add.svg" />
+                <span>Add Chapter</span>
+              </button>
+              <input type="file" #attachmentInput (change)="onFileSelected($event,'ATTACHMENT', $index)"
+                style="display: none;" />
+              <button (click)="openFileUploadWindow(attachmentInput)">
+                <img src="../../../assets/images/icon-add.svg" />
+                <span>Add Attachment</span>
+              </button>
+              <button (click)="courseChapterList.splice($index,1)" [disabled]="courseChapterList.length <= 1">
+                <img src="../../../assets/images/icon-add.svg" class="icon-delete" />
+                <span>Delete</span>
+              </button>
+            </div>
+          </div>
+          <div class="upload-form-holder">
+            <div class="course-upload-left">
+              <div class="input-holder">
+                <label>Title</label>
+                <input type="text" placeholder="Type here" [(ngModel)]="chapter.chapterTitle" />
+              </div>
+              @for (item of chapter.fileDetails; track $index; let videIndex = $index) {
+              <div class="input-holder">
+                <label>Video</label>
+                <input type="text" placeholder="chapter1.mp4" readonly [(ngModel)]="item.fileURL" />
+              </div>
+              <div calss="input-holder">
+                <label>Video Description</label>
+                <textarea rows="3" cols="45" [(ngModel)]="item.description"></textarea>
+                <div class="add-button">
+                  <button>
+                    <img src="../../../assets/images/icon-video.svg" alt="" />
+                    <span (click)="previewVideo(item)">Preview</span>
+                  </button>
+                  <input type="file" #videoInput
+                    (change)="onFileSelected($event,'VIDEO_FILE',parentIndex, videIndex)"
+                    style="display: none;" />
+                  <button (click)="openFileUploadWindow(videoInput)">
+                    <img src="../../../assets/images/icon-video.svg" alt="" />
+                    <span>Upload Video</span>
+                  </button>
+                  <button (click)="addNewVideoList(chapter)">
+                    <img src="../../../assets/images/icon-add.svg" alt="" />
+                    <span>Add</span>
+                  </button>
+                  <button (click)="chapter.fileDetails.splice($index,1)"
+                    [disabled]="chapter.fileDetails.length <= 1">
+                    <img src="../../../assets/images/icon-add.svg" class="icon-delete" alt="" />
+                    <span>Delete</span>
+                  </button>
                 </div>
               </div>
+              }
             </div>
+            <div class="accordion-holder">
+              <app-attachment-accordion [attachmentList]="chapter.attachments"></app-attachment-accordion>
+            </div>
+          </div>
+        </div>
+        }
+        <div class="add-button save-course">
+          <button (click)="saveButtonClick()">
+            <img src="../../../assets/images/icon-add.svg" />
+            <span>Save Course</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="content-right">
+    <div class="content-box">
+      <h3>Last Submitted</h3>
+      <div class="reading-list-wrapper">
+        <div class="reading-list-content">
+          <div class="scroll-content">
+            @for (course of lastUpdatedCourse; track $index) {
+            <div class="reading-list" (click)="handleCourseEdit(course)">
+              <figure>
+                <img [src]="course.courseCoverImage" alt="" />
+              </figure>
+              <div class="reading-list-right">
+                <h4>{{course.courseTitle}}</h4>
+                <span>{{course?.chapterDetails?.length}} Chapters</span>
+                <button>Published</button>
+              </div>
+            </div>
+            }
           </div>
         </div>
       </div>
     </div>
   </div>
-</section>
+</div>

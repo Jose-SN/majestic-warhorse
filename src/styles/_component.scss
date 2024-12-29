@@ -21,7 +21,7 @@ app-assign-teachers,
 app-approval-pending,
 app-student-teacher-assign-list,
 app-course-overview, app-questionnaire, app-edit-account, app-teachers-list, app-students-list, app-approval-list, app-course-detils, app-dashboard-sidepanel, 
-app-course-overview, app-registration-page {
+app-course-overview, app-registration-page, app-video-player, app-course-upload {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -32,4 +32,11 @@ app-under-construction {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+@media screen and (max-width: 1024px){
+  app-students-list {
+    .common-wrapper {
+      height: calc(100vh - 210px)!important;
+    }
+  }
 }

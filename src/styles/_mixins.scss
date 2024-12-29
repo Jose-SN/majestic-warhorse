@@ -84,10 +84,10 @@
   user-select: $value;
 }
 
-@mixin btn($left, $top) {
+@mixin btn($right, $top) {
   position: absolute;
   top: $top;
-  left: $left;
+  left: $right;
 }
 
 @mixin icon($height, $width) {
@@ -142,3 +142,54 @@
     white-space: nowrap;
   }
 }
+
+@mixin btn($right, $top) {
+  position: absolute;
+  width: 60px;
+  height: 55px;
+  top: $top;
+  right: $right;
+  transition-duration: 0.5s;
+}
+
+@mixin icon($height, $width) {
+  transition-duration: 0.5s;
+  position: absolute;
+  height: $height;
+  width: $width;
+  top: 22px;
+  background-color: var(--white);
+}
+
+@mixin icon-before($height, $width, $top) {
+  transition-duration: 0.5s;
+  position: absolute;
+  width: $width;
+  height: $height;
+  background-color: var(--white);
+  content: "";
+  top: $top;
+}
+
+@mixin icon-after($height, $width, $top) {
+  transition-duration: 0.5s;
+  position: absolute;
+  width: $width;
+  height: $height;
+  background-color: var(--white);
+  content: "";
+  top: $top;
+}
+
+@mixin icon-circle($height, $width) {
+  transition-duration: 0.5s;
+  position: absolute;
+  height: $height;
+  width: $width;
+  top: 2px;
+  border-radius: 100%;
+  background: transparent;
+  border: 4px solid black;
+  left: -15px;
+}
+

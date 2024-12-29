@@ -98,6 +98,7 @@
             .btn-holder {
               max-width: 330px;
               width: 100%;
+              flex-shrink: 0;
               button {
                 font-family: $archivo-medium;
                 font-size: 0.875rem;
@@ -348,6 +349,261 @@
     }
   }
 
+  
+.accordion {
+  font-family: $archivo-regular;
+  font-size: 0.875rem;
+  font-weight: normal;
+  background: var(--bg-input);
+  cursor: pointer;
+  padding: 11px 14px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;  
+  transition: 0.4s;  
+  border: 1px solid var(--bg-border-input);
+  color: rgba($color: #fff, $alpha: 0.3);
+  @include border-radius(8px);
+}
+.accordion-content {
+  position: relative;
+  &:not(:last-child){
+    margin-bottom: 20px;
+  }
+}
+label {
+  font-size: 0.785rem;
+  color:  var(--white); 
+  margin-bottom: 10px;
+}
+
+.accordion:after {
+  content: '\002B';
+  color: var( --bg-blue);
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+
+.panel {
+  width: 100%;
+  background: var(--bg-panel-acco);
+  max-height: 0;
+  overflow: hidden;
+  color: var(--white);
+  position: relative;
+  top: 0;
+  left: 0;
+  @include border-radius(8px);
+  transition: max-height 0.2s ease-out;
+  overflow-y: auto;
+  .panel-content {
+    padding: 15px;
+  }
+  .panel-list {
+    p {
+      font-size: 0.875rem;
+      color: rgba($color: #fff, $alpha: 0.3);
+    }
+    ul {
+      @include common-margin;
+      list-style: none;
+      @include flex(flex, null, null, null);
+      margin: 10px 0 0;
+      li {
+        font-size: 0.785rem;
+        color: var( --white);
+        cursor: pointer;        
+        &:not(:last-child){
+          padding-right: 5px;
+          margin-right: 5px;
+        }
+      }
+    }
+    &:not(:last-child){
+      border-bottom: 1px dashed rgba($color: #fff, $alpha: 0.3);
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+    }
+  }
+}
+.course-list-holder {
+  position: relative;
+  overflow-y: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;  
+}
+.courses-list {
+  max-width: 330px;
+  width: 100%;
+  background: var(--bg-time);
+  @include border-radius(5px);
+  padding: 5px;
+  margin-bottom: 10px;
+  .scroll-content {
+    padding: 0 3px 0 0;
+  }
+  ul {
+    list-style: none;
+    @include common-margin();
+    @include flex(flex, column, null, null);
+    gap: 5px;
+    li {
+      background: var(--bg-left-panel);
+      border: 1px solid var(--bg-card-border);
+      width: 100%;
+      height: 48px;
+      padding: 15px;
+      @include flex(flex, null, null, center);
+      @include border-radius(8px);
+      @include transition(all 0.3s ease-in-out);
+      cursor: pointer;
+      figure {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+      }
+      span {
+        font-family: $titilliumWeb-semibold;
+        font-size: 0.875rem;
+        color: var(--white);
+      }
+      strong {
+        font-family: $archivo-light;
+        font-weight: normal;
+        color: rgba($color: #fff, $alpha: 0.4);
+        position: absolute;
+        right: 15px;
+      }
+      svg {
+        path {
+          fill: var(--bg-time) !important;
+        }
+      }
+      &.active {
+        background: var(--bg-orange);
+        color: var(--white);
+        svg {
+          path {
+            fill: var(--white) !important;
+          }
+        }
+      }
+    }
+  }  
+}
+.video-bottom {
+  position: relative;  
+  gap: 25px;
+  overflow-x: auto;
+  height: 65px;
+  .common-video-holder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    flex-shrink: 0;
+    @include flex(flex, null, null, null);
+  }
+  .bottom-holder {
+    width: 800px;
+    @include flex(flex, null, null, center);
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  margin-top: 15px;
+  .profile {
+    max-width: 200px;
+    width: 100%;
+    @include flex(flex, null, null, center);
+    padding: 0 10px;
+    gap: 15px;
+    figure {
+      width: 50px;
+      height: 50px;
+      @include border-radius(100%);
+      overflow: hidden;
+    }
+    .profile-right {
+      width: 115px;
+      color: var(--white);
+      span {
+        font-family: $titilliumWeb-regular;
+        font-size: 1rem;
+        @include text-ellipsis($lines: 1);
+        display: block;
+      }
+      strong {
+        font-family: $titilliumWeb-regular;
+        font-size: 0.75rem;
+        font-weight: normal;
+        display: block;
+      }
+    }
+  }
+  .time {
+    @include flex(flex, null, null, center);
+    padding: 0 10px;
+    gap: 10px;
+    svg {
+      path {
+        fill: var(--btn-add) !important;
+      }
+    }
+    span {
+      font-family: $titilliumWeb-regular;
+      font-size: 0.75rem;
+      color: var(--btn-add);
+      white-space: nowrap;
+    }
+  }
+  .bookmark {
+    @include flex(flex, null, null, center);
+    gap: 10px;
+    padding: 0 10px;
+    span {
+      font-family: $titilliumWeb-regular;
+      font-size: 0.75rem;
+      color: var(--btn-add);
+      white-space: nowrap;
+    }
+  }
+  .download {
+    @include flex(flex, null, null, center);
+    gap: 10px;
+    padding: 0 10px;
+    span {
+      font-family: $titilliumWeb-regular;
+      font-size: 0.75rem;
+      color: var(--btn-add);
+      white-space: nowrap;
+    }
+  }
+  .rating {
+  margin: 0;
+  }
+}
+.flex-direction-row{
+  flex-direction: row !important;
+}
+.align-center-video {
+  gap: 5px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  svg {
+    path {
+      fill: var(--bg-time) !important;
+    }
+  }
+}
+.full-width{
+  width: 100% !important;
+}
+
+
 @media screen and (min-width: 1921px) {
   .dashboard-right {
     max-width: 1592px;
@@ -559,362 +815,69 @@
   }
 }
 @media screen and (max-width: 1024px) {
-  .dashboard-left {
-    height: 100%;
-    padding: 30px 10px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 100;
-    transform: translateX(-100%);
-    @include transition(transform, 0.3s ease-in-out);
-    &.active {
-      transform: translateX(0);
+  .content-area {
+    @include flex(flex,column,null,null);
+    .content-left {
+      max-width: 100%;
+      width: 100%;
+      .courses-wrapper {
+        .course-top {
+          h2 {
+            font-size: 1.5rem;
+          }
+        }
+      }      
     }
-  }
-  .dashboard-right {
-    .icon-mobile {
-      position: absolute;
-      right: 30px;
-      top: 40px;
-      display: block !important;
-    }
-    .search-holder {
-      padding-right: 55px;
+    .content-right {
+      max-width: 100%;
+      width: 100%;
+      .courses-list {
+        max-width: 100%;
+        width: 100%;
+      }
     }
   }
 }
 
-@media screen and (max-height: 907px) {
-  .dashboard-container {
-    height: auto;
-  }
-}
 @media screen and (max-width: 768px) {
-  .header-small {
-    margin-top: 20px;
-    display: block !important;
-    figure {
-      max-width: 233px;
-      width: 100%;
-      margin: 0 auto;
-    }
-  }
-  .dashboard-left {
-    height: 100%;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 100;
-    header {
-      display: none;
-    }
-  }
-  .dashboard-container {
+  .content-area {
     @include flex(flex, column, null, null);
-  }
-  .dashboard-right {
-    .profile-area {
-      width: 50px;
-      height: 50px;
-      .common-holder {
-        width: 50px;
-        height: 50px;
-        figure {
-          width: 21px;
-          height: 21px;
-        }
-      }
-    }
-    .icon-mobile {
-      position: absolute !important;
-      top: 30px;
-      right: 20px;
-      display: block !important;
-    }
-    .search-holder {
-      padding-right: 0;
-      margin-right: 0;
-    }
-    .search-and-profile {
-      @include flex(flex, column, null, null);
-    }
-    .profile-area {
-      justify-content: center;
-    }
-    .title-holder {
-      @include flex(flex, column, null, null);
-    }
-    .data-refreshed-holder {
-      @include flex(flex, column, null, null);
-    }
-    .content-area {
-      @include flex(flex, column, null, null);
-      .content-left {
-        order: 2;
-        .courses-wrapper {
-          .course-card-holder {
-            .course-card {
-              width: 257px;
-              flex: inherit;
-            }
-          }
-        }
-        .course-title {
-          @include flex(flex, column, null, null);
-        }
-      }
-      .content-right {
-        order: 1;
-        max-width: 100%;
-        .content-box {
-          .reading-list-wrapper {
-            .reading-list {
-              figure {
-                width: 35px;
-                flex-shrink: 0;
+    margin-top: 0;
+    .content-left {
+      .courses-wrapper {
+        .video-wrapper {
+          .video-left {
+            .btn-holder {
+              max-width: 250px;
+              button {
+                max-width: 250px;
               }
             }
           }
         }
-      }
-    }
-  }
-}
-
-.accordion {
-  font-family: $archivo-regular;
-  font-size: 0.875rem;
-  font-weight: normal;
-  background: var(--bg-input);
-  cursor: pointer;
-  padding: 11px 14px;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;  
-  transition: 0.4s;  
-  border: 1px solid var(--bg-border-input);
-  color: rgba($color: #fff, $alpha: 0.3);
-  @include border-radius(8px);
-}
-.accordion-content {
-  position: relative;
-  &:not(:last-child){
-    margin-bottom: 20px;
-  }
-}
-label {
-  font-size: 0.785rem;
-  color:  var(--white); 
-  margin-bottom: 10px;
-}
-
-.accordion:after {
-  content: '\002B';
-  color: var( --bg-blue);
-  font-weight: bold;
-  float: right;
-  margin-left: 5px;
-}
-
-.panel {
-  width: 100%;
-  background: var(--bg-panel-acco);
-  max-height: 0;
-  overflow: hidden;
-  color: var(--white);
-  position: relative;
-  top: 0;
-  left: 0;
-  @include border-radius(8px);
-  transition: max-height 0.2s ease-out;
-  overflow-y: auto;
-  .panel-content {
-    padding: 15px;
-  }
-  .panel-list {
-    p {
-      font-size: 0.875rem;
-      color: rgba($color: #fff, $alpha: 0.3);
-    }
-    ul {
-      @include common-margin;
-      list-style: none;
-      @include flex(flex, null, null, null);
-      margin: 10px 0 0;
-      li {
-        font-size: 0.785rem;
-        color: var( --white);
-        cursor: pointer;        
-        &:not(:last-child){
-          padding-right: 5px;
-          margin-right: 5px;
+        .course-card-holder {
+          .course-card {
+            width: 257px;
+            flex: inherit;
+          }
         }
       }
+      .course-title {
+        @include flex(flex, column, null, null);
+      }
     }
-    &:not(:last-child){
-      border-bottom: 1px dashed rgba($color: #fff, $alpha: 0.3);
-      margin-bottom: 10px;
-      padding-bottom: 10px;
-    }
-  }
-}
-.course-list-holder {
-  position: relative;
-  overflow-y: auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;  
-}
-.courses-list {
-  max-width: 330px;
-  width: 100%;
-  background: var(--bg-time);
-  @include border-radius(5px);
-  padding: 5px;
-  margin-bottom: 10px;
-  .scroll-content {
-    padding: 0 3px 0 0;
-  }
-  ul {
-    list-style: none;
-    @include common-margin();
-    @include flex(flex, column, null, null);
-    gap: 5px;
-    li {
-      background: var(--bg-left-panel);
-      border: 1px solid var(--bg-card-border);
-      width: 100%;
-      height: 48px;
-      padding: 15px;
-      @include flex(flex, null, null, center);
-      @include border-radius(8px);
-      @include transition(all 0.3s ease-in-out);
-      cursor: pointer;
-      figure {
-        width: 20px;
-        height: 20px;
-        margin-right: 10px;
-      }
-      span {
-        font-family: $titilliumWeb-semibold;
-        font-size: 0.875rem;
-        color: var(--white);
-      }
-      strong {
-        font-family: $archivo-light;
-        font-weight: normal;
-        color: rgba($color: #fff, $alpha: 0.4);
-        position: absolute;
-        right: 15px;
-      }
-      svg {
-        path {
-          fill: var(--bg-time) !important;
-        }
-      }
-      &.active {
-        background: var(--bg-orange);
-        color: var(--white);
-        svg {
-          path {
-            fill: var(--white) !important;
+    .content-right {
+      max-width: 100%;
+      .content-box {
+        .reading-list-wrapper {
+          .reading-list {
+            figure {
+              width: 35px;
+              flex-shrink: 0;
+            }
           }
         }
       }
     }
-  }  
-}
-.video-bottom {
-  @include flex(flex, null, null, null);
-  gap: 25px;
-  .bottom-holder {
-    max-width: 820px;
-    width: 100%;
-    @include flex(flex, null, space-between, center);
-    gap: 10px;
   }
-  margin-top: 15px;
-  .profile {
-    max-width: 200px;
-    width: 100%;
-    @include flex(flex, null, null, center);
-    padding: 0 10px;
-    gap: 15px;
-    figure {
-      width: 50px;
-      height: 50px;
-      @include border-radius(100%);
-      overflow: hidden;
-    }
-    .profile-right {
-      width: 115px;
-      color: var(--white);
-      span {
-        font-family: $titilliumWeb-regular;
-        font-size: 1rem;
-        @include text-ellipsis($lines: 1);
-        display: block;
-      }
-      strong {
-        font-family: $titilliumWeb-regular;
-        font-size: 0.75rem;
-        font-weight: normal;
-        display: block;
-      }
-    }
-  }
-  .time {
-    @include flex(flex, null, null, center);
-    padding: 0 10px;
-    gap: 10px;
-    svg {
-      path {
-        fill: var(--btn-add) !important;
-      }
-    }
-    span {
-      font-family: $titilliumWeb-regular;
-      font-size: 0.75rem;
-      color: var(--btn-add);
-    }
-  }
-  .bookmark {
-    @include flex(flex, null, null, center);
-    gap: 10px;
-    padding: 0 10px;
-    span {
-      font-family: $titilliumWeb-regular;
-      font-size: 0.75rem;
-      color: var(--btn-add);
-    }
-  }
-  .download {
-    @include flex(flex, null, null, center);
-    gap: 10px;
-    padding: 0 10px;
-    span {
-      font-family: $titilliumWeb-regular;
-      font-size: 0.75rem;
-      color: var(--btn-add);
-    }
-  }
-}
-.flex-direction-row{
-  flex-direction: row !important;
-}
-.align-center-video {
-  gap: 5px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  svg {
-    path {
-      fill: var(--bg-time) !important;
-    }
-  }
-}
-.full-width{
-  width: 100% !important;
 }

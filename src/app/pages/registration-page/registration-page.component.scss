@@ -14,17 +14,16 @@ app-particle {
   left: 0;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   z-index: 0;
 }
 .registration-wrapper {
   padding: 30px;
   border-radius: 15px;
-  box-shadow: 2px 2px 15px var(--bg-shadow);
-}
-
-.edit {
-  padding:0;
-  box-shadow: none;
+  box-shadow: 2px 2px 15px var(--bg-shadow);  
+  &.edit {
+    box-shadow: none;
+  }
 }
 
 .registration-holder {
@@ -32,7 +31,6 @@ app-particle {
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  padding: 40px 20px;
   @include border-radius(60px);
   margin: 0 auto;
   position: relative;
@@ -208,12 +206,17 @@ app-particle {
         &:not(:last-child){
           margin-bottom: 15px;
         }
-        strong {
+        strong {          
+          font-size: 1.125rem;
           font-weight: normal;
+          color: var(--white);
+          background: var(--bg-mit2);
           position: relative;
-          top: 5px;
+          top: -3px;
           margin-left: 40px;
+          padding: 5px 8px;
           display: block;
+          @include border-radius(5px)
         }
       }
       input {
@@ -269,98 +272,38 @@ input[type='file']::file-selector-button {
   }
 }
 
-@media only screen and (max-width: 1400px) {
-  .login-wrapper {
-    max-width: 595px;
-    padding: 40px 20px;
-    border-radius: 40px;
-    > figure {
-      max-width: 185px;
-      margin: 0 auto;
-    }
-    h1 {
-      font-size: 2.375rem;
-      letter-spacing: 2px;
-      margin: 30px 0 0;
-    }
-    p {
-      margin: 20px 0;
-    }
-    .form-wrapper {
-      margin: 5px auto;
-      .btn-login {
-        padding: 10px 15px;
-      }
-      .input-holder {
-        input {
-          &[type='text'],
-          &[type='password'] {
-            padding: 8px 15px;
-          }
-        }
-        margin-bottom: 15px;
-      }
-      .btn-login {
-        margin: 25px 0 30px;
-      }
-      a {
-        margin-top: 20px;
-      }
-    }
-    .login-bottom {
-      .btn-holder {
-        margin: 25px 0;
-        button {
-          padding: 10px 15px;
-        }
-      }
-      p {
-        margin: 30px 0 0;
-      }
-    }
-  }
-}
-
-@media only screen and (max-width: 768px) {
-  .login-container {
-    padding: 20px;
-  }
-
-  .login-wrapper {
-    padding: 25px;
-    @include border-radius(20px);
-    h1 {
-      font-size: 1.563rem;
-      margin: 15px 0 0;
-    }
-    p {
-      font-size: 0.875rem;
-    }
-    h1,
-    p {
-      margin: 15px 0 0;
-    }
-    .form-wrapper {
-      margin-top: 10px;
-      .btn-login {
-        margin: 15px 0;
-      }
-    }
-    .login-bottom {
-      p {
-        display: block !important;
-        margin: 15px 0 0 !important;
-      }
-      .btn-holder {
-        margin: 10px 0 25px;
-      }
-    }
-  }
-}
-
 .align-items-start{
   align-items: start !important;
 }
 .padding-top-0{
   padding-top: 0 !important;
+}
+
+@media screen and (max-width: 768px) {
+  .content-area {
+    margin: 0;
+  }       
+  .registration-holder {
+    > figure {
+      max-width: 122px;
+    }
+    h1 {
+      font-size: 1.375rem;
+    }
+    .form-wrapper {
+      .image-holder {
+        width: 100px;
+        height: 100px;
+        border-width: 6px;
+        margin: 20px auto 0;
+      }
+      .checkbox-holder {
+        justify-content: center;
+      }
+     .input-row {
+         @include flex(flex, column, null,null);
+     }
+    }
+
+  }
 }
