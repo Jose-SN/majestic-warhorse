@@ -233,14 +233,26 @@
             }
           }
         }
-        ul {
-          max-width: fit-content;
-          background: var(--bg-tab-nav);
+        .content-top-nav {
+         max-width: 366px;
+         width: 100%;
+         height: 63px;
+          overflow-x: auto;   
+          position: relative;     
+          overflow:hidden; 
+          overflow-x: auto;
+        }
+        ul { 
+          background: var(--bg-tab-nav);         
           list-style: none;
           margin: 0;
-          padding: 5px;
-          @include border-radius(15px);
+          padding: 5px;          
+          white-space: nowrap;
+          position: absolute;
+          top: 0;
+          left: 0;
           @include flex(flex, null, null, center);
+          @include border-radius(15px);
           li {
             font-family: $archivo-light;
             font-size: 0.875rem;
@@ -621,16 +633,14 @@
   .content-area {
     .content-left {
       .courses-wrapper {
+        .content-top-nav {
+          margin: 10px auto;
+        }
         .course-top {
           flex-direction: column;
           h2 {
             font-size: 1.375rem;
             text-align: center;
-          }
-          ul {
-            max-width: 100%;
-            justify-content: center;
-            margin-top: 10px;
           }
         }
         .course-card-holder {
@@ -646,14 +656,6 @@
   .content-area {
     .content-left {      
       .courses-wrapper {
-        .course-top {
-          ul {
-            li {
-              @include border-radius(7px);
-              padding: 13px 14px;
-            }
-          }
-        }
         .course-card-holder {
           justify-content: center;
           .course-card {

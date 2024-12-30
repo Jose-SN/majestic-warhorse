@@ -277,11 +277,13 @@
         <div class="content-holder">
           <div class="course-top">
             <h2>My Courses</h2>
-            <ul>
-              @for (filter of filterList; track $index) {
-              <li [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}</li>
-              }
-            </ul>
+            <div class="content-top-nav">
+              <ul>
+                @for (filter of filterList; track $index) {
+                <li [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}</li>
+                }
+              </ul>
+            </div>
           </div>
           <div class="scroll-container courses">
             <div class="course-card-holder" *ngIf="courseLists.length > 0">
