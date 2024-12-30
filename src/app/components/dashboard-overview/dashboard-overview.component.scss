@@ -250,7 +250,6 @@
           white-space: nowrap;
           position: absolute;
           top: 0;
-          left: 0;
           @include flex(flex, null, null, center);
           @include border-radius(15px);
           li {
@@ -677,6 +676,9 @@
             @include border-radius(7px);
             padding: 13px 17px;
           }
+        }
+        .content-top-nav { 
+          max-width: 310px;
         }
       }
        .scroll-container {
