@@ -47,6 +47,12 @@ export class StudentTeacherAssignListComponent {
         });
         this.getStudentList();
       });
+      this.commonService
+        .getCommonSearchText()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((searchText) => {
+          this.searchText = searchText;
+        }); 
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -61,9 +67,6 @@ export class StudentTeacherAssignListComponent {
   }
   sliderActiveRemove(): void {
     this.showSliderView = false;
-  }
-  seachTextHandler(searchText: string) {
-    this.searchText = searchText;
   }
   getStudentList() {
     this.studentList = this.commonService.allUsersList.filter(

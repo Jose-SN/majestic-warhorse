@@ -73,6 +73,12 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
         }
       });
     }
+    this.commonService
+    .getCommonSearchText()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((searchText) => {
+      this.searchText = searchText;
+    });
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -136,8 +142,5 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-  seachTextHandler(searchText: string) {
-    this.searchText = searchText;
   }
 }

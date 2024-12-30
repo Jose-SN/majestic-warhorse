@@ -16,7 +16,10 @@ export class CommonApiService {
   ) {}
   uploadImage(selectedFile: FormData) {
     return this.http
-      .post<{ [key: string]: string }>(`${this._apiUrl}file/upload`, selectedFile)
+      .post<{ [key: string]: string }>(`${this._apiUrl}file/upload`, selectedFile,{
+        reportProgress: true,
+        observe: 'events',
+      })
       .pipe(catchError(this.commonService.handleError));
   }
   deleteUser(deletePayload: any) {

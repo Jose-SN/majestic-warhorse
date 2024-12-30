@@ -5,6 +5,7 @@ import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { IRegistrationModel } from './model/registration-model';
 import { Subject, takeUntil } from 'rxjs';
+import { HttpEventType } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -42,12 +43,17 @@ export class RegistrationPageService {
         .uploadImage(formData)
         .pipe(takeUntil(_destroy$))
         .subscribe({
-          next: (imageUrl) => {
-            this.imageUrl = imageUrl?.['url'];
-            resolve({
-              success: true,
-              url: this.imageUrl,
-            });
+          next: (event: any) => {
+            if (event.type === HttpEventType.UploadProgress && event.total) {
+              const uploadedCourse = Math.round((100 * event.loaded) / event.total);
+              console.log(uploadedCourse);
+            } else if (event.type === HttpEventType.Response) {
+              this.imageUrl = event?.body?.['url'];
+              resolve({
+                success: true,
+                url: this.imageUrl,
+              });
+            }
           },
           error: () => {
             resolve({
@@ -102,8 +108,8 @@ export class RegistrationPageService {
     });
   }
   async convertUrlToFile(url: string, fileName: string): Promise<File> {
-    const response = await fetch(url);             // Fetch the file from the URL
-    const blob = await response.blob();            // Convert response to Blob
+    const response = await fetch(url); // Fetch the file from the URL
+    const blob = await response.blob(); // Convert response to Blob
     return new File([blob], fileName, { type: blob.type }); // Create a File object
   }
 }

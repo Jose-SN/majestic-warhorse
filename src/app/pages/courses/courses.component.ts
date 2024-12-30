@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef, Output, EventEmitter } from '@angular
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CoursesService } from './courses.service';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject, takeUntil } from 'rxjs';
 import { ICourseList } from './modal/course-list';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
@@ -32,6 +32,7 @@ export class CoursesComponent {
   public activeFilterTab: string = 'All';
   public searchText: string = '';
   public loginedUserPrivilege: string = '';
+  private destroy$ = new Subject<void>();
   filterList: string[] = ['All', 'New', 'Pending', 'Completed'];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
@@ -40,9 +41,17 @@ export class CoursesComponent {
     private commonService: CommonService,
     private dashboardService: DashboardService
   ) {
-    this.courseList$ = this.coursesService.getCourseList();
-    this.profileUrl = this.commonService.decodeUrl(this.commonService.loginedUserInfo.profileImage ?? '')
+    this.profileUrl = this.commonService.decodeUrl(
+      this.commonService.loginedUserInfo.profileImage ?? ''
+    );
     this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
+    this.commonService
+      .getCommonSearchText()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((searchText) => {
+        this.searchText = searchText;
+      });
+    this.fetchCourseList();
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -62,12 +71,17 @@ export class CoursesComponent {
   }
   sliderActiveRemove(): void {
     this.showSliderView = false;
+    this.fetchCourseList();
   }
   setActiveFilterTab(filter: string) {
     this.activeFilterTab = filter;
     // filter the course list
   }
-  seachTextHandler(searchText: string) {
-    this.searchText = searchText;
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  fetchCourseList() {
+    this.courseList$ = this.coursesService.getCourseList();
   }
 }
