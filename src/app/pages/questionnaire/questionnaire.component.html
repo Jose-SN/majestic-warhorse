@@ -5,99 +5,85 @@
         <div class="form-holder">
           <div class="scroll-content">
             <div class="course-top">
-                <h2>Start Your Assessment Test</h2>
-                <span>Please answer the questions before submit</span>
-            </div>   
+              <h2>Start Your Assessment Test</h2>
+              <span>Please answer the questions before submit</span>
+            </div>
             <div class="questionnire-form">
-                  <div class="input-holder">
-                  <label class="sub-title">Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec pretium f ?</label>
-                  <input type="text" placeholder="Type here"  />
-                  </div>
-                  <div calss="input-holder">
-                      <label class="sub-title">Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec pretium fDonec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec 
-                          Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec pretium f pretium f  Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. 
-                          Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec pretium f  ?</label>
-                      <textarea rows="5" cols="45"></textarea>
-                  </div>
-                  <div class="checkbox-holder">
-                      <span class="sub-title">Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec pretium f ? (Please selects) </span>
-                      <label>
-                        <strong>Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. </strong>
-                          <input type="checkbox">
-                          <span class="checkmark"></span>
-                      </label>
-                      <label>
-                        <strong>Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. </strong>
-                          <input type="checkbox">
-                          <span class="checkmark"></span>
-                      </label>
-                      <label>
-                        <strong>Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. </strong>
-                          <input type="checkbox">
-                          <span class="checkmark"></span>
-                      </label>
-                      <label>
-                        <strong>Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. </strong>
-                          <input type="checkbox">
-                          <span class="checkmark"></span>
-                      </label>
-                      <label>
-                        <strong>Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. </strong>
-                          <input type="checkbox">
-                          <span class="checkmark"></span>
-                      </label>
-                  </div>
-                  <div class="input-holder">
-                    <label class="sub-title">Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec pretium f ?</label>
-                    <input type="text" placeholder="Type here"  />
-                    </div>
-                    <div calss="input-holder">
-                        <label class="sub-title">Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec pretium fDonec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec 
-                            Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec pretium f pretium f  Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. 
-                            Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec pretium f  ?</label>
-                        <textarea rows="5" cols="45"></textarea>
-                    </div>
-                    <div class="checkbox-holder">
-                        <span class="sub-title">Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec pretium f ? (Please selects) </span>
-                        <label>
-                          <strong>Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. </strong>
-                            <input type="checkbox">
-                            <span class="checkmark"></span>
-                        </label>
-                        <label>
-                          <strong>Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. </strong>
-                            <input type="checkbox">
-                            <span class="checkmark"></span>
-                        </label>
-                        <label>
-                          <strong>Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. </strong>
-                            <input type="checkbox">
-                            <span class="checkmark"></span>
-                        </label>
-                        <label>
-                          <strong>Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. </strong>
-                            <input type="checkbox">
-                            <span class="checkmark"></span>
-                        </label>
-                        <label>
-                          <strong>Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. </strong>
-                            <input type="checkbox">
-                            <span class="checkmark"></span>
-                        </label>
-                    </div>                  
+              @for (question of questionsList; track $index) {
+              @switch (question.type) {
+              @case ("Textbox") {
+              <div class="input-holder">
+                <label class="sub-title">{{question.question}}</label>
+                <input type="text" [placeholder]="question.placeholder" [maxLength]="question.maxValue"
+                  [minLength]="question.minValue" />
               </div>
-              <div class="data-refreshed-holder">
-                <button>Submit</button>
-              </div>  
-          </div> 
+              }
+              @case ("Textarea") {
+              <div calss="input-holder">
+                <label class="sub-title">Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci
+                  risus. Donec pretium fDonec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci
+                  risus. Donec
+                  Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec pretium f
+                  pretium f Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus.
+                  Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec pretium f
+                  ?</label>
+                <textarea rows="5" cols="45"></textarea>
+              </div>
+              }
+              @case ("Checkbox") {
+              <div class="checkbox-holder">
+                <span class="sub-title">{{question.question}}</span>
+                @if(question?.options?.length){
+                @for (option of question.options; track $index) {
+                <label>
+                  <strong>{{option.label}}</strong>
+                  <input type="checkbox" [value]="option.value">
+                  <span class="checkmark"></span>
+                </label>
+                }
+                }
+              </div>
+              }
+              @case ("Radio") {
+              <div class="checkbox-holder">
+                <span class="sub-title">{{question.question}}</span>
+                @if(question?.options?.length){
+                @for (option of question.options; track $index) {
+                <label>
+                  <strong>{{option.label}}</strong>
+                  <input type="radio" [value]="option.value">
+                </label>
+                }
+                }
+              </div>
+              }
+              @case ("Dropdown") {
+              <div class="checkbox-holder">
+                <span class="sub-title">{{question.question}}</span>
+                @if(question?.options?.length){
+                <select>
+                  @for (option of question.options; track $index) {
+                  <option [value]="option.value">{{option.label}}</option>
+                  }
+                </select>
+                }
+              </div>
+              }
+              }
+              }
+            </div>
+            <div class="data-refreshed-holder">
+              <button>Submit</button>
+            </div>
+          </div>
         </div>
-      </div>              
+      </div>
     </div>
   </div>
   <div class="content-right">
     <div class="content-box">
       <h3>Last Submitted</h3>
-        <div class="reading-list-wrapper">
+      <div class="reading-list-wrapper">
         <div class="reading-list-content">
           <div class="scroll-content">
             <div class="reading-list">
@@ -210,9 +196,9 @@
                 <button>Published</button>
               </div>
             </div>
-          </div>                  
+          </div>
         </div>
-        </div>
+      </div>
     </div>
   </div>
 </div>
