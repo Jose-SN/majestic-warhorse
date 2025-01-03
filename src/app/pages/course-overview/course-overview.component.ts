@@ -20,8 +20,12 @@ import { ISidepanel } from '../dashboard/modal/dashboard-modal';
 @Component({
   selector: 'app-course-overview',
   standalone: true,
-  imports: [FormsModule, CommonModule, CommonSearchProfileComponent,
-    SearchFilterPipe,StarRatingModule
+  imports: [
+    FormsModule,
+    CommonModule,
+    CommonSearchProfileComponent,
+    SearchFilterPipe,
+    StarRatingModule,
   ],
   templateUrl: './course-overview.component.html',
   styleUrl: './course-overview.component.scss',
@@ -51,7 +55,9 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
   ) {
     this.fetchCourseList();
     this.fetchDashboardOverview();
-    this.profileUrl = this.commonService.decodeUrl(this.commonService.loginedUserInfo.profileImage ?? '')
+    this.profileUrl = this.commonService.decodeUrl(
+      this.commonService.loginedUserInfo.profileImage ?? ''
+    );
   }
   async ngOnInit() {
     this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
@@ -74,11 +80,11 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
       });
     }
     this.commonService
-    .getCommonSearchText()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((searchText) => {
-      this.searchText = searchText;
-    });
+      .getCommonSearchText()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((searchText) => {
+        this.searchText = searchText;
+      });
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -106,22 +112,25 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
               courseStatus.parentId === fileDetails._id && +courseStatus.percentage === 100
           );
         });
-        const rating = chapterDetails.fileDetails.reduce((accumulator,current) => {
-          let selectedRating = this.courseDetailsService.courseStatusList.find((courseStatus) =>
-            courseStatus.createdBy === this.commonService.loginedUserInfo.id &&
-          courseStatus.parentId === current.parentId);
+        const rating = chapterDetails.fileDetails.reduce((accumulator, current) => {
+          let selectedRating = this.courseDetailsService.courseStatusList.find(
+            (courseStatus) =>
+              courseStatus.createdBy === this.commonService.loginedUserInfo.id &&
+              courseStatus.parentId === current.parentId
+          );
           accumulator = selectedRating?.rating || accumulator;
-          return accumulator
-        },0);
-        if(rating){
-          averageRating = averageRating + Math.round(rating/chapterDetails.fileDetails.length * 100) / 100;
+          return accumulator;
+        }, 0);
+        if (rating) {
+          averageRating =
+            averageRating + Math.round((rating / chapterDetails.fileDetails.length) * 100) / 100;
         }
         if (chapterCompleted) {
           completedLessonCount = (completedLessonCount || 0) + 1;
         }
         if (index + 1 === course.chapterDetails.length) {
           course.chapterCompletedCount = completedLessonCount || 0;
-          course.completionPercent =  `${(completedLessonCount/course.chapterDetails.length)*100}%`;
+          course.completionPercent = `${(completedLessonCount / course.chapterDetails.length) * 100}%`;
           course.averageRating = averageRating;
         }
       });

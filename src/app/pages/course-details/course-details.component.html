@@ -68,11 +68,11 @@
                         [rating]="videoRating"></star-rating>
                     </div>
                   </div>
-                  <!-- @if(loginedUserRole === 'student'){ -->
+                  @if(loginedUserRole === 'student' && showQuestionAnswer){
                   <div class="btn-holder">
                     <button (click)="handleStartAssessment()">Start Assessment Test</button>
                   </div>
-              <!-- } -->
+              }
               </div>
             </div>
             <div class="content-bottom">

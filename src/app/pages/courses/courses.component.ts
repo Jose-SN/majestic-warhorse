@@ -10,6 +10,8 @@ import { CommonSliderComponent } from 'src/app/components/common-slider/common-s
 import { DashboardService } from '../dashboard/dashboard.service';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
+import { CourseDetailsService } from '../course-details/course-details.service';
+import { StarRatingModule } from 'angular-star-rating';
 
 @Component({
   selector: 'app-courses',
@@ -20,6 +22,7 @@ import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
     CommonSliderComponent,
     CommonSearchProfileComponent,
     SearchFilterPipe,
+    StarRatingModule,
   ],
   templateUrl: './courses.component.html',
   styleUrl: './courses.component.scss',
@@ -39,12 +42,16 @@ export class CoursesComponent {
     private coursesService: CoursesService,
     private authService: AuthService,
     private commonService: CommonService,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private courseDetailsService: CourseDetailsService
   ) {
     this.profileUrl = this.commonService.decodeUrl(
       this.commonService.loginedUserInfo.profileImage ?? ''
     );
+  }
+  async ngOnInit(): Promise<void> {
     this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
+    await this.courseDetailsService.getCourseStatusList();
     this.commonService
       .getCommonSearchText()
       .pipe(takeUntil(this.destroy$))

@@ -296,7 +296,12 @@
                   </h3>
                   <span class="lesson-label">
                     <div class="lesson-holder">
-                    <span>Lessons</span>
+                    <star-rating [hoverEnabled]="false" [rating]="course.averageRating??0"></star-rating>
+                    <span>Lessons
+                      @if(course.chapterDetails.length){
+                        {{course.chapterCompletedCount}}/{{course.chapterDetails.length}} 
+                        }
+                    </span>
                     </div>                
                   </span>
                   <div class="loader-holder">
@@ -386,17 +391,3 @@
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
