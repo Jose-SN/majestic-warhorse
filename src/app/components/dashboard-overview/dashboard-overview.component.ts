@@ -9,10 +9,18 @@ import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { DashboardSidepanelComponent } from 'src/app/components/dashboard-sidepanel/dashboard-sidepanel.component';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
+import { CourseDetailsService } from 'src/app/pages/course-details/course-details.service';
+import { StarRatingModule } from 'angular-star-rating';
 @Component({
   selector: 'app-dashboard-overview',
   standalone: true,
-  imports: [FormsModule, CommonModule, CommonSearchProfileComponent, DashboardSidepanelComponent],
+  imports: [
+    FormsModule,
+    CommonModule,
+    CommonSearchProfileComponent,
+    DashboardSidepanelComponent,
+    StarRatingModule,
+  ],
   templateUrl: './dashboard-overview.component.html',
   styleUrl: './dashboard-overview.component.scss',
 })
@@ -20,28 +28,65 @@ export class DashboardOverviewComponent {
   public isMobileNav = false;
   public activePanel: string = '';
   public courseLists: ICourseList[] = [];
-  public loginedUserInfo:UserModel = {} as UserModel;
+  public loginedUserInfo: UserModel = {} as UserModel;
   public refreshTime: string = '';
   public activeFilterTab: string = 'All';
   filterList: string[] = ['All', 'New', 'Pending', 'Completed'];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private courseUploadService: CourseUploadService,
-    private authService:AuthService,
+    private authService: AuthService,
     public commonService: CommonService,
     private dashboardService: DashboardService,
-    private datePipe: DatePipe
-  ) {
+    private datePipe: DatePipe,
+    private courseDetailsService: CourseDetailsService
+  ) {}
+  async ngOnInit(): Promise<void> {
+    await this.courseDetailsService.getCourseStatusList();
     this.fetchCourseList();
     this.loginedUserInfo = this.commonService.loginedUserInfo ?? {};
-    this.loginedUserInfo.profileImage = this.commonService.decodeUrl(this.loginedUserInfo.profileImage ?? '')
+    this.loginedUserInfo.profileImage = this.commonService.decodeUrl(
+      this.loginedUserInfo.profileImage ?? ''
+    );
     this.getCurrentTime();
   }
-
   async fetchCourseList() {
     this.courseLists = await this.courseUploadService.fetchUploadedCourses();
+    this.courseLists.forEach((course) => {
+      let averageRating = 0;
+      let completedLessonCount = 0;
+      course.chapterDetails.forEach((chapterDetails, index) => {
+        const chapterCompleted = chapterDetails.fileDetails.every((fileDetails) => {
+          return this.courseDetailsService.courseStatusList.find(
+            (courseStatus) =>
+              courseStatus.parentId === fileDetails._id && +courseStatus.percentage === 100
+          );
+        });
+        const rating = chapterDetails.fileDetails.reduce((accumulator, current) => {
+          let selectedRating = this.courseDetailsService.courseStatusList.find(
+            (courseStatus) =>
+              courseStatus.createdBy === this.commonService.loginedUserInfo.id &&
+              courseStatus.parentId === current.parentId
+          );
+          accumulator = selectedRating?.rating || accumulator;
+          return accumulator;
+        }, 0);
+        if (rating) {
+          averageRating =
+            averageRating + Math.round((rating / chapterDetails.fileDetails.length) * 100) / 100;
+        }
+        if (chapterCompleted) {
+          completedLessonCount = (completedLessonCount || 0) + 1;
+        }
+        if (index + 1 === course.chapterDetails.length) {
+          course.chapterCompletedCount = completedLessonCount || 0;
+          course.completionPercent = `${(completedLessonCount / course.chapterDetails.length) * 100}%`;
+          course.averageRating = averageRating;
+        }
+      });
+    });
   }
-  logOut(){
+  logOut() {
     this.authService.logOutApplication();
   }
   openCourseDetailsPage(selectedCourse: ICourseList) {

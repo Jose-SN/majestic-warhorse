@@ -78,7 +78,7 @@ export class CourseDetailsComponent {
         fileDetails.videoDuration = this.commonService.formatTime(time);
       });
     });
-    // this.checkAssesmentView();
+    this.checkAssesmentView();
   }
 
   setDefaultVideo() {
@@ -158,9 +158,9 @@ export class CourseDetailsComponent {
       },
       this.destroy$
     );
-    // setTimeout(() => {
-    //   this.checkAssesmentView();
-    // },5000);
+    setTimeout(() => {
+      this.checkAssesmentView();
+    }, 1000);
   }
   checkActiveVideoStatus() {
     const courseStatusInfo = this.courseDetailsService.courseStatusList.find(
