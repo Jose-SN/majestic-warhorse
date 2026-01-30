@@ -8,6 +8,8 @@ import { CommonDialogComponent } from './components/common-dialog/common-dialog.
 import { COMPONENT_NAME } from './constants/popup-constants';
 import { FileViwerComponent } from './components/file-viwer/file-viwer.component';
 import { AssignTeachersComponent } from './components/assign-teachers/assign-teachers.component';
+import { ApplicationApiService } from './services/api-service/application-api.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -24,9 +26,27 @@ export class AppComponent implements OnInit {
   public PARTICLE_ROUTES_LIST: string[] = PARTICLE_ROUTES_LIST;
   constructor(
     private router: Router,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private applicationApiService: ApplicationApiService
   ) {}
   ngOnInit() {
+    // Call application API on app load
+    this.applicationApiService.getApplications()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if(response.data.length > 0){
+            const app = response.data.find((app: any) => app.client_id === environment.client_id);
+            if(app){
+              sessionStorage.setItem('application', JSON.stringify(app));
+            }
+          }
+        },
+        error: (error) => {
+          console.error('Error loading application data:', error);
+        }
+      });
+
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.activeRouteName = event?.url?.split('/')?.[1]?.toUpperCase();
