@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private isAuthenticated: boolean = false;
-  private _apiUrl: string = environment.majesticWarhorseApi;
+  private _apiUrl: string = environment.iamApi;
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -33,7 +33,7 @@ export class AuthService {
   }
   loginUser(loginInfo: UserLogin) {
     return this.http
-      .post<UserModel>(`${this._apiUrl}user/validate`, loginInfo)
+      .post<UserModel>(`${this._apiUrl}user/login`, loginInfo)
       .pipe(catchError(this.commonService.handleError));
   }
   updatePassword(updatePassword: IPassWordUpdate) {
