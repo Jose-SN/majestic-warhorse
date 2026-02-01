@@ -9,6 +9,7 @@ import { catchError, lastValueFrom } from 'rxjs';
 })
 export class CommonApiService {
   private _apiUrl: string = environment.majesticWarhorseApi;
+  private _iamApi: string = environment.iamApi;
 
   constructor(
     private http: HttpClient,
@@ -24,7 +25,7 @@ export class CommonApiService {
   }
   deleteUser(deletePayload: any) {
     return this.http
-      .delete<{ [key: string]: string }>(`${this._apiUrl}user/delete`, deletePayload)
+      .delete<{ [key: string]: string }>(`${this._iamApi}user/delete`, deletePayload)
       .pipe(catchError(this.commonService.handleError));
   }
 }
