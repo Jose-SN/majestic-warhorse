@@ -5,9 +5,10 @@
 export const environment = {
   production: false,
   appVersion: '1.0.0',
-  client_id: 'Majestic_Warhorse',
+  client_id: 'majestic_warhorse',
   apiUrl: 'https://rehobothlondonapi.netlify.app/.netlify/functions/api/',
-  majesticWarhorseApi: 'http://localhost:5000/api/'// 'https://majesticapi.rehoboth.london/',
+  iamApi: 'http://localhost:5000/api/',
+  majesticWarhorseApi: 'http://localhost:6000/'// 'https://majesticapi.rehoboth.london/',
 };
 
 /*
