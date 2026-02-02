@@ -8,7 +8,7 @@ export const environment = {
   client_id: 'majestic_warhorse',
   apiUrl: 'https://rehobothlondonapi.netlify.app/.netlify/functions/api/',
   iamApi: 'http://localhost:5000/api/',
-  majesticWarhorseApi: 'http://localhost:6000/'// 'https://majesticapi.rehoboth.london/',
+  majesticWarhorseApi: 'http://localhost:3000/'// 'https://majesticapi.rehoboth.london/',
 };
 
 /*
