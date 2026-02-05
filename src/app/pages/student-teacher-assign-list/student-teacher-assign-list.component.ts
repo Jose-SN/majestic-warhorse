@@ -32,7 +32,7 @@ export class StudentTeacherAssignListComponent {
     private commonApiService: CommonApiService,
     private dashboardService: DashboardService
   ) {
-    this.profileUrl = this.commonService.decodeUrl(this.commonService.loginedUserInfo.profileImage ?? '')
+    this.profileUrl = this.commonService.decodeUrl((this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? '')
     this.getStudentList();
   }
   ngOnInit() {
@@ -41,7 +41,7 @@ export class StudentTeacherAssignListComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((closeModel) => {
         this.commonService.allUsersList.forEach((student) => {
-          if (student._id === this.editedStudent._id) {
+          if (student.id === this.editedStudent.id) {
             student.approved = true;
           }
         });
@@ -68,6 +68,10 @@ export class StudentTeacherAssignListComponent {
   sliderActiveRemove(): void {
     this.showSliderView = false;
   }
+  getStudentId(student: UserModel): string {
+    return student.id || '';
+  }
+  
   getStudentList() {
     this.studentList = this.commonService.allUsersList.filter(
       (users) => users.role === 'student' && !users.approved

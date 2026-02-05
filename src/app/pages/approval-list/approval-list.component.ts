@@ -38,7 +38,7 @@ export class ApprovalListComponent {
     private approveTeacherService: ApproveTeacherService
   ) {
     this.profileUrl = this.commonService.decodeUrl(
-      this.commonService.loginedUserInfo.profileImage ?? ''
+      (this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? ''
     );
     this.getApprovalPendingTeachers();
     this.commonService
@@ -62,12 +62,19 @@ export class ApprovalListComponent {
   sliderActiveRemove(): void {
     this.showSliderView = false;
   }
+  getTeacherId(teacher: UserModel): string {
+    return teacher.id || '';
+  }
+  
   onTeacherSelect(teacher: UserModel, currentTarget: any) {
-    const isChecked = currentTarget.checked;
-    if (isChecked) {
-      this.selectedTeachers.push(teacher._id);
+    const isChecked = currentTarget?.checked ?? false;
+    const teacherId = this.getTeacherId(teacher);
+    if (isChecked && teacherId) {
+      if (!this.selectedTeachers.includes(teacherId)) {
+        this.selectedTeachers.push(teacherId);
+      }
     } else {
-      const index = this.selectedTeachers.indexOf(teacher._id);
+      const index = teacherId ? this.selectedTeachers.indexOf(teacherId) : -1;
       if (index > -1) {
         this.selectedTeachers.splice(index, 1);
       }
@@ -88,7 +95,8 @@ export class ApprovalListComponent {
       .subscribe({
         next: () => {
           this.commonService.allUsersList.forEach((user: UserModel) => {
-            if (this.selectedTeachers.includes(user._id)) {
+            const userId = this.getTeacherId(user);
+            if (userId && this.selectedTeachers.includes(userId)) {
               user.approved = true;
             }
           });
@@ -102,7 +110,7 @@ export class ApprovalListComponent {
         error: () => {
           this.commonService.openToaster({
             message: 'Error while approving teachers!',
-            messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+            messageType: TOASTER_MESSAGE_TYPE.ERROR,
           });
         },
       });

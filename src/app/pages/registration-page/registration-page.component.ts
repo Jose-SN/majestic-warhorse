@@ -13,13 +13,12 @@ import { Router } from '@angular/router';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { UserModel } from '../login-page/model/user-model';
 import { CommonModule } from '@angular/common';
-import { CommonDialogComponent } from '../../components/common-dialog/common-dialog.component';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 
 @Component({
   selector: 'app-registration-page',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, CommonDialogComponent],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './registration-page.component.html',
   styleUrl: './registration-page.component.scss',
 })
@@ -33,6 +32,9 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   private destroy$ = new Subject<void>();
   public isAdminLogin: boolean = false;
   public profileUrl: string = '../../../../assets/images/img-placeholder.jpg';
+  public showPassword: boolean = false;
+  public showConfirmPassword: boolean = false;
+  
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
@@ -43,7 +45,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
       {
         firstName: ['', [Validators.required]],
         lastName: ['', []],
-        profileImage: [null, Validators.required],
+        profileImage: [''],
         email: ['', [Validators.required, Validators.email]],
         phone: ['', [Validators.required, Validators.pattern('^\\+?\\d{10,15}$')]],
         password: [
@@ -56,7 +58,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
         ],
         confirmPassword: ['', [Validators.required]],
         role: ['student', [Validators.required]],
-        status: ['Active'],
+        status: ['active'],
       },
       {
         validator: this.formValidator.passwordMatchValidator.bind(this.createAccountForm),
@@ -70,24 +72,35 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     if (this.commonService?.loginedUserInfo) {
       const loginedId = this.commonService.loginedUserInfo?.id;
       const loginedUser = this.commonService.allUsersList.find(
-        (user: UserModel) => user._id === loginedId
-      );
+        (user: UserModel) => user.id === loginedId
+      ) || this.commonService.loginedUserInfo;
+      
+      // Use new structure with fallback to legacy fields
+      const firstName = loginedUser?.first_name || loginedUser?.firstName || '';
+      const lastName = loginedUser?.last_name || loginedUser?.lastName || '';
+      const email = loginedUser?.contact?.email || loginedUser?.email || '';
+      const phone = loginedUser?.contact?.phone || loginedUser?.phone || '';
+      const profileImage = loginedUser?.profile_image || loginedUser?.profileImage || '';
+      const role = loginedUser?.role || 'student';
+      
       const userFormInfo = {
         password: '',
         profileImage: '',
-        status: 'Active',
+        status: loginedUser?.status || 'active',
         confirmPassword: '',
-        role: loginedUser?.role,
-        email: loginedUser?.email,
-        phone: loginedUser?.phone,
-        lastName: loginedUser?.lastName,
-        firstName: loginedUser?.firstName,
+        role: role,
+        email: email,
+        phone: phone,
+        lastName: lastName,
+        firstName: firstName,
       };
-      this.profileUrl = this.commonService.decodeUrl(loginedUser?.profileImage ?? '') as string;
+      this.profileUrl = this.commonService.decodeUrl(profileImage) as string;
       this.registrationService.imageUrl = this.profileUrl;
-      this.isAdminLogin = loginedUser?.role === 'admin';
+      this.isAdminLogin = role === 'admin';
       this.createAccountForm.setValue(userFormInfo);
-      this.createAccountForm?.get('email')?.disable();
+      if (this.isEditMode) {
+        this.createAccountForm?.get('email')?.disable();
+      }
       this.createAccountForm?.get('role')?.disable();
       this.createAccountForm.markAllAsTouched();
 
@@ -116,10 +129,10 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     if (this.createAccountForm.valid) {
       this.registrationService
         .registerUserInfo(this.destroy$, this.createAccountForm.value)
-        .then((clearForms) => {
+        .then((clearForms) => {debugger
           if (clearForms) {
             this.createAccountForm.reset();
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/login']);
           }
         });
     } else {
@@ -137,5 +150,13 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   isDialogOpen = false;
   openDialog(): void {
     this.isDialogOpen = true;
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }

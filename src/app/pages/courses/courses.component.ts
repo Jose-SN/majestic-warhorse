@@ -46,7 +46,7 @@ export class CoursesComponent {
     private courseDetailsService: CourseDetailsService
   ) {
     this.profileUrl = this.commonService.decodeUrl(
-      this.commonService.loginedUserInfo.profileImage ?? ''
+      (this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? ''
     );
   }
   async ngOnInit(): Promise<void> {

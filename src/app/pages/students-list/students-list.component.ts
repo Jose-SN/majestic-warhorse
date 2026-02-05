@@ -33,7 +33,7 @@ export class StudentsListComponent {
     private commonApiService: CommonApiService,
     private dashboardService: DashboardService
   ) {
-    this.profileUrl = this.commonService.decodeUrl(this.commonService.loginedUserInfo.profileImage ?? '')
+    this.profileUrl = this.commonService.decodeUrl((this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? '')
     this.studentList = this.commonService.allUsersList.filter(
       (users) => users.role === 'student' && users.approved
     );

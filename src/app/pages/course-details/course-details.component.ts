@@ -55,7 +55,7 @@ export class CourseDetailsComponent {
     private dashboardService: DashboardService
   ) {
     this.profileUrl = this.commonService.decodeUrl(
-      this.commonService.loginedUserInfo.profileImage ?? ''
+      (this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? ''
     );
   }
   async ngOnInit(): Promise<void> {
@@ -136,7 +136,7 @@ export class CourseDetailsComponent {
     }
   }
   videoStatusUpdateHandler(triggerType: string) {
-    if (triggerType === 'PAUSE' || !this.courseStatusInfo?._id) {
+    if (triggerType === 'PAUSE' || !this.courseStatusInfo?.id) {
       this.updateVideoStatus(undefined, true);
     }
   }
@@ -171,7 +171,7 @@ export class CourseDetailsComponent {
     const videoStatusInfo = this.courseDetailsService.courseStatusList.find(
       (courseStatus) =>
         courseStatus.createdBy === this.commonService.loginedUserInfo.id &&
-        courseStatus.parentId === this.activeVideoInfo._id
+        courseStatus.parentId === this.activeVideoInfo.id
     );
     if (courseStatusInfo) {
       this.courseStatusInfo = courseStatusInfo;
@@ -213,7 +213,7 @@ export class CourseDetailsComponent {
       const chapterCompleted = chapterDetails.fileDetails.every((fileDetails) => {
         return this.courseDetailsService.courseStatusList.find(
           (courseStatus) =>
-            courseStatus.parentId === fileDetails._id && +courseStatus.percentage === 100
+            courseStatus.parentId === fileDetails.id && +courseStatus.percentage === 100
         );
       });
       if (chapterCompleted) {

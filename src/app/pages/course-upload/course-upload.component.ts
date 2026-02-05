@@ -141,7 +141,7 @@ export class CourseUploadComponent {
   }
   handleCourseEdit(courseInfo: ICourseList) {
     this.mainCourseInfo = {
-      _id: courseInfo._id,
+      id: courseInfo.id,
       courseCoverImage: courseInfo.courseCoverImage,
       courseTitle: courseInfo.courseTitle,
       courseDescription: courseInfo.courseDescription,

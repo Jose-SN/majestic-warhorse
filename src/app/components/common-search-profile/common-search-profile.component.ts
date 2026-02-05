@@ -19,7 +19,7 @@ export class CommonSearchProfileComponent {
     private authService: AuthService,
     private commonService: CommonService
   ) {
-    this.profileUrl = this.commonService.loginedUserInfo.profileImage ?? '';
+    this.profileUrl = (this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? '';
   }
   logOut() {
     this.authService.logOutApplication();

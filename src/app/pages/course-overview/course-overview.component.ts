@@ -56,7 +56,7 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
     this.fetchCourseList();
     this.fetchDashboardOverview();
     this.profileUrl = this.commonService.decodeUrl(
-      this.commonService.loginedUserInfo.profileImage ?? ''
+      (this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? ''
     );
   }
   async ngOnInit() {
@@ -109,7 +109,7 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
         const chapterCompleted = chapterDetails.fileDetails.every((fileDetails) => {
           return this.courseDetailsService.courseStatusList.find(
             (courseStatus) =>
-              courseStatus.parentId === fileDetails._id && +courseStatus.percentage === 100
+              courseStatus.parentId === fileDetails.id && +courseStatus.percentage === 100
           );
         });
         const rating = chapterDetails.fileDetails.reduce((accumulator, current) => {
@@ -148,6 +148,11 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
   async fetchDashboardOverview() {
     this.dashboardOverview = await this.dashboardService.fetchUploadedCourseCount();
   }
+  
+  hasDashboardData(): boolean {
+    return this.dashboardOverview && Object.keys(this.dashboardOverview).length > 0;
+  }
+  
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

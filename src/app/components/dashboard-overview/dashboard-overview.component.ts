@@ -7,8 +7,6 @@ import { DashboardService } from 'src/app/pages/dashboard/dashboard.service';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
-import { DashboardSidepanelComponent } from 'src/app/components/dashboard-sidepanel/dashboard-sidepanel.component';
-import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { CourseDetailsService } from 'src/app/pages/course-details/course-details.service';
 import { StarRatingModule } from 'angular-star-rating';
 @Component({
@@ -17,8 +15,6 @@ import { StarRatingModule } from 'angular-star-rating';
   imports: [
     FormsModule,
     CommonModule,
-    CommonSearchProfileComponent,
-    DashboardSidepanelComponent,
     StarRatingModule,
   ],
   templateUrl: './dashboard-overview.component.html',
@@ -46,7 +42,7 @@ export class DashboardOverviewComponent {
     this.fetchCourseList();
     this.loginedUserInfo = this.commonService.loginedUserInfo ?? {};
     this.loginedUserInfo.profileImage = this.commonService.decodeUrl(
-      this.loginedUserInfo.profileImage ?? ''
+      (this.loginedUserInfo.profileImage || this.loginedUserInfo.profile_image) ?? ''
     );
     this.getCurrentTime();
   }
@@ -59,7 +55,7 @@ export class DashboardOverviewComponent {
         const chapterCompleted = chapterDetails.fileDetails.every((fileDetails) => {
           return this.courseDetailsService.courseStatusList.find(
             (courseStatus) =>
-              courseStatus.parentId === fileDetails._id && +courseStatus.percentage === 100
+              courseStatus.parentId === fileDetails.id && +courseStatus.percentage === 100
           );
         });
         const rating = chapterDetails.fileDetails.reduce((accumulator, current) => {
