@@ -69,19 +69,49 @@ export class RegistrationPageService {
     registrationInfo: IRegistrationModel
   ): Promise<boolean> {
     registrationInfo.profileImage = this.commonService.decodeUrl(encodeURI(this.imageUrl));
-    registrationInfo.phone = registrationInfo.phone;
     delete registrationInfo.confirmPassword;
+    
+    // Transform payload to match database schema
+    const transformedPayload: any = {
+      first_name: registrationInfo.firstName || '',
+      last_name: registrationInfo.lastName || null,
+      profile_image: registrationInfo.profileImage || '',
+      password: registrationInfo.password || '',
+      contact: {
+        email: registrationInfo.email || '',
+        phone: registrationInfo.phone || '',
+      },
+      role: registrationInfo.role || 'student',
+      status: 'pending', // Default status as per schema
+    };
+
+    // Add app_id if available from sessionStorage
+    const applicationData = sessionStorage.getItem('application');
+    if (applicationData) {
+      try {
+        const appData = JSON.parse(applicationData);
+        if (appData.id) {
+          transformedPayload.app_id = appData.id;
+        }
+      } catch (e) {
+        console.error('Error parsing application data:', e);
+      }
+    }
+
+    // Add app_id if provided in registration info (for organization registration)
+    if (registrationInfo.app_id) {
+      transformedPayload.app_id = registrationInfo.app_id;
+    }
+
     return new Promise((resolve) => {
       this.registrationApiService
-        .saveUserInfo({
-          ...registrationInfo,
-        })
+        .saveUserInfo(transformedPayload)
         .pipe(takeUntil(_destroy$))
         .subscribe({
-          next: (userAdded) => {
+          next: (userAdded) => {debugger
             if (userAdded.success) {
               this.showToasterMessage(
-                'User Information successfully saved',
+                'User registered successfully',
                 TOASTER_MESSAGE_TYPE.SUCCESS
               );
               resolve(true);

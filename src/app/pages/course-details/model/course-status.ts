@@ -1,5 +1,5 @@
 export interface ICourseStatus {
-  _id?: string;
+  id?: string;
   parentId: string;
   parentType: string;
   rating: number;

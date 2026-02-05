@@ -68,7 +68,7 @@ export class ForgotPasswordComponent implements OnDestroy {
           setTimeout(() => {
             this.otpForm.get('email')?.setValue(resetPasswordForm.email);
             this.otpForm.get('email')?.disable();
-            this.otpForm.get('userId')?.setValue(data.data.userId);
+            this.otpForm.get('userId')?.setValue(data.data.userId || data.data.otpData.user_id || '');
             this.otpForm.get('password')?.setValue(resetPasswordForm.password);
             this.showOtpSection = true;
           }, 1000);
@@ -96,7 +96,15 @@ export class ForgotPasswordComponent implements OnDestroy {
   onSubmitOtp() {
     if (this.otpForm.valid) {
       const otpForm = this.otpForm.value;
-      this.forgotPasswordService.validateOtp(this.destroy$, otpForm).then((otpUpdated: any) => {
+      
+      // Transform payload to match backend expectation: { email, otp, password }
+      const otpPayload = {
+        email: this.resetPasswordForm.get('email')?.value,
+        otp: otpForm.otp,
+        password: otpForm.password
+      };
+      
+      this.forgotPasswordService.validateOtp(this.destroy$, otpPayload).then((otpUpdated: any) => {
         const response = JSON.parse(otpUpdated);
         if (response.success) {
           this.commonService.openToaster({

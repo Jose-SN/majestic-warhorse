@@ -39,6 +39,8 @@ export class AppComponent implements OnInit {
             const app = response.data.find((app: any) => app.client_id === environment.client_id);
             if(app){
               sessionStorage.setItem('application', JSON.stringify(app));
+              const client_id = app.client_id;
+              sessionStorage.setItem('client_id', client_id);
             }
           }
         },
