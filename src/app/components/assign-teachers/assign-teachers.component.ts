@@ -28,7 +28,7 @@ export class AssignTeachersComponent {
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
 
   constructor(
-    private commonService: CommonService,
+    public commonService: CommonService,
     private authService: AuthService,
     private assignTeacherService: AssignTeacherService
   ) {
@@ -36,7 +36,7 @@ export class AssignTeachersComponent {
     this.selectedItems = [];
     this.dropdownSettings = {
       singleSelection: false,
-      idField: '_id',
+      idField: 'id',
       textField: 'firstName',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
@@ -59,13 +59,20 @@ export class AssignTeachersComponent {
   sliderActiveRemove(): void {
     this.showSliderView = false;
   }
+  getTeacherId(teacher: UserModel): string {
+    return teacher.id || '';
+  }
+  
   onTeacherSelect(teacher: any, event: Event) {
     const input = event.target as HTMLInputElement;
     const isChecked = input.checked;
+    const teacherId = this.getTeacherId(teacher);
     if (isChecked) {
-      this.selectedTeachers.push(teacher._id);
+      if (!this.selectedTeachers.includes(teacherId)) {
+        this.selectedTeachers.push(teacherId);
+      }
     } else {
-      const index = this.selectedTeachers.indexOf(teacher._id);
+      const index = this.selectedTeachers.indexOf(teacherId);
       if (index > -1) {
         this.selectedTeachers.splice(index, 1);
       }
@@ -74,7 +81,7 @@ export class AssignTeachersComponent {
   handleTeacherAssign() {
     this.assignTeacherService
       .assignTeachersToStudent([
-        { id: this.popupModelInfo.data._id, assignedTo: this.selectedTeachers },
+        { id: this.popupModelInfo.data.id, assignedTo: this.selectedTeachers },
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe({

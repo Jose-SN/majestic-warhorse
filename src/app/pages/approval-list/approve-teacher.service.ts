@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ApproveTeacherService {
-  private _apiUrl: string = environment.majesticWarhorseApi;
+  private _iamApi: string = environment.iamApi;
 
   constructor(
     private http: HttpClient,
@@ -16,7 +16,7 @@ export class ApproveTeacherService {
   ) {}
   public approveTeachers(approveTeacher: any) {
     return this.http
-      .put<any>(`${this._apiUrl}user/approve-teachers`, approveTeacher)
+      .put<any>(`${this._iamApi}user/approve-teachers`, approveTeacher)
       .pipe(catchError(this.commonService.handleError));
   }
 }

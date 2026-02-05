@@ -70,7 +70,7 @@ export class CourseUploadService {
         chapterInfo.createdBy = this.commonService.loginedUserInfo.id;
       });
       let courseSaveApi: any;
-      if (courseDetails.mainCourseInfo._id) {
+      if (courseDetails.mainCourseInfo.id) {
         courseSaveApi = this.courseApi.updateCourseDetails.bind(this.courseApi);
       } else {
         courseSaveApi = this.courseApi.saveCourseDetails.bind(this.courseApi);

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { Subject, takeUntil } from 'rxjs';
+import { mapUserToLegacy } from 'src/app/shared/utils/user-mapper.util';
 
 @Injectable({
   providedIn: 'root',
@@ -24,12 +25,13 @@ export class LoginService {
           if (Object.keys(userExist || {}).length) {
             this.authService.setLogin = true;
             this.router.navigate(['/dashboard']);
-            this.commonService.loginedUserInfo = userExist;
+            // Map new structure to include legacy fields for backward compatibility
+            this.commonService.loginedUserInfo = mapUserToLegacy(userExist);
             sessionStorage.setItem(
               'login_details',
               JSON.stringify(this.commonService.loginedUserInfo)
             );
-            sessionStorage.setItem('authToken', userExist.jwt);
+            sessionStorage.setItem('authToken', userExist.jwt || '');
           } else {
             this.loginUserFailed();
           }

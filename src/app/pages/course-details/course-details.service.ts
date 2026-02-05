@@ -33,11 +33,11 @@ export class CourseDetailsService {
       statusPayload = {
         rating: null,
         createdBy: createdId,
-        parentId: saveInfo.activeFile._id,
+        parentId: saveInfo.activeFile.id,
         parentType: 'File',
         percentage:
           saveInfo.courseStatusInfo.percentage !== 100 ? saveInfo.videoPercentage || 0 : 100,
-        ...(saveInfo.videoStatusInfo._id && { _id: saveInfo.videoStatusInfo._id }),
+        ...(saveInfo.videoStatusInfo.id && { id: saveInfo.videoStatusInfo.id }),
       };
     } else {
       statusPayload = {
@@ -45,11 +45,11 @@ export class CourseDetailsService {
         createdBy: createdId,
         parentType: 'Chapter',
         rating: saveInfo.rating,
-        parentId: saveInfo.activeChapter._id,
-        ...(saveInfo.courseStatusInfo._id && { _id: saveInfo.courseStatusInfo._id }),
+        parentId: saveInfo.activeChapter.id,
+        ...(saveInfo.courseStatusInfo.id && { id: saveInfo.courseStatusInfo.id }),
       };
     }
-    if (statusPayload._id) {
+    if (statusPayload.id) {
       service = this.courseApiService.updateCourseStatus.bind(this.courseApiService);
     } else {
       service = this.courseApiService.saveCourseStatus.bind(this.courseApiService);

@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ApplicationApiService {
-  private _apiUrl: string = environment.majesticWarhorseApi;
+  private _apiUrl: string = environment.iamApi;
 
   constructor(
     private http: HttpClient,

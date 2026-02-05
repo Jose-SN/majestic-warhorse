@@ -23,7 +23,7 @@ export class CoursesService {
               const chapterCompleted = chapterDetails.fileDetails.every((fileDetails) => {
                 return this.courseDetailsService.courseStatusList.find(
                   (courseStatus) =>
-                    courseStatus.parentId === fileDetails._id && +courseStatus.percentage === 100
+                    courseStatus.parentId === fileDetails.id && +courseStatus.percentage === 100
                 );
               });
               if (chapterCompleted) {
