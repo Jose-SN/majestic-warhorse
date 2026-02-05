@@ -536,6 +536,7 @@
               flex-direction: row;
               gap: 10px;
               padding-right: 10px;
+              align-items: center;
             }
             .scroll-container {
                 @include flex(flex,column,null,null);

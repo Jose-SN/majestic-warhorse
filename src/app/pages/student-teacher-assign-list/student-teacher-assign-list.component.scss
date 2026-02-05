@@ -536,6 +536,7 @@
               flex-direction: row;
               gap: 10px;
               padding-right: 10px;
+              align-items: center;
             }
             .scroll-container {
                 @include flex(flex,column,null,null);
@@ -549,57 +550,219 @@
                 .common-list {
                   background: var(--bg-list);
                   width: 100%;
-                  @include flex(flex, row, space-between, center);                  
+                  @include flex(flex, row, space-between, center);
                   gap: 15px;
                   position: relative;
-                  border: 1px solid var(--bg-input-border);
+                  border: 2px solid var(--bg-input-border);
                   overflow: hidden;
+                  cursor: pointer;
+                  min-height: 80px;
+                  padding: 0;
+                  -webkit-user-select: none;
+                  -moz-user-select: none;
+                  -ms-user-select: none;
+                  user-select: none;
                   @include border-radius(15px);
-                  .list-left {
-                    padding: 10px;                    
-                    gap: 10px;
-                    flex-grow: 1;
-                    @include flex(flex, null, null, center);
+                  @include transition(all 0.3s ease-in-out);
+                  
+                  &:hover {
+                    border-color: var(--bg-mit1);
+                    transform: translateY(-2px);
+                    @include box-shadow(0, 4px, 12px, rgba(0, 0, 0, 0.15));
                   }
+                  
                   h4 {
                     font-family: $poppins-regular;
-                    font-size: 0.938rem;
+                    font-size: 1rem;
                     color: var(--light-blue);
-                    font-weight: normal;
-                    line-height: 18px;
-                    margin-bottom: 5px;
+                    font-weight: 600;
+                    line-height: 1.4;
+                    margin: 0 0 6px 0;
                     @include text-ellipsis($lines: 1);
+                    position: relative;
+                    z-index: 1;
                   }
-                  figure {
-                    width: 50px;
-                    height: 50px;
-                    flex-shrink: 0;
+                  
+                  .student-email {
+                    font-family: $archivo-regular;
+                    font-size: 0.813rem;
+                    color: var(--bg-light-grey);
+                    display: block;
+                    margin-bottom: 4px;
+                    @include text-ellipsis($lines: 1);
+                    position: relative;
+                    z-index: 1;
+                  }
+                  
+                  .student-status {
+                    display: inline-block;
+                    font-family: $archivo-medium;
+                    font-size: 0.75rem;
+                    color: var(--bg-orange);
+                    background: rgba(255, 152, 0, 0.1);
+                    padding: 2px 8px;
+                    @include border-radius(12px);
+                    position: relative;
+                    z-index: 1;
+                  }
+                  
+                  .list-left {
+                    padding: 15px;
+                    gap: 15px;
+                    flex-grow: 1;
+                    @include flex(flex, null, null, center);
+                    position: relative;
+                    z-index: 1;
+                    min-width: 0;
+                  }
+                  
+                  .student-avatar {
+                    width: 55px;
+                    height: 55px;
+                    min-width: 55px;
                     @include border-radius(100%);
                     overflow: hidden;
+                    border: 2px solid var(--bg-input-border);
+                    background: var(--bg-input);
+                    @include flex(flex, null, center, center);
+                    
                     img {
                       width: 100%;
                       height: 100%;
                       object-fit: cover;
+                      display: block;
                     }
-                  }                  
-                  .common-list-right {
-                    max-width: 188px;
-                    width: 100%;                    
                   }
+                  
+                  .common-list-right {
+                    flex: 1;
+                    min-width: 0;
+                    overflow: hidden;
+                  }
+                  
                   .icon-holder {
                     background: var(--bg-list-action);
                     @include flex(flex, null, null, center);
-                    @include border-radius(0 10px 10px 0);
+                    @include border-radius(0 13px 13px 0);
                     height: 100%;
-                    padding: 10px;
-                    button {
+                    padding: 0 12px;
+                    gap: 8px;
+                    position: relative;
+                    z-index: 1;
+                    flex-shrink: 0;
+                    
+                    .icon-btn {
                       background: transparent;
-                      width: 23px;
-                      height: 23px;
-                      padding: 3px;
+                      width: 36px;
+                      height: 36px;
+                      padding: 6px;
                       border: 0;
                       cursor: pointer;
+                      @include border-radius(8px);
+                      @include flex(flex, null, center, center);
+                      @include transition(all 0.2s ease-in-out);
+                      
+                      img {
+                        width: 18px;
+                        height: 18px;
+                        filter: brightness(0) invert(1);
+                        opacity: 0.8;
+                        @include transition(all 0.2s ease-in-out);
+                      }
+                      
+                      &:hover {
+                        background: rgba(255, 255, 255, 0.1);
+                        
+                        img {
+                          opacity: 1;
+                          transform: scale(1.1);
+                        }
+                      }
+                      
+                      &.edit-btn:hover {
+                        background: rgba(59, 130, 246, 0.2);
+                      }
+                      
+                      &.delete-btn:hover {
+                        background: rgba(239, 68, 68, 0.2);
+                      }
                     }
+                  }
+                }
+                
+                .no-students-found {
+                  @include flex(flex, column, center, center);
+                  padding: 60px 40px;
+                  text-align: center;
+                  min-height: 400px;
+                  max-width: 600px;
+                  margin: 0 auto;
+                  
+                  figure {
+                    margin: 0 0 30px 0;
+                    opacity: 0.7;
+                    
+                    svg {
+                      width: 140px;
+                      height: 140px;
+                      color: var(--bg-light-grey);
+                    }
+                  }
+                  
+                  h3 {
+                    font-family: $poppins-bold;
+                    font-size: 1.75rem;
+                    color: var(--white);
+                    margin: 0 0 15px 0;
+                    font-weight: 600;
+                  }
+                  
+                  p {
+                    font-family: $archivo-regular;
+                    font-size: 1rem;
+                    color: var(--bg-light-grey);
+                    margin: 0 0 15px 0;
+                    opacity: 0.9;
+                    line-height: 1.6;
+                  }
+                  
+                  ul {
+                    text-align: left;
+                    margin: 15px auto 20px;
+                    padding-left: 0;
+                    list-style: none;
+                    max-width: 500px;
+                    
+                    li {
+                      font-family: $archivo-regular;
+                      font-size: 0.938rem;
+                      color: var(--bg-light-grey);
+                      margin: 10px 0;
+                      padding-left: 25px;
+                      position: relative;
+                      opacity: 0.85;
+                      line-height: 1.5;
+                      
+                      &::before {
+                        content: '•';
+                        position: absolute;
+                        left: 10px;
+                        color: var(--bg-mit1);
+                        font-size: 1.2rem;
+                        font-weight: bold;
+                      }
+                    }
+                  }
+                  
+                  .help-text {
+                    font-family: $archivo-medium;
+                    font-size: 0.875rem;
+                    color: var(--bg-light-grey);
+                    margin-top: 20px;
+                    padding-top: 20px;
+                    border-top: 1px solid var(--bg-input-border);
+                    opacity: 0.7;
+                    font-style: italic;
                   }
                 }
             }

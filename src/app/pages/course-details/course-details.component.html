@@ -16,10 +16,10 @@
                   <div class="bottom-holder">
                     <div class="profile">
                       <figure>
-                        <img [src]="commonService.decodeUrl(activeChapter?.createdBy?.profileImage ?? '')" alt="" />
+                        <img [src]="commonService.decodeUrl((activeChapter?.createdBy?.profileImage || activeChapter?.createdBy?.profile_image) ?? '')" alt="" />
                       </figure>
                       <div class="profile-right">
-                        <span>{{activeChapter?.createdBy?.firstName}} {{activeChapter?.createdBy?.lastName}}</span>
+                        <span>{{(activeChapter?.createdBy?.firstName || activeChapter?.createdBy?.first_name)}} {{(activeChapter?.createdBy?.lastName || activeChapter?.createdBy?.last_name)}}</span>
                         <strong>{{selectedCourseInfo?.chapterDetails?.length}}</strong>
                       </div>
                     </div>
@@ -101,7 +101,7 @@
                   <ul>
                     @for (chapterDetails of selectedCourseInfo.chapterDetails; track $index) {
                     <li (click)="openCourseAccordian($event,chapterDetails)"
-                      [ngClass]="{'active': chapterDetails._id === activeChapter._id}">
+                      [ngClass]="{'active': chapterDetails.id === activeChapter.id}">
                       <figure>
                         <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                           <path d="M0 0h48v48H0z" fill="none" />

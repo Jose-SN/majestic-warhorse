@@ -1,25 +1,45 @@
 <div class="content-area">
   <div class="content-left">
-    <div class="content-top">
-      <div class="total-assessment">
-        <div class="course-detail cursor-pointer"
-        (click)="dashboardService.setSidePanelChangeValue(loginedUserPrivilege === 'admin' ? SIDE_PANEL_LIST.TEACHERS_LISTING : SIDE_PANEL_LIST.STUDENTS_LISTING)">
-        <div class="detail-top">
-          <div class="icons mit1">
-            <figure>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M4 21V16.75L17.175 3.6C17.375 3.4 17.6 3.25 17.85 3.15C18.1 3.05 18.35 3 18.6 3C18.8667 3 19.121 3.05 19.363 3.15C19.605 3.25 19.8173 3.4 20 3.6L21.4 5C21.6 5.18333 21.75 5.396 21.85 5.638C21.95 5.88 22 6.134 22 6.4C22 6.65 21.95 6.9 21.85 7.15C21.75 7.4 21.6 7.625 21.4 7.825L8.25 21H4ZM18.65 7.775L20 6.425L18.575 5L17.225 6.35L18.65 7.775ZM14 21C15.2333 21 16.375 20.6917 17.425 20.075C18.475 19.4583 19 18.6 19 17.5C19 16.9 18.8417 16.3833 18.525 15.95C18.2083 15.5167 17.7833 15.1417 17.25 14.825L15.775 16.3C16.1583 16.4667 16.4583 16.65 16.675 16.85C16.8917 17.05 17 17.2667 17 17.5C17 17.8833 16.6957 18.2293 16.087 18.538C15.4783 18.8467 14.7827 19.0007 14 19C13.7167 19 13.4793 19.096 13.288 19.288C13.0967 19.48 13.0007 19.7173 13 20C13 20.2833 13.096 20.521 13.288 20.713C13.48 20.905 13.7173 21.0007 14 21ZM4.575 13.35L6.075 11.85C5.74167 11.7167 5.479 11.5793 5.287 11.438C5.095 11.2967 4.99933 11.1507 5 11C5 10.8 5.15 10.6 5.45 10.4C5.75 10.2 6.38333 9.89167 7.35 9.475C8.81667 8.84167 9.79167 8.26667 10.275 7.75C10.7583 7.23333 11 6.65 11 6C11 5.08333 10.6333 4.35433 9.9 3.813C9.16667 3.27167 8.2 3.00067 7 3C6.25 3 5.579 3.13333 4.987 3.4C4.395 3.66667 3.941 3.99167 3.625 4.375C3.44167 4.59167 3.36667 4.83333 3.4 5.1C3.43333 5.36667 3.55833 5.58333 3.775 5.75C3.99167 5.93333 4.23333 6.00833 4.5 5.975C4.76667 5.94167 4.99167 5.83333 5.175 5.65C5.40833 5.41667 5.66667 5.25 5.95 5.15C6.23333 5.05 6.58333 5 7 5C7.68333 5 8.18767 5.1 8.513 5.3C8.83833 5.5 9.00067 5.73333 9 6C9 6.23333 8.85433 6.44567 8.563 6.637C8.27167 6.82833 7.60067 7.166 6.55 7.65C5.21667 8.23333 4.29167 8.76267 3.775 9.238C3.25833 9.71333 3 10.3007 3 11C3 11.5333 3.14167 11.9877 3.425 12.363C3.70833 12.7383 4.09167 13.0673 4.575 13.35Z"
-                  fill="black" />
-              </svg>
-            </figure>
-          </div>
-          <div class="detail-right">
-            <h2>{{dashboardOverview.totalTeachers ?? dashboardOverview.assignedStudents}}</h2>
-            <span>{{loginedUserPrivilege === 'admin' ? 'Total Teachers': 'Assigned Students'}}</span>
-          </div>
+      @if (!hasDashboardData()) {
+        <div class="no-dashboard-data">
+          <figure>
+            <svg width="140" height="140" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z" fill="currentColor"/>
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" fill="none" opacity="0.2"/>
+              <path d="M12 8C13.1 8 14 8.9 14 10C14 11.1 13.1 12 12 12C10.9 12 10 11.1 10 10C10 8.9 10.9 8 12 8Z" fill="currentColor" opacity="0.5"/>
+            </svg>
+          </figure>
+          <h3>Dashboard Data Unavailable</h3>
+          <p>We couldn't fetch dashboard statistics from the backend. This could be due to:</p>
+          <ul>
+            <li>Backend server is not responding</li>
+            <li>Network connectivity issues</li>
+            <li>Authentication or authorization problems</li>
+            <li>API endpoint configuration issues</li>
+          </ul>
+          <p class="help-text">Please check your connection and try refreshing the page. If the issue persists, contact your system administrator.</p>
         </div>
-      </div>
+      } @else {
+      <div class="content-top">
+        <div class="total-assessment">
+          <div class="course-detail cursor-pointer"
+          (click)="dashboardService.setSidePanelChangeValue(loginedUserPrivilege === 'admin' ? SIDE_PANEL_LIST.TEACHERS_LISTING : SIDE_PANEL_LIST.STUDENTS_LISTING)">
+            <div class="detail-top">
+              <div class="icons mit1">
+                <figure>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M4 21V16.75L17.175 3.6C17.375 3.4 17.6 3.25 17.85 3.15C18.1 3.05 18.35 3 18.6 3C18.8667 3 19.121 3.05 19.363 3.15C19.605 3.25 19.8173 3.4 20 3.6L21.4 5C21.6 5.18333 21.75 5.396 21.85 5.638C21.95 5.88 22 6.134 22 6.4C22 6.65 21.95 6.9 21.85 7.15C21.75 7.4 21.6 7.625 21.4 7.825L8.25 21H4ZM18.65 7.775L20 6.425L18.575 5L17.225 6.35L18.65 7.775ZM14 21C15.2333 21 16.375 20.6917 17.425 20.075C18.475 19.4583 19 18.6 19 17.5C19 16.9 18.8417 16.3833 18.525 15.95C18.2083 15.5167 17.7833 15.1417 17.25 14.825L15.775 16.3C16.1583 16.4667 16.4583 16.65 16.675 16.85C16.8917 17.05 17 17.2667 17 17.5C17 17.8833 16.6957 18.2293 16.087 18.538C15.4783 18.8467 14.7827 19.0007 14 19C13.7167 19 13.4793 19.096 13.288 19.288C13.0967 19.48 13.0007 19.7173 13 20C13 20.2833 13.096 20.521 13.288 20.713C13.48 20.905 13.7173 21.0007 14 21ZM4.575 13.35L6.075 11.85C5.74167 11.7167 5.479 11.5793 5.287 11.438C5.095 11.2967 4.99933 11.1507 5 11C5 10.8 5.15 10.6 5.45 10.4C5.75 10.2 6.38333 9.89167 7.35 9.475C8.81667 8.84167 9.79167 8.26667 10.275 7.75C10.7583 7.23333 11 6.65 11 6C11 5.08333 10.6333 4.35433 9.9 3.813C9.16667 3.27167 8.2 3.00067 7 3C6.25 3 5.579 3.13333 4.987 3.4C4.395 3.66667 3.941 3.99167 3.625 4.375C3.44167 4.59167 3.36667 4.83333 3.4 5.1C3.43333 5.36667 3.55833 5.58333 3.775 5.75C3.99167 5.93333 4.23333 6.00833 4.5 5.975C4.76667 5.94167 4.99167 5.83333 5.175 5.65C5.40833 5.41667 5.66667 5.25 5.95 5.15C6.23333 5.05 6.58333 5 7 5C7.68333 5 8.18767 5.1 8.513 5.3C8.83833 5.5 9.00067 5.73333 9 6C9 6.23333 8.85433 6.44567 8.563 6.637C8.27167 6.82833 7.60067 7.166 6.55 7.65C5.21667 8.23333 4.29167 8.76267 3.775 9.238C3.25833 9.71333 3 10.3007 3 11C3 11.5333 3.14167 11.9877 3.425 12.363C3.70833 12.7383 4.09167 13.0673 4.575 13.35Z"
+                      fill="black" />
+                  </svg>
+                </figure>
+              </div>
+              <div class="detail-right">
+                <h2>{{dashboardOverview.totalTeachers ?? dashboardOverview.assignedStudents}}</h2>
+                <span>{{loginedUserPrivilege === 'admin' ? 'Total Teachers': 'Assigned Students'}}</span>
+              </div>
+            </div>
+          </div>
       <div class="course-detail cursor-pointer"
         (click)="dashboardService.setSidePanelChangeValue(loginedUserPrivilege === 'admin' ? SIDE_PANEL_LIST.STUDENTS_LISTING : SIDE_PANEL_LIST.COURSE_LISTING)">
         <div class="detail-top">
@@ -81,43 +101,61 @@
         </div>
       </div>
       }
+        </div>
       </div>
-    </div>
-    <div class="courses-wrapper">
-      <div class="course-top">
-        <h2>Uploaded Courses</h2>
-      </div>
+      }
+      <div class="courses-wrapper">
+        <div class="course-top">
+          <h2>Uploaded Courses</h2>
+        </div>
 
-      <div class="scroll-container courses">
-        <div class="course-card-holder" *ngIf="courseLists.length > 0">
-          @for (course of courseLists | searchFilter: searchText : 'COURSE'; track $index) {
-          <div class="course-card" (click)="openCourseDetailsPage(course)">
-            <div class="card-content">
-              <figure><img [src]="course.courseCoverImage" alt="" /></figure>
-            </div>
-            <div class="card-content">
-              <span>A Course by {{ course["createdBy"].firstName }} {{ course["createdBy"].lastName }}</span>
-              <h3>{{course?.courseTitle}}
-              </h3>
-              <span class="lesson-label">
-                <div class="lesson-holder">
-                <star-rating [hoverEnabled]="false" [rating]="course.averageRating"></star-rating>
-                <span>Lessons
-                  @if(course.chapterDetails.length){
-                    {{course.chapterCompletedCount}}/{{course.chapterDetails.length}} 
-                    }
+        <div class="scroll-container courses">
+          <div class="course-card-holder" *ngIf="courseLists.length > 0">
+            @for (course of courseLists | searchFilter: searchText : 'COURSE'; track $index) {
+            <div class="course-card" (click)="openCourseDetailsPage(course)">
+              <div class="card-content">
+                <figure><img [src]="course.courseCoverImage" alt="" /></figure>
+              </div>
+              <div class="card-content">
+                <span>A Course by {{ course["createdBy"].firstName || course["createdBy"].first_name }} {{ course["createdBy"].lastName || course["createdBy"].last_name }}</span>
+                <h3>{{course?.courseTitle}}
+                </h3>
+                <span class="lesson-label">
+                  <div class="lesson-holder">
+                  <star-rating [hoverEnabled]="false" [rating]="course.averageRating"></star-rating>
+                  <span>Lessons
+                    @if(course.chapterDetails.length){
+                      {{course.chapterCompletedCount}}/{{course.chapterDetails.length}} 
+                      }
+                  </span>
+                  </div>                
                 </span>
-                </div>                
-              </span>
-              <div class="loader-holder">
-                <span [ngStyle]="{width: course.completionPercent}"></span>
+                <div class="loader-holder">
+                  <span [ngStyle]="{width: course.completionPercent}"></span>
+                </div>
               </div>
             </div>
+            }
           </div>
+          @if (courseLists.length === 0) {
+            <div class="no-courses-found">
+              <figure>
+                <svg width="140" height="140" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19Z" fill="currentColor" opacity="0.3"/>
+                  <path d="M12 7C13.1 7 14 7.9 14 9C14 10.1 13.1 11 12 11C10.9 11 10 10.1 10 9C10 7.9 10.9 7 12 7ZM12 13C13.1 13 14 13.9 14 15C14 16.1 13.1 17 12 17C10.9 17 10 16.1 10 15C10 13.9 10.9 13 12 13Z" fill="currentColor"/>
+                  <path d="M7 3H5C3.9 3 3 3.9 3 5V7H5V5H7V3ZM17 3H19C20.1 3 21 3.9 21 5V7H19V5H17V3ZM7 21H5C3.9 21 3 20.1 3 19V17H5V19H7V21ZM17 21H19C20.1 21 21 20.1 21 19V17H19V19H17V21Z" fill="currentColor" opacity="0.5"/>
+                </svg>
+              </figure>
+              <h3>No Courses Available</h3>
+              <p>We couldn't find any uploaded courses. This could happen if:</p>
+              <ul>
+                <li>No courses have been uploaded yet</li>
+                <li>There was an issue fetching data from the server</li>
+                <li>The dashboard data hasn't been loaded properly</li>
+              </ul>
+              <p class="help-text">Please try refreshing the page or contact your administrator if the problem persists.</p>
+            </div>
           }
-        </div>
-        <div class="no-records" *ngIf="courseLists.length == 0">
-          <p>No records found</p>
         </div>
       </div>
     </div>
@@ -135,7 +173,7 @@
             </figure>
             <div class="reading-list-right">
               <h4>{{course?.firstName}} {{course?.lastName}}</h4>
-              <span>5 courses</span>
+              <span>{{courseLists.length}} courses</span>
             </div>
           </div>
           }
@@ -165,4 +203,3 @@
     </div>
     }
   </div>
-</div>

@@ -31,6 +31,7 @@
       flex-direction: row;
       gap: 10px;
       padding-right: 10px;
+      align-items: center;
     }
     .scroll-container {
         @include flex(flex,column,null,null);
@@ -41,6 +42,82 @@
         left: 0;
         overflow: hidden;
         overflow-y: auto;
+        
+        .no-students-found {
+          @include flex(flex, column, center, center);
+          padding: 60px 40px;
+          text-align: center;
+          min-height: 400px;
+          max-width: 600px;
+          margin: 0 auto;
+          
+          figure {
+            margin: 0 0 30px 0;
+            opacity: 0.7;
+            
+            svg {
+              width: 140px;
+              height: 140px;
+              color: var(--bg-light-grey);
+            }
+          }
+          
+          h3 {
+            font-family: $poppins-bold;
+            font-size: 1.75rem;
+            color: var(--white);
+            margin: 0 0 20px 0;
+            font-weight: 600;
+          }
+          
+          p {
+            font-family: $archivo-regular;
+            font-size: 1rem;
+            color: var(--bg-light-grey);
+            margin: 0 0 15px 0;
+            opacity: 0.9;
+            line-height: 1.6;
+          }
+          
+          ul {
+            text-align: left;
+            margin: 15px auto 20px;
+            padding-left: 0;
+            list-style: none;
+            max-width: 500px;
+            
+            li {
+              font-family: $archivo-regular;
+              font-size: 0.938rem;
+              color: var(--bg-light-grey);
+              margin: 10px 0;
+              padding-left: 25px;
+              position: relative;
+              opacity: 0.85;
+              line-height: 1.5;
+              
+              &::before {
+                content: '•';
+                position: absolute;
+                left: 10px;
+                color: var(--bg-mit1);
+                font-size: 1.2rem;
+                font-weight: bold;
+              }
+            }
+          }
+          
+          .help-text {
+            font-family: $archivo-medium;
+            font-size: 0.875rem;
+            color: var(--bg-light-grey);
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--bg-input-border);
+            opacity: 0.7;
+            font-style: italic;
+          }
+        }
         .common-list {
           background: var(--bg-list);
           width: 100%;

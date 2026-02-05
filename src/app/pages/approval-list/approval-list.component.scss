@@ -33,6 +33,7 @@
       flex-direction: row;
       gap: 10px;
       padding-right: 10px;
+      align-items: center;
     }
     .scroll-container {
         @include flex(flex,column,null,null);
@@ -44,107 +45,283 @@
         overflow: hidden;
         overflow-y: auto;
         .common-list {
+          display: flex;
           background: var(--bg-list);
           width: 100%;
-          @include flex(flex, row, null, null);
+          @include flex(flex, row, space-between, center);
           gap: 15px;
           position: relative;
-          border: 1px solid var(--bg-input-border);
+          border: 2px solid var(--bg-input-border);
           overflow: hidden;
           cursor: pointer;
+          min-height: 80px;
+          padding: 0;
           -webkit-user-select: none;
           -moz-user-select: none;
           -ms-user-select: none;
           user-select: none;
           @include border-radius(15px);
+          @include transition(all 0.3s ease-in-out);
+          
+          &:hover {
+            border-color: var(--bg-mit1);
+            transform: translateY(-2px);
+            @include box-shadow(0, 4px, 12px, rgba(0, 0, 0, 0.15));
+          }
+          
+          &.selected {
+            border-color: var(--bg-mit1);
+            background: var(--bg-list-active);
+            @include box-shadow(0, 2px, 8px, rgba(0, 0, 0, 0.1));
+          }
+          
           input {
             position: absolute;
             opacity: 0;
             height: 0;
             width: 0;
-        }
-       span {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        z-index: 0;
-        }
-        input:checked ~ span {
-            background-color: var(--bg-list-active);                      
           }
+          
+          .checkbox-indicator {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--bg-input-border);
+            background: var(--bg-input);
+            @include border-radius(6px);
+            z-index: 2;
+            @include transition(all 0.2s ease-in-out);
+            
+            &::after {
+              content: '';
+              position: absolute;
+              left: 7px;
+              top: 3px;
+              width: 6px;
+              height: 12px;
+              border: solid var(--white);
+              border-width: 0 2px 2px 0;
+              transform: rotate(45deg);
+              opacity: 0;
+              @include transition(all 0.2s ease-in-out);
+            }
+          }
+          
+          input:checked ~ .checkbox-indicator {
+            background: var(--bg-mit1);
+            border-color: var(--bg-mit1);
+            
+            &::after {
+              opacity: 1;
+            }
+          }
+          
           h4 {
             font-family: $poppins-regular;
-            font-size: 0.938rem;
+            font-size: 1rem;
             color: var(--light-blue);
-            font-weight: normal;
-            line-height: 18px;
-            margin-bottom: 5px;
+            font-weight: 600;
+            line-height: 1.4;
+            margin: 0 0 6px 0;
             @include text-ellipsis($lines: 1);
             position: relative;
             z-index: 1;
           }
+          
+          .teacher-email {
+            font-family: $archivo-regular;
+            font-size: 0.813rem;
+            color: var(--bg-light-grey);
+            display: block;
+            margin-bottom: 4px;
+            @include text-ellipsis($lines: 1);
+            position: relative;
+            z-index: 1;
+          }
+          
+          .teacher-status {
+            display: inline-block;
+            font-family: $archivo-medium;
+            font-size: 0.75rem;
+            color: var(--bg-orange);
+            background: rgba(255, 152, 0, 0.1);
+            padding: 2px 8px;
+            @include border-radius(12px);
+            position: relative;
+            z-index: 1;
+          }
+          
           .list-left {
-            padding: 10px;                    
-            gap: 10px;
+            padding: 15px 15px 15px 50px;
+            gap: 15px;
             flex-grow: 1;
             @include flex(flex, null, null, center);
             position: relative;
             z-index: 1;
+            min-width: 0;
           }
-          figure {
-            width: 50px;
-            height: 50px;
+          
+          .teacher-avatar {
+            width: 55px;
+            height: 55px;
+            min-width: 55px;
             @include border-radius(100%);
-            overflow: hidden;  
+            overflow: hidden;
+            border: 2px solid var(--bg-input-border);
+            background: var(--bg-input);
+            @include flex(flex, null, center, center);
+            
             img {
               width: 100%;
               height: 100%;
               object-fit: cover;
-            }                  
-          }                  
-          .common-list-right {
-            width: 100%;                    
+              display: block;
+            }
           }
+          
+          .common-list-right {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+          }
+          
           .icon-holder {
-            background: var(--bg-shadow);
+            background: var(--bg-list-action);
             @include flex(flex, null, null, center);
-            @include border-radius(0 10px 10px 0);
+            @include border-radius(0 13px 13px 0);
             height: 100%;
-            padding: 10px;
-            border-left: 1px solid var(--bg-input-border);
+            padding: 0 12px;
+            gap: 8px;
             position: relative;
             z-index: 1;
-            button {
+            flex-shrink: 0;
+            
+            .icon-btn {
               background: transparent;
-              width: 23px;
-              height: 23px;
-              padding: 3px;
+              width: 36px;
+              height: 36px;
+              padding: 6px;
               border: 0;
               cursor: pointer;
+              @include border-radius(8px);
+              @include flex(flex, null, center, center);
+              @include transition(all 0.2s ease-in-out);
+              
+              img {
+                width: 18px;
+                height: 18px;
+                filter: brightness(0) invert(1);
+                opacity: 0.8;
+                @include transition(all 0.2s ease-in-out);
+              }
+              
+              &:hover {
+                background: rgba(255, 255, 255, 0.1);
+                
+                img {
+                  opacity: 1;
+                  transform: scale(1.1);
+                }
+              }
+              
+              &.delete-btn:hover {
+                background: rgba(239, 68, 68, 0.2);
+              }
             }
+          }
+        }
+        
+        .no-teachers-found {
+          @include flex(flex, column, center, center);
+          padding: 60px 40px;
+          text-align: center;
+          min-height: 400px;
+          max-width: 600px;
+          margin: 0 auto;
+          
+          figure {
+            margin: 0 0 30px 0;
+            opacity: 0.7;
+            
+            svg {
+              width: 140px;
+              height: 140px;
+              color: var(--bg-light-grey);
+            }
+          }
+          
+          h3 {
+            font-family: $poppins-bold;
+            font-size: 1.75rem;
+            color: var(--white);
+            margin: 0 0 15px 0;
+            font-weight: 600;
+          }
+          
+          p {
+            font-family: $archivo-regular;
+            font-size: 1rem;
+            color: var(--bg-light-grey);
+            margin: 0;
+            opacity: 0.9;
+            line-height: 1.6;
           }
         }
     }
 }
 .submit-holder {
-  button {
+  padding: 20px 0 0;
+  margin-top: auto;
+  border-top: 1px solid var(--bg-input-border);
+  position: sticky;
+  bottom: 0;
+  background: var(--bg-left-panel);
+  z-index: 10;
+  @include flex(flex, null, flex-end, null);
+  
+  .btn-assign {
     font-family: $archivo-medium;
-    font-size: 0.875rem;
-    color:  var(--white);
-    width: 180px;
-    height: 40px;
-    @include border-radius(20px);
+    font-size: 1rem;
+    color: var(--white);
+    margin: 0;
+    @include button();
+    @include box-shadow(2px, 2px, 12px, var(--bg-magento));
+    width: auto;
+    min-width: 200px;
+    padding: 16px 24px;
+    @include border-radius(12px);
     @include gradient();
-    border: none;
-    cursor: pointer;
+    border: 1px solid var(--bg-orange);
     @include flex(flex, null, center, center);
-  }
-  & {
-      @include flex(flex, null, flex-end, null);
-  }
+    gap: 8px;
+    @include transition(all 0.3s ease-in-out);
+    cursor: pointer;
     
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      @include box-shadow(4px, 4px, 16px, var(--bg-magento));
+    }
+    
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    
+    .selected-count {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 2px 8px;
+      @include border-radius(12px);
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+  }
 }
 @media screen and (max-width: 1919px) {
   .scroll-container {

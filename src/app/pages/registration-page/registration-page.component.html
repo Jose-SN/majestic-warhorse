@@ -1,39 +1,72 @@
-<section class="registration-wrapper" [ngClass]="{'edit':!isEditMode}">
+<section class="registration-wrapper" [ngClass]="{'edit': isEditMode}">
   @if(!isEditMode){
   <div id="particles-js"></div>
   }
-  <div class="registration-holder">
+  <div class="registration-holder" [ngClass]="{'edit-mode': isEditMode}">
     @if(!isEditMode){
     <figure>
       <img src="../../../../assets/images/logo-mejestic-hourse-landing.svg" alt="Mejastic Hourse" />
     </figure>
     <h1>Create An Account</h1>
     <p>LET'S GET YOU STARTED</p>
+    } @else {
+    <div class="edit-header">
+      <div class="header-content">
+        <h1>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Update Account Details
+        </h1>
+        <p>Manage your profile information and account settings</p>
+      </div>
+    </div>
     }
-    <div class="form-wrapper">
-      <div class="image-holder">
-        <figure><img [src]="profileUrl" alt="Mejastic Hourse" /></figure>
+    <div class="form-wrapper" [ngClass]="{'edit-form': isEditMode}">
+      <div class="image-holder" [ngClass]="{'edit-avatar': isEditMode}">
+        <figure>
+          <img [src]="profileUrl" alt="Profile Picture" />
+          @if(isEditMode) {
+            <div class="avatar-overlay">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </div>
+          }
+        </figure>
       </div>
       <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
         <div class="input-row">
           <div class="input-holder">
-            <label for="role">Register As</label>
-            <div class="checkbox-holder">
+            <label for="role">
+              @if(isEditMode) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              }
+              {{isEditMode ? 'Account Role' : 'Register As'}}
+            </label>
+            <div class="checkbox-holder" [ngClass]="{'edit-role': isEditMode}">
               @if(isAdminLogin){
               <label>
                 <strong>Admin</strong>
-                <input type="radio" name="role" formControlName="role" value="admin">
+                <input type="radio" name="role" formControlName="role" value="admin" [disabled]="isEditMode">
                 <span class="checkmark"></span>
               </label>
               }@else {
               <label>
                 <strong>Student</strong>
-                <input type="radio" name="role" formControlName="role" value="student">
+                <input type="radio" name="role" formControlName="role" value="student" [disabled]="isEditMode">
                 <span class="checkmark"></span>
               </label>
               <label>
                 <strong>Teacher</strong>
-                <input type="radio" name="role" formControlName="role" value="teacher">
+                <input type="radio" name="role" formControlName="role" value="teacher" [disabled]="isEditMode">
                 <span class="checkmark"></span>
               </label>
               }
@@ -41,24 +74,52 @@
           </div>
           
           <div class="input-holder">
-            <label for="profileimage">Upload Image</label>
+            <label for="profileimage">
+              @if(isEditMode) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+              }
+              {{isEditMode ? 'Profile Picture' : 'Upload Image'}}
+            </label>
             <input type="file" name="profileimage" placeholder="Upload Image" formControlName="profileImage"
-              (change)="onFileSelected($event)" />
+              (change)="onFileSelected($event)" accept="image/*" />
             @if (isFieldInvalid(createAccountForm, 'profileImage')) {
             <span>Image is required.</span>
+            }
+            @if(isEditMode) {
+              <span class="file-hint">Click to change your profile picture</span>
             }
           </div>
         </div>
         <div class="input-row">
           <div class="input-holder">
-            <label for="firstname">Your First Name</label>
+            <label for="firstname">
+              @if(isEditMode) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              }
+              {{isEditMode ? 'First Name' : 'Your First Name'}}
+            </label>
             <input type="text" name="firstname" placeholder="Enter First Name" formControlName="firstName" />
             @if (isFieldInvalid(createAccountForm, 'firstName')) {
             <span> First Name is required.</span>
             }
           </div>
           <div class="input-holder">
-            <label for="lastname">Your Last Name</label>
+            <label for="lastname">
+              @if(isEditMode) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              }
+              {{isEditMode ? 'Last Name' : 'Your Last Name'}}
+            </label>
             <input type="text" name="lastname" placeholder="Enter Last Name" formControlName="lastName" />
             @if (isFieldInvalid(createAccountForm, 'lastName')) {
             <span> LastName is required.</span>
@@ -66,9 +127,15 @@
           </div>
         </div>
         <div class="input-row">
-          
           <div class="input-holder">
-            <label>Mobile</label>
+            <label>
+              @if(isEditMode) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+              }
+              Mobile
+            </label>
             <input type="text" placeholder="Enter Mobile Number" formControlName="phone" />
             @if (isFieldInvalid(createAccountForm, 'phone')) {
             <div class="error-message">
@@ -82,8 +149,25 @@
             }
           </div>
           <div class="input-holder">
-            <label for="email">Email</label>
-            <input type="text" name="email" placeholder="Enter Email Address" formControlName="email" />
+            <label for="email">
+              @if(isEditMode) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              }
+              Email
+            </label>
+            <input 
+              type="email" 
+              name="email" 
+              placeholder="Enter Email Address" 
+              formControlName="email"
+              [readonly]="isEditMode"
+              [class.readonly-field]="isEditMode" />
+            @if(isEditMode) {
+              <span class="field-hint">Email cannot be changed</span>
+            }
             @if (isFieldInvalid(createAccountForm, 'email')) {
             <div class="error-message">
               @if (createAccountForm.get('email')?.errors?.['required']) {
@@ -97,10 +181,36 @@
           </div>
         </div>
         <div class="input-row">
-          <div class="input-holder">
-            <label for="password">Password</label>
-            <input type="password" name="password" placeholder="Enter Your Password (6 characters)"
-              formControlName="password" />
+          <div class="input-holder password-field">
+            <label for="password">
+              @if(isEditMode) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              }
+              {{isEditMode ? 'New Password (Optional)' : 'Password'}}
+            </label>
+            <div class="password-input-wrapper">
+              <input 
+                [type]="showPassword ? 'text' : 'password'" 
+                name="password" 
+                placeholder="Enter Your Password (6 characters)"
+                formControlName="password" />
+              <span class="eye-icon" (click)="togglePasswordVisibility()">
+                @if (showPassword) {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                } @else {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                }
+              </span>
+            </div>
             @if (isFieldInvalid(createAccountForm, 'password')) {
             <div class="error-message">
               @if (getPasswordError(createAccountForm, 'required')) {
@@ -129,10 +239,36 @@
             }
           </div>
           
-          <div class="input-holder">
-            <label for="password">Confirm Password</label>
-            <input type="password" name="password" placeholder="Enter Your Password (6 characters)"
-              formControlName="confirmPassword" />
+          <div class="input-holder password-field">
+            <label for="confirmPassword">
+              @if(isEditMode) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              }
+              {{isEditMode ? 'Confirm New Password' : 'Confirm Password'}}
+            </label>
+            <div class="password-input-wrapper">
+              <input 
+                [type]="showConfirmPassword ? 'text' : 'password'" 
+                name="confirmPassword" 
+                placeholder="Enter Your Password (6 characters)"
+                formControlName="confirmPassword" />
+              <span class="eye-icon" (click)="toggleConfirmPasswordVisibility()">
+                @if (showConfirmPassword) {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                } @else {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                }
+              </span>
+            </div>
             @if (isFieldInvalid(createAccountForm, 'confirmPassword')) {
             <span>Confirm Password is required.</span>
             }
@@ -145,7 +281,16 @@
         
         
         
-        <button class="btn-login" type="submit"> {{isEditMode ? 'Update Account': 'Get Started'}}</button>
+        <button class="btn-login" [ngClass]="{'btn-update': isEditMode}" type="submit">
+          @if(isEditMode) {
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+              <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+          }
+          {{isEditMode ? 'Update Account': 'Get Started'}}
+        </button>
       </form>
     </div>
     @if(!isEditMode){

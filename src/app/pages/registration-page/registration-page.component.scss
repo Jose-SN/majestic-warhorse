@@ -22,7 +22,9 @@ app-particle {
   border-radius: 15px;
   box-shadow: 2px 2px 15px var(--bg-shadow);  
   &.edit {
+    padding: 0;
     box-shadow: none;
+    background: transparent;
   }
 }
 
@@ -35,10 +37,20 @@ app-particle {
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  
+  &.edit-mode {
+    max-width: 900px;
+    @include border-radius(15px);
+    background: var(--bg-list);
+    padding: 30px;
+    @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
+  }
+  
   > figure {
     max-width: 185px;
     margin: 0 auto;
   }
+  
   h1 {
     font-size: 2.375rem;
     color: var(--light-blue);
@@ -46,12 +58,14 @@ app-particle {
     letter-spacing: 4px;
     margin: 25px 0 0;
   }
+  
   p {
     font-size: 0.9375rem;
     text-align: center;
     color: var(--white);
     margin: 18px 0 0;
   }
+  
   a {
     font-size: 0.875rem;
     color: var(--bg-blue);
@@ -60,7 +74,45 @@ app-particle {
       color: var(--white);
     }
   }
+  
+  .edit-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--bg-input-border);
+    
+    .header-content {
+      h1 {
+        font-size: 1.875rem;
+        color: var(--light-blue);
+        text-align: left;
+        letter-spacing: 0;
+        margin: 0 0 8px 0;
+        @include flex(flex, null, null, center);
+        gap: 12px;
+        font-weight: 600;
+        
+        svg {
+          color: var(--bg-mit1);
+          flex-shrink: 0;
+        }
+      }
+      
+      p {
+        font-size: 0.938rem;
+        text-align: left;
+        color: var(--bg-light-grey);
+        margin: 0;
+        opacity: 0.85;
+        line-height: 1.5;
+      }
+    }
+  }
   .form-wrapper {
+    &.edit-form {
+      background: transparent;
+      padding: 0;
+    }
+    
     .image-holder {
       width: 150px;
       height: 150px;
@@ -68,6 +120,53 @@ app-particle {
       margin: 25px auto;
       overflow: hidden;
       border: 10px solid rgba(215,46,132, 0.32);
+      position: relative;
+      
+      &.edit-avatar {
+        width: 120px;
+        height: 120px;
+        border: 4px solid var(--bg-input-border);
+        margin: 0 auto 30px;
+        cursor: pointer;
+        @include transition(all 0.3s ease-in-out);
+        
+        &:hover {
+          border-color: var(--bg-mit1);
+          transform: scale(1.05);
+          
+          .avatar-overlay {
+            opacity: 1;
+          }
+        }
+        
+        figure {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+          
+          .avatar-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            @include flex(flex, null, center, center);
+            opacity: 0;
+            @include transition(all 0.3s ease-in-out);
+            
+            svg {
+              color: var(--white);
+              width: 24px;
+              height: 24px;
+            }
+          }
+        }
+      }
     }
     .input-row {
       @include flex(flex,null,null,null);
@@ -77,14 +176,36 @@ app-particle {
     .input-holder {
       position: relative;
       flex: 1;
+      
       label {
         font-size: 0.75rem;
         color: var(--bg-label);
-        margin-bottom: 5px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        
+        svg {
+          width: 16px;
+          height: 16px;
+          color: var(--bg-mit1);
+          flex-shrink: 0;
+        }
+      }
+      
+      .file-hint {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--bg-light-grey);
+        margin-top: 6px;
+        opacity: 0.7;
+        font-style: italic;
       }
       input {
         &[type='text'],
         &[type='password'],
+        &[type='email'],
         &[type='file'] {
           font-weight: normal;
           font-size: 1rem;
@@ -98,9 +219,74 @@ app-particle {
           &:focus {
             border-color: var(--bg-mit1);
           }
+          
+          &[readonly],
+          &.readonly-field {
+            background: var(--bg-list);
+            border-color: var(--bg-input-border);
+            cursor: not-allowed;
+            opacity: 1;
+            color: var(--bg-label);
+            
+            &:focus {
+              border-color: var(--bg-input-border);
+              outline: none;
+            }
+          }
+          
+          &:disabled {
+            background: var(--bg-list);
+            border-color: var(--bg-input-border);
+            cursor: not-allowed;
+            opacity: 1;
+            color: var(--bg-label);
+            
+            &:focus {
+              border-color: var(--bg-input-border);
+              outline: none;
+            }
+          }
         }
         &[type='file'] {
           padding: 5px !important;
+        }
+      }
+      
+      .field-hint {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--bg-light-grey);
+        margin-top: 6px;
+        opacity: 0.7;
+        font-style: italic;
+      }
+      &.password-field {
+        .password-input-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+          input {
+            padding-right: 45px;
+          }
+        }
+        .eye-icon {
+          position: absolute;
+          right: 15px;
+          top: 50%;
+          transform: translateY(-50%);
+          cursor: pointer;
+          color: var(--bg-label);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          @include transition(color 0.2s ease-in-out);
+          &:hover {
+            color: var(--bg-mit1);
+          }
+          svg {
+            width: 20px;
+            height: 20px;
+          }
         }
       }
     }
@@ -121,6 +307,32 @@ app-particle {
       @include border-radius(50px);
       @include gradient();
       border: 1px solid var(--bg-orange);
+      @include flex(flex, null, center, center);
+      gap: 10px;
+      
+      &.btn-update {
+        font-family: $archivo-medium;
+        font-size: 1rem;
+        margin: 25px 0 0;
+        @include border-radius(12px);
+        padding: 14px 24px;
+        @include transition(all 0.3s ease-in-out);
+        
+        svg {
+          width: 20px;
+          height: 20px;
+          flex-shrink: 0;
+        }
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        &:active {
+          transform: translateY(0);
+        }
+      }
     }
   }
   .login-bottom {
@@ -190,35 +402,47 @@ app-particle {
   .checkbox-holder  {
     display: flex;
     margin-top: 20px;
+    gap: 20px;
+    
+    &.edit-role {
+      margin-top: 10px;
+      pointer-events: none;
+      opacity: 0.7;
+      
       label {
-        font-size: 0.785rem;
-        color:  var(--white);
-        height: 25px;
-        display: block;
-        position: relative;
-        cursor: pointer;
-        margin-right: 25px;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        @include border-radius(5px);
-        &:not(:last-child){
-          margin-bottom: 15px;
-        }
-        strong {          
-          font-size: 1.125rem;
-          font-weight: normal;
-          color: var(--white);
-          background: var(--bg-mit2);
-          position: relative;
-          top: -3px;
-          margin-left: 40px;
-          padding: 5px 8px;
-          display: block;
-          @include border-radius(5px)
-        }
+        cursor: not-allowed;
       }
+    }
+    
+    label {
+      font-size: 0.785rem;
+      color:  var(--white);
+      height: 25px;
+      display: block;
+      position: relative;
+      cursor: pointer;
+      margin-right: 25px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      @include border-radius(5px);
+      &:not(:last-child){
+        margin-bottom: 15px;
+      }
+      strong {          
+        font-size: 1.125rem;
+        font-weight: normal;
+        color: var(--white);
+        background: var(--bg-mit2);
+        position: relative;
+        top: -3px;
+        margin-left: 40px;
+        padding: 5px 8px;
+        display: block;
+        @include border-radius(5px)
+      }
+    }
       input {
         position: absolute;
         opacity: 0;

@@ -1,21 +1,60 @@
 <div class="common-wrapper">
   <div class="scoll-wrapper">
     <div class="scroll-container">
-      <div class="common-list-wrapper">
-        @for (teacher of teachersList | searchFilter: searchText : 'USER_LIST';; track $index) {
-        <div class="common-list">
-          <div class="list-left">
-            <figure><img [src]="commonService.decodeUrl(teacher.profileImage)" alt=""></figure>
-            <div class="common-list-right">
-              <h4>{{teacher.firstName}} {{teacher.lastName}}</h4>
-            </div>
-          </div>
-          <div class="icon-holder">
-            <button (click)="deleteTeacher(teacher)"><img src="../../../assets/images/icon-delete.svg" alt=""></button>
-          </div>
+      @if (teachersList.length === 0) {
+        <div class="no-teachers-found">
+          <figure>
+            <svg width="140" height="140" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4ZM12 6C8.69 6 6 8.69 6 12C6 15.31 8.69 18 12 18C15.31 18 18 15.31 18 12C18 8.69 15.31 6 12 6ZM11 7H13V9H11V7ZM11 10H13V16H11V10Z" fill="currentColor"/>
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" fill="none" opacity="0.2"/>
+            </svg>
+          </figure>
+          <h3>No Teachers Found</h3>
+          <p>We couldn't find any teachers in the system. This could happen if:</p>
+          <ul>
+            <li>No teachers have been registered yet</li>
+            <li>All teachers are pending approval</li>
+            <li>There was an issue fetching data from the server</li>
+          </ul>
+          <p class="help-text">Please try refreshing the page or contact your administrator if the problem persists.</p>
         </div>
+      } @else {
+        @if (teachersList | searchFilter: searchText : 'USER_LIST'; as filteredList) {
+          @if (filteredList.length > 0) {
+            <div class="common-list-wrapper">
+              @for (teacher of filteredList; track teacher.id || $index) {
+                <div class="common-list">
+                  <div class="list-left">
+                    <figure><img [src]="commonService.decodeUrl(teacher.profileImage || teacher.profile_image)" alt=""></figure>
+                    <div class="common-list-right">
+                      <h4>{{teacher.firstName || teacher.first_name}} {{teacher.lastName || teacher.last_name}}</h4>
+                    </div>
+                  </div>
+                  <div class="icon-holder">
+                    <button (click)="deleteTeacher(teacher)" aria-label="Delete teacher"><img src="../../../assets/images/icon-delete.svg" alt="Delete"></button>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="no-teachers-found">
+              <figure>
+                <svg width="140" height="140" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill="currentColor"/>
+                  <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="currentColor" opacity="0.3"/>
+                </svg>
+              </figure>
+              <h3>No Matching Teachers</h3>
+              <p>We couldn't find any teachers matching your search criteria. Try:</p>
+              <ul>
+                <li>Adjusting your search terms</li>
+                <li>Clearing the search filter</li>
+                <li>Checking if teachers are pending approval</li>
+              </ul>
+            </div>
+          }
         }
-      </div>
+      }
     </div>
   </div>
 </div>
