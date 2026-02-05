@@ -291,7 +291,7 @@
                   <figure><img [src]="course.courseCoverImage" alt="" /></figure>
                 </div>
                 <div class="card-content">
-                  <span>A Course by {{ course["createdBy"].firstName }} {{ course["createdBy"].lastName }}</span>
+                  <span>A Course by {{ course["createdBy"].firstName || course["createdBy"].first_name }} {{ course["createdBy"].lastName || course["createdBy"].last_name }}</span>
                   <h3>{{course?.courseTitle}}
                   </h3>
                   <span class="lesson-label">
@@ -321,13 +321,13 @@
   <div class="content-right">
     <div class="content-box">
       <figure>
-        <img [src]="loginedUserInfo.profileImage"/>
+        <img [src]="loginedUserInfo.profileImage || loginedUserInfo.profile_image"/>
       </figure>
-      <span>{{loginedUserInfo.firstName}} {{loginedUserInfo.lastName}}</span>
-      <strong>{{commonService.transformText(loginedUserInfo.role || '')}}</strong>
+      <span>{{loginedUserInfo.firstName || loginedUserInfo.first_name}} {{loginedUserInfo.lastName || loginedUserInfo.last_name}}</span>
+      <strong>{{commonService.transformText((loginedUserInfo.role || ''))}}</strong>
       <ul class="contact-area">
-        <li><a href="">{{loginedUserInfo.email}}</a></li>
-        <li><a href="">{{loginedUserInfo.phone}}</a></li>
+        <li><a href="">{{loginedUserInfo.email || loginedUserInfo.contact?.email}}</a></li>
+        <li><a href="">{{loginedUserInfo.phone || loginedUserInfo.contact?.phone}}</a></li>
       </ul>
       <div class="status-wrapper">
         <div class="status-holder">
