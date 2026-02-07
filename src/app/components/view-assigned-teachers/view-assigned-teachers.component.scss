@@ -1,0 +1,206 @@
+@import '../../../styles/index';
+
+.common-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .common-wrapper {
+      padding: 30px;
+      @include border-radius(15px);
+      @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
+      flex: 1;
+      margin: 30px 0 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      
+      .scoll-wrapper {
+          width: 100%;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          min-height: 0;
+          overflow: hidden;
+          .scroll-container {
+              display: flex;
+              flex-direction: column;
+              width: 100%;
+              flex: 1;
+              min-height: 0;
+              .common-list-wrapper {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                margin-top: 20px;
+                flex: 1;
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding-right: 10px;
+                min-height: 0;
+                
+                .loading-state {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  padding: 40px 20px;
+                  color: var(--light-blue);
+                  font-family: $poppins-regular;
+                  font-size: 1rem;
+                }
+                
+                .no-teachers-found {
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;
+                  padding: 40px 20px;
+                  text-align: center;
+                  color: var(--light-blue);
+                  
+                  figure {
+                    margin-bottom: 20px;
+                    svg {
+                      color: var(--bg-light-grey);
+                      opacity: 0.5;
+                    }
+                  }
+                  
+                  h3 {
+                    font-family: $poppins-bold;
+                    font-size: 1.25rem;
+                    margin-bottom: 12px;
+                    color: var(--light-blue);
+                  }
+                  
+                  p {
+                    font-family: $poppins-regular;
+                    font-size: 0.938rem;
+                    margin-bottom: 16px;
+                    color: var(--bg-light-grey);
+                    line-height: 1.5;
+                  }
+                  
+                  ul {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0 0 20px 0;
+                    text-align: left;
+                    max-width: 400px;
+                    
+                    li {
+                      font-family: $poppins-regular;
+                      font-size: 0.875rem;
+                      color: var(--bg-light-grey);
+                      padding: 8px 0;
+                      padding-left: 24px;
+                      position: relative;
+                      
+                      &::before {
+                        content: '•';
+                        position: absolute;
+                        left: 8px;
+                        color: var(--bg-text-orange);
+                        font-size: 1.2rem;
+                      }
+                    }
+                  }
+                  
+                  .help-text {
+                    font-size: 0.813rem;
+                    color: var(--bg-light-grey);
+                    opacity: 0.7;
+                    font-style: italic;
+                  }
+                }
+              }
+              .assign-footer {
+                flex-shrink: 0;
+                padding: 20px 0 0;
+                border-top: 1px solid var(--bg-input-border);
+                background: var(--bg-left-panel);
+              }
+              .common-list {
+                background: var(--bg-list);
+                width: 100%;
+                @include flex(flex, row, null, null);
+                gap: 15px;
+                position: relative;
+                border: 1px solid var(--bg-input-border);
+                overflow: hidden;
+                cursor: pointer;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                @include border-radius(15px);
+                input {
+                  position: absolute;
+                  opacity: 0;
+                  height: 0;
+                  width: 0;
+              }
+             span {
+              position: absolute;
+              top: 0;
+              left: 0;
+              height: 100%;
+              width: 100%;
+              z-index: 0;
+              }
+              input:checked ~ span {
+                  background-color: var(--bg-list-active);                      
+                }
+                h4 {
+                  font-family: $poppins-regular;
+                  font-size: 0.938rem;
+                  color: var(--light-blue);
+                  font-weight: normal;
+                  line-height: 18px;
+                  margin-bottom: 5px;
+                  @include text-ellipsis($lines: 1);
+                  position: relative;
+                  z-index: 1;
+                }
+                .list-left {
+                  padding: 10px;                    
+                  gap: 10px;
+                  flex-grow: 1;
+                  @include flex(flex, null, null, center);
+                  position: relative;
+                  z-index: 1;
+                }
+                figure {
+                  width: 50px;
+                  height: 50px;
+                  @include border-radius(100%);
+                  overflow: hidden;                    
+                }                  
+                .common-list-right {
+                  width: 100%;                    
+                }
+              }
+          }
+      }
+  }
+}
+
+.assign-footer {
+  .btn-assign {
+    font-family: $archivo-regular;
+    font-size: 1rem;
+    color: var(--white);
+    margin: 0;
+    @include button();
+    @include box-shadow(2px, 2px, 8px, var(--bg-magento));
+    width: 100%;
+    @include border-radius(50px);
+    &:not(:disabled) {
+      @include gradient();
+      border: 1px solid var(--bg-orange);
+    }
+    .selected-count {
+      margin-left: 8px;
+      font-weight: 600;
+    }
+  }
+}

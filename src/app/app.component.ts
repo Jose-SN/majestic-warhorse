@@ -8,6 +8,7 @@ import { CommonDialogComponent } from './components/common-dialog/common-dialog.
 import { COMPONENT_NAME } from './constants/popup-constants';
 import { FileViwerComponent } from './components/file-viwer/file-viwer.component';
 import { AssignTeachersComponent } from './components/assign-teachers/assign-teachers.component';
+import { ViewAssignedTeachersComponent } from './components/view-assigned-teachers/view-assigned-teachers.component';
 import { ApplicationApiService } from './services/api-service/application-api.service';
 import { environment } from 'src/environments/environment';
 
@@ -76,6 +77,9 @@ export class AppComponent implements OnInit {
         break;
       case COMPONENT_NAME.ASSIGN_TEACHER:
         componentName = AssignTeachersComponent;
+        break;
+      case COMPONENT_NAME.VIEW_ASSIGNED_TEACHERS:
+        componentName = ViewAssignedTeachersComponent;
         break;
     }
     this.commonDialogComponent.loadComponent(componentName, { popupModelInfo: modelInfo });

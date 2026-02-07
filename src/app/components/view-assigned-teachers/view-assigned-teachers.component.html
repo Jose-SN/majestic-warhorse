@@ -1,0 +1,104 @@
+<div class="common-container">
+    <div class="common-wrapper">
+        <div class="scoll-wrapper">
+            <div class="scroll-container">
+                <div class="common-list-wrapper">
+                    @if (isLoading) {
+                        <div class="loading-state">
+                            <p>Loading assigned teachers...</p>
+                        </div>
+                    } @else if (teachersList.length === 0) {
+                        <div class="no-teachers-found">
+                            <figure>
+                                <svg width="140" height="140" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" fill="currentColor" opacity="0.3"/>
+                                    <path d="M12 14C16.4183 14 20 15.7909 20 18V20H4V18C4 15.7909 7.58172 14 12 14Z" fill="currentColor" opacity="0.3"/>
+                                    <path d="M12 2C13.6569 2 15 3.34315 15 5C15 6.65685 13.6569 8 12 8C10.3431 8 9 6.65685 9 5C9 3.34315 10.3431 2 12 2Z" fill="currentColor"/>
+                                    <path d="M12 10C15.866 10 19 11.3431 19 13V15H5V13C5 11.3431 8.13401 10 12 10Z" fill="currentColor"/>
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" fill="none" opacity="0.2"/>
+                                </svg>
+                            </figure>
+                            <h3>No Teachers Available</h3>
+                            <p>We couldn't find any teachers to assign. This could happen if:</p>
+                            <ul>
+                                <li>No teachers have been added to the system yet</li>
+                                <li>There was an issue fetching data from the server</li>
+                            </ul>
+                            <p class="help-text">Please try refreshing the page or contact your administrator if the problem persists.</p>
+                        </div>
+                    } @else {
+                        @for (teacher of teachersList; track getTeacherId(teacher) || $index) {
+                            <label 
+                                class="common-list" 
+                                [class.selected]="selectedTeachers.includes(getTeacherId(teacher))" 
+                                [style.display]="'flex'"
+                                [style.align-items]="'center'"
+                                [style.gap]="'15px'"
+                                [style.padding]="'14px 16px'"
+                                [style.border-radius]="'12px'"
+                                [style.border]="selectedTeachers.includes(getTeacherId(teacher)) ? '2px solid var(--bg-mit1)' : '2px solid var(--bg-input-border)'"
+                                [style.background]="selectedTeachers.includes(getTeacherId(teacher)) ? 'rgba(59, 130, 246, 0.08)' : 'var(--bg-list)'"
+                                [style.cursor]="'pointer'"
+                                [style.transition]="'all 0.3s ease'"
+                                [style.position]="'relative'"
+                                [style.min-height]="'72px'"
+                                [style.box-shadow]="selectedTeachers.includes(getTeacherId(teacher)) ? '0 0 0 1px rgba(59, 130, 246, 0.2)' : 'none'">
+                                <input 
+                                    type="checkbox" 
+                                    [checked]="selectedTeachers.includes(getTeacherId(teacher))"
+                                    (change)="onTeacherSelect(teacher, $event)"
+                                    [value]="getTeacherId(teacher)"
+                                    style="position: absolute; opacity: 0; width: 0; height: 0;">
+                                <span 
+                                    class="checkbox-indicator" 
+                                    [style.position]="'absolute'"
+                                    [style.left]="'16px'"
+                                    [style.top]="'50%'"
+                                    [style.transform]="'translateY(-50%)'"
+                                    [style.width]="'20px'"
+                                    [style.height]="'20px'"
+                                    [style.border]="selectedTeachers.includes(getTeacherId(teacher)) ? '2px solid var(--bg-mit1)' : '2px solid var(--bg-input-border)'"
+                                    [style.border-radius]="'5px'"
+                                    [style.background]="selectedTeachers.includes(getTeacherId(teacher)) ? 'var(--bg-mit1)' : 'var(--bg-list)'"
+                                    [style.cursor]="'pointer'"
+                                    [style.flex-shrink]="'0'"
+                                    [style.z-index]="'2'"
+                                    [style.transition]="'all 0.2s ease'"
+                                    [style.display]="'block'"
+                                    [style.position]="'relative'">
+                                    @if (selectedTeachers.includes(getTeacherId(teacher))) {
+                                        <span style="position: absolute; left: 5px; top: 2px; width: 5px; height: 10px; border: solid var(--white); border-width: 0 2px 2px 0; transform: rotate(45deg); display: block;"></span>
+                                    }
+                                </span>
+                                <div class="list-left" style="display: flex; align-items: center; gap: 14px; flex: 1; padding-left: 48px; min-width: 0;">
+                                    <figure class="teacher-avatar" style="width: 48px; height: 48px; min-width: 48px; max-width: 48px; border-radius: 50%; overflow: hidden; border: 2px solid var(--bg-input-border); background: var(--bg-input); margin: 0; flex-shrink: 0;">
+                                        <img [src]="commonService.decodeUrl((teacher.profileImage || teacher.profile_image) ?? '')" alt="Teacher Avatar" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                                    </figure>
+                                    <div class="common-list-right" style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+                                        <h4 style="margin: 0; font-size: 0.938rem; font-weight: 600; color: var(--light-blue); line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{teacher.firstName || teacher.first_name}} {{teacher.lastName || teacher.last_name}}</h4>
+                                        @if (teacher.contact?.email || teacher.email) {
+                                            <span class="teacher-email" style="font-size: 0.75rem; color: var(--bg-light-grey); opacity: 0.85; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{teacher.contact?.email || teacher.email}}</span>
+                                        }
+                                    </div>
+                                </div>
+                            </label>
+                        }
+                    }
+                </div>
+                <footer class="assign-footer">
+                    <button 
+                        class="btn-assign" 
+                        [disabled]="selectedTeachers.length === 0" 
+                        (click)="handleTeacherUpdate()"
+                        type="button"
+                        aria-label="Update assigned teachers">
+                        <span>Update Teachers</span>
+                        @if (selectedTeachers.length > 0) {
+                            <span class="selected-count">({{ selectedTeachers.length }})</span>
+                        }
+                    </button>
+                </footer>
+            </div>
+        </div>
+    </div>
+</div>
