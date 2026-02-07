@@ -69,6 +69,22 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     this.isPasswordMismatch = this.formValidator.isPasswordMismatch;
   }
   ngOnInit(): void {
+    // Make password fields optional in edit mode
+    if (this.isEditMode) {
+      // Clear required validators for password fields
+      this.createAccountForm.get('password')?.clearValidators();
+      // Set optional validators (only validate format if password is provided)
+      this.createAccountForm.get('password')?.setValidators([
+        Validators.minLength(6),
+        this.formValidator.customPasswordValidator.bind(this.formValidator),
+      ]);
+      this.createAccountForm.get('confirmPassword')?.clearValidators();
+      // Update form-level validator to handle optional passwords
+      this.createAccountForm.setValidators(
+        this.formValidator.passwordMatchValidatorOptional.bind(this.formValidator)
+      );
+    }
+
     if (this.commonService?.loginedUserInfo) {
       const loginedId = this.commonService.loginedUserInfo?.id;
       const loginedUser = this.commonService.allUsersList.find(
@@ -100,6 +116,9 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
       this.createAccountForm.setValue(userFormInfo);
       if (this.isEditMode) {
         this.createAccountForm?.get('email')?.disable();
+        // Update validators after setting values
+        this.createAccountForm.get('password')?.updateValueAndValidity();
+        this.createAccountForm.get('confirmPassword')?.updateValueAndValidity();
       }
       this.createAccountForm?.get('role')?.disable();
       this.createAccountForm.markAllAsTouched();
@@ -128,11 +147,28 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     this.createAccountForm.markAllAsTouched();
     if (this.createAccountForm.valid) {
       this.registrationService
-        .registerUserInfo(this.destroy$, this.createAccountForm.value)
-        .then((clearForms) => {debugger
+        .registerUserInfo(this.destroy$, this.createAccountForm.value, this.isEditMode)
+        .then((clearForms) => {
           if (clearForms) {
-            this.createAccountForm.reset();
-            this.router.navigate(['/login']);
+            if (this.isEditMode) {
+              // For update, refresh user info and stay on the page or navigate to dashboard
+              this.commonService.loginedUserInfo = {
+                ...this.commonService.loginedUserInfo,
+                first_name: this.createAccountForm.get('firstName')?.value,
+                last_name: this.createAccountForm.get('lastName')?.value,
+                contact: {
+                  email: this.createAccountForm.get('email')?.value,
+                  phone: this.createAccountForm.get('phone')?.value,
+                },
+                profile_image: this.registrationService.imageUrl,
+              };
+              // Optionally navigate to dashboard or refresh the page
+              // this.router.navigate(['/dashboard/account']);
+            } else {
+              // For new registration, reset form and navigate to login
+              this.createAccountForm.reset();
+              this.router.navigate(['/login']);
+            }
           }
         });
     } else {

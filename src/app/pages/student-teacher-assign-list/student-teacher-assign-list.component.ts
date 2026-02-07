@@ -42,7 +42,7 @@ export class StudentTeacherAssignListComponent {
       .subscribe((closeModel) => {
         this.commonService.allUsersList.forEach((student) => {
           if (student.id === this.editedStudent.id) {
-            student.approved = true;
+            student.status = 'active';
           }
         });
         this.getStudentList();
@@ -74,7 +74,7 @@ export class StudentTeacherAssignListComponent {
   
   getStudentList() {
     this.studentList = this.commonService.allUsersList.filter(
-      (users) => users.role === 'student' && !users.approved
+      (users) => users.role === 'student' && users.status === 'active'
     );
   }
   assignTeacher(selectedStudent: UserModel) {

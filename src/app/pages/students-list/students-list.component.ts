@@ -35,7 +35,7 @@ export class StudentsListComponent {
   ) {
     this.profileUrl = this.commonService.decodeUrl((this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? '')
     this.studentList = this.commonService.allUsersList.filter(
-      (users) => users.role === 'student' && users.approved
+      (users) => users.role === 'student' && users.status === 'active'
     );
     this.commonService
     .getCommonSearchText()

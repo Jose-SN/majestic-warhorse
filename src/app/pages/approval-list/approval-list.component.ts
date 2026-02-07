@@ -82,12 +82,12 @@ export class ApprovalListComponent {
   }
   getApprovalPendingTeachers() {
     this.teachersList = this.commonService.allUsersList.filter((users) => {
-      return users.role === 'teacher' && !users.approved;
+      return users.role === 'teacher' && users.status === 'pending';
     });
   }
   approveTeachers() {
     const approvePayload = this.selectedTeachers.map((teacherId: string) => {
-      return { id: teacherId, approved: true };
+      return { id: teacherId, status: 'active' };
     });
     this.approveTeacherService
       .approveTeachers(approvePayload)
@@ -97,7 +97,7 @@ export class ApprovalListComponent {
           this.commonService.allUsersList.forEach((user: UserModel) => {
             const userId = this.getTeacherId(user);
             if (userId && this.selectedTeachers.includes(userId)) {
-              user.approved = true;
+              user.status = 'active';
             }
           });
           this.selectedTeachers = [];

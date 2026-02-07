@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RegistrationApiService } from 'src/app/services/api-service/registration-api.service';
+import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
@@ -16,6 +17,7 @@ export class RegistrationPageService {
   public ALLOWED_FILE_TYPES: string[] = ['image/png', 'image/jpeg', 'image/jpg'];
   constructor(
     private registrationApiService: RegistrationApiService,
+    private authService: AuthService,
     private commonApiService: CommonApiService,
     private commonService: CommonService
   ) {}
@@ -66,7 +68,8 @@ export class RegistrationPageService {
   }
   public registerUserInfo(
     _destroy$: Subject<void>,
-    registrationInfo: IRegistrationModel
+    registrationInfo: IRegistrationModel,
+    isEditMode: boolean = false
   ): Promise<boolean> {
     registrationInfo.profileImage = this.commonService.decodeUrl(encodeURI(this.imageUrl));
     delete registrationInfo.confirmPassword;
@@ -76,14 +79,27 @@ export class RegistrationPageService {
       first_name: registrationInfo.firstName || '',
       last_name: registrationInfo.lastName || null,
       profile_image: registrationInfo.profileImage || '',
-      password: registrationInfo.password || '',
       contact: {
         email: registrationInfo.email || '',
         phone: registrationInfo.phone || '',
       },
       role: registrationInfo.role || 'student',
-      status: 'pending', // Default status as per schema
     };
+
+    // Only include password if provided (for updates, password is optional)
+    if (registrationInfo.password) {
+      transformedPayload.password = registrationInfo.password;
+    }
+
+    // For new registrations, set status to pending
+    if (!isEditMode) {
+      transformedPayload.status = 'pending';
+    } else {
+      // For updates, include user ID and status
+      const loginedUser = this.commonService.loginedUserInfo;
+      transformedPayload.id = loginedUser?.id;
+      transformedPayload.status = loginedUser?.status || 'active';
+    }
 
     // Add app_id if available from sessionStorage
     const applicationData = sessionStorage.getItem('application');
@@ -104,31 +120,61 @@ export class RegistrationPageService {
     }
 
     return new Promise((resolve) => {
-      this.registrationApiService
-        .saveUserInfo(transformedPayload)
-        .pipe(takeUntil(_destroy$))
-        .subscribe({
-          next: (userAdded) => {debugger
-            if (userAdded.success) {
-              this.showToasterMessage(
-                'User registered successfully',
-                TOASTER_MESSAGE_TYPE.SUCCESS
-              );
-              resolve(true);
-            } else {
-              this.showToasterMessage('Error while saving...', TOASTER_MESSAGE_TYPE.ERROR);
-            }
-          },
-          error: (errorHandler) => {
-            if (errorHandler?.errors?.length) {
-              errorHandler.errors.forEach((error: { [key: string]: string }) => {
-                this.showToasterMessage(error['msg'], TOASTER_MESSAGE_TYPE.ERROR);
-              });
-            } else {
-              this.showToasterMessage('Error while saving...', TOASTER_MESSAGE_TYPE.ERROR);
-            }
-          },
-        });
+      if (isEditMode) {
+        // Call update API for edit mode
+        this.authService
+          .updateUserInfo(transformedPayload)
+          .pipe(takeUntil(_destroy$))
+          .subscribe({
+            next: (userUpdated) => {
+              if (userUpdated) {
+                this.showToasterMessage(
+                  'Account updated successfully',
+                  TOASTER_MESSAGE_TYPE.SUCCESS
+                );
+                resolve(true);
+              } else {
+                this.showToasterMessage('Error while updating...', TOASTER_MESSAGE_TYPE.ERROR);
+              }
+            },
+            error: (errorHandler) => {
+              if (errorHandler?.errors?.length) {
+                errorHandler.errors.forEach((error: { [key: string]: string }) => {
+                  this.showToasterMessage(error['msg'], TOASTER_MESSAGE_TYPE.ERROR);
+                });
+              } else {
+                this.showToasterMessage('Error while updating...', TOASTER_MESSAGE_TYPE.ERROR);
+              }
+            },
+          });
+      } else {
+        // Call save API for new registration
+        this.registrationApiService
+          .saveUserInfo(transformedPayload)
+          .pipe(takeUntil(_destroy$))
+          .subscribe({
+            next: (userAdded) => {debugger
+              if (userAdded) {
+                this.showToasterMessage(
+                  'User registered successfully',
+                  TOASTER_MESSAGE_TYPE.SUCCESS
+                );
+                resolve(true);
+              } else {
+                this.showToasterMessage('Error while saving...', TOASTER_MESSAGE_TYPE.ERROR);
+              }
+            },
+            error: (errorHandler) => {
+              if (errorHandler?.errors?.length) {
+                errorHandler.errors.forEach((error: { [key: string]: string }) => {
+                  this.showToasterMessage(error['msg'], TOASTER_MESSAGE_TYPE.ERROR);
+                });
+              } else {
+                this.showToasterMessage('Error while saving...', TOASTER_MESSAGE_TYPE.ERROR);
+              }
+            },
+          });
+      }
     });
   }
   private showToasterMessage(message: string, messageType: string) {

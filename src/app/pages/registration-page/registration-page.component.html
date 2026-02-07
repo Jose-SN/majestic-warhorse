@@ -213,11 +213,11 @@
             </div>
             @if (isFieldInvalid(createAccountForm, 'password')) {
             <div class="error-message">
-              @if (getPasswordError(createAccountForm, 'required')) {
+              @if (getPasswordError(createAccountForm, 'required') && !isEditMode) {
               <span>Password is required.</span>
               }
             </div>
-            @if (!getPasswordError(createAccountForm, 'required')) {
+            @if (!getPasswordError(createAccountForm, 'required') || isEditMode) {
             <div class="suggestion-holder">
               @if (getPasswordError(createAccountForm, 'minlength')) {
               <span>Password must be at least 6 characters long.</span>
@@ -269,10 +269,13 @@
                 }
               </span>
             </div>
-            @if (isFieldInvalid(createAccountForm, 'confirmPassword')) {
+            @if (isFieldInvalid(createAccountForm, 'confirmPassword') && !isEditMode) {
             <span>Confirm Password is required.</span>
             }
             @if (isPasswordMismatch(createAccountForm, 'password', 'confirmPassword')) {
+            <span>Passwords do not match.</span>
+            }
+            @if (createAccountForm.errors?.['mismatch'] && (createAccountForm.get('password')?.touched || createAccountForm.get('confirmPassword')?.touched)) {
             <span>Passwords do not match.</span>
             }
           </div>

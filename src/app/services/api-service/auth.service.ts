@@ -70,6 +70,10 @@ export class AuthService {
       .pipe(catchError(this.commonService.handleError));
   }
   public updateUserInfo(userInfo: any) {
+    const userId = userInfo.id;
+    if (!userId) {
+      throw new Error('User ID is required for update');
+    }
     return this.http
       .put<{ data: UserLoginResponse } | UserLoginResponse>(`${this._apiUrl}user/update`, userInfo)
       .pipe(

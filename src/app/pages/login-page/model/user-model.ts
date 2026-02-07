@@ -29,7 +29,6 @@ export interface UserModel {
   modificationDate?: Date;
   jwt?: string;
   assignedTo?: string[];
-  approved?: boolean;
 }
 export interface UserLoginResponse {
   success?: boolean;
