@@ -51,15 +51,36 @@ export class DashboardSidepanelComponent {
     this.destroy$.complete();
   }
   setActivePanel(activePanel: string) {
-    this.activePanel = activePanel;
-    this.dashboardService.setSidePanelChangeValue(activePanel);
+    if (this.disableListItems() && activePanel !== this.SIDE_PANEL_LIST['APPROVAL_PENDING']) return;
+    
+    const routeMap: { [key: string]: string } = {
+      [this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW']]: '/dashboard/overview',
+      [this.SIDE_PANEL_LIST['COURSE_LISTING']]: '/dashboard/courses',
+      [this.SIDE_PANEL_LIST['ACCOUNT']]: '/dashboard/account',
+      [this.SIDE_PANEL_LIST['TEACHERS_LISTING']]: '/dashboard/teachers',
+      [this.SIDE_PANEL_LIST['STUDENTS_LISTING']]: '/dashboard/students',
+      [this.SIDE_PANEL_LIST['TEACHER_APPROVAL']]: '/dashboard/approval',
+      [this.SIDE_PANEL_LIST['APPROVAL_PENDING']]: '/dashboard/approval-pending',
+      [this.SIDE_PANEL_LIST['ASSIGN_TEACHER']]: '/dashboard/assign-teacher',
+      [this.SIDE_PANEL_LIST['ASSESMENT']]: '/dashboard/assessment',
+    };
+
+    const route = routeMap[activePanel];
+    if (route) {
+      this.router.navigate([route]);
+      this.activePanel = activePanel;
+      this.dashboardService.setSidePanelChangeValue(activePanel);
+    }
   }
   navigateToHome() {
     if (this.disableListItems()) return;
-    this.setActivePanel(this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW']);
+    const defaultRoute = this.commonService.adminRoleType.includes(this.loginedUserPrivilege) 
+      ? '/dashboard/course-overview' 
+      : '/dashboard/overview';
+    this.router.navigate([defaultRoute]);
   }
   disableListItems() {
     return this.loginedUserPrivilege === 'student' && this.commonService.loginedUserInfo.assignedTo?.length === 0 || 
-      this.loginedUserPrivilege === 'teacher' && this.commonService.loginedUserInfo.approved === false;
+      this.loginedUserPrivilege === 'teacher' && this.commonService.loginedUserInfo.status === 'pending';
   }
 }
