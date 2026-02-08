@@ -11,6 +11,7 @@ import { UserModel } from '../login-page/model/user-model';
 import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
 import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
+import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
 
 @Component({
   selector: 'app-teachers-list',
@@ -57,6 +58,13 @@ export class TeachersListComponent {
   }
   sliderActiveRemove(): void {
     this.showSliderView = false;
+  }
+  viewAssignedStudents(teacher: UserModel) {
+    this.commonService.openPopupModel({
+      title: `Assigned Students - ${teacher.firstName || teacher.first_name} ${teacher.lastName || teacher.last_name}`,
+      data: teacher,
+      componentName: COMPONENT_NAME.VIEW_ASSIGNED_STUDENTS,
+    });
   }
   deleteTeacher(deletedTeacher: UserModel) {
     this.commonApiService.deleteUser(takeUntil(this.destroy$)).subscribe({
