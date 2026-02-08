@@ -3,9 +3,54 @@
     <app-dashboard-sidepanel></app-dashboard-sidepanel>
   </div>
   <div class="dashboard-right">
-    <app-search-profile (mobNavchild)="btnMobileMenu()"></app-search-profile>
-    <div class="common-container">
-      <router-outlet></router-outlet>
-    </div>
+  <app-search-profile (mobNavchild)="btnMobileMenu()"></app-search-profile>
+  <div class="common-container">
+  @switch (activePanel) {
+    @case (SIDE_PANEL_LIST['DASHBOARD_OVERVIEW']) {
+      @if (isAdminLogin) {
+        <app-course-overview></app-course-overview>
+      } @else {
+        <app-dashboard-overview></app-dashboard-overview>
+      }
+    }
+    @case (SIDE_PANEL_LIST['COURSE_LISTING']) {
+      @if(showCourseDetailedView){
+        <app-course-detils [selectedCourseInfo]="selectedCourseInfo"></app-course-detils>
+      }@else{
+        <app-courses></app-courses>
+      }
+    }
+    @case (SIDE_PANEL_LIST['ACCOUNT']) {
+      <app-edit-account></app-edit-account>
+    }
+    @case (SIDE_PANEL_LIST['TEACHERS_LISTING']) {
+      <app-teachers-list></app-teachers-list>
+    }
+    @case (SIDE_PANEL_LIST['STUDENTS_LISTING']) {
+      <app-students-list></app-students-list>
+    }
+    @case (SIDE_PANEL_LIST['TEACHER_APPROVAL']) {
+      <app-approval-list></app-approval-list>
+    }
+    @case (SIDE_PANEL_LIST['APPROVAL_PENDING']) {
+      <app-approval-pending [infoMessage]="infoMessage"></app-approval-pending>
+    }
+    @case (SIDE_PANEL_LIST['ASSIGN_TEACHER']) {
+      <app-student-teacher-assign-list></app-student-teacher-assign-list>
+    }
+    @case (SIDE_PANEL_LIST['ASSIGN_TEACHER']) {
+      <app-assign-teachers></app-assign-teachers>
+    }
+    @case (SIDE_PANEL_LIST['ASSESMENT']) {
+      <app-questionnaire></app-questionnaire>
+    }
+    @default {
+      <app-under-construction></app-under-construction>
+    }
+  }
+  @if(activePanel === SIDE_PANEL_LIST['APPROVAL_PENDING']){
+    <app-overlay style="margin-left: -5%;"></app-overlay>
+  }
   </div>
+</div>  
 </section>
