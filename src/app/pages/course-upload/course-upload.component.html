@@ -67,24 +67,24 @@
                 <label>Video Description</label>
                 <textarea rows="3" cols="45" [(ngModel)]="item.description"></textarea>
                 <div class="add-button">
-                  <button>
-                    <img src="../../../assets/images/icon-video.svg" alt="" />
-                    <span (click)="previewVideo(item)">Preview</span>
+                  <button [disabled]="!item.fileURL || item.fileURL.trim() === ''" (click)="previewVideo(item)">
+                    <img src="../../../assets/images/icon-video.svg" alt="Preview Video" />
+                    <span>Preview</span>
                   </button>
                   <input type="file" #videoInput
                     (change)="onFileSelected($event,'VIDEO_FILE',parentIndex, videIndex)"
                     style="display: none;" />
-                  <button (click)="openFileUploadWindow(videoInput)">
-                    <img src="../../../assets/images/icon-video.svg" alt="" />
+                  <button [disabled]="!item.fileURL || item.fileURL.trim() === ''" (click)="openFileUploadWindow(videoInput)">
+                    <img src="../../../assets/images/icon-video.svg" alt="Upload Video" />
                     <span>Upload Video</span>
                   </button>
                   <button (click)="addNewVideoList(chapter)">
-                    <img src="../../../assets/images/icon-add.svg" alt="" />
+                    <img src="../../../assets/images/icon-add.svg" alt="Add Video" />
                     <span>Add</span>
                   </button>
                   <button (click)="chapter.fileDetails.splice($index,1)"
                     [disabled]="chapter.fileDetails.length <= 1">
-                    <img src="../../../assets/images/icon-add.svg" class="icon-delete" alt="" />
+                    <img src="../../../assets/images/icon-add.svg" class="icon-delete" alt="Delete Video" />
                     <span>Delete</span>
                   </button>
                 </div>
@@ -98,8 +98,8 @@
         </div>
         }
         <div class="add-button save-course">
-          <button (click)="saveButtonClick()">
-            <img src="../../../assets/images/icon-add.svg" />
+          <button (click)="saveButtonClick()" [disabled]="!isFormValid()">
+            <img src="../../../assets/images/icon-add.svg" alt="Save Course" />
             <span>Save Course</span>
           </button>
         </div>

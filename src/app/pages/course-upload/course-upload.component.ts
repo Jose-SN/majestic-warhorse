@@ -163,4 +163,39 @@ export class CourseUploadComponent {
     this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
     this.fetchLastUpdatedCourses();
   }
+  isFormValid(): boolean {
+    // Check main course info required fields
+    if (!this.mainCourseInfo.courseTitle || !this.mainCourseInfo.courseTitle.trim()) {
+      return false;
+    }
+    if (!this.mainCourseInfo.courseDescription || !this.mainCourseInfo.courseDescription.trim()) {
+      return false;
+    }
+    if (!this.mainCourseInfo.courseCoverImage || !this.mainCourseInfo.courseCoverImage.trim()) {
+      return false;
+    }
+    
+    // Check chapters
+    if (!this.courseChapterList || this.courseChapterList.length === 0) {
+      return false;
+    }
+    
+    // Check each chapter has required fields
+    for (const chapter of this.courseChapterList) {
+      if (!chapter.chapterTitle || !chapter.chapterTitle.trim()) {
+        return false;
+      }
+      if (!chapter.fileDetails || chapter.fileDetails.length === 0) {
+        return false;
+      }
+      // Check each video has fileURL
+      for (const video of chapter.fileDetails) {
+        if (!video.fileURL || !video.fileURL.trim()) {
+          return false;
+        }
+      }
+    }
+    
+    return true;
+  }
 }

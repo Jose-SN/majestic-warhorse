@@ -28,6 +28,7 @@ export class DashboardOverviewComponent {
   public refreshTime: string = '';
   public activeFilterTab: string = 'All';
   filterList: string[] = ['All', 'New', 'Pending', 'Completed'];
+  public readingFiles: any[] = [];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private courseUploadService: CourseUploadService,
@@ -40,11 +41,18 @@ export class DashboardOverviewComponent {
   async ngOnInit(): Promise<void> {
     await this.courseDetailsService.getCourseStatusList();
     this.fetchCourseList();
+    this.fetchReadingFiles();
     this.loginedUserInfo = this.commonService.loginedUserInfo ?? {};
     this.loginedUserInfo.profileImage = this.commonService.decodeUrl(
       (this.loginedUserInfo.profileImage || this.loginedUserInfo.profile_image) ?? ''
     );
     this.getCurrentTime();
+  }
+  async fetchReadingFiles() {
+    // TODO: Replace with actual API call when endpoint is available
+    // Example: this.readingFiles = await this.someService.getReadingFiles();
+    // For now, initialize as empty array - will be populated from API
+    this.readingFiles = [];
   }
   async fetchCourseList() {
     this.courseLists = await this.courseUploadService.fetchUploadedCourses();

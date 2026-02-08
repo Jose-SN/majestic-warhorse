@@ -717,12 +717,28 @@ span {
 } 
 &:last-child {
   background: var(--bg-delete)!important;
+}
+&:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--bg-light-grey);
+  &:hover {
+    background: var(--bg-light-grey);
+  }
 }   
 }
 &.save-course {
 @include flex(null, null, flex-end, null);
 button {
   max-width: 125px;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--bg-light-grey);
+    &:hover {
+      background: var(--bg-light-grey);
+    }
+  }
 }
 }
 }   

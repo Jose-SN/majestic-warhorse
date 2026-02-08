@@ -48,6 +48,19 @@
                 </label>
               }
             </div>
+            
+            <footer class="submit-holder">
+              <button 
+                class="btn-assign" 
+                [disabled]="selectedTeachers.length === 0" 
+                (click)="approveTeachers()"
+                type="button">
+                <span>Approve Teachers</span>
+                @if (selectedTeachers.length > 0) {
+                  <span class="selected-count">({{ selectedTeachers.length }})</span>
+                }
+              </button>
+            </footer>
           } @else {
             <div class="no-teachers-found">
               <figure>
@@ -64,16 +77,4 @@
       }
     </div>
   </div>
-  <footer class="submit-holder">
-    <button 
-      class="btn-assign" 
-      [disabled]="selectedTeachers.length === 0" 
-      (click)="approveTeachers()"
-      type="button">
-      <span>Approve Teachers</span>
-      @if (selectedTeachers.length > 0) {
-        <span class="selected-count">({{ selectedTeachers.length }})</span>
-      }
-    </button>
-  </footer>
 </div>

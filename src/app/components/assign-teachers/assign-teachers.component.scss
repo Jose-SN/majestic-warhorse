@@ -366,17 +366,18 @@
     }
   }
   .common-container {
-    @include flex(flex, column, null, null);
+    display: flex;
+    flex-direction: column;
     height: 100%;
     .common-wrapper {
         padding: 30px;
         @include border-radius(15px);
         @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
-        flex-grow: 1;
+        flex: 1;
         margin: 30px 0 0;
-        height: 100%;
-        position: relative;
-        @include flex(flex, column, null, null);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
         .courses {
           overflow: hidden;
           overflow-y: auto;
@@ -528,24 +529,34 @@
         
         .scoll-wrapper {
             width: 100%;
-            position: relative;
-            height: 100%;
-            .common-list-wrapper {
-              display: flex;
-              flex-flow: column wrap;
-              flex-direction: row;
-              gap: 10px;
-              padding-right: 10px;
-            }
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
             .scroll-container {
-                @include flex(flex,column,null,null);
+                display: flex;
+                flex-direction: column;
                 width: 100%;
-                height: 100%;
-                position: absolute;
-                top: 0;
-                left: 0;
-                overflow: hidden;
-                overflow-y: auto;
+                flex: 1;
+                min-height: 0;
+                .common-list-wrapper {
+                  display: flex;
+                  flex-direction: column;
+                  gap: 12px;
+                  margin-top: 20px;
+                  flex: 1;
+                  overflow-y: auto;
+                  overflow-x: hidden;
+                  padding-right: 10px;
+                  min-height: 0;
+                }
+                .assign-footer {
+                  flex-shrink: 0;
+                  padding: 20px 0 0;
+                  border-top: 1px solid var(--bg-input-border);
+                  background: var(--bg-left-panel);
+                }
                 .common-list {
                   background: var(--bg-list);
                   width: 100%;
@@ -630,18 +641,23 @@
   }
 }
 
-.btn-assign {
+.assign-footer {
+  .btn-assign {
     font-family: $archivo-regular;
     font-size: 1rem;
     color: var(--white);
-    margin: 25px 0;
+    margin: 0;
     @include button();
     @include box-shadow(2px, 2px, 8px, var(--bg-magento));
     width: 100%;
     @include border-radius(50px);
-    @include gradient();
-    border: 1px solid var(--bg-orange);
+    &:not(:disabled) {
+      @include gradient();
+      border: 1px solid var(--bg-orange);
+    }
   }
+}
+
 footer {
   color: var(--bg-grey);
   line-height: 1.313rem;
