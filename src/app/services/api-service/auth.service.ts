@@ -59,8 +59,8 @@ export class AuthService {
   logOutApplication() {
     this.isAuthenticated = false;
     this.commonService.allUsersList = [];
-    sessionStorage.removeItem('login_details');
-    sessionStorage.removeItem('isAuthenticated');
+    sessionStorage.clear();
+    localStorage.clear();
     this.router.navigate(['/login']);
   }
   validateOtp(updatePassword: IPassWordUpdate) {
