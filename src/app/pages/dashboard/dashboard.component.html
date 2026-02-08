@@ -1,5 +1,5 @@
 <section class="dashboard-container">
-  <div class="dashboard-left" [ngClass]="{'active': isMobileNav}">
+  <div class="dashboard-left" [ngClass]="{'active': isMobileNav}" [style.pointer-events]="activePanel === SIDE_PANEL_LIST['APPROVAL_PENDING'] ? 'none' : 'auto'">
     <app-dashboard-sidepanel></app-dashboard-sidepanel>
   </div>
   <div class="dashboard-right">
@@ -48,9 +48,9 @@
       <app-under-construction></app-under-construction>
     }
   }
-  @if(activePanel === SIDE_PANEL_LIST['APPROVAL_PENDING']){
+  <!-- @if(activePanel === SIDE_PANEL_LIST['APPROVAL_PENDING']){
     <app-overlay style="margin-left: -5%;"></app-overlay>
-  }
+  } -->
   </div>
 </div>  
 </section>

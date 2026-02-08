@@ -60,6 +60,6 @@ export class DashboardSidepanelComponent {
   }
   disableListItems() {
     return this.loginedUserPrivilege === 'student' && this.commonService.loginedUserInfo.assignedTo?.length === 0 || 
-      this.loginedUserPrivilege === 'teacher' && this.commonService.loginedUserInfo.approved === false;
+      this.loginedUserPrivilege === 'teacher' && this.commonService.loginedUserInfo.status === 'pending';
   }
 }

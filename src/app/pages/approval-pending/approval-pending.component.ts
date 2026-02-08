@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonSearchProfileComponent } from "../../components/common-search-profile/common-search-profile.component";
 
@@ -10,7 +10,8 @@ import { CommonSearchProfileComponent } from "../../components/common-search-pro
   styleUrl: './approval-pending.component.scss',
 })
 export class ApprovalPendingComponent implements OnInit {
-  infoMessage: string = '';
+  @Input() infoMessage: string = '';
+
 
   constructor(private router: Router) {}
 

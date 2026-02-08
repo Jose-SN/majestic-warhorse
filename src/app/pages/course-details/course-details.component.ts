@@ -16,6 +16,7 @@ import { CommonSearchProfileComponent } from 'src/app/components/common-search-p
 import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
 import { VideoDurationService } from 'src/app/shared/services/video-duration.service';
 import { DashboardService } from '../dashboard/dashboard.service';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-course-detils',
@@ -44,7 +45,7 @@ export class CourseDetailsComponent {
   private videoStatusInfo: ICourseStatus = {} as ICourseStatus;
   public selectedAttachmentList: any = [];
   public showQuestionAnswer: boolean = false;
-  public selectedCourseInfo: ICourseList = {} as ICourseList;
+  @Input() selectedCourseInfo: ICourseList = {} as ICourseList;
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   @ViewChild(VideoPlayerComponent) videoPlayerComponent!: VideoPlayerComponent;
   constructor(

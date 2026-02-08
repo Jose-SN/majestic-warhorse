@@ -89,7 +89,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
       this.infoMessage =
         'You have not been assigned any teachers to view this course. Please contact the admin for assistance';
-    } else if ((loginedUserData?.role === 'teacher' && !loginedUserData.approved)) {
+    } else if ((loginedUserData?.role === 'teacher' && loginedUserData.status === 'pending')) {
       this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
       this.infoMessage =
         'Your request is pending approval from the admin. Please reach out to the admin for assistance.';
