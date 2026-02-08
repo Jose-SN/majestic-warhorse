@@ -5,7 +5,7 @@ import { CommonService } from 'src/app/shared/services/common.service';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { AssignTeacherService } from './assign-teacher.service';
 import { IModelInfo } from '../common-dialog/model/popupmodel';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, switchMap } from 'rxjs';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 
 @Component({
@@ -79,29 +79,52 @@ export class AssignTeachersComponent {
     }
   }
   handleTeacherAssign() {
+    const studentId = this.popupModelInfo.data.id;
+    const student = this.popupModelInfo.data;
+    const payload = [
+      {
+        student_id: studentId,
+        teacher_ids: this.selectedTeachers
+      }
+    ];
+    
     this.assignTeacherService
-      .assignTeachersToStudent([
-        { id: this.popupModelInfo.data.id, assignedTo: this.selectedTeachers },
-      ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (result) => {
+      .assignTeachersToStudent(payload)
+      .pipe(
+        switchMap((result) => {
           if (result.success) {
-            this.commonService.openToaster({
-              message: 'Teachers assign successfully done!',
-              messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
-            });
-            this.commonService.closePopupModel(true);
+            // Update user status to approved
+            const updatePayload = {
+              id: studentId,
+              status: 'active',
+              ...student
+            };
+            return this.authService.updateUserInfo(updatePayload);
           } else {
-            this.commonService.openToaster({
-              message: 'Error while assiging teacher, please contact admin',
-              messageType: TOASTER_MESSAGE_TYPE.ERROR,
-            });
+            throw new Error('Failed to assign teachers');
           }
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (updateResult) => {
+          // Update local user list
+          const userIndex = this.commonService.allUsersList.findIndex(
+            (user) => user.id === studentId
+          );
+          if (userIndex > -1) {
+            this.commonService.allUsersList[userIndex].status = 'active';
+          }
+          
+          this.commonService.openToaster({
+            message: 'Teachers assigned successfully!',
+            messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+          });
+          this.commonService.closePopupModel(true);
         },
         error: () => {
           this.commonService.openToaster({
-            message: 'Error while assiging teacher, please contact admin',
+            message: 'Error while assigning teachers, please contact admin',
             messageType: TOASTER_MESSAGE_TYPE.ERROR,
           });
         },

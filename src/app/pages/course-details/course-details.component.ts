@@ -1,6 +1,7 @@
-import { Component, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ChapterDetail, FileDetail, ICourseList } from '../courses/modal/course-list';
 import { VideoPlayerComponent } from 'src/app/components/video-player/video-player.component';
 import { AuthService } from 'src/app/services/api-service/auth.service';
@@ -43,7 +44,7 @@ export class CourseDetailsComponent {
   private videoStatusInfo: ICourseStatus = {} as ICourseStatus;
   public selectedAttachmentList: any = [];
   public showQuestionAnswer: boolean = false;
-  @Input() selectedCourseInfo: ICourseList = {} as ICourseList;
+  public selectedCourseInfo: ICourseList = {} as ICourseList;
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   @ViewChild(VideoPlayerComponent) videoPlayerComponent!: VideoPlayerComponent;
   constructor(
@@ -52,13 +53,32 @@ export class CourseDetailsComponent {
     private fileDownloadService: FileDownloadService,
     private courseDetailsService: CourseDetailsService,
     private videoDurationService: VideoDurationService,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private router: Router
   ) {
     this.profileUrl = this.commonService.decodeUrl(
       (this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? ''
     );
   }
   async ngOnInit(): Promise<void> {
+    // Get selected course from route state
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras?.state) {
+      this.selectedCourseInfo = navigation.extras.state['selectedCourse'] || {} as ICourseList;
+    } else {
+      // Fallback: check history state
+      const state = history.state;
+      if (state && state['selectedCourse']) {
+        this.selectedCourseInfo = state['selectedCourse'];
+      }
+    }
+
+    // If no course info, redirect back to courses
+    if (!this.selectedCourseInfo || !this.selectedCourseInfo.id) {
+      this.router.navigate(['/dashboard/courses']);
+      return;
+    }
+
     this.setDefaultVideo();
     this.loginedUserRole = this.commonService?.loginedUserInfo?.role ?? '';
     await this.courseDetailsService.getCourseStatusList();

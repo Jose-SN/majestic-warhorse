@@ -1,4 +1,5 @@
-import { Component, Input, input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonSearchProfileComponent } from "../../components/common-search-profile/common-search-profile.component";
 
 @Component({
@@ -8,6 +9,21 @@ import { CommonSearchProfileComponent } from "../../components/common-search-pro
   templateUrl: './approval-pending.component.html',
   styleUrl: './approval-pending.component.scss',
 })
-export class ApprovalPendingComponent {
-  @Input() infoMessage: string = '';
+export class ApprovalPendingComponent implements OnInit {
+  infoMessage: string = '';
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras?.state) {
+      this.infoMessage = navigation.extras.state['infoMessage'] || '';
+    } else {
+      // Fallback: check history state
+      const state = history.state;
+      if (state && state['infoMessage']) {
+        this.infoMessage = state['infoMessage'];
+      }
+    }
+  }
 }
