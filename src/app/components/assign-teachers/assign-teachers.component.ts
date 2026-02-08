@@ -95,9 +95,8 @@ export class AssignTeachersComponent {
           if (result.success) {
             // Update user status to approved
             const updatePayload = {
-              id: studentId,
+              ...student,
               status: 'active',
-              ...student
             };
             return this.authService.updateUserInfo(updatePayload);
           } else {

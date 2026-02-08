@@ -9,14 +9,14 @@
               <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" fill="none" opacity="0.2"/>
             </svg>
           </figure>
-          <h3>No Students Found</h3>
-          <p>We couldn't find any students in the system. This could happen if:</p>
+          <h3>No Approved Students Found</h3>
+          <p>We couldn't find any approved students in the system. This could happen if:</p>
           <ul>
-            <li>No students have been registered yet</li>
+            <li>No approved students have been registered yet</li>
             <li>All students are pending approval</li>
             <li>There was an issue fetching data from the server</li>
           </ul>
-          <p class="help-text">Please try refreshing the page or contact your administrator if the problem persists.</p>
+          <p class="help-text">Please try refreshing the page or contact your administrator if the problem persists.</p> 
         </div>
       } @else {
         @if (studentList | searchFilter: searchText : 'USER_LIST'; as filteredList) {
@@ -31,8 +31,8 @@
                     </div>
                   </div>
                   <div class="icon-holder">
-                    <button aria-label="Edit student"><img src="../../../assets/images/icon-edit.svg" alt="Edit"></button>
-                    <button (click)="deleteStudent(student)" aria-label="Delete student"><img src="../../../assets/images/icon-delete.svg" alt="Delete"></button>
+                    <button (click)="viewAssignedTeachers(student)" aria-label="View assigned teachers" title="View Assigned Teachers"><img src="../../../assets/images/icon-edit.svg" alt="View"></button>
+                    <button (click)="deleteStudent(student)" aria-label="Delete student" title="Delete Student"><img src="../../../assets/images/icon-delete.svg" alt="Delete"></button>
                   </div>
                 </div>
               }

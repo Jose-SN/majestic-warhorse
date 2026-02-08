@@ -74,7 +74,7 @@ export class StudentTeacherAssignListComponent {
   
   getStudentList() {
     this.studentList = this.commonService.allUsersList.filter(
-      (users) => users.role === 'student' && users.status === 'active'
+      (users) => users.role === 'student' && users.status === 'pending'
     );
   }
   assignTeacher(selectedStudent: UserModel) {

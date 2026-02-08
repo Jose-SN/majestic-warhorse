@@ -51,19 +51,20 @@ export class ViewAssignedTeachersComponent implements OnInit {
           this.isLoading = false;
           // Handle different response structures
           const responseData = result.data || result;
-          if (responseData) {
+          if (responseData) {debugger
             // If response has teacher_ids array
-            if (responseData.teacher_ids && Array.isArray(responseData.teacher_ids)) {
-              this.selectedTeachers = responseData.teacher_ids;
-            } 
+            // if (responseData.teacher_ids && Array.isArray(responseData.teacher_ids)) {
+            //   this.selectedTeachers = responseData.teacher_ids;
+            // } 
             // If response is an array of teacher objects
-            else if (Array.isArray(responseData) && responseData.length > 0) {
+            // else 
+            if (Array.isArray(responseData) && responseData.length > 0) {
               this.selectedTeachers = responseData.map((teacher: any) => teacher.id || teacher.teacher_id || '');
             }
             // If response has teachers array
-            else if (responseData.teachers && Array.isArray(responseData.teachers)) {
-              this.selectedTeachers = responseData.teachers.map((teacher: any) => teacher.id || teacher.teacher_id || '');
-            }
+            // else if (responseData.teachers && Array.isArray(responseData.teachers)) {
+            //   this.selectedTeachers = responseData.teachers.map((teacher: any) => teacher.id || teacher.teacher_id || '');
+            // }
             
             // Map assigned teacher IDs to teacher objects
             this.assignedTeachers = this.teachersList.filter((teacher) =>

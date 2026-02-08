@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class AssignTeacherService {
-  private _apiUrl: string = environment.iamApi;
+  private _apiUrl: string = environment.majesticWarhorseApi;
 
   constructor(
     private http: HttpClient,
@@ -23,6 +23,12 @@ export class AssignTeacherService {
   public getAssignedTeachers(studentId: string) {
     return this.http
       .get<any>(`${this._apiUrl}teacher-students/assigned-teachers/${studentId}`)
+      .pipe(catchError(this.commonService.handleError));
+  }
+
+  public getAssignedStudents(teacherId: string) {
+    return this.http
+      .get<any>(`${this._apiUrl}teacher-students/assigned-students/${teacherId}`)
       .pipe(catchError(this.commonService.handleError));
   }
 }
