@@ -15,7 +15,7 @@
               </div>
               <div calss="input-holder">
                 <label>Description</label>
-                <textarea rows="5" cols="45" [(ngModel)]="mainCourseInfo.courseDescription"></textarea>
+                <textarea rows="5" cols="45" [(ngModel)]="mainCourseInfo.courseDescription" placeholder="Type here"></textarea>
               </div>
             </div>
             <div class="course-upload-right">
@@ -34,17 +34,17 @@
             <h5>Course Content</h5>
             <div class="add-button">
               <button (click)="addNewChapter(true)">
-                <img src="../../../assets/images/icon-add.svg" />
+                <img src="../../../assets/images/icon-add.svg" alt="Add Chapter" />
                 <span>Add Chapter</span>
               </button>
-              <input type="file" #attachmentInput (change)="onFileSelected($event,'ATTACHMENT', $index)"
-                style="display: none;" />
+              <input type="file" #attachmentInput title="Add Attachment" placeholder="Add Attachment" (change)="onFileSelected($event,'ATTACHMENT', $index)"
+                class="hidden-file-input" />
               <button (click)="openFileUploadWindow(attachmentInput)">
-                <img src="../../../assets/images/icon-add.svg" />
+                <img src="../../../assets/images/icon-add.svg" alt="Add Attachment" />
                 <span>Add Attachment</span>
               </button>
               <button (click)="courseChapterList.splice($index,1)" [disabled]="courseChapterList.length <= 1">
-                <img src="../../../assets/images/icon-add.svg" class="icon-delete" />
+                <img src="../../../assets/images/icon-add.svg" class="icon-delete" alt="Delete Attachment" />
                 <span>Delete</span>
               </button>
             </div>
@@ -65,15 +65,15 @@
               </div>
               <div calss="input-holder">
                 <label>Video Description</label>
-                <textarea rows="3" cols="45" [(ngModel)]="item.description"></textarea>
+                <textarea rows="3" cols="45" [(ngModel)]="item.description" placeholder="Type here"></textarea>
                 <div class="add-button">
                   <button [disabled]="!item.fileURL || item.fileURL.trim() === ''" (click)="previewVideo(item)">
                     <img src="../../../assets/images/icon-video.svg" alt="Preview Video" />
                     <span>Preview</span>
                   </button>
-                  <input type="file" #videoInput
+                  <input type="file" #videoInput title="Add Video" placeholder="Add Video"
                     (change)="onFileSelected($event,'VIDEO_FILE',parentIndex, videIndex)"
-                    style="display: none;" />
+                    class="hidden-file-input" />
                   <button [disabled]="!item.fileURL || item.fileURL.trim() === ''" (click)="openFileUploadWindow(videoInput)">
                     <img src="../../../assets/images/icon-video.svg" alt="Upload Video" />
                     <span>Upload Video</span>
@@ -115,7 +115,7 @@
             @for (course of lastUpdatedCourse; track $index) {
             <div class="reading-list" (click)="handleCourseEdit(course)">
               <figure>
-                <img [src]="course.courseCoverImage" alt="" />
+                <img [src]="course.courseCoverImage" alt="Course Cover Image" />
               </figure>
               <div class="reading-list-right">
                 <h4>{{course.courseTitle}}</h4>

@@ -108,6 +108,9 @@ export class DashboardOverviewComponent {
     this.activeFilterTab = filter;
     // filter the course list
   }
+  trackByIndex(index: number): number {
+    return index;
+  }
   btnMobileMenu() {
     this.isMobileNav = !this.isMobileNav;
   }

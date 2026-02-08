@@ -278,9 +278,7 @@
           <div class="course-top">
             <h2>My Courses</h2>
             <ul>
-              @for (filter of filterList; track $index) {
-              <li [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}</li>
-              }
+              <li *ngFor="let filter of filterList; trackBy: trackByIndex" [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}</li>
             </ul>
           </div>
           <div class="scroll-container courses">
@@ -367,7 +365,8 @@
                     <img 
                       [src]="file.imageUrl || file.coverImage || '../../../assets/images/img-reading1.png'" 
                       [alt]="file.title || file.name || 'Reading Material'"
-                      [title]="file.title || file.name || 'Reading Material'" />
+                      [title]="file.title || file.name || 'Reading Material'" 
+                      alt="Reading Material" />
                   </figure>
                   <div class="reading-list-right">
                     <h4>{{ file.title || file.name || 'Untitled' }}</h4>
