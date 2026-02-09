@@ -153,7 +153,7 @@ export class RegistrationPageService {
           .saveUserInfo(transformedPayload)
           .pipe(takeUntil(_destroy$))
           .subscribe({
-            next: (userAdded) => {debugger
+            next: (userAdded) => {
               if (userAdded) {
                 this.showToasterMessage(
                   'User registered successfully',

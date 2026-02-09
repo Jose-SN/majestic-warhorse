@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AttachmentAccordionComponent } from 'src/app/components/attachment-accordion/attachment-accordion.component';
@@ -18,12 +18,14 @@ import { ProgressBarComponent } from 'src/app/shared/progress-bar/progress-bar.c
   templateUrl: './course-upload.component.html',
   styleUrl: './course-upload.component.scss',
 })
-export class CourseUploadComponent {
+export class CourseUploadComponent implements OnChanges {
   public mobMenu: boolean = false;
   private destroy$ = new Subject<void>();
   public mainCourseInfo: IMainCourseInfo;
   public courseChapterList: IChapterInfo[] = [];
   public lastUpdatedCourse: ICourseList[] = [];
+  @Input() courseData: ICourseList | null = null;
+  @Output() courseSaved = new EventEmitter<void>();
   constructor(
     private courseUploadService: CourseUploadService,
     private commonService: CommonService
@@ -31,6 +33,11 @@ export class CourseUploadComponent {
     this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
     this.addNewChapter();
     this.fetchLastUpdatedCourses();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['courseData'] && this.courseData) {
+      this.handleCourseEdit(this.courseData);
+    }
   }
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   triggerMenu() {
@@ -130,6 +137,7 @@ export class CourseUploadComponent {
     );
     if (isCourseUploaded) {
       this.clearPage();
+      this.courseSaved.emit(); // Emit event to close popup
     }
   }
   ngOnDestroy(): void {

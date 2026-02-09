@@ -2,14 +2,13 @@
   <div class="content-area">
     <div class="content-left" [ngClass]="{'common-slider':showSliderView}">
       <app-common-slider [ngClass]="{'active':showSliderView}"
+        [courseData]="selectedCourseForEdit"
         (removeClass)="sliderActiveRemove()">></app-common-slider>
       <div class="courses-wrapper">
         <div class="course-top">
           <h2>Courses List</h2>
           <ul>
-            @for (filter of filterList; track $index) {
-              <li [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}</li>
-            }
+            <li *ngFor="let filter of filterList; trackBy: trackByIndex" [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}</li>
           </ul>
           @if(["admin","teacher"].includes(loginedUserPrivilege)){
           <div class="data-refreshed-holder">
@@ -20,7 +19,7 @@
           </div>
           }
         </div>
-        <div class="scroll-container">
+        <div class="scroll-container courses">
           @if (courseList$ | async; as courseList) {
             @if (courseList.length === 0) {
               <div class="no-courses-found">
@@ -43,24 +42,38 @@
             } @else {
               @if (courseList | searchFilter: searchText : 'COURSE' : activeFilterTab; as filteredList) {
                 @if (filteredList.length > 0) {
-                  @for (course of filteredList; track course.id || $index) {
-                    <div class="course-card" (click)="openCourseDetailsPage(course)">
-                      <div class="card-content">
-                        <figure><img [src]="course.courseCoverImage" alt="" /></figure>
-                      </div>
-                      <div class="card-content">
-                        <span>A Course by {{ course["createdBy"].firstName || course["createdBy"].first_name }} {{ course["createdBy"].lastName || course["createdBy"].last_name }}</span>
-                        <h3>{{ course.courseTitle }}</h3>
-                        <span>@if(course.chapterDetails.length){
-                          {{course.chapterCompletedCount}}/{{course.chapterDetails.length}} Lessons
-                          }
-                        </span>
-                        <div class="loader-holder">
-                          <span [ngStyle]="{width: course.completionPercent}"></span>
+                  <div class="course-card-holder">
+                    @for (course of filteredList; track course.id || $index) {
+                      <div class="course-card">
+                        <div class="card-content" (click)="openCourseDetailsPage(course)">
+                          <figure><img [src]="course.courseCoverImage" alt="" /></figure>
+                        </div>
+                        <div class="card-content">
+                          <div class="course-header">
+                            <span>A Course by {{ course["createdBy"].firstName || course["createdBy"].first_name }} {{ course["createdBy"].lastName || course["createdBy"].last_name }}</span>
+                            @if(["admin","teacher"].includes(loginedUserPrivilege)){
+                            <button class="edit-course-btn" (click)="openEditCourse(course, $event)" aria-label="Edit course" title="Edit Course">
+                              <img src="../../../assets/images/icon-edit.svg" alt="Edit" />
+                            </button>
+                            }
+                          </div>
+                          <h3 (click)="openCourseDetailsPage(course)">{{ course.courseTitle }}</h3>
+                          <span class="lesson-label">
+                            <div class="lesson-holder">
+                              <span>Lessons
+                                @if(course.chapterDetails.length){
+                                  {{course.chapterCompletedCount}}/{{course.chapterDetails.length}}
+                                }
+                              </span>
+                            </div>
+                          </span>
+                          <div class="loader-holder">
+                            <span [ngStyle]="{width: course.completionPercent}"></span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  }
+                    }
+                  </div>
                 } @else {
                   <div class="no-courses-found">
                     <figure>

@@ -8,7 +8,6 @@ import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { CommonSliderComponent } from 'src/app/components/common-slider/common-slider.component';
 import { DashboardService } from '../dashboard/dashboard.service';
-import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
 import { CourseDetailsService } from '../course-details/course-details.service';
 import { StarRatingModule } from 'angular-star-rating';
@@ -20,7 +19,6 @@ import { StarRatingModule } from 'angular-star-rating';
     FormsModule,
     CommonModule,
     CommonSliderComponent,
-    CommonSearchProfileComponent,
     SearchFilterPipe,
     StarRatingModule,
   ],
@@ -35,6 +33,7 @@ export class CoursesComponent {
   public activeFilterTab: string = 'All';
   public searchText: string = '';
   public loginedUserPrivilege: string = '';
+  public selectedCourseForEdit: ICourseList | null = null;
   private destroy$ = new Subject<void>();
   filterList: string[] = ['All', 'New', 'Pending', 'Completed'];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
@@ -78,11 +77,20 @@ export class CoursesComponent {
   }
   sliderActiveRemove(): void {
     this.showSliderView = false;
+    this.selectedCourseForEdit = null;
     this.fetchCourseList();
+  }
+  openEditCourse(course: ICourseList, event: Event): void {
+    event.stopPropagation(); // Prevent opening course details
+    this.selectedCourseForEdit = course;
+    this.showSliderView = true;
   }
   setActiveFilterTab(filter: string) {
     this.activeFilterTab = filter;
     // filter the course list
+  }
+  trackByIndex(index: number, item: any): number {
+    return index;
   }
   ngOnDestroy(): void {
     this.destroy$.next();

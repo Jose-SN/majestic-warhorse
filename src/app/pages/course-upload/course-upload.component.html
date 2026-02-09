@@ -19,6 +19,9 @@
               </div>
             </div>
             <div class="course-upload-right">
+              @if(mainCourseInfo.courseCoverImage && mainCourseInfo.courseCoverImage.trim() !== ''){
+                <img [src]="mainCourseInfo.courseCoverImage" alt="Course Cover Image" class="course-cover-image" />
+              }
               <label for="images" class="drop-container" id="dropcontainer">
                 <div class="img-holder"></div>
                 <span class="drop-title">Upload Cover Image</span>
@@ -31,7 +34,7 @@
         @for (chapter of courseChapterList; track $index; let parentIndex = $index;) {
         <div class="course-upload-form">
           <div class="action-holder">
-            <h5>Course Content</h5>
+            <h5>Chapter Details</h5>
             <div class="add-button">
               <button (click)="addNewChapter(true)">
                 <img src="../../../assets/images/icon-add.svg" alt="Add Chapter" />
@@ -74,13 +77,13 @@
                   <input type="file" #videoInput title="Add Video" placeholder="Add Video"
                     (change)="onFileSelected($event,'VIDEO_FILE',parentIndex, videIndex)"
                     class="hidden-file-input" />
-                  <button [disabled]="!item.fileURL || item.fileURL.trim() === ''" (click)="openFileUploadWindow(videoInput)">
+                  <button (click)="openFileUploadWindow(videoInput)">
                     <img src="../../../assets/images/icon-video.svg" alt="Upload Video" />
                     <span>Upload Video</span>
                   </button>
                   <button (click)="addNewVideoList(chapter)">
                     <img src="../../../assets/images/icon-add.svg" alt="Add Video" />
-                    <span>Add</span>
+                    <span>Add Video</span>
                   </button>
                   <button (click)="chapter.fileDetails.splice($index,1)"
                     [disabled]="chapter.fileDetails.length <= 1">

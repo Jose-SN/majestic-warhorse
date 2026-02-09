@@ -54,7 +54,6 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
     private courseDetailsService: CourseDetailsService
   ) {
     this.fetchCourseList();
-    this.fetchDashboardOverview();
     this.profileUrl = this.commonService.decodeUrl(
       (this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? ''
     );
@@ -66,6 +65,7 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
       .subscribe((status: boolean) => {
         this.isOnline = status;
       });
+    // Fetch all users first to populate allUsersList
     this.commonService.alluserList = await this.authService.getAllUsers();
     if (this.commonService?.allUsersList.length) {
       this.commonService.allUsersList.forEach((user) => {
@@ -79,6 +79,8 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
         }
       });
     }
+    // Fetch dashboard overview AFTER allUsersList is populated
+    await this.fetchDashboardOverview();
     this.commonService
       .getCommonSearchText()
       .pipe(takeUntil(this.destroy$))
@@ -100,8 +102,8 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
     this.showSliderView = false;
   }
   async fetchCourseList() {
-    await this.courseDetailsService.getCourseStatusList();
     this.courseLists = await this.courseUploadService.fetchUploadedCourses();
+    await this.courseDetailsService.getCourseStatusList();
     this.courseLists.forEach((course) => {
       let averageRating = 0;
       let completedLessonCount = 0;

@@ -22,13 +22,19 @@ export class AssignTeacherService {
 
   public getAssignedTeachers(studentId: string) {
     return this.http
-      .get<any>(`${this._apiUrl}teacher-students/assigned-teachers/${studentId}`)
+      .get<any>(`${this._apiUrl}teacher-students/student/${studentId}/teachers`)
       .pipe(catchError(this.commonService.handleError));
   }
 
   public getAssignedStudents(teacherId: string) {
     return this.http
-      .get<any>(`${this._apiUrl}teacher-students/assigned-students/${teacherId}`)
+      .get<any>(`${this._apiUrl}teacher-students/teacher/${teacherId}/students`)
+      .pipe(catchError(this.commonService.handleError));
+  }
+
+  public getAllTeacherStudentRelationships() {
+    return this.http
+      .get<any>(`${this._apiUrl}teacher-students/get`)
       .pipe(catchError(this.commonService.handleError));
   }
 }

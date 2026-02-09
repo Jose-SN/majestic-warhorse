@@ -6,6 +6,7 @@ import { CommonService } from 'src/app/shared/services/common.service';
 import { ICourseList } from '../courses/modal/course-list';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-teacher.service';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +34,8 @@ export class DashboardService {
   constructor(
     private authService: AuthService,
     private commonService: CommonService,
-    private http: HttpClient
+    private http: HttpClient,
+    private assignTeacherService: AssignTeacherService
   ) {}
   async getAllUsers() {
     this.commonService.alluserList = await this.authService.getAllUsers();
@@ -50,14 +52,64 @@ export class DashboardService {
   getCourseDetailsInfo() {
     return this.courseDetailsInfo.asObservable();
   }
-  fetchUploadedCourseCount() {
+  async fetchUploadedCourseCount() {
     let role: string = this.commonService.loginedUserInfo.role ?? '';
+    
+    // For admin, calculate stats from allUsersList and teacher-student relationships
+    if (role === 'admin') {
+      const allUsers = this.commonService.allUsersList || [];
+      
+      // Filter users by role
+      const teachers = allUsers.filter(user => user.role === 'teacher');
+      const students = allUsers.filter(user => user.role === 'student');
+      
+      // Fetch all teacher-student relationships from the new API
+      let relationships: any[] = [];
+      try {
+        const relationshipsResponse = await lastValueFrom(
+          this.assignTeacherService.getAllTeacherStudentRelationships()
+        );
+        relationships = relationshipsResponse.data || relationshipsResponse || [];
+      } catch (error) {
+        console.error('Error fetching teacher-student relationships:', error);
+        // Continue with empty relationships array if API fails
+      }
+      
+      // Create sets of assigned student IDs and teacher IDs from relationships
+      const assignedStudentIds = new Set<string>();
+      const assignedTeacherIds = new Set<string>();
+      
+      relationships.forEach((rel: any) => {
+        const studentId = rel.student_id || rel.studentId;
+        const teacherId = rel.teacher_id || rel.teacherId;
+        if (studentId) assignedStudentIds.add(studentId);
+        if (teacherId) assignedTeacherIds.add(teacherId);
+      });
+      
+      // Count unassigned students (students not in any relationship)
+      const unassignedStudents = students.filter(student => 
+        !assignedStudentIds.has(student.id || '')
+      );
+      
+      // Count unassigned teachers (teachers not in any relationship)
+      const unassignedTeachers = teachers.filter(teacher => 
+        !assignedTeacherIds.has(teacher.id || '')
+      );
+      
+      return {
+        totalTeachers: teachers.length,
+        totalStudents: students.length,
+        unassignedStudents: unassignedStudents.length,
+        unassignedTeachers: unassignedTeachers.length,
+      };
+    }
+    
+    // For non-admin roles, call the API as before
     const roleInfo: { [key: string]: string } = {
-      admin: 'isAdmin=true',
       teacher: 'isTeacher=true',
       student: 'isStudent=true',
     };
-    let queryParam = role === 'admin' ? `` : role === 'teacher' ? `` : '';
+    
     return lastValueFrom(
       this.http
         .get<any>(`${this._apiUrl}dashboard/get?${roleInfo[role]}`)

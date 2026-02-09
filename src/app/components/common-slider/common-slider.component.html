@@ -1,4 +1,4 @@
-<button class="btn-slide-close" (click)="sliderRemoveAction()">
-  <img src="../../../assets/images/icon-close.svg" alt="" />
+<button class="btn-slide-close" (click)="sliderRemoveAction()" aria-label="Close slider" title="Close">
+  <img src="../../../assets/images/icon-close.svg" alt="Close" />
 </button>
-<app-course-upload></app-course-upload>
+<app-course-upload [courseData]="courseData" (courseSaved)="sliderRemoveAction()"></app-course-upload>

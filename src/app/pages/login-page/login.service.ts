@@ -21,16 +21,13 @@ export class LoginService {
       .loginUser(loginInfo)
       .pipe(takeUntil(_destroy$))
       .subscribe({
-        next: (userExist) => {
+        next: (response) => {
+          const userExist = response.success == true || response.success == false ? response.data : response;
           if (Object.keys(userExist || {}).length) {
             this.authService.setLogin = true;
             this.router.navigate(['/dashboard']);
-            // Map new structure to include legacy fields for backward compatibility
             this.commonService.loginedUserInfo = mapUserToLegacy(userExist);
-            sessionStorage.setItem(
-              'login_details',
-              JSON.stringify(this.commonService.loginedUserInfo)
-            );
+            sessionStorage.setItem('login_details', JSON.stringify(this.commonService.loginedUserInfo));
             sessionStorage.setItem('authToken', userExist.jwt || '');
           } else {
             this.loginUserFailed();

@@ -19,7 +19,7 @@ export class CoursesApiService {
   geAllDetailsCourseList() {
     return this.http
       .get<ICourseList[]>(
-        `${this._apiUrl}course/get?populateUser=true&populateChapters=true&populateFiles=true`
+        `${this._apiUrl}course/get?populateChapters=true&populateFiles=true`
       )
       .pipe(catchError(this.commonService.handleError));
   }
@@ -38,7 +38,7 @@ export class CoursesApiService {
       this.http
         .get<
           ICourseList[]
-        >(`${this._apiUrl}course/get?populateUser=true&populateChapters=true&populateFiles=true`)
+        >(`${this._apiUrl}course/get?populateChapters=true&populateFiles=true`)
         .pipe(catchError(this.commonService.handleError))
     );
   }

@@ -51,7 +51,7 @@ export class ViewAssignedTeachersComponent implements OnInit {
           this.isLoading = false;
           // Handle different response structures
           const responseData = result.data || result;
-          if (responseData) {debugger
+          if (responseData) {
             // If response has teacher_ids array
             // if (responseData.teacher_ids && Array.isArray(responseData.teacher_ids)) {
             //   this.selectedTeachers = responseData.teacher_ids;

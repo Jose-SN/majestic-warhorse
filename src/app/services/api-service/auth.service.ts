@@ -38,9 +38,9 @@ export class AuthService {
   }
   loginUser(loginInfo: UserLogin) {
     return this.http
-      .post<{ data: UserModel } | UserModel>(`${this._apiUrl}user/login`, loginInfo)
+      .post<any>(`${this._apiUrl}user/login`, loginInfo)//{ success: boolean, data: UserModel }
       .pipe(
-        map((res: any) => res.data || res),
+        // map((res: any) => res.success ? res.data : res),
         catchError(this.commonService.handleError)
       );
   }
