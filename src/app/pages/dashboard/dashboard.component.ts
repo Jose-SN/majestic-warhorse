@@ -6,7 +6,7 @@ import { DashboardOverviewComponent } from 'src/app/components/dashboard-overvie
 import { CoursesComponent } from '../courses/courses.component';
 import { DashboardService } from './dashboard.service';
 import { ISidepanel } from './modal/dashboard-modal';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, lastValueFrom } from 'rxjs';
 import { CourseOverviewComponent } from '../course-overview/course-overview.component';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { UnderConstructionComponent } from 'src/app/components/under-construction/under-construction.component';
@@ -23,6 +23,7 @@ import { ApprovalPendingComponent } from '../approval-pending/approval-pending.c
 import { StudentTeacherAssignListComponent } from '../student-teacher-assign-list/student-teacher-assign-list.component';
 import { OverlayComponent } from 'src/app/shared/overlay/overlay.component';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
+import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-teacher.service';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -60,7 +61,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   @ViewChild(DashboardSidepanelComponent) dashboardSidepanelComponent!: DashboardSidepanelComponent;
   constructor(
     private dashboardService: DashboardService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private assignTeacherService: AssignTeacherService
   ) {
     this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
   }
@@ -69,7 +71,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.commonService?.loginedUserInfo?.role ?? ''
     );
   }
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.dashboardService
       .getSidePanelChange()
       .pipe(takeUntil(this.destroy$))
@@ -84,15 +86,76 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe((courseInfo: { [key: string]: boolean | ICourseList }) => {
         this.handleCourseDetailsView(courseInfo);
       });
+    
     const loginedUserData = this.commonService.loginedUserInfo;
-    if (loginedUserData?.role === 'student' && !loginedUserData.assignedTo?.length) {
-      this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
-      this.infoMessage =
-        'You have not been assigned any teachers to view this course. Please contact the admin for assistance';
-    } else if ((loginedUserData?.role === 'teacher' && loginedUserData.status === 'pending')) {
-      this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
-      this.infoMessage =
-        'Your request is pending approval from the admin. Please reach out to the admin for assistance.';
+    const userId = loginedUserData?.id;
+    const userRole = loginedUserData?.role;
+    
+    if (!userId || !userRole) {
+      return;
+    }
+    
+    // Check if user has assigned teachers/students based on role
+    let hasAssignedData = false;
+    
+    try {
+      if (userRole === 'student') {
+        // Call getAssignedTeachers API for students
+        const response = await lastValueFrom(
+          this.assignTeacherService.getAssignedTeachers(userId).pipe(takeUntil(this.destroy$))
+        );
+        const responseData = response.data || response;
+        
+        // Check if any teachers are assigned
+        if (Array.isArray(responseData) && responseData.length > 0) {
+          hasAssignedData = true;
+        } else if (responseData?.teachers && Array.isArray(responseData.teachers) && responseData.teachers.length > 0) {
+          hasAssignedData = true;
+        } else if (responseData?.teacher_ids && Array.isArray(responseData.teacher_ids) && responseData.teacher_ids.length > 0) {
+          hasAssignedData = true;
+        }
+        
+        // Show approval pending if student status is pending and no teachers assigned
+        if (loginedUserData.status === 'pending' && !hasAssignedData) {
+          this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
+          this.infoMessage =
+            'You have not been assigned any teachers to view this course. Please contact the admin for assistance';
+        }
+      } else if (userRole === 'teacher') {
+        // Call getAssignedStudents API for teachers
+        const response = await lastValueFrom(
+          this.assignTeacherService.getAssignedStudents(userId).pipe(takeUntil(this.destroy$))
+        );
+        const responseData = response.data || response;
+        
+        // Check if any students are assigned
+        if (Array.isArray(responseData) && responseData.length > 0) {
+          hasAssignedData = true;
+        } else if (responseData?.students && Array.isArray(responseData.students) && responseData.students.length > 0) {
+          hasAssignedData = true;
+        } else if (responseData?.student_ids && Array.isArray(responseData.student_ids) && responseData.student_ids.length > 0) {
+          hasAssignedData = true;
+        }
+        
+        // Show approval pending if teacher status is pending
+        if (loginedUserData.status === 'pending') {
+          this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
+          this.infoMessage =
+            'Your request is pending approval from the admin. Please reach out to the admin for assistance.';
+        }
+      }
+    } catch (error) {
+      console.error('Error checking assigned teachers/students:', error);
+      // If API fails, fall back to checking status
+      if (userRole === 'student' && loginedUserData.status === 'pending') {
+        this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
+        this.infoMessage =
+          'You have not been assigned any teachers to view this course. Please contact the admin for assistance';
+      } else if (userRole === 'teacher' && loginedUserData.status === 'pending') {
+        this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
+        this.infoMessage =
+          'Your request is pending approval from the admin. Please reach out to the admin for assistance.';
+      }
     }
   }
   ngOnDestroy(): void {
