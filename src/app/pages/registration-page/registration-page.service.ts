@@ -74,20 +74,52 @@ export class RegistrationPageService {
     registrationInfo.profileImage = this.commonService.decodeUrl(encodeURI(this.imageUrl));
     delete registrationInfo.confirmPassword;
     
-    // Transform payload to match database schema
-    const transformedPayload: any = {
-      first_name: registrationInfo.firstName || '',
-      last_name: registrationInfo.lastName || null,
-      profile_image: registrationInfo.profileImage || '',
-      contact: {
-        email: registrationInfo.email || '',
-        phone: registrationInfo.phone || '',
-      },
-      role: registrationInfo.role || 'student',
+    // Transform payload to match database schema - only include non-empty values
+    const transformedPayload: any = {};
+    
+    // Helper function to check if value should be included
+    const shouldInclude = (value: any): boolean => {
+      return value !== null && value !== undefined && value !== '';
     };
 
+    // Add first_name if not empty
+    if (shouldInclude(registrationInfo.firstName)) {
+      transformedPayload.first_name = registrationInfo.firstName;
+    }
+
+    // Add last_name if not empty
+    if (shouldInclude(registrationInfo.lastName)) {
+      transformedPayload.last_name = registrationInfo.lastName;
+    }
+
+    // Add profile_image if not empty
+    if (shouldInclude(registrationInfo.profileImage)) {
+      transformedPayload.profile_image = registrationInfo.profileImage;
+    }
+
+    // Build contact object - only include non-empty values
+    const contact: any = {};
+    if (shouldInclude(registrationInfo.email)) {
+      contact.email = registrationInfo.email;
+    }
+    if (shouldInclude(registrationInfo.phone)) {
+      contact.phone = registrationInfo.phone;
+    }
+    
+    // Only add contact if it has at least one field
+    if (Object.keys(contact).length > 0) {
+      transformedPayload.contact = contact;
+    }
+
+    // Add role if provided, otherwise default to 'student' for new registrations
+    if (shouldInclude(registrationInfo.role)) {
+      transformedPayload.role = registrationInfo.role;
+    } else if (!isEditMode) {
+      transformedPayload.role = 'student';
+    }
+
     // Only include password if provided (for updates, password is optional)
-    if (registrationInfo.password) {
+    if (shouldInclude(registrationInfo.password)) {
       transformedPayload.password = registrationInfo.password;
     }
 
@@ -97,8 +129,14 @@ export class RegistrationPageService {
     } else {
       // For updates, include user ID and status
       const loginedUser = this.commonService.loginedUserInfo;
-      transformedPayload.id = loginedUser?.id;
-      transformedPayload.status = loginedUser?.status || 'active';
+      if (loginedUser?.id) {
+        transformedPayload.id = loginedUser.id;
+      }
+      if (loginedUser?.status) {
+        transformedPayload.status = loginedUser.status;
+      } else {
+        transformedPayload.status = 'active';
+      }
     }
 
     // Add app_id if available from sessionStorage
@@ -115,7 +153,7 @@ export class RegistrationPageService {
     }
 
     // Add app_id if provided in registration info (for organization registration)
-    if (registrationInfo.app_id) {
+    if (shouldInclude(registrationInfo.app_id)) {
       transformedPayload.app_id = registrationInfo.app_id;
     }
 
