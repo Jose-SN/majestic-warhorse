@@ -146,8 +146,18 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   onSubmit() {
     this.createAccountForm.markAllAsTouched();
     if (this.createAccountForm.valid) {
+      const userFormInfo = this.createAccountForm.value;
+      userFormInfo.email = this.createAccountForm.get('email')?.value || this.commonService.loginedUserInfo?.contact?.email || '';
+      userFormInfo.phone = this.createAccountForm.get('phone')?.value || this.commonService.loginedUserInfo?.contact?.phone || '';
+      userFormInfo.firstName = this.createAccountForm.get('firstName')?.value;
+      userFormInfo.lastName = this.createAccountForm.get('lastName')?.value;
+      userFormInfo.profileImage = this.registrationService.imageUrl;
+      userFormInfo.role = this.createAccountForm.get('role')?.value;
+      userFormInfo.status = this.createAccountForm.get('status')?.value;
+      userFormInfo.password = this.createAccountForm.get('password')?.value;
+      userFormInfo.confirmPassword = this.createAccountForm.get('confirmPassword')?.value;
       this.registrationService
-        .registerUserInfo(this.destroy$, this.createAccountForm.value, this.isEditMode)
+        .registerUserInfo(this.destroy$, userFormInfo, this.isEditMode)
         .then((clearForms) => {
           if (clearForms) {
             if (this.isEditMode) {
