@@ -19,4 +19,16 @@ export class QuestionnaireApiService {
       .get<any[]>(`${this._apiUrl}question/get`)
       .pipe(catchError(this.commonService.handleError));
   }
+
+  createQuestion(questionData: any) {
+    return this.http
+      .post<any>(`${this._apiUrl}question/create`, questionData)
+      .pipe(catchError(this.commonService.handleError));
+  }
+
+  submitAnswers(answers: any) {
+    return this.http
+      .post<any>(`${this._apiUrl}question/submit`, answers)
+      .pipe(catchError(this.commonService.handleError));
+  }
 }
