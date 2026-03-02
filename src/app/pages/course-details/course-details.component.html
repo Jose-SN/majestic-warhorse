@@ -3,8 +3,16 @@
     <div class="courses-wrapper">
       <div class="course-top">
         <h2>{{selectedCourseInfo.courseTitle}}</h2>
-        <span>{{activeChapter.chapterTitle}}</span>
+        <ul class="tab-navigation">
+          <li [ngClass]="{ 'active': activeTab === 'course' }" (click)="setActiveTab('course')">Course</li>
+          <li [ngClass]="{ 'active': activeTab === 'questionnaire' }" (click)="setActiveTab('questionnaire')">Questionnaire</li>
+        </ul>
       </div>
+      @if(activeTab === 'course') {
+      <div class="tab-content">
+        <div class="chapter-title">
+          <span>{{activeChapter.chapterTitle}}</span>
+        </div>
       <div class="video-wrapper">
         <div class="video-holder">
           <div class="video-left">
@@ -87,6 +95,13 @@
           </div>
         </div>
       </div>
+      </div>
+      }
+      @if(activeTab === 'questionnaire') {
+      <div class="tab-content">
+        <app-questionnaire></app-questionnaire>
+      </div>
+      }
     </div>
   </div>
   <div class="content-right">

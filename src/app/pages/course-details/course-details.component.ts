@@ -17,6 +17,7 @@ import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
 import { VideoDurationService } from 'src/app/shared/services/video-duration.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { Input } from '@angular/core';
+import { QuestionnaireComponent } from '../questionnaire/questionnaire.component';
 
 @Component({
   selector: 'app-course-detils',
@@ -27,6 +28,7 @@ import { Input } from '@angular/core';
     VideoPlayerComponent,
     StarRatingModule,
     CommonSearchProfileComponent,
+    QuestionnaireComponent,
   ],
   templateUrl: './course-details.component.html',
   styleUrl: './course-details.component.scss',
@@ -45,6 +47,7 @@ export class CourseDetailsComponent {
   private videoStatusInfo: ICourseStatus = {} as ICourseStatus;
   public selectedAttachmentList: any = [];
   public showQuestionAnswer: boolean = false;
+  public activeTab: string = 'course';
   @Input() selectedCourseInfo: ICourseList = {} as ICourseList;
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   @ViewChild(VideoPlayerComponent) videoPlayerComponent!: VideoPlayerComponent;
@@ -246,5 +249,8 @@ export class CourseDetailsComponent {
         }
       }
     });
+  }
+  setActiveTab(tab: string) {
+    this.activeTab = tab;
   }
 }
