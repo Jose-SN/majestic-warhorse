@@ -4,6 +4,81 @@
       <div class="question-inner">
         <div class="form-holder">
           <div class="scroll-content">
+            @if(isTeacher) {
+            <!-- Teacher View: Add Questions -->
+            <div class="course-top">
+              <h2>Create Assessment Questions</h2>
+              <span>Add questions for your assessment test</span>
+            </div>
+            <div class="questionnire-form">
+              <div class="input-holder">
+                <label class="sub-title">Question Text</label>
+                <input type="text" [(ngModel)]="newQuestion.question" placeholder="Enter your question" />
+              </div>
+              
+              <div class="input-holder">
+                <label class="sub-title">Question Type</label>
+                <select [(ngModel)]="newQuestion.type">
+                  <option value="Textbox">Textbox</option>
+                  <option value="Textarea">Textarea</option>
+                  <option value="Radio">Radio</option>
+                  <option value="Checkbox">Checkbox</option>
+                  <option value="Dropdown">Dropdown</option>
+                </select>
+              </div>
+
+              <!-- Options Fields (Radio/Checkbox/Dropdown) -->
+              @if(newQuestion.type === 'Radio' || newQuestion.type === 'Checkbox' || newQuestion.type === 'Dropdown') {
+              <div class="input-holder">
+                <label class="sub-title">Options</label>
+                <div class="option-input-row">
+                  <input type="text" [(ngModel)]="newOption.label" placeholder="Option label" class="option-input" />
+                  <input type="text" [(ngModel)]="newOption.value" placeholder="Option value" class="option-input" />
+                  <button type="button" (click)="addOption()" class="btn-add-option">Add Option</button>
+                </div>
+                @if(newQuestion.options && newQuestion.options.length > 0) {
+                <div class="options-list">
+                  @for (option of newQuestion.options; track $index) {
+                  <div class="option-item">
+                    <span class="option-text">{{option.label}} ({{option.value}})</span>
+                    <button type="button" (click)="removeOption($index)" class="btn-remove-option">Remove</button>
+                  </div>
+                  }
+                </div>
+                }
+              </div>
+              }
+
+              <div class="data-refreshed-holder">
+                <button (click)="createQuestion()">Add Question</button>
+              </div>
+            </div>
+
+            <!-- Existing Questions List -->
+            @if(questionsList && questionsList.length > 0) {
+            <div class="existing-questions">
+              <h3 class="section-title">Existing Questions</h3>
+              @for (question of questionsList; track $index) {
+              <div class="question-item">
+                <div class="question-header">
+                  <strong>{{$index + 1}}. {{question.question}}</strong>
+                  <span class="question-type">({{question.type}})</span>
+                </div>
+                @if(question.options && question.options.length > 0) {
+                <div class="question-options">
+                  @for (option of question.options; track $index) {
+                  <div class="option-display">- {{option.label}} ({{option.value}})</div>
+                  }
+                </div>
+                }
+              </div>
+              }
+            </div>
+            }
+            }
+
+            @if(isStudent) {
+            <!-- Student View: Answer Questions -->
             <div class="course-top">
               <h2>Start Your Assessment Test</h2>
               <span>Please answer the questions before submit</span>
@@ -14,54 +89,54 @@
               @case ("Textbox") {
               <div class="input-holder">
                 <label class="sub-title">{{question.question}}</label>
-                <input type="text" [placeholder]="question.placeholder" [maxLength]="question.maxValue"
-                  [minLength]="question.minValue" />
+                <input type="text" [(ngModel)]="answers[question.id || $index]" />
               </div>
               }
               @case ("Textarea") {
-              <div calss="input-holder">
-                <label class="sub-title">Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci
-                  risus. Donec pretium fDonec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci
-                  risus. Donec
-                  Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec pretium f
-                  pretium f Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus.
-                  Donec sed erat ut magna suscipit mattis. Aliquam erat volutpat. Morbi in orci risus. Donec pretium f
-                  ?</label>
-                <textarea rows="5" cols="45"></textarea>
-              </div>
-              }
-              @case ("Checkbox") {
-              <div class="checkbox-holder">
-                <span class="sub-title">{{question.question}}</span>
-                @if(question?.options?.length){
-                @for (option of question.options; track $index) {
-                <label>
-                  <strong>{{option.label}}</strong>
-                  <input type="checkbox" [value]="option.value">
-                  <span class="checkmark"></span>
-                </label>
-                }
-                }
+              <div class="input-holder">
+                <label class="sub-title">{{question.question}}</label>
+                <textarea rows="5" [(ngModel)]="answers[question.id || $index]"></textarea>
               </div>
               }
               @case ("Radio") {
               <div class="checkbox-holder">
                 <span class="sub-title">{{question.question}}</span>
-                @if(question?.options?.length){
+                @if(question?.options && question.options.length > 0){
                 @for (option of question.options; track $index) {
-                <label>
+                <label class="radio-label">
+                  <input type="radio" 
+                    [name]="'question_' + (question.id || $index)"
+                    [value]="option.value"
+                    [(ngModel)]="answers[question.id || $index]" />
                   <strong>{{option.label}}</strong>
-                  <input type="radio" [value]="option.value">
+                </label>
+                }
+                }
+              </div>
+              }
+              @case ("Checkbox") {
+              <div class="checkbox-holder">
+                <span class="sub-title">{{question.question}}</span>
+                @if(question?.options && question.options.length > 0){
+                @for (option of question.options; track $index) {
+                <label class="checkbox-label">
+                  <input type="checkbox" 
+                    [value]="option.value"
+                    [checked]="answers[question.id || $index]?.includes(option.value)"
+                    (change)="handleCheckboxChange(question.id || $index, option.value, $event)" />
+                  <span class="checkmark"></span>
+                  <strong>{{option.label}}</strong>
                 </label>
                 }
                 }
               </div>
               }
               @case ("Dropdown") {
-              <div class="checkbox-holder">
-                <span class="sub-title">{{question.question}}</span>
-                @if(question?.options?.length){
-                <select>
+              <div class="input-holder">
+                <label class="sub-title">{{question.question}}</label>
+                @if(question?.options && question.options.length > 0){
+                <select [(ngModel)]="answers[question.id || $index]">
+                  <option value="">Select an option</option>
                   @for (option of question.options; track $index) {
                   <option [value]="option.value">{{option.label}}</option>
                   }
@@ -73,129 +148,9 @@
               }
             </div>
             <div class="data-refreshed-holder">
-              <button>Submit</button>
+              <button (click)="submitAnswers()">Submit</button>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="content-right">
-    <div class="content-box">
-      <h3>Last Submitted</h3>
-      <div class="reading-list-wrapper">
-        <div class="reading-list-content">
-          <div class="scroll-content">
-            <div class="reading-list">
-              <figure>
-                <img src="../../../assets/images/img-last-submited.png" alt="" />
-              </figure>
-              <div class="reading-list-right">
-                <h4>MIT Year 1 (C24)</h4>
-                <span>12 Chapters</span>
-                <button>Published</button>
-              </div>
-            </div>
-            <div class="reading-list">
-              <figure>
-                <img src="../../../assets/images/img-last-submited.png" alt="" />
-              </figure>
-              <div class="reading-list-right">
-                <h4>MIT Year 1 (C24)</h4>
-                <span>12 Chapters</span>
-                <button>Published</button>
-              </div>
-            </div>
-            <div class="reading-list">
-              <figure>
-                <img src="../../../assets/images/img-last-submited.png" alt="" />
-              </figure>
-              <div class="reading-list-right">
-                <h4>MIT Year 1 (C24)</h4>
-                <span>12 Chapters</span>
-                <button>Published</button>
-              </div>
-            </div>
-            <div class="reading-list">
-              <figure>
-                <img src="../../../assets/images/img-last-submited.png" alt="" />
-              </figure>
-              <div class="reading-list-right">
-                <h4>MIT Year 1 (C24)</h4>
-                <span>12 Chapters</span>
-                <button>Published</button>
-              </div>
-            </div>
-            <div class="reading-list">
-              <figure>
-                <img src="../../../assets/images/img-last-submited.png" alt="" />
-              </figure>
-              <div class="reading-list-right">
-                <h4>MIT Year 1 (C24)</h4>
-                <span>12 Chapters</span>
-                <button>Published</button>
-              </div>
-            </div>
-            <div class="reading-list">
-              <figure>
-                <img src="../../../assets/images/img-last-submited.png" alt="" />
-              </figure>
-              <div class="reading-list-right">
-                <h4>MIT Year 1 (C24)</h4>
-                <span>12 Chapters</span>
-                <button>Published</button>
-              </div>
-            </div>
-            <div class="reading-list">
-              <figure>
-                <img src="../../../assets/images/img-last-submited.png" alt="" />
-              </figure>
-              <div class="reading-list-right">
-                <h4>MIT Year 1 (C24)</h4>
-                <span>12 Chapters</span>
-                <button>Published</button>
-              </div>
-            </div>
-            <div class="reading-list">
-              <figure>
-                <img src="../../../assets/images/img-last-submited.png" alt="" />
-              </figure>
-              <div class="reading-list-right">
-                <h4>MIT Year 1 (C24)</h4>
-                <span>12 Chapters</span>
-                <button>Published</button>
-              </div>
-            </div>
-            <div class="reading-list">
-              <figure>
-                <img src="../../../assets/images/img-last-submited.png" alt="" />
-              </figure>
-              <div class="reading-list-right">
-                <h4>MIT Year 1 (C24)</h4>
-                <span>12 Chapters</span>
-                <button>Published</button>
-              </div>
-            </div>
-            <div class="reading-list">
-              <figure>
-                <img src="../../../assets/images/img-last-submited.png" alt="" />
-              </figure>
-              <div class="reading-list-right">
-                <h4>MIT Year 1 (C24)</h4>
-                <span>12 Chapters</span>
-                <button>Published</button>
-              </div>
-            </div>
-            <div class="reading-list">
-              <figure>
-                <img src="../../../assets/images/img-last-submited.png" alt="" />
-              </figure>
-              <div class="reading-list-right">
-                <h4>MIT Year 1 (C24)</h4>
-                <span>12 Chapters</span>
-                <button>Published</button>
-              </div>
-            </div>
+            }
           </div>
         </div>
       </div>
