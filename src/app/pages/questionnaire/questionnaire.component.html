@@ -40,8 +40,27 @@
                 <div class="options-list">
                   @for (option of newQuestion.options; track $index) {
                   <div class="option-item">
-                    <span class="option-text">{{option.label}} ({{option.value}})</span>
-                    <button type="button" (click)="removeOption($index)" class="btn-remove-option">Remove</button>
+                    @if(editingOptionIndex === $index) {
+                    <!-- Edit Mode -->
+                    <div class="option-inputs-edit">
+                      <input type="text" [(ngModel)]="editingOption.label" placeholder="Option label" class="option-input-edit" />
+                      <input type="text" [(ngModel)]="editingOption.value" placeholder="Option value" class="option-input-edit" />
+                    </div>
+                    <div class="option-actions">
+                      <button type="button" (click)="saveOption($index)" class="btn-save-option">Save</button>
+                      <button type="button" (click)="cancelEditOption()" class="btn-cancel-option">Cancel</button>
+                    </div>
+                    } @else {
+                    <!-- Display Mode -->
+                    <div class="option-inputs-display">
+                      <input type="text" [value]="option.label" disabled class="option-input-disabled" />
+                      <input type="text" [value]="option.value" disabled class="option-input-disabled" />
+                    </div>
+                    <div class="option-actions">
+                      <button type="button" (click)="editOption($index)" class="btn-edit-option">Edit</button>
+                      <button type="button" (click)="removeOption($index)" class="btn-remove-option">Remove</button>
+                    </div>
+                    }
                   </div>
                   }
                 </div>
