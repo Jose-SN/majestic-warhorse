@@ -5,6 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { QuestionnaireApiService } from 'src/app/services/api-service/questionnaire-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
+import { ConfirmationPopupService } from 'src/app/shared/confirmation-popup/confirmation-popup.service';
 
 @Component({
   selector: 'app-questionnaire',
@@ -40,7 +41,8 @@ export class QuestionnaireComponent implements OnInit {
 
   constructor(
     private questionnaireApiService: QuestionnaireApiService,
-    public commonService: CommonService
+    public commonService: CommonService,
+    private confirmationPopupService: ConfirmationPopupService
   ) {}
 
   ngOnInit() {
@@ -73,7 +75,7 @@ export class QuestionnaireComponent implements OnInit {
   // Teacher methods
   addOption() {
     if (!this.newOption.label || !this.newOption.value) {
-      alert('Please enter both label and value for the option');
+      this.confirmationPopupService.showAlert('Please enter both label and value for the option');
       return;
     }
     if (!this.newQuestion.options) {
@@ -102,7 +104,7 @@ export class QuestionnaireComponent implements OnInit {
 
   saveOption(index: number) {
     if (!this.editingOption.label || !this.editingOption.value) {
-      alert('Please enter both label and value');
+      this.confirmationPopupService.showAlert('Please enter both label and value');
       return;
     }
     this.newQuestion.options[index] = { ...this.editingOption };
@@ -116,14 +118,14 @@ export class QuestionnaireComponent implements OnInit {
 
   createQuestion() {
     if (!this.newQuestion.question) {
-      alert('Please enter a question');
+      this.confirmationPopupService.showAlert('Please enter a question');
       return;
     }
 
     // Validate options for Radio, Checkbox, and Dropdown
     const needsOptions = ['Radio', 'Checkbox', 'Dropdown'].includes(this.newQuestion.type);
     if (needsOptions && (!this.newQuestion.options || this.newQuestion.options.length === 0)) {
-      alert('Please add at least one option for this question type');
+      this.confirmationPopupService.showAlert('Please add at least one option for this question type');
       return;
     }
 
@@ -145,7 +147,7 @@ export class QuestionnaireComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error creating question:', error);
-          alert('Error creating question. Please try again.');
+          this.confirmationPopupService.showAlert('Error creating question. Please try again.');
         }
       });
   }
@@ -186,7 +188,9 @@ export class QuestionnaireComponent implements OnInit {
     });
 
     if (unansweredQuestions.length > 0) {
-      alert(`Please answer all questions. ${unansweredQuestions.length} question(s) remaining.`);
+      this.confirmationPopupService.showAlert(
+        `Please answer all questions. ${unansweredQuestions.length} question(s) remaining.`
+      );
       return;
     }
 
@@ -200,14 +204,14 @@ export class QuestionnaireComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          alert('Answers submitted successfully!');
+          this.confirmationPopupService.showAlert('Answers submitted successfully!', 'Success');
           // Optionally reset answers
           this.answers = {};
           this.loadQuestions();
         },
         error: (error) => {
           console.error('Error submitting answers:', error);
-          alert('Error submitting answers. Please try again.');
+          this.confirmationPopupService.showAlert('Error submitting answers. Please try again.', 'Error');
         }
       });
   }

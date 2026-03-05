@@ -130,87 +130,53 @@
             }
             .option-item {
                 @include flex(flex, null, space-between, center);
+                gap: 10px;
                 padding: 12px 15px;
                 background: var(--bg-input);
-                @include border-radius(5px);
+                @include border-radius(8px);
                 margin-bottom: 10px;
                 width: 100%;
-                gap: 15px;
                 .option-inputs-display, .option-inputs-edit {
                     flex: 1;
-                    display: flex;
+                    @include flex(flex, null, null, null);
                     gap: 10px;
-                    .option-input-disabled {
+                    .option-input {
                         flex: 1;
-                        font-family: $archivo-regular;
-                        font-size: 0.875rem;
-                        color: var(--white);
-                        background: var(--bg-input);
-                        border: 1px solid var(--bg-border-input);
-                        padding: 8px 10px;
-                        @include border-radius(5px);
+                    }
+                    .option-input-disabled {
                         opacity: 0.7;
                         cursor: not-allowed;
                     }
-                    .option-input-edit {
-                        flex: 1;
-                        font-family: $archivo-regular;
-                        font-size: 0.875rem;
-                        color: var(--white);
-                        background: var(--bg-input);
-                        border: 1px solid var(--bg-border-input);
-                        padding: 8px 10px;
-                        @include border-radius(5px);
-                    }
                 }
                 .option-actions {
-                    display: flex;
-                    gap: 8px;
+                    @include flex(flex, null, null, center);
+                    gap: 10px;
+                    flex-shrink: 0;
                 }
             }
-            .btn-remove-option {
-                font-family: $archivo-medium;
-                font-size: 0.75rem;
-                color: var(--white);
-                padding: 5px 15px;
-                height: auto;
-                @include border-radius(5px);
-                background: var(--bg-notification-red);
-                border: none;
-                cursor: pointer;
-            }
-            .btn-edit-option {
-                font-family: $archivo-medium;
-                font-size: 0.75rem;
-                color: var(--white);
-                padding: 5px 15px;
-                height: auto;
-                @include border-radius(5px);
-                background: var(--bg-blue);
-                border: none;
-                cursor: pointer;
-            }
-            .btn-save-option {
-                font-family: $archivo-medium;
-                font-size: 0.75rem;
-                color: var(--white);
-                padding: 5px 15px;
-                height: auto;
-                @include border-radius(5px);
-                background: var(--bg-green);
-                border: none;
-                cursor: pointer;
-            }
+            .btn-remove-option,
+            .btn-edit-option,
+            .btn-save-option,
             .btn-cancel-option {
                 font-family: $archivo-medium;
-                font-size: 0.75rem;
+                font-size: 0.875rem;
                 color: var(--white);
-                padding: 5px 15px;
-                height: auto;
-                @include border-radius(5px);
-                background: var(--bg-grey);
+                padding: 0 20px;
+                height: 44px;
+                @include border-radius(8px);
                 border: none;
                 cursor: pointer;
+                white-space: nowrap;
+            }
+            .btn-remove-option {
+                background: var(--bg-notification-red);
+            }
+            .btn-edit-option,
+            .btn-save-option {
+                @include gradient();
+            }
+            .btn-cancel-option {
+                background: var(--bg-grey);
             }
             .existing-questions {
                 margin-top: 30px;

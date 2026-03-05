@@ -43,8 +43,8 @@
                     @if(editingOptionIndex === $index) {
                     <!-- Edit Mode -->
                     <div class="option-inputs-edit">
-                      <input type="text" [(ngModel)]="editingOption.label" placeholder="Option label" class="option-input-edit" />
-                      <input type="text" [(ngModel)]="editingOption.value" placeholder="Option value" class="option-input-edit" />
+                      <input type="text" [(ngModel)]="editingOption.label" placeholder="Option label" class="option-input" />
+                      <input type="text" [(ngModel)]="editingOption.value" placeholder="Option value" class="option-input" />
                     </div>
                     <div class="option-actions">
                       <button type="button" (click)="saveOption($index)" class="btn-save-option">Save</button>
@@ -53,8 +53,8 @@
                     } @else {
                     <!-- Display Mode -->
                     <div class="option-inputs-display">
-                      <input type="text" [value]="option.label" disabled class="option-input-disabled" />
-                      <input type="text" [value]="option.value" disabled class="option-input-disabled" />
+                      <input type="text" [value]="option.label" disabled class="option-input option-input-disabled" />
+                      <input type="text" [value]="option.value" disabled class="option-input option-input-disabled" />
                     </div>
                     <div class="option-actions">
                       <button type="button" (click)="editOption($index)" class="btn-edit-option">Edit</button>
