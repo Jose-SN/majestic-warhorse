@@ -31,6 +31,10 @@ export class QuestionnaireComponent implements OnInit {
     value: ''
   };
   
+  // Editing state
+  public editingOptionIndex: number | null = null;
+  public editingOption: any = { label: '', value: '' };
+  
   // Student form answers
   public answers: any = {};
 
@@ -81,6 +85,33 @@ export class QuestionnaireComponent implements OnInit {
 
   removeOption(index: number) {
     this.newQuestion.options.splice(index, 1);
+    if (this.editingOptionIndex === index) {
+      this.cancelEditOption();
+    } else if (this.editingOptionIndex !== null && this.editingOptionIndex > index) {
+      this.editingOptionIndex = this.editingOptionIndex - 1;
+    }
+  }
+
+  editOption(index: number) {
+    this.editingOptionIndex = index;
+    this.editingOption = {
+      label: this.newQuestion.options[index].label,
+      value: this.newQuestion.options[index].value
+    };
+  }
+
+  saveOption(index: number) {
+    if (!this.editingOption.label || !this.editingOption.value) {
+      alert('Please enter both label and value');
+      return;
+    }
+    this.newQuestion.options[index] = { ...this.editingOption };
+    this.cancelEditOption();
+  }
+
+  cancelEditOption() {
+    this.editingOptionIndex = null;
+    this.editingOption = { label: '', value: '' };
   }
 
   createQuestion() {
@@ -98,8 +129,6 @@ export class QuestionnaireComponent implements OnInit {
 
     const questionData = {
       ...this.newQuestion,
-      minValue: this.newQuestion.minValue ? parseInt(this.newQuestion.minValue) : null,
-      maxValue: this.newQuestion.maxValue ? parseInt(this.newQuestion.maxValue) : null,
       // Clear options for text input types
       options: needsOptions ? this.newQuestion.options : []
     };
