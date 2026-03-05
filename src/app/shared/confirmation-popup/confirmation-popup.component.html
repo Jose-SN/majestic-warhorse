@@ -1,0 +1,26 @@
+@if (config) {
+<div class="confirmation-overlay" (click)="config.type === 'alert' ? onConfirm() : onCancel()">
+  <div class="confirmation-dialog" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
+    <div class="confirmation-header">
+      <h2 class="confirmation-title">{{ config.title }}</h2>
+    </div>
+    <div class="confirmation-body">
+      <p class="confirmation-message">{{ config.message }}</p>
+    </div>
+    <div class="confirmation-actions">
+      @if (config.type === 'alert') {
+        <button type="button" class="btn-confirm" (click)="onConfirm()">
+          {{ config.confirmText || 'OK' }}
+        </button>
+      } @else {
+        <button type="button" class="btn-cancel" (click)="onCancel()">
+          {{ config.cancelText || 'Cancel' }}
+        </button>
+        <button type="button" class="btn-confirm" (click)="onConfirm()">
+          {{ config.confirmText || 'Confirm' }}
+        </button>
+      }
+    </div>
+  </div>
+</div>
+}

@@ -1,0 +1,73 @@
+@import '../../../styles/index';
+
+.confirmation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1050;
+  @include flex(flex, null, center, center);
+}
+
+.confirmation-dialog {
+  background: var(--bg-left-panel);
+  color: var(--white);
+  min-width: 320px;
+  max-width: 480px;
+  padding: 24px;
+  @include border-radius(15px);
+  @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
+}
+
+.confirmation-header {
+  margin-bottom: 16px;
+}
+
+.confirmation-title {
+  font-family: $titilliumWeb-bold;
+  font-size: 1.25rem;
+  font-weight: normal;
+  color: var(--white);
+  margin: 0;
+}
+
+.confirmation-body {
+  margin-bottom: 24px;
+}
+
+.confirmation-message {
+  font-family: $archivo-regular;
+  font-size: 0.938rem;
+  line-height: 1.5;
+  color: var(--light-blue);
+  margin: 0;
+}
+
+.confirmation-actions {
+  @include flex(flex, null, flex-end, center);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-confirm,
+.btn-cancel {
+  font-family: $archivo-medium;
+  font-size: 0.875rem;
+  color: var(--white);
+  padding: 0 24px;
+  height: 44px;
+  @include border-radius(8px);
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-confirm {
+  @include gradient();
+}
+
+.btn-cancel {
+  background: var(--bg-grey);
+}
