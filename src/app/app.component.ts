@@ -12,7 +12,6 @@ import { ViewAssignedTeachersComponent } from './components/view-assigned-teache
 import { ViewAssignedStudentsComponent } from './components/view-assigned-students/view-assigned-students.component';
 import { ApplicationApiService } from './services/api-service/application-api.service';
 import { environment } from 'src/environments/environment';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

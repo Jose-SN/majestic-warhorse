@@ -1,51 +1,25 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { DashboardSidepanelComponent } from 'src/app/components/dashboard-sidepanel/dashboard-sidepanel.component';
-import { DashboardOverviewComponent } from 'src/app/components/dashboard-overview/dashboard-overview.component';
-import { CoursesComponent } from '../courses/courses.component';
 import { DashboardService } from './dashboard.service';
 import { ISidepanel } from './modal/dashboard-modal';
-import { Subject, takeUntil, lastValueFrom } from 'rxjs';
-import { CourseOverviewComponent } from '../course-overview/course-overview.component';
-import { CommonService } from 'src/app/shared/services/common.service';
-import { UnderConstructionComponent } from 'src/app/components/under-construction/under-construction.component';
-import { CourseUploadComponent } from '../course-upload/course-upload.component';
 import { ICourseList } from '../courses/modal/course-list';
-import { CourseDetailsComponent } from '../course-details/course-details.component';
-import { EditAccountComponent } from '../edit-account/edit-account.component';
-import { QuestionnaireComponent } from '../questionnaire/questionnaire.component';
-import { TeachersListComponent } from '../teachers-list/teachers-list.component';
-import { ApprovalListComponent } from '../approval-list/approval-list.component';
-import { StudentsListComponent } from '../students-list/students-list.component';
-import { AssignTeachersComponent } from 'src/app/components/assign-teachers/assign-teachers.component';
-import { ApprovalPendingComponent } from '../approval-pending/approval-pending.component';
-import { StudentTeacherAssignListComponent } from '../student-teacher-assign-list/student-teacher-assign-list.component';
-import { OverlayComponent } from 'src/app/shared/overlay/overlay.component';
+import { Subject, takeUntil } from 'rxjs';
+import { CommonService } from 'src/app/shared/services/common.service';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
-import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-teacher.service';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
     FormsModule,
     CommonModule,
-    CoursesComponent,
-    CourseOverviewComponent,
-    DashboardOverviewComponent,
-    UnderConstructionComponent,
-    AssignTeachersComponent,
+    RouterModule,
     DashboardSidepanelComponent,
-    CourseDetailsComponent,
-    EditAccountComponent,
-    TeachersListComponent,
-    ApprovalListComponent,
-    StudentsListComponent,
-    ApprovalPendingComponent,
-    StudentTeacherAssignListComponent,
-    OverlayComponent,
     CommonSearchProfileComponent,
-    QuestionnaireComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -53,121 +27,139 @@ import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-
 export class DashboardComponent implements OnInit, OnDestroy {
   public isMobileNav = false;
   public activePanel: string = '';
-  public showCourseDetailedView: boolean = false;
-  public selectedCourseInfo: ICourseList = {} as ICourseList;
-  private destroy$ = new Subject<void>();
   public infoMessage: string = '';
   public SIDE_PANEL_LIST: ISidepanel = this.dashboardService.SIDE_PANEL_LIST;
-  @ViewChild(DashboardSidepanelComponent) dashboardSidepanelComponent!: DashboardSidepanelComponent;
+  private destroy$ = new Subject<void>();
+
   constructor(
     private dashboardService: DashboardService,
     private commonService: CommonService,
-    private assignTeacherService: AssignTeacherService
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
   }
+
   get isAdminLogin() {
     return this.commonService.adminRoleType.includes(
       this.commonService?.loginedUserInfo?.role ?? ''
     );
   }
-  async ngOnInit(): Promise<void> {
+
+  ngOnInit(): void {
     this.dashboardService
       .getSidePanelChange()
       .pipe(takeUntil(this.destroy$))
       .subscribe((activePanel: string) => {
         this.activePanel = activePanel;
-        this.selectedCourseInfo = {} as ICourseList;
-        this.showCourseDetailedView = false;
       });
+
     this.dashboardService
       .getCourseDetailsInfo()
       .pipe(takeUntil(this.destroy$))
       .subscribe((courseInfo: { [key: string]: boolean | ICourseList }) => {
         this.handleCourseDetailsView(courseInfo);
       });
-    
+
+    this.router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.updateActivePanelFromRoute();
+      });
+
     const loginedUserData = this.commonService.loginedUserInfo;
-    const userId = loginedUserData?.id;
-    const userRole = loginedUserData?.role;
-    
-    if (!userId || !userRole) {
-      return;
-    }
-    
-    // Check if user has assigned teachers/students based on role
-    let hasAssignedData = false;
-    
-    try {
-      if (userRole === 'student') {
-        // Call getAssignedTeachers API for students
-        const response = await lastValueFrom(
-          this.assignTeacherService.getAssignedTeachers(userId).pipe(takeUntil(this.destroy$))
-        );
-        const responseData = response.data || response;
-        
-        // Check if any teachers are assigned
-        if (Array.isArray(responseData) && responseData.length > 0) {
-          hasAssignedData = true;
-        } else if (responseData?.teachers && Array.isArray(responseData.teachers) && responseData.teachers.length > 0) {
-          hasAssignedData = true;
-        } else if (responseData?.teacher_ids && Array.isArray(responseData.teacher_ids) && responseData.teacher_ids.length > 0) {
-          hasAssignedData = true;
-        }
-        
-        // Show approval pending if student status is pending and no teachers assigned
-        if (loginedUserData.status === 'pending' && !hasAssignedData) {
-          this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
-          this.infoMessage =
-            'You have not been assigned any teachers to view this course. Please contact the admin for assistance';
-        }
-      } else if (userRole === 'teacher') {
-        // Call getAssignedStudents API for teachers
-        const response = await lastValueFrom(
-          this.assignTeacherService.getAssignedStudents(userId).pipe(takeUntil(this.destroy$))
-        );
-        const responseData = response.data || response;
-        
-        // Check if any students are assigned
-        if (Array.isArray(responseData) && responseData.length > 0) {
-          hasAssignedData = true;
-        } else if (responseData?.students && Array.isArray(responseData.students) && responseData.students.length > 0) {
-          hasAssignedData = true;
-        } else if (responseData?.student_ids && Array.isArray(responseData.student_ids) && responseData.student_ids.length > 0) {
-          hasAssignedData = true;
-        }
-        
-        // Show approval pending if teacher status is pending
-        if (loginedUserData.status === 'pending') {
-          this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
-          this.infoMessage =
-            'Your request is pending approval from the admin. Please reach out to the admin for assistance.';
-        }
-      }
-    } catch (error) {
-      console.error('Error checking assigned teachers/students:', error);
-      // If API fails, fall back to checking status
-      if (userRole === 'student' && loginedUserData.status === 'pending') {
-        this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
-        this.infoMessage =
-          'You have not been assigned any teachers to view this course. Please contact the admin for assistance';
-      } else if (userRole === 'teacher' && loginedUserData.status === 'pending') {
-        this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
-        this.infoMessage =
-          'Your request is pending approval from the admin. Please reach out to the admin for assistance.';
-      }
+    if (loginedUserData?.role === 'student' && !loginedUserData.assignedTo?.length) {
+      this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
+      this.infoMessage =
+        'You have not been assigned any teachers to view this course. Please contact the admin for assistance';
+      this.router.navigate(['/dashboard/approval-pending'], {
+        state: { infoMessage: this.infoMessage },
+      });
+    } else if (
+      loginedUserData?.role === 'teacher' &&
+      loginedUserData.status === 'pending'
+    ) {
+      this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
+      this.infoMessage =
+        'Your request is pending approval from the admin. Please reach out to the admin for assistance.';
+      this.router.navigate(['/dashboard/approval-pending'], {
+        state: { infoMessage: this.infoMessage },
+      });
+    } else {
+      this.updateActivePanelFromRoute();
     }
   }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-  handleCourseDetailsView(showCourseView: { [key: string]: boolean | ICourseList }) {
-    this.activePanel = this.SIDE_PANEL_LIST['COURSE_LISTING'];
-    this.dashboardSidepanelComponent.activePanel = this.activePanel;
-    this.selectedCourseInfo = showCourseView['selectedCourse'] as ICourseList;
-    this.showCourseDetailedView = showCourseView['showCourseDetail'] as boolean;
+
+  private handleCourseDetailsView(showCourseView: {
+    [key: string]: boolean | ICourseList;
+  }) {
+    const showCourseDetail = showCourseView['showCourseDetail'] as boolean;
+    const selectedCourse = showCourseView['selectedCourse'] as ICourseList;
+
+    if (showCourseDetail && selectedCourse) {
+      this.router.navigate(['/dashboard/course-details'], {
+        state: { selectedCourse },
+      });
+    } else {
+      this.router.navigate(['/dashboard/courses']);
+    }
   }
+
+  private updateActivePanelFromRoute() {
+    const route = this.activatedRoute.firstChild;
+    if (route) {
+      const routePath = route.snapshot.routeConfig?.path || '';
+      const panelMap: { [key: string]: string } = {
+        overview: this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'],
+        'course-overview': this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'],
+        courses: this.SIDE_PANEL_LIST['COURSE_LISTING'],
+        'course-details': this.SIDE_PANEL_LIST['COURSE_LISTING'],
+        account: this.SIDE_PANEL_LIST['ACCOUNT'],
+        teachers: this.SIDE_PANEL_LIST['TEACHERS_LISTING'],
+        students: this.SIDE_PANEL_LIST['STUDENTS_LISTING'],
+        approval: this.SIDE_PANEL_LIST['TEACHER_APPROVAL'],
+        'approval-pending': this.SIDE_PANEL_LIST['APPROVAL_PENDING'],
+        'assign-teacher': this.SIDE_PANEL_LIST['ASSIGN_TEACHER'],
+        assessment: this.SIDE_PANEL_LIST['ASSESMENT'],
+      };
+      const panel = panelMap[routePath] || '';
+      if (panel) {
+        this.activePanel = panel;
+        this.dashboardService.setSidePanelChangeValue(panel);
+      }
+    } else {
+      const currentUrl = this.router.url;
+      const urlParts = currentUrl.split('/');
+      const routePath = urlParts[urlParts.length - 1] || '';
+      const panelMap: { [key: string]: string } = {
+        overview: this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'],
+        'course-overview': this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'],
+        courses: this.SIDE_PANEL_LIST['COURSE_LISTING'],
+        'course-details': this.SIDE_PANEL_LIST['COURSE_LISTING'],
+        account: this.SIDE_PANEL_LIST['ACCOUNT'],
+        teachers: this.SIDE_PANEL_LIST['TEACHERS_LISTING'],
+        students: this.SIDE_PANEL_LIST['STUDENTS_LISTING'],
+        approval: this.SIDE_PANEL_LIST['TEACHER_APPROVAL'],
+        'approval-pending': this.SIDE_PANEL_LIST['APPROVAL_PENDING'],
+        'assign-teacher': this.SIDE_PANEL_LIST['ASSIGN_TEACHER'],
+        assessment: this.SIDE_PANEL_LIST['ASSESMENT'],
+      };
+      const panel = panelMap[routePath] || '';
+      if (panel) {
+        this.activePanel = panel;
+        this.dashboardService.setSidePanelChangeValue(panel);
+      }
+    }
+  }
+
   btnMobileMenu() {
     this.isMobileNav = !this.isMobileNav;
   }
