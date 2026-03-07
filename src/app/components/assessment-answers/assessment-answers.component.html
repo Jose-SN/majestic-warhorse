@@ -1,0 +1,109 @@
+<div class="assessment-answers">
+  @if (!canAccess) {
+  <div class="access-denied">
+    <p>You do not have permission to view this section.</p>
+  </div>
+  } @else {
+  <div class="answers-header">
+    <h3>Submitted Answers</h3>
+    <button type="button" class="btn-refresh" (click)="loadSubmissions()">Refresh</button>
+  </div>
+
+  @if (loading) {
+  <div class="loading-state">Loading submissions...</div>
+  } @else if (submissions.length === 0) {
+  <div class="empty-state">No answers submitted yet.</div>
+  } @else {
+  <div class="submissions-list">
+    @for (submission of submissions; track (submission.id || submission.userId || $index)) {
+    <div class="submission-card">
+      <div
+        class="submission-header"
+        (click)="toggleExpand(submission)"
+        [class.expanded]="expandedSubmissionId === (submission.id || submission.userId)">
+        <div class="user-info">
+          <strong>{{ submission.userName || 'Unknown User' }}</strong>
+          <span class="email">{{ submission.userEmail || '' }}</span>
+          <span class="date">{{ submission.submittedAt | date: 'medium' }}</span>
+        </div>
+        <span class="expand-icon">{{ expandedSubmissionId === (submission.id || submission.userId) ? '▼' : '▶' }}</span>
+      </div>
+
+      @if (expandedSubmissionId === (submission.id || submission.userId)) {
+      <div class="submission-content">
+        @if (editingSubmissionId === (submission.id || submission.userId)) {
+        <!-- Edit Mode -->
+        <div class="answers-edit">
+          @for (question of questionsList; track $index) {
+          @let qId = question.id || $index;
+          @let answer = submission.answers[qId];
+          <div class="answer-row">
+            <label>{{ question.question }}</label>
+            <div class="original-answer">
+              <span class="label">Student answer:</span>
+              <span>{{ formatAnswer(answer) }}</span>
+            </div>
+            <div class="corrected-input">
+              <span class="label">Corrected / Feedback:</span>
+              @if (question.type === 'Textarea') {
+              <textarea
+                [(ngModel)]="correctedAnswersMap[submission.id || submission.userId || ''][qId]"
+                rows="3"
+                placeholder="Enter corrected answer"></textarea>
+              } @else {
+              <input
+                type="text"
+                [(ngModel)]="correctedAnswersMap[submission.id || submission.userId || ''][qId]"
+                placeholder="Enter corrected answer" />
+              }
+            </div>
+          </div>
+          }
+          <div class="feedback-row">
+            <label>General Feedback</label>
+            <textarea
+              [(ngModel)]="feedbackMap[submission.id || submission.userId || '']"
+              rows="4"
+              placeholder="Add feedback or comments for the student..."></textarea>
+          </div>
+          <div class="action-buttons">
+            <button type="button" class="btn-save" (click)="saveFeedback(submission)">Save Feedback</button>
+            <button type="button" class="btn-cancel" (click)="cancelEditing()">Cancel</button>
+          </div>
+        </div>
+        } @else {
+        <!-- View Mode -->
+        <div class="answers-view">
+          @for (question of questionsList; track $index) {
+          @let qId = question.id || $index;
+          @let answer = submission.answers[qId];
+          <div class="answer-row">
+            <label>{{ question.question }}</label>
+            <div class="answer-value">
+              <span>{{ formatAnswer(answer) }}</span>
+            </div>
+            @if (submission.correctedAnswers && submission.correctedAnswers[qId]) {
+            <div class="corrected-value">
+              <span class="label">Corrected:</span>
+              <span>{{ formatAnswer(submission.correctedAnswers[qId]) }}</span>
+            </div>
+            }
+          </div>
+          }
+          @if (submission.feedback) {
+          <div class="feedback-display">
+            <label>Feedback</label>
+            <p>{{ submission.feedback }}</p>
+          </div>
+          }
+          <button type="button" class="btn-edit" (click)="startEditing(submission)">Add / Edit Feedback</button>
+        </div>
+        }
+      </div>
+      }
+    </div>
+    }
+  </div>
+  }
+  }
+</div>

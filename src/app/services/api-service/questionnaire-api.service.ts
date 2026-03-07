@@ -22,13 +22,27 @@ export class QuestionnaireApiService {
 
   createQuestion(questionData: any) {
     return this.http
-      .post<any>(`${this._apiUrl}question/create`, questionData)
+      .post<any>(`${this._apiUrl}question/save`, questionData)
       .pipe(catchError(this.commonService.handleError));
   }
 
   submitAnswers(answers: any) {
     return this.http
       .post<any>(`${this._apiUrl}question/submit`, answers)
+      .pipe(catchError(this.commonService.handleError));
+  }
+
+  /** Get all submitted answers (for teachers/admins) */
+  getSubmittedAnswers() {
+    return this.http
+      .get<any[]>(`${this._apiUrl}question/answers/get`)
+      .pipe(catchError(this.commonService.handleError));
+  }
+
+  /** Update feedback or corrected answer for a submission (teachers/admins) */
+  updateAnswerFeedback(submissionId: string, payload: { feedback?: string; correctedAnswers?: Record<string, unknown> }) {
+    return this.http
+      .put<any>(`${this._apiUrl}question/answers/${submissionId}/feedback`, payload)
       .pipe(catchError(this.commonService.handleError));
   }
 }

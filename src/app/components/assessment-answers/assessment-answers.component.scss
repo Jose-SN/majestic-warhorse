@@ -1,0 +1,201 @@
+@import '../../../styles/index';
+
+.assessment-answers {
+  padding: 20px 0;
+  .access-denied {
+    padding: 40px;
+    text-align: center;
+    color: var(--bg-grey);
+    font-size: 1rem;
+  }
+  .answers-header {
+    @include flex(flex, null, space-between, center);
+    margin-bottom: 24px;
+    h3 {
+      font-family: $titilliumWeb-bold;
+      font-size: 1.25rem;
+      color: var(--white);
+      margin: 0;
+    }
+    .btn-refresh {
+      font-family: $archivo-medium;
+      font-size: 0.875rem;
+      color: var(--white);
+      padding: 0 20px;
+      height: 44px;
+      @include border-radius(8px);
+      @include gradient();
+      border: none;
+      cursor: pointer;
+    }
+  }
+  .loading-state,
+  .empty-state {
+    padding: 40px;
+    text-align: center;
+    color: var(--bg-grey);
+    font-size: 1rem;
+  }
+  .submissions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .submission-card {
+    background: var(--bg-input);
+    @include border-radius(8px);
+    border: 1px solid var(--bg-border-input);
+    overflow: hidden;
+  }
+  .submission-header {
+    @include flex(flex, null, space-between, center);
+    padding: 16px 20px;
+    cursor: pointer;
+    @include transition(background 0.2s);
+    &:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      strong {
+        font-family: $archivo-medium;
+        font-size: 1rem;
+        color: var(--white);
+      }
+      .email,
+      .date {
+        font-size: 0.813rem;
+        color: var(--bg-grey);
+      }
+    }
+    .expand-icon {
+      font-size: 0.75rem;
+      color: var(--bg-grey);
+    }
+  }
+  .submission-content {
+    padding: 20px;
+    border-top: 1px solid var(--bg-border-input);
+    background: rgba(0, 0, 0, 0.2);
+  }
+  .answer-row {
+    margin-bottom: 16px;
+    label {
+      display: block;
+      font-family: $archivo-medium;
+      font-size: 0.813rem;
+      color: var(--bg-grey);
+      margin-bottom: 6px;
+    }
+    .answer-value,
+    .original-answer,
+    .corrected-value {
+      font-size: 0.875rem;
+      color: var(--white);
+      padding: 8px 12px;
+      background: var(--bg-input);
+      @include border-radius(5px);
+      margin-bottom: 8px;
+    }
+    .label {
+      font-size: 0.75rem;
+      color: var(--bg-grey);
+      margin-right: 8px;
+    }
+    .corrected-input {
+      margin-top: 8px;
+      input,
+      textarea {
+        width: 100%;
+        font-family: $archivo-regular;
+        font-size: 0.875rem;
+        color: var(--white);
+        background: var(--bg-input);
+        border: 1px solid var(--bg-border-input);
+        padding: 10px 12px;
+        @include border-radius(5px);
+        margin-top: 4px;
+      }
+      textarea {
+        resize: vertical;
+        min-height: 60px;
+      }
+    }
+  }
+  .feedback-row {
+    margin-top: 20px;
+    margin-bottom: 16px;
+    label {
+      display: block;
+      font-family: $archivo-medium;
+      font-size: 0.813rem;
+      color: var(--bg-grey);
+      margin-bottom: 6px;
+    }
+    textarea {
+      width: 100%;
+      font-family: $archivo-regular;
+      font-size: 0.875rem;
+      color: var(--white);
+      background: var(--bg-input);
+      border: 1px solid var(--bg-border-input);
+      padding: 10px 12px;
+      @include border-radius(5px);
+      resize: vertical;
+      min-height: 80px;
+    }
+  }
+  .feedback-display {
+    margin-top: 16px;
+    padding: 12px;
+    background: var(--bg-input);
+    @include border-radius(5px);
+    p {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--white);
+      line-height: 1.5;
+    }
+  }
+  .action-buttons {
+    @include flex(flex, null, null, center);
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .btn-save {
+    font-family: $archivo-medium;
+    font-size: 0.875rem;
+    color: var(--white);
+    padding: 0 24px;
+    height: 44px;
+    @include border-radius(8px);
+    @include gradient();
+    border: none;
+    cursor: pointer;
+  }
+  .btn-cancel {
+    font-family: $archivo-medium;
+    font-size: 0.875rem;
+    color: var(--white);
+    padding: 0 24px;
+    height: 44px;
+    @include border-radius(8px);
+    background: var(--bg-grey);
+    border: none;
+    cursor: pointer;
+  }
+  .btn-edit {
+    font-family: $archivo-medium;
+    font-size: 0.875rem;
+    color: var(--white);
+    padding: 0 20px;
+    height: 40px;
+    @include border-radius(8px);
+    background: var(--bg-blue);
+    border: none;
+    cursor: pointer;
+    margin-top: 16px;
+  }
+}

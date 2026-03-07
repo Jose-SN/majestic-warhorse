@@ -6,6 +6,7 @@ import { CommonSearchProfileComponent } from 'src/app/components/common-search-p
 import { QuestionnaireApiService } from 'src/app/services/api-service/questionnaire-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { ConfirmationPopupService } from 'src/app/shared/confirmation-popup/confirmation-popup.service';
+import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 
 @Component({
   selector: 'app-questionnaire',
@@ -147,7 +148,10 @@ export class QuestionnaireComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error creating question:', error);
-          this.confirmationPopupService.showAlert('Error creating question. Please try again.');
+          this.commonService.openToaster({
+            message: 'Error creating question. Please try again.',
+            messageType: TOASTER_MESSAGE_TYPE.ERROR,
+          });
         }
       });
   }
