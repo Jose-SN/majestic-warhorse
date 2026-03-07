@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
@@ -7,6 +7,7 @@ import { QuestionnaireApiService } from 'src/app/services/api-service/questionna
 import { CommonService } from 'src/app/shared/services/common.service';
 import { ConfirmationPopupService } from 'src/app/shared/confirmation-popup/confirmation-popup.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
+import { IQuestion, IQuestionCreate, IQuestionOption } from './model/question.model';
 
 @Component({
   selector: 'app-questionnaire',
@@ -16,17 +17,18 @@ import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
   styleUrl: './questionnaire.component.scss',
 })
 export class QuestionnaireComponent implements OnInit {
+  @Input() courseId: string = '';
   private destroy$ = new Subject<void>();
-  public questionsList: any = [];
+  public questionsList: IQuestion[] = [];
   public userRole: string = '';
   public isTeacher: boolean = false;
   public isStudent: boolean = false;
-  
-  // Teacher form fields
-  public newQuestion: any = {
+
+  // Teacher form fields - matches question table structure
+  public newQuestion: Partial<IQuestion> & { options?: IQuestionOption[] } = {
     question: '',
-    type: 'Textbox',
-    options: []
+    type: 'text',
+    options: [],
   };
   public newOption: any = {
     label: '',
@@ -36,6 +38,7 @@ export class QuestionnaireComponent implements OnInit {
   // Editing state
   public editingOptionIndex: number | null = null;
   public editingOption: any = { label: '', value: '' };
+  public editingQuestionId: string | null = null;
   
   // Student form answers
   public answers: any = {};
@@ -56,11 +59,11 @@ export class QuestionnaireComponent implements OnInit {
   }
 
   loadQuestions() {
-    this.questionnaireApiService
-      .geAllQuestions()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((questionsList) => {
-        this.questionsList = questionsList;
+    const apiCall = this.courseId
+      ? this.questionnaireApiService.getQuestionsByCourse(this.courseId)
+      : this.questionnaireApiService.geAllQuestions();
+    apiCall.pipe(takeUntil(this.destroy$)).subscribe((questionsList) => {
+      this.questionsList = questionsList ?? [];
         // Initialize answers object based on question type
         questionsList.forEach((question: any, index: number) => {
           const questionId = question.id || index;
@@ -82,12 +85,12 @@ export class QuestionnaireComponent implements OnInit {
     if (!this.newQuestion.options) {
       this.newQuestion.options = [];
     }
-    this.newQuestion.options.push({ ...this.newOption });
+    this.newQuestion.options!.push({ ...this.newOption });
     this.newOption = { label: '', value: '' };
   }
 
   removeOption(index: number) {
-    this.newQuestion.options.splice(index, 1);
+    this.newQuestion.options?.splice(index, 1);
     if (this.editingOptionIndex === index) {
       this.cancelEditOption();
     } else if (this.editingOptionIndex !== null && this.editingOptionIndex > index) {
@@ -97,10 +100,10 @@ export class QuestionnaireComponent implements OnInit {
 
   editOption(index: number) {
     this.editingOptionIndex = index;
-    this.editingOption = {
-      label: this.newQuestion.options[index].label,
-      value: this.newQuestion.options[index].value
-    };
+    const opts = this.newQuestion.options;
+    this.editingOption = opts?.[index]
+      ? { label: opts[index].label, value: opts[index].value }
+      : { label: '', value: '' };
   }
 
   saveOption(index: number) {
@@ -108,13 +111,33 @@ export class QuestionnaireComponent implements OnInit {
       this.confirmationPopupService.showAlert('Please enter both label and value');
       return;
     }
-    this.newQuestion.options[index] = { ...this.editingOption };
+    const opts = this.newQuestion.options;
+    if (opts) opts[index] = { ...this.editingOption };
     this.cancelEditOption();
   }
 
   cancelEditOption() {
     this.editingOptionIndex = null;
     this.editingOption = { label: '', value: '' };
+  }
+
+  editQuestion(question: IQuestion) {
+    if (!question.id) return;
+    this.editingQuestionId = question.id;
+    this.newQuestion = {
+      question: question.question ?? '',
+      type: (question.type ?? 'text').toLowerCase(),
+      options: question.options ? [...question.options] : [],
+    };
+    this.newOption = { label: '', value: '' };
+    this.cancelEditOption();
+    // Scroll to form
+    document.querySelector('.questionnire-form')?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  cancelEditQuestion() {
+    this.editingQuestionId = null;
+    this.resetQuestionForm();
   }
 
   createQuestion() {
@@ -124,43 +147,85 @@ export class QuestionnaireComponent implements OnInit {
     }
 
     // Validate options for Radio, Checkbox, and Dropdown
-    const needsOptions = ['Radio', 'Checkbox', 'Dropdown'].includes(this.newQuestion.type);
+    const needsOptions = ['radio', 'checkbox', 'dropdown'].includes((this.newQuestion.type ?? '').toLowerCase());
     if (needsOptions && (!this.newQuestion.options || this.newQuestion.options.length === 0)) {
       this.confirmationPopupService.showAlert('Please add at least one option for this question type');
       return;
     }
 
-    const questionData = {
-      ...this.newQuestion,
-      // Clear options for text input types
-      options: needsOptions ? this.newQuestion.options : []
+    const courseId = this.courseId || (this.commonService.loginedUserInfo as any)?.selectedCourseId;
+    const createdBy = this.commonService.loginedUserInfo?.id;
+    if (!courseId || !createdBy) {
+      this.confirmationPopupService.showAlert('Course context or user not found. Please open the questionnaire from a course.');
+      return;
+    }
+
+    const typeMap: Record<string, string> = {
+      text: 'Textbox',
+      textarea: 'Textarea',
+      radio: 'Radio',
+      checkbox: 'Checkbox',
+      dropdown: 'Dropdown',
+    };
+    const questionData: IQuestionCreate = {
+      course_id: courseId as string,
+      created_by: createdBy!,
+      question: this.newQuestion.question,
+      type: typeMap[this.newQuestion.type ?? 'text'] ?? 'Textbox',
+      options: needsOptions ? (this.newQuestion.options ?? []) : [],
     };
 
-    this.questionnaireApiService
-      .createQuestion(questionData)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          // Reset form
-          this.resetQuestionForm();
-          // Reload questions
-          this.loadQuestions();
-        },
-        error: (error) => {
-          console.error('Error creating question:', error);
-          this.commonService.openToaster({
-            message: 'Error creating question. Please try again.',
-            messageType: TOASTER_MESSAGE_TYPE.ERROR,
-          });
-        }
-      });
+    if (this.editingQuestionId) {
+      this.questionnaireApiService
+        .updateQuestion(this.editingQuestionId, questionData)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.commonService.openToaster({
+              message: 'Question updated successfully!',
+              messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+            });
+            this.cancelEditQuestion();
+            this.loadQuestions();
+          },
+          error: (error) => {
+            console.error('Error updating question:', error);
+            this.commonService.openToaster({
+              message: 'Error updating question. Please try again.',
+              messageType: TOASTER_MESSAGE_TYPE.ERROR,
+            });
+          },
+        });
+    } else {
+      this.questionnaireApiService
+        .createQuestion(questionData)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.commonService.openToaster({
+              message: 'Question created successfully!',
+              messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+            });
+            this.resetQuestionForm();
+            this.loadQuestions();
+          },
+          error: (error) => {
+            console.error('Error creating question:', error);
+            this.commonService.openToaster({
+              message: 'Error creating question. Please try again.',
+              messageType: TOASTER_MESSAGE_TYPE.ERROR,
+            });
+          },
+        });
+    }
   }
 
   resetQuestionForm() {
+    this.editingQuestionId = null;
     this.newQuestion = {
       question: '',
-      type: 'Textbox',
-      options: []
+      type: 'text',
+      options: [],
     };
     this.newOption = { label: '', value: '' };
   }
@@ -182,8 +247,8 @@ export class QuestionnaireComponent implements OnInit {
 
   submitAnswers() {
     // Validate that all questions are answered
-    const unansweredQuestions = this.questionsList.filter((question: any, index: number) => {
-      const questionId = question.id || index;
+    const unansweredQuestions = this.questionsList.filter((question: IQuestion, index: number) => {
+      const questionId = question.id ?? String(index);
       const answer = this.answers[questionId];
       if (question.type === 'Checkbox') {
         return !answer || !Array.isArray(answer) || answer.length === 0;
@@ -218,6 +283,23 @@ export class QuestionnaireComponent implements OnInit {
           this.confirmationPopupService.showAlert('Error submitting answers. Please try again.', 'Error');
         }
       });
+  }
+
+  /** Format question type for display (e.g. "text" -> "Textbox") */
+  getQuestionTypeLabel(type?: string): string {
+    const map: Record<string, string> = {
+      text: 'Textbox',
+      textarea: 'Textarea',
+      radio: 'Radio',
+      checkbox: 'Checkbox',
+      dropdown: 'Dropdown',
+      Textbox: 'Textbox',
+      Textarea: 'Textarea',
+      Radio: 'Radio',
+      Checkbox: 'Checkbox',
+      Dropdown: 'Dropdown',
+    };
+    return map[type ?? ''] ?? (type || 'Textbox');
   }
 
   seachTextHandler(searchText: string) {}

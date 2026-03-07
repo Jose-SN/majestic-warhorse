@@ -178,38 +178,168 @@
             .btn-cancel-option {
                 background: var(--bg-grey);
             }
+            .data-refreshed-holder,
+            .add-question-holder {
+                position: static !important;
+                bottom: auto !important;
+                right: auto !important;
+                margin-top: 24px;
+                margin-bottom: 24px;
+            }
+            .form-holder .add-question-holder,
+            .form-holder .data-refreshed-holder.add-question-holder {
+                position: static !important;
+                bottom: auto !important;
+                right: auto !important;
+                margin-top: 24px;
+                margin-bottom: 24px;
+            }
             .existing-questions {
-                margin-top: 30px;
+                margin-top: 40px;
+                padding-top: 30px;
+                border-top: 1px solid rgba(255, 255, 255, 0.12);
                 .section-title {
                     color: var(--white);
                     font-family: $titilliumWeb-bold;
-                    font-size: 1.25rem;
-                    margin-bottom: 20px;
+                    font-size: 1.5rem;
+                    margin-bottom: 8px;
+                    letter-spacing: 0.5px;
                 }
-                .question-item {
-                    background: var(--bg-input);
-                    padding: 15px;
-                    @include border-radius(8px);
-                    margin-bottom: 15px;
-                    .question-header {
-                        color: var(--white);
-                        margin-bottom: 10px;
-                        strong {
-                            font-family: $titilliumWeb-semibold;
-                            font-size: 1rem;
-                        }
-                        .question-type {
-                            color: var(--bg-grey);
-                            font-size: 0.875rem;
-                            margin-left: 10px;
+                .section-subtitle {
+                    color: var(--bg-light-grey);
+                    font-family: $archivo-regular;
+                    font-size: 0.875rem;
+                    opacity: 0.9;
+                    margin-bottom: 24px;
+                }
+                .common-list-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 16px;
+                    padding-right: 10px;
+                    align-items: stretch;
+                }
+                .common-list {
+                    background: linear-gradient(135deg, rgba(0, 25, 59, 0.95) 0%, rgba(0, 19, 45, 0.98) 100%);
+                    width: 100%;
+                    @include flex(flex, row, space-between, center);
+                    gap: 20px;
+                    position: relative;
+                    border: 1px solid rgba(53, 69, 133, 0.6);
+                    overflow: hidden;
+                    @include border-radius(16px);
+                    transition: all 0.25s ease;
+                    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        bottom: 0;
+                        width: 4px;
+                        background: linear-gradient(180deg, var(--bg-text-orange), rgba(253, 120, 89, 0.5));
+                        @include border-radius(4px 0 0 4px);
+                    }
+                    &:hover {
+                        border-color: rgba(255, 255, 255, 0.2);
+                        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+                        transform: translateY(-1px);
+                    }
+                    .list-left {
+                        padding: 20px 24px 20px 28px;
+                        gap: 18px;
+                        flex-grow: 1;
+                        min-width: 0;
+                        @include flex(flex, null, null, center);
+                    }
+                    .question-number-badge {
+                        width: 52px;
+                        height: 52px;
+                        flex-shrink: 0;
+                        @include border-radius(14px);
+                        overflow: hidden;
+                        @include flex(flex, center, center, null);
+                        background: linear-gradient(145deg, rgba(253, 120, 89, 0.4) 0%, rgba(253, 120, 89, 0.2) 100%);
+                        border: 1px solid rgba(253, 120, 89, 0.55);
+                        margin: 0;
+                        box-shadow: 0 2px 8px rgba(253, 120, 89, 0.2);
+                        span {
+                            font-family: $titilliumWeb-bold;
+                            font-size: 1.375rem;
+                            color: var(--white);
                         }
                     }
+                    .common-list-right {
+                        flex: 1;
+                        min-width: 0;
+                    }
+                    .question-text {
+                        font-family: $poppins-regular;
+                        font-size: 1.063rem;
+                        color: var(--light-blue);
+                        font-weight: normal;
+                        line-height: 1.5;
+                        margin: 0 0 10px 0;
+                        @include text-ellipsis($lines: 2);
+                    }
+                    .question-type-badge {
+                        display: inline-block;
+                        font-family: $archivo-medium;
+                        font-size: 0.75rem;
+                        color: var(--white);
+                        background: rgba(79, 137, 252, 0.25);
+                        padding: 5px 12px;
+                        @include border-radius(8px);
+                        margin-bottom: 10px;
+                        text-transform: capitalize;
+                        letter-spacing: 0.5px;
+                        border: 1px solid rgba(79, 137, 252, 0.3);
+                    }
                     .question-options {
-                        margin-left: 20px;
-                        .option-display {
-                            color: var(--bg-grey);
-                            font-size: 0.875rem;
-                            margin-bottom: 5px;
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 8px;
+                        .option-tag {
+                            font-family: $archivo-regular;
+                            font-size: 0.813rem;
+                            color: var(--white);
+                            background: rgba(255, 255, 255, 0.1);
+                            padding: 6px 14px;
+                            @include border-radius(8px);
+                            opacity: 0.95;
+                            border: 1px solid rgba(255, 255, 255, 0.12);
+                        }
+                    }
+                    .icon-holder {
+                        background: rgba(0, 40, 93, 0.5);
+                        @include flex(flex, null, null, center);
+                        @include border-radius(0 16px 16px 0);
+                        height: 100%;
+                        padding: 16px 20px;
+                        border-left: 1px solid rgba(255, 255, 255, 0.08);
+                        flex-shrink: 0;
+                        button {
+                            background: linear-gradient(135deg, rgba(253, 120, 89, 0.25) 0%, rgba(253, 120, 89, 0.15) 100%);
+                            width: 40px;
+                            height: 40px;
+                            padding: 8px;
+                            border: 1px solid rgba(253, 120, 89, 0.4);
+                            border-radius: 12px;
+                            cursor: pointer;
+                            @include flex(flex, center, center, null);
+                            opacity: 1;
+                            @include transition(all, 0.2s ease);
+                            &:hover {
+                                background: linear-gradient(135deg, rgba(253, 120, 89, 0.4) 0%, rgba(253, 120, 89, 0.25) 100%);
+                                border-color: rgba(253, 120, 89, 0.6);
+                                transform: scale(1.05);
+                            }
+                            img {
+                                width: 20px;
+                                height: 20px;
+                                object-fit: contain;
+                                filter: brightness(1.2);
+                            }
                         }
                     }
                 }
@@ -535,6 +665,22 @@
     position: absolute;
     bottom: 30px;
     right: 0;
+    @include flex(flex, null, flex-end, null);
+    gap: 12px;
+    @include flex(flex, null, null, null);
+    gap: 12px;
+    .btn-cancel-edit {
+      font-family: $archivo-medium;
+      font-size: 0.875rem;
+      color: var(--white);
+      width: 211px;
+      height: 44px;
+      @include border-radius(20px);
+      background: var(--bg-grey);
+      border: none;
+      cursor: pointer;
+      @include flex(flex, null, center, center);
+    }
     span {
       font-size: 0.875rem;
       white-space: nowrap;

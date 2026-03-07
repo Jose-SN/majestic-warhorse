@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { environment } from 'src/environments/environment';
+import { IQuestion, IQuestionCreate } from 'src/app/pages/questionnaire/model/question.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,15 +15,31 @@ export class QuestionnaireApiService {
     private http: HttpClient,
     private commonService: CommonService
   ) {}
-  geAllQuestions() {
+
+  /** Get all questions (optionally filtered by course) */
+  geAllQuestions(courseId?: string) {
+    const params: Record<string, string> = {};
+    if (courseId) params['course_id'] = courseId;
     return this.http
-      .get<any[]>(`${this._apiUrl}question/get`)
+      .get<IQuestion[]>(`${this._apiUrl}question/get`, { params })
       .pipe(catchError(this.commonService.handleError));
   }
 
-  createQuestion(questionData: any) {
+  /** Get questions by course ID */
+  getQuestionsByCourse(courseId: string) {
+    return this.geAllQuestions(courseId);
+  }
+
+  createQuestion(questionData: IQuestionCreate) {
     return this.http
-      .post<any>(`${this._apiUrl}question/save`, questionData)
+      .post<IQuestion>(`${this._apiUrl}question/save`, questionData)
+      .pipe(catchError(this.commonService.handleError));
+  }
+
+  /** Update an existing question */
+  updateQuestion(questionId: string, questionData: Partial<IQuestionCreate>) {
+    return this.http
+      .put<IQuestion>(`${this._apiUrl}question/update/${questionId}`, questionData)
       .pipe(catchError(this.commonService.handleError));
   }
 

@@ -18,17 +18,17 @@
               
               <div class="input-holder">
                 <label class="sub-title">Question Type</label>
-                <select [(ngModel)]="newQuestion.type">
-                  <option value="Textbox">Textbox</option>
-                  <option value="Textarea">Textarea</option>
-                  <option value="Radio">Radio</option>
-                  <option value="Checkbox">Checkbox</option>
-                  <option value="Dropdown">Dropdown</option>
+                <select [(ngModel)]="newQuestion.type" title="Question Type">
+                  <option value="text">Textbox</option>
+                  <option value="textarea">Textarea</option>
+                  <option value="radio">Radio</option>
+                  <option value="checkbox">Checkbox</option>
+                  <option value="dropdown">Dropdown</option>
                 </select>
               </div>
-
+              
               <!-- Options Fields (Radio/Checkbox/Dropdown) -->
-              @if(newQuestion.type === 'Radio' || newQuestion.type === 'Checkbox' || newQuestion.type === 'Dropdown') {
+              @if(newQuestion.type === 'radio' || newQuestion.type === 'checkbox' || newQuestion.type === 'dropdown') {
               <div class="input-holder">
                 <label class="sub-title">Options</label>
                 <div class="option-input-row">
@@ -68,34 +68,50 @@
               </div>
               }
 
-              <div class="data-refreshed-holder">
-                <button (click)="createQuestion()">Add Question</button>
+              <!-- Add Question Button (before Your Questions) -->
+              <div class="data-refreshed-holder add-question-holder">
+                <button (click)="createQuestion()">{{ editingQuestionId ? 'Update Question' : 'Add Question' }}</button>
+                @if(editingQuestionId) {
+                <button type="button" (click)="cancelEditQuestion()" class="btn-cancel-edit">Cancel</button>
+                }
               </div>
-            </div>
 
-            <!-- Existing Questions List -->
-            @if(questionsList && questionsList.length > 0) {
-            <div class="existing-questions">
-              <h3 class="section-title">Existing Questions</h3>
-              @for (question of questionsList; track $index) {
-              <div class="question-item">
-                <div class="question-header">
-                  <strong>{{$index + 1}}. {{question.question}}</strong>
-                  <span class="question-type">({{question.type}})</span>
-                </div>
-                @if(question.options && question.options.length > 0) {
-                <div class="question-options">
-                  @for (option of question.options; track $index) {
-                  <div class="option-display">- {{option.label}} ({{option.value}})</div>
+              <!-- Existing Questions List -->
+              @if(questionsList && questionsList.length > 0) {
+              <div class="existing-questions">
+                <h3 class="section-title">Your Questions</h3>
+                <p class="section-subtitle">Questions you've added to this assessment</p>
+                <div class="common-list-wrapper">
+                  @for (question of questionsList; track question.id || $index) {
+                  <div class="common-list">
+                    <div class="list-left">
+                      <figure class="question-number-badge">
+                        <span>{{$index + 1}}</span>
+                      </figure>
+                      <div class="common-list-right">
+                        <h4 class="question-text">{{question.question}}</h4>
+                        <span class="question-type-badge">{{getQuestionTypeLabel(question.type)}}</span>
+                        @if(question.options && question.options.length > 0) {
+                        <div class="question-options">
+                          @for (opt of question.options; track $any(opt).value) {
+                          <span class="option-tag">{{$any(opt).label}}</span>
+                          }
+                        </div>
+                        }
+                      </div>
+                    </div>
+                    <div class="icon-holder">
+                      <button type="button" (click)="editQuestion(question)" aria-label="Edit question" title="Edit question">
+                        <img src="../../../assets/images/icon-edit.svg" alt="Edit">
+                      </button>
+                    </div>
+                  </div>
                   }
                 </div>
-                }
               </div>
               }
             </div>
             }
-            }
-
             @if(isStudent) {
             <!-- Student View: Answer Questions -->
             <div class="course-top">
@@ -120,14 +136,14 @@
               @case ("Radio") {
               <div class="checkbox-holder">
                 <span class="sub-title">{{question.question}}</span>
-                @if(question?.options && question.options.length > 0){
+                @if((question?.options?.length ?? 0) > 0){
                 @for (option of question.options; track $index) {
                 <label class="radio-label">
                   <input type="radio" 
                     [name]="'question_' + (question.id || $index)"
-                    [value]="option.value"
+                    [value]="$any(option).value"
                     [(ngModel)]="answers[question.id || $index]" />
-                  <strong>{{option.label}}</strong>
+                  <strong>{{$any(option).label}}</strong>
                 </label>
                 }
                 }
@@ -136,15 +152,15 @@
               @case ("Checkbox") {
               <div class="checkbox-holder">
                 <span class="sub-title">{{question.question}}</span>
-                @if(question?.options && question.options.length > 0){
+                @if((question?.options?.length ?? 0) > 0){
                 @for (option of question.options; track $index) {
                 <label class="checkbox-label">
                   <input type="checkbox" 
-                    [value]="option.value"
-                    [checked]="answers[question.id || $index]?.includes(option.value)"
-                    (change)="handleCheckboxChange(question.id || $index, option.value, $event)" />
+                    [value]="$any(option).value"
+                    [checked]="answers[question.id || $index]?.includes($any(option).value)"
+                    (change)="handleCheckboxChange(question.id || $index, $any(option).value, $event)" />
                   <span class="checkmark"></span>
-                  <strong>{{option.label}}</strong>
+                  <strong>{{$any(option).label}}</strong>
                 </label>
                 }
                 }
@@ -153,11 +169,11 @@
               @case ("Dropdown") {
               <div class="input-holder">
                 <label class="sub-title">{{question.question}}</label>
-                @if(question?.options && question.options.length > 0){
+                @if((question?.options?.length ?? 0) > 0){
                 <select [(ngModel)]="answers[question.id || $index]">
                   <option value="">Select an option</option>
                   @for (option of question.options; track $index) {
-                  <option [value]="option.value">{{option.label}}</option>
+                  <option [value]="$any(option).value">{{$any(option).label}}</option>
                   }
                 </select>
                 }
