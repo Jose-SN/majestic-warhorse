@@ -7,15 +7,13 @@ import { DashboardService } from 'src/app/pages/dashboard/dashboard.service';
 import { ISidepanel } from 'src/app/pages/dashboard/modal/dashboard-modal';
 import { AppService } from 'src/app/shared/services/app.service';
 import { CommonService } from 'src/app/shared/services/common.service';
-import { ModalComponent } from '../modal/modal.component';
-import { CommonDialogComponent } from '../common-dialog/common-dialog.component';
 import { IModelInfo } from '../common-dialog/model/popupmodel';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 
 @Component({
   selector: 'app-dashboard-sidepanel',
   standalone: true,
-  imports: [FormsModule, CommonModule, ModalComponent, CommonDialogComponent],
+  imports: [FormsModule, CommonModule],
   templateUrl: './dashboard-sidepanel.component.html',
   styleUrl: './dashboard-sidepanel.component.scss',
 })
@@ -41,7 +39,7 @@ export class DashboardSidepanelComponent {
     public authService: AuthService
   ) {
     this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
-    this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
+    this.loginedUserPrivilege = this.commonService.loginedUserInfo?.role || '';
     this.dashboardService.sidePanelChange$.pipe(takeUntil(this.destroy$)).subscribe((activePanel: string) => {
       this.activePanel = activePanel;
     })

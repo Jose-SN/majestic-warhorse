@@ -53,7 +53,7 @@ export class DashboardService {
     return this.courseDetailsInfo.asObservable();
   }
   async fetchUploadedCourseCount() {
-    let role: string = this.commonService.loginedUserInfo.role ?? '';
+    let role: string = this.commonService.loginedUserInfo?.role || '';
     
     // For admin, calculate stats from allUsersList and teacher-student relationships
     if (role === 'admin') {

@@ -59,7 +59,7 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
     );
   }
   async ngOnInit() {
-    this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
+    this.loginedUserPrivilege = this.commonService.loginedUserInfo?.role || '';
     this.commonService.onlineStatusChanged
       .pipe(takeUntil(this.destroy$))
       .subscribe((status: boolean) => {

@@ -278,6 +278,7 @@
         @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
         flex-grow: 1;
         margin: 20px 0 0;
+        height: 100%;
         @include flex(flex, column, null, null);
         .courses {
           overflow: hidden;

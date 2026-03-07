@@ -274,9 +274,50 @@
         </div>
       </div> -->
       <div class="courses-wrapper">
+        <div class="content-holder favorites-section" *ngIf="favoriteCourses.length > 0">
+          <div class="course-top clickable" (click)="toggleFavoriteSection()" role="button" tabindex="0" (keydown.enter)="toggleFavoriteSection()" (keydown.space)="toggleFavoriteSection(); $event.preventDefault()">
+            <h2>Favorite Courses</h2>
+            <div class="favorite-header-actions">
+              <a class="view-all-link" (click)="navigateToFavorites(); $event.stopPropagation()">View all</a>
+              <span class="toggle-icon" [class.collapsed]="!favoriteSectionExpanded">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div class="scroll-container courses" *ngIf="favoriteSectionExpanded">
+            <div class="course-card-holder">
+              @for (course of favoriteCourses; track course.id) {
+              <div class="course-card" (click)="openCourseDetailsPage(course)">
+                <div class="card-content">
+                  <figure><img [src]="course.courseCoverImage" alt="" /></figure>
+                </div>
+                <div class="card-content">
+                  <span>A Course by {{ course["createdBy"].firstName || course["createdBy"].first_name }} {{ course["createdBy"].lastName || course["createdBy"].last_name }}</span>
+                  <h3>{{course?.courseTitle}}</h3>
+                  <span class="lesson-label">
+                    <div class="lesson-holder">
+                      <star-rating [hoverEnabled]="false" [rating]="course.averageRating??0"></star-rating>
+                      <span>Lessons
+                        @if(course.chapterDetails?.length){
+                          {{course.chapterCompletedCount}}/{{course.chapterDetails.length}}
+                        }
+                      </span>
+                    </div>
+                  </span>
+                  <div class="loader-holder">
+                    <span [ngStyle]="{width: course.completionPercent}"></span>
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
         <div class="content-holder">
           <div class="course-top">
-            <h2>My Courses</h2>
+            <h2>All Courses</h2>
             <ul>
               <li *ngFor="let filter of filterList; trackBy: trackByIndex" [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}</li>
             </ul>
@@ -324,8 +365,8 @@
       <span>{{loginedUserInfo.firstName || loginedUserInfo.first_name}} {{loginedUserInfo.lastName || loginedUserInfo.last_name}}</span>
       <strong>{{commonService.transformText((loginedUserInfo.role || ''))}}</strong>
       <ul class="contact-area">
-        <li><a href="">{{loginedUserInfo.email || loginedUserInfo.contact?.email}}</a></li>
-        <li><a href="">{{loginedUserInfo.phone || loginedUserInfo.contact?.phone}}</a></li>
+        <li><a href="">{{loginedUserInfo.email || (loginedUserInfo.contact && loginedUserInfo.contact.email)}}</a></li>
+        <li><a href="">{{loginedUserInfo.phone || (loginedUserInfo.contact && loginedUserInfo.contact.phone)}}</a></li>
       </ul>
       <div class="status-wrapper">
         <div class="status-holder">

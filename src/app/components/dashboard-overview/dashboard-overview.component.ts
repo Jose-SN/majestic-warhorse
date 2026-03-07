@@ -1,11 +1,14 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { CourseUploadService } from 'src/app/pages/course-upload/course-upload.service';
 import { ICourseList } from 'src/app/pages/courses/modal/course-list';
 import { DashboardService } from 'src/app/pages/dashboard/dashboard.service';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { AuthService } from 'src/app/services/api-service/auth.service';
+import { FavoritesApiService } from 'src/app/services/api-service/favorites-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { CourseDetailsService } from 'src/app/pages/course-details/course-details.service';
 import { StarRatingModule } from 'angular-star-rating';
@@ -24,11 +27,14 @@ export class DashboardOverviewComponent {
   public isMobileNav = false;
   public activePanel: string = '';
   public courseLists: ICourseList[] = [];
+  public favoriteCourses: ICourseList[] = [];
+  public favoriteSectionExpanded = true;
   public loginedUserInfo: UserModel = {} as UserModel;
   public refreshTime: string = '';
   public activeFilterTab: string = 'All';
   filterList: string[] = ['All', 'New', 'Pending', 'Completed'];
   public readingFiles: any[] = [];
+  private destroy$ = new Subject<void>();
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private courseUploadService: CourseUploadService,
@@ -36,11 +42,14 @@ export class DashboardOverviewComponent {
     public commonService: CommonService,
     private dashboardService: DashboardService,
     private datePipe: DatePipe,
-    private courseDetailsService: CourseDetailsService
+    private courseDetailsService: CourseDetailsService,
+    private favoritesApiService: FavoritesApiService,
+    private router: Router
   ) {}
   async ngOnInit(): Promise<void> {
     await this.courseDetailsService.getCourseStatusList();
     this.fetchCourseList();
+    this.fetchFavoriteCourses();
     this.fetchReadingFiles();
     this.loginedUserInfo = this.commonService.loginedUserInfo ?? {};
     this.loginedUserInfo.profileImage = this.commonService.decodeUrl(
@@ -48,6 +57,71 @@ export class DashboardOverviewComponent {
     );
     this.getCurrentTime();
   }
+  fetchFavoriteCourses(): void {
+    const userId = this.commonService.loginedUserInfo?.id;
+    if (!userId) return;
+
+    this.favoritesApiService
+      .getFavorites(userId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: async (response: any) => {
+          const data = response?.data ?? response;
+          const favorites = Array.isArray(data) ? data : [];
+          const favoriteIds = new Set(favorites.map((f: any) => f.courseId));
+          if (favoriteIds.size === 0) {
+            this.favoriteCourses = [];
+            return;
+          }
+          try {
+            const allCourses = await this.courseUploadService.fetchUploadedCourses();
+            this.favoriteCourses = allCourses.filter((c) => favoriteIds.has(c.id));
+            this.favoriteCourses.forEach((course) => {
+              let averageRating = 0;
+              let completedLessonCount = 0;
+              course.chapterDetails?.forEach((chapterDetails: any, index: number) => {
+                const chapterCompleted = chapterDetails.fileDetails?.every((fileDetails: any) =>
+                  this.courseDetailsService.courseStatusList.find(
+                    (cs) => cs.parentId === fileDetails.id && +cs.percentage === 100
+                  )
+                );
+                const rating = chapterDetails.fileDetails?.reduce((acc: number, current: any) => {
+                  const selectedRating = this.courseDetailsService.courseStatusList.find(
+                    (cs) =>
+                      cs.createdBy === this.commonService.loginedUserInfo.id &&
+                      cs.parentId === current.parentId
+                  );
+                  return selectedRating?.rating || acc;
+                }, 0);
+                if (rating) {
+                  averageRating += Math.round((rating / (chapterDetails.fileDetails?.length || 1)) * 100) / 100;
+                }
+                if (chapterCompleted) completedLessonCount++;
+                if (index + 1 === (course.chapterDetails?.length || 0)) {
+                  course.chapterCompletedCount = completedLessonCount;
+                  course.completionPercent = `${((completedLessonCount / (course.chapterDetails?.length || 1)) * 100)}%`;
+                  course.averageRating = averageRating;
+                }
+              });
+            });
+          } catch {
+            this.favoriteCourses = [];
+          }
+        },
+        error: () => {
+          this.favoriteCourses = [];
+        },
+      });
+  }
+
+  toggleFavoriteSection(): void {
+    this.favoriteSectionExpanded = !this.favoriteSectionExpanded;
+  }
+
+  navigateToFavorites(): void {
+    this.router.navigate(['/dashboard/courses']);
+  }
+
   async fetchReadingFiles() {
     // TODO: Replace with actual API call when endpoint is available
     // Example: this.readingFiles = await this.someService.getReadingFiles();
@@ -113,5 +187,10 @@ export class DashboardOverviewComponent {
   }
   btnMobileMenu() {
     this.isMobileNav = !this.isMobileNav;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

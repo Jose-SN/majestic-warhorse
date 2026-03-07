@@ -49,7 +49,7 @@ export class CoursesComponent {
     );
   }
   async ngOnInit(): Promise<void> {
-    this.loginedUserPrivilege = this.commonService.loginedUserInfo.role ?? '';
+    this.loginedUserPrivilege = this.commonService.loginedUserInfo?.role || '';
     await this.courseDetailsService.getCourseStatusList();
     this.commonService
       .getCommonSearchText()
