@@ -18,6 +18,8 @@ import { VideoDurationService } from 'src/app/shared/services/video-duration.ser
 import { DashboardService } from '../dashboard/dashboard.service';
 import { Input } from '@angular/core';
 import { QuestionnaireComponent } from '../questionnaire/questionnaire.component';
+import { AssessmentAnswersComponent } from 'src/app/components/assessment-answers/assessment-answers.component';
+import { FavoritesApiService } from 'src/app/services/api-service/favorites-api.service';
 
 @Component({
   selector: 'app-course-detils',
@@ -29,6 +31,7 @@ import { QuestionnaireComponent } from '../questionnaire/questionnaire.component
     StarRatingModule,
     CommonSearchProfileComponent,
     QuestionnaireComponent,
+    AssessmentAnswersComponent,
   ],
   templateUrl: './course-details.component.html',
   styleUrl: './course-details.component.scss',
@@ -48,6 +51,9 @@ export class CourseDetailsComponent {
   public selectedAttachmentList: any = [];
   public showQuestionAnswer: boolean = false;
   public activeTab: string = 'course';
+  public canAccessAnswers: boolean = false;
+  public isCourseFavorited: boolean = false;
+  private favoriteId: string | null = null;
   @Input() selectedCourseInfo: ICourseList = {} as ICourseList;
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   @ViewChild(VideoPlayerComponent) videoPlayerComponent!: VideoPlayerComponent;
@@ -58,7 +64,8 @@ export class CourseDetailsComponent {
     private courseDetailsService: CourseDetailsService,
     private videoDurationService: VideoDurationService,
     private dashboardService: DashboardService,
-    private router: Router
+    private router: Router,
+    private favoritesApiService: FavoritesApiService
   ) {
     this.profileUrl = this.commonService.decodeUrl(
       (this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? ''
@@ -85,6 +92,7 @@ export class CourseDetailsComponent {
 
     this.setDefaultVideo();
     this.loginedUserRole = this.commonService?.loginedUserInfo?.role ?? '';
+    this.canAccessAnswers = this.commonService.adminRoleType.includes(this.loginedUserRole);
     await this.courseDetailsService.getCourseStatusList();
     this.checkActiveVideoStatus();
     this.courseDetailsService
@@ -103,6 +111,61 @@ export class CourseDetailsComponent {
       });
     });
     this.checkAssesmentView();
+    this.checkFavoriteStatus();
+  }
+
+  checkFavoriteStatus(): void {
+    const userId = this.commonService.loginedUserInfo?.id;
+    const courseId = this.selectedCourseInfo?.id;
+    if (!userId || !courseId) return;
+
+    this.favoritesApiService
+      .getFavorites(userId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res: any) => {
+          const data = res?.data ?? res;
+          const favorites = Array.isArray(data) ? data : [];
+          const fav = favorites.find((f: any) => (f.courseId ?? f.course_id) === courseId);
+          this.isCourseFavorited = !!fav;
+          this.favoriteId = fav?.id ?? null;
+        },
+        error: () => {
+          this.isCourseFavorited = false;
+          this.favoriteId = null;
+        },
+      });
+  }
+
+  toggleFavorite(): void {
+    const userId = this.commonService.loginedUserInfo?.id;
+    const courseId = this.selectedCourseInfo?.id;
+    if (!userId || !courseId) return;
+
+    if (this.isCourseFavorited) {
+      const obs = this.favoriteId
+        ? this.favoritesApiService.removeFavorite(this.favoriteId)
+        : this.favoritesApiService.removeFavoriteByCourse(userId, courseId);
+      obs.pipe(takeUntil(this.destroy$)).subscribe({
+        next: () => {
+          this.isCourseFavorited = false;
+          this.favoriteId = null;
+        },
+        error: (err) => console.error('Error removing favorite:', err),
+      });
+    } else {
+      this.favoritesApiService
+        .addFavorite(userId, courseId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (res: any) => {
+            const data = res?.data ?? res;
+            this.isCourseFavorited = true;
+            this.favoriteId = data?.id ?? null;
+          },
+          error: (err) => console.error('Error adding favorite:', err),
+        });
+    }
   }
 
   setDefaultVideo() {
