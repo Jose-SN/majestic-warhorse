@@ -111,7 +111,7 @@
                     flex: 1;
                 }
             }
-            .btn-add-option {
+            .btn-add-option:not(.btn-icon-option) {
                 font-family: $archivo-medium;
                 font-size: 0.875rem;
                 color: var(--white);
@@ -123,10 +123,49 @@
                 cursor: pointer;
                 white-space: nowrap;
             }
+            .btn-icon-option.btn-add-option {
+                @include gradient();
+                &:hover {
+                    opacity: 0.9;
+                }
+            }
             .options-list {
                 margin-top: 15px;
                 width: 100%;
                 display: block;
+                .icon-holder {
+                  background: rgba(0, 40, 93, 0.5);
+                  @include flex(flex, null, null, center);
+                  gap: 6px;
+                  @include border-radius(0 12px 12px 0);
+                  height: 100%;
+                  padding: 10px 12px;
+                  border-left: 1px solid rgba(255, 255, 255, 0.08);
+                  flex-shrink: 0;
+                  button {
+                      background: linear-gradient(135deg, rgba(253, 120, 89, 0.25) 0%, rgba(253, 120, 89, 0.15) 100%);
+                      width: 32px;
+                      height: 32px;
+                      padding: 6px;
+                      border: 1px solid rgba(253, 120, 89, 0.4);
+                      border-radius: 8px;
+                      cursor: pointer;
+                      @include flex(flex, center, center, null);
+                      opacity: 1;
+                      @include transition(all, 0.2s ease);
+                      &:hover {
+                          background: linear-gradient(135deg, rgba(253, 120, 89, 0.4) 0%, rgba(253, 120, 89, 0.25) 100%);
+                          border-color: rgba(253, 120, 89, 0.6);
+                          transform: scale(1.05);
+                      }
+                      img {
+                          width: 16px;
+                          height: 16px;
+                          object-fit: contain;
+                          filter: brightness(1.2);
+                      }
+                  }
+              }
             }
             .option-item {
                 @include flex(flex, null, space-between, center);
@@ -168,10 +207,34 @@
                 cursor: pointer;
                 white-space: nowrap;
             }
-            .btn-remove-option {
-                background: var(--bg-notification-red);
+            .btn-icon-option {
+                width: 40px;
+                height: 40px;
+                padding: 6px;
+                @include flex(flex, center, center, null);
+                @include border-radius(6px);
+                border: none;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                img {
+                    width: 14px;
+                    height: 14px;
+                    object-fit: contain;
+                    filter: brightness(1.2);
+                }
             }
-            .btn-edit-option,
+            .btn-icon-option.btn-remove-option {
+                background: var(--bg-notification-red);
+                &:hover {
+                    opacity: 0.9;
+                }
+            }
+            .btn-icon-option.btn-edit-option {
+                @include gradient();
+                &:hover {
+                    opacity: 0.9;
+                }
+            }
             .btn-save-option {
                 @include gradient();
             }
@@ -215,7 +278,7 @@
                 .common-list-wrapper {
                     display: flex;
                     flex-direction: column;
-                    gap: 16px;
+                    gap: 10px;
                     padding-right: 10px;
                     align-items: stretch;
                 }
@@ -223,49 +286,50 @@
                     background: linear-gradient(135deg, rgba(0, 25, 59, 0.95) 0%, rgba(0, 19, 45, 0.98) 100%);
                     width: 100%;
                     @include flex(flex, row, space-between, center);
-                    gap: 20px;
+                    gap: 12px;
                     position: relative;
                     border: 1px solid rgba(53, 69, 133, 0.6);
                     overflow: hidden;
-                    @include border-radius(16px);
+                    @include border-radius(12px);
                     transition: all 0.25s ease;
-                    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+                    cursor: pointer;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
                     &::before {
                         content: '';
                         position: absolute;
                         left: 0;
                         top: 0;
                         bottom: 0;
-                        width: 4px;
+                        width: 3px;
                         background: linear-gradient(180deg, var(--bg-text-orange), rgba(253, 120, 89, 0.5));
-                        @include border-radius(4px 0 0 4px);
+                        @include border-radius(3px 0 0 3px);
                     }
                     &:hover {
                         border-color: rgba(255, 255, 255, 0.2);
-                        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+                        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.06);
                         transform: translateY(-1px);
                     }
                     .list-left {
-                        padding: 20px 24px 20px 28px;
-                        gap: 18px;
+                        padding: 12px 16px 12px 20px;
+                        gap: 12px;
                         flex-grow: 1;
                         min-width: 0;
                         @include flex(flex, null, null, center);
                     }
                     .question-number-badge {
-                        width: 52px;
-                        height: 52px;
+                        width: 36px;
+                        height: 36px;
                         flex-shrink: 0;
-                        @include border-radius(14px);
+                        @include border-radius(10px);
                         overflow: hidden;
                         @include flex(flex, center, center, null);
                         background: linear-gradient(145deg, rgba(253, 120, 89, 0.4) 0%, rgba(253, 120, 89, 0.2) 100%);
                         border: 1px solid rgba(253, 120, 89, 0.55);
                         margin: 0;
-                        box-shadow: 0 2px 8px rgba(253, 120, 89, 0.2);
+                        box-shadow: 0 2px 6px rgba(253, 120, 89, 0.2);
                         span {
                             font-family: $titilliumWeb-bold;
-                            font-size: 1.375rem;
+                            font-size: 1rem;
                             color: var(--white);
                         }
                     }
@@ -275,22 +339,22 @@
                     }
                     .question-text {
                         font-family: $poppins-regular;
-                        font-size: 1.063rem;
+                        font-size: 0.9rem;
                         color: var(--light-blue);
                         font-weight: normal;
-                        line-height: 1.5;
-                        margin: 0 0 10px 0;
+                        line-height: 1.4;
+                        margin: 0 0 6px 0;
                         @include text-ellipsis($lines: 2);
                     }
                     .question-type-badge {
                         display: inline-block;
                         font-family: $archivo-medium;
-                        font-size: 0.75rem;
+                        font-size: 0.7rem;
                         color: var(--white);
                         background: rgba(79, 137, 252, 0.25);
-                        padding: 5px 12px;
-                        @include border-radius(8px);
-                        margin-bottom: 10px;
+                        padding: 4px 10px;
+                        @include border-radius(6px);
+                        margin-bottom: 6px;
                         text-transform: capitalize;
                         letter-spacing: 0.5px;
                         border: 1px solid rgba(79, 137, 252, 0.3);
@@ -298,14 +362,14 @@
                     .question-options {
                         display: flex;
                         flex-wrap: wrap;
-                        gap: 8px;
+                        gap: 6px;
                         .option-tag {
                             font-family: $archivo-regular;
-                            font-size: 0.813rem;
+                            font-size: 0.75rem;
                             color: var(--white);
                             background: rgba(255, 255, 255, 0.1);
-                            padding: 6px 14px;
-                            @include border-radius(8px);
+                            padding: 4px 10px;
+                            @include border-radius(6px);
                             opacity: 0.95;
                             border: 1px solid rgba(255, 255, 255, 0.12);
                         }
@@ -313,18 +377,19 @@
                     .icon-holder {
                         background: rgba(0, 40, 93, 0.5);
                         @include flex(flex, null, null, center);
-                        @include border-radius(0 16px 16px 0);
+                        gap: 6px;
+                        @include border-radius(0 12px 12px 0);
                         height: 100%;
-                        padding: 16px 20px;
+                        padding: 10px 12px;
                         border-left: 1px solid rgba(255, 255, 255, 0.08);
                         flex-shrink: 0;
                         button {
                             background: linear-gradient(135deg, rgba(253, 120, 89, 0.25) 0%, rgba(253, 120, 89, 0.15) 100%);
-                            width: 40px;
-                            height: 40px;
-                            padding: 8px;
+                            width: 32px;
+                            height: 32px;
+                            padding: 6px;
                             border: 1px solid rgba(253, 120, 89, 0.4);
-                            border-radius: 12px;
+                            border-radius: 8px;
                             cursor: pointer;
                             @include flex(flex, center, center, null);
                             opacity: 1;
@@ -335,8 +400,8 @@
                                 transform: scale(1.05);
                             }
                             img {
-                                width: 20px;
-                                height: 20px;
+                                width: 16px;
+                                height: 16px;
                                 object-fit: contain;
                                 filter: brightness(1.2);
                             }

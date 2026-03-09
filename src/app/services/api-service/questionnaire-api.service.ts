@@ -43,6 +43,13 @@ export class QuestionnaireApiService {
       .pipe(catchError(this.commonService.handleError));
   }
 
+  /** Delete a question */
+  deleteQuestion(questionId: string) {
+    return this.http
+      .delete<any>(`${this._apiUrl}question/delete/${questionId}`)
+      .pipe(catchError(this.commonService.handleError));
+  }
+
   submitAnswers(answers: any) {
     return this.http
       .post<any>(`${this._apiUrl}question/submit`, answers)

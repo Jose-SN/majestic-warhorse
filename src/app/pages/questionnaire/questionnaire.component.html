@@ -32,9 +32,10 @@
               <div class="input-holder">
                 <label class="sub-title">Options</label>
                 <div class="option-input-row">
-                  <input type="text" [(ngModel)]="newOption.label" placeholder="Option label" class="option-input" />
-                  <input type="text" [(ngModel)]="newOption.value" placeholder="Option value" class="option-input" />
-                  <button type="button" (click)="addOption()" class="btn-add-option">Add Option</button>
+                  <input type="text" [(ngModel)]="newOption" placeholder="Option (e.g. Yes, No, Maybe)" class="option-input" />
+                  <button type="button" (click)="addOption()" class="btn-icon-option btn-add-option" title="Add option" aria-label="Add option">
+                    <img src="../../../assets/images/icon-add.svg" alt="Add">
+                  </button>
                 </div>
                 @if(newQuestion.options && newQuestion.options.length > 0) {
                 <div class="options-list">
@@ -43,8 +44,7 @@
                     @if(editingOptionIndex === $index) {
                     <!-- Edit Mode -->
                     <div class="option-inputs-edit">
-                      <input type="text" [(ngModel)]="editingOption.label" placeholder="Option label" class="option-input" />
-                      <input type="text" [(ngModel)]="editingOption.value" placeholder="Option value" class="option-input" />
+                      <input type="text" [(ngModel)]="editingOption" placeholder="Option" class="option-input" />
                     </div>
                     <div class="option-actions">
                       <button type="button" (click)="saveOption($index)" class="btn-save-option">Save</button>
@@ -54,11 +54,14 @@
                     <!-- Display Mode -->
                     <div class="option-inputs-display">
                       <input type="text" [value]="option.label" disabled class="option-input option-input-disabled" />
-                      <input type="text" [value]="option.value" disabled class="option-input option-input-disabled" />
                     </div>
-                    <div class="option-actions">
-                      <button type="button" (click)="editOption($index)" class="btn-edit-option">Edit</button>
-                      <button type="button" (click)="removeOption($index)" class="btn-remove-option">Remove</button>
+                    <div class="icon-holder" (click)="$event.stopPropagation()">
+                      <button type="button" (click)="editOption($index)" aria-label="Edit option" title="Edit option">
+                        <img src="../../../assets/images/icon-edit.svg" alt="Edit">
+                      </button>
+                      <button type="button" (click)="removeOption($index)" aria-label="Delete option" title="Delete option">
+                        <img src="../../../assets/images/icon-delete.svg" alt="Delete">
+                      </button>
                     </div>
                     }
                   </div>
@@ -83,13 +86,17 @@
                 <p class="section-subtitle">Questions you've added to this assessment</p>
                 <div class="common-list-wrapper">
                   @for (question of questionsList; track question.id || $index) {
-                  <div class="common-list">
+                  <div 
+                    class="common-list" 
+                    [class.expanded]="isQuestionExpanded(question)"
+                    (click)="toggleQuestionExpand(question)">
                     <div class="list-left">
                       <figure class="question-number-badge">
                         <span>{{$index + 1}}</span>
                       </figure>
                       <div class="common-list-right">
                         <h4 class="question-text">{{question.question}}</h4>
+                        @if (isQuestionExpanded(question)) {
                         <span class="question-type-badge">{{getQuestionTypeLabel(question.type)}}</span>
                         @if(question.options && question.options.length > 0) {
                         <div class="question-options">
@@ -98,11 +105,15 @@
                           }
                         </div>
                         }
+                        }
                       </div>
                     </div>
-                    <div class="icon-holder">
+                    <div class="icon-holder" (click)="$event.stopPropagation()">
                       <button type="button" (click)="editQuestion(question)" aria-label="Edit question" title="Edit question">
                         <img src="../../../assets/images/icon-edit.svg" alt="Edit">
+                      </button>
+                      <button type="button" (click)="deleteQuestion(question)" aria-label="Delete question" title="Delete question">
+                        <img src="../../../assets/images/icon-delete.svg" alt="Delete">
                       </button>
                     </div>
                   </div>

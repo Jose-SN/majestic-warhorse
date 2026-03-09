@@ -12,7 +12,7 @@ import { IQuestion, IQuestionCreate, IQuestionOption } from './model/question.mo
 @Component({
   selector: 'app-questionnaire',
   standalone: true,
-  imports: [CommonSearchProfileComponent, FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './questionnaire.component.html',
   styleUrl: './questionnaire.component.scss',
 })
@@ -30,16 +30,12 @@ export class QuestionnaireComponent implements OnInit {
     type: 'text',
     options: [],
   };
-  public newOption: any = {
-    label: '',
-    value: ''
-  };
-  
-  // Editing state
+  public newOption = '';
   public editingOptionIndex: number | null = null;
-  public editingOption: any = { label: '', value: '' };
+  public editingOption = '';
   public editingQuestionId: string | null = null;
-  
+  public expandedQuestionId: string | null = null;
+
   // Student form answers
   public answers: any = {};
 
@@ -78,15 +74,19 @@ export class QuestionnaireComponent implements OnInit {
 
   // Teacher methods
   addOption() {
-    if (!this.newOption.label || !this.newOption.value) {
-      this.confirmationPopupService.showAlert('Please enter both label and value for the option');
+    const text = (this.newOption || '').trim();
+    if (!text) {
+      this.confirmationPopupService.showAlert('Please enter an option');
       return;
     }
     if (!this.newQuestion.options) {
       this.newQuestion.options = [];
     }
-    this.newQuestion.options!.push({ ...this.newOption });
-    this.newOption = { label: '', value: '' };
+    this.newQuestion.options!.push({
+      label: text,
+      value: text.replace(/\s/g, ''),
+    });
+    this.newOption = '';
   }
 
   removeOption(index: number) {
@@ -101,24 +101,23 @@ export class QuestionnaireComponent implements OnInit {
   editOption(index: number) {
     this.editingOptionIndex = index;
     const opts = this.newQuestion.options;
-    this.editingOption = opts?.[index]
-      ? { label: opts[index].label, value: opts[index].value }
-      : { label: '', value: '' };
+    this.editingOption = opts?.[index]?.label ?? '';
   }
 
   saveOption(index: number) {
-    if (!this.editingOption.label || !this.editingOption.value) {
-      this.confirmationPopupService.showAlert('Please enter both label and value');
+    const text = (this.editingOption || '').trim();
+    if (!text) {
+      this.confirmationPopupService.showAlert('Please enter an option');
       return;
     }
     const opts = this.newQuestion.options;
-    if (opts) opts[index] = { ...this.editingOption };
+    if (opts) opts[index] = { label: text, value: text.replace(/\s/g, '') };
     this.cancelEditOption();
   }
 
   cancelEditOption() {
     this.editingOptionIndex = null;
-    this.editingOption = { label: '', value: '' };
+    this.editingOption = '';
   }
 
   editQuestion(question: IQuestion) {
@@ -129,7 +128,7 @@ export class QuestionnaireComponent implements OnInit {
       type: (question.type ?? 'text').toLowerCase(),
       options: question.options ? [...question.options] : [],
     };
-    this.newOption = { label: '', value: '' };
+    this.newOption = '';
     this.cancelEditOption();
     // Scroll to form
     document.querySelector('.questionnire-form')?.scrollIntoView({ behavior: 'smooth' });
@@ -138,6 +137,51 @@ export class QuestionnaireComponent implements OnInit {
   cancelEditQuestion() {
     this.editingQuestionId = null;
     this.resetQuestionForm();
+  }
+
+  toggleQuestionExpand(question: IQuestion) {
+    const id = question.id ?? '';
+    this.expandedQuestionId = this.expandedQuestionId === id ? null : id;
+  }
+
+  isQuestionExpanded(question: IQuestion): boolean {
+    const id = question.id ?? '';
+    return this.expandedQuestionId === id;
+  }
+
+  deleteQuestion(question: IQuestion) {
+    if (!question.id) return;
+    this.confirmationPopupService
+      .showConfirm('Are you sure you want to delete this question?', 'Delete Question', 'Delete', 'Cancel')
+      .then((confirmed) => {
+        if (confirmed) {
+          this.questionnaireApiService
+            .deleteQuestion(question.id!)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: () => {
+                this.commonService.openToaster({
+                  message: 'Question deleted successfully!',
+                  messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+                });
+                if (this.editingQuestionId === question.id) {
+                  this.cancelEditQuestion();
+                }
+                if (this.expandedQuestionId === question.id) {
+                  this.expandedQuestionId = null;
+                }
+                this.loadQuestions();
+              },
+              error: (error) => {
+                console.error('Error deleting question:', error);
+                this.commonService.openToaster({
+                  message: 'Error deleting question. Please try again.',
+                  messageType: TOASTER_MESSAGE_TYPE.ERROR,
+                });
+              },
+            });
+        }
+      });
   }
 
   createQuestion() {
@@ -227,7 +271,7 @@ export class QuestionnaireComponent implements OnInit {
       type: 'text',
       options: [],
     };
-    this.newOption = { label: '', value: '' };
+    this.newOption = '';
   }
 
   // Student methods
