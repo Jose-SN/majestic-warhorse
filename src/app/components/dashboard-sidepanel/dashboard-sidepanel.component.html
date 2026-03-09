@@ -81,7 +81,7 @@
         <span>Courses</span>
       </a>
     </li>
-    <li *ngIf="loginedUserPrivilege === 'admin'" (click)="setActivePanel(SIDE_PANEL_LIST.TEACHERS_LISTING)">
+    <li *ngIf="['admin', 'teacher'].includes(loginedUserPrivilege)" (click)="setActivePanel(SIDE_PANEL_LIST.TEACHERS_LISTING)">
       <a [ngClass]="{ active: activePanel === SIDE_PANEL_LIST.TEACHERS_LISTING }" href="javascript:void(0);">
         <figure>
           <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -106,7 +106,7 @@
         <span>Students</span>
       </a>
     </li>
-    <li *ngIf="loginedUserPrivilege === 'admin'" (click)="setActivePanel(SIDE_PANEL_LIST.TEACHER_APPROVAL)">
+    <li *ngIf="['admin', 'teacher'].includes(loginedUserPrivilege)" (click)="setActivePanel(SIDE_PANEL_LIST.TEACHER_APPROVAL)">
       <a [ngClass]="{ active: activePanel === SIDE_PANEL_LIST.TEACHER_APPROVAL }" href="javascript:void(0);">
         <figure>
           <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -118,7 +118,7 @@
         <span>Teachers Approval</span>
       </a>
     </li>
-    <li *ngIf="loginedUserPrivilege === 'admin'" (click)="setActivePanel(SIDE_PANEL_LIST.ASSIGN_TEACHER)">
+    <li *ngIf="['admin', 'teacher'].includes(loginedUserPrivilege)" (click)="setActivePanel(SIDE_PANEL_LIST.ASSIGN_TEACHER)">
       <a [ngClass]="{ active: activePanel === SIDE_PANEL_LIST.ASSIGN_TEACHER }" href="javascript:void(0);">
         <figure>
           <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
