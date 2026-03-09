@@ -8,4 +8,9 @@ import { RegistrationPageComponent } from '../registration-page/registration-pag
   templateUrl: './edit-account.component.html',
   styleUrl: './edit-account.component.scss',
 })
-export class EditAccountComponent {}
+export class EditAccountComponent {
+  isEditMode: boolean = true;
+  ngOnDestroy(): void {
+    this.isEditMode = false;
+  }
+}

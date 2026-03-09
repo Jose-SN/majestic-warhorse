@@ -12,6 +12,7 @@ import { ViewAssignedTeachersComponent } from './components/view-assigned-teache
 import { ViewAssignedStudentsComponent } from './components/view-assigned-students/view-assigned-students.component';
 import { ApplicationApiService } from './services/api-service/application-api.service';
 import { environment } from 'src/environments/environment';
+import { DashboardService } from './pages/dashboard/dashboard.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -28,7 +29,8 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private commonService: CommonService,
-    private applicationApiService: ApplicationApiService
+    private applicationApiService: ApplicationApiService,
+    private dashboardService: DashboardService
   ) {}
   ngOnInit() {
     // Call application API on app load
@@ -67,6 +69,7 @@ export class AppComponent implements OnInit {
       .subscribe((closeModel) => {
         this.closeModel();
       });
+      this.dashboardService.getAllUsers();
   }
   loadPopupComponent(modelInfo: IModelInfo) {
     this.commonDialogComponent.title = modelInfo.title;

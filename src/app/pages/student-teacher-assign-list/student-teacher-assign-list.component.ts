@@ -33,7 +33,12 @@ export class StudentTeacherAssignListComponent {
     private dashboardService: DashboardService
   ) {
     this.profileUrl = this.commonService.decodeUrl((this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? '')
-    this.getStudentList();
+    if (this.commonService.allUsersList.length === 0) {
+      this.dashboardService.getAllUsers();
+      this.getStudentList();
+    } else {
+      this.getStudentList();
+    }
   }
   ngOnInit() {
     this.commonService
