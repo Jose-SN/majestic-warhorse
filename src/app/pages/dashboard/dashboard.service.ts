@@ -106,8 +106,8 @@ export class DashboardService {
     
     // For non-admin roles, call the API as before
     const roleInfo: { [key: string]: string } = {
-      teacher: 'isTeacher=true',
-      student: 'isStudent=true',
+      teacher: `isTeacher=true&id=${this.commonService.loginedUserInfo?.id}`,
+      student: `isStudent=true&id=${this.commonService.loginedUserInfo?.id}`,
     };
     
     return lastValueFrom(

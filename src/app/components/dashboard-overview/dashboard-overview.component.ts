@@ -35,18 +35,24 @@ export class DashboardOverviewComponent {
   filterList: string[] = ['All', 'New', 'Pending', 'Completed'];
   public readingFiles: any[] = [];
   private destroy$ = new Subject<void>();
+  public loginedUserPrivilege: string = '';
+  public dashboardOverview: any = {
+    coursesUploaded: 0,
+  };
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private courseUploadService: CourseUploadService,
     private authService: AuthService,
     public commonService: CommonService,
-    private dashboardService: DashboardService,
+    public dashboardService: DashboardService,
     private datePipe: DatePipe,
     private courseDetailsService: CourseDetailsService,
     private favoritesApiService: FavoritesApiService,
     private router: Router
   ) {}
   async ngOnInit(): Promise<void> {
+    this.loginedUserPrivilege = this.commonService.loginedUserInfo?.role || '';
+    await this.fetchDashboardOverview();
     await this.courseDetailsService.getCourseStatusList();
     this.fetchCourseList();
     this.fetchFavoriteCourses();
@@ -163,6 +169,7 @@ export class DashboardOverviewComponent {
         }
       });
     });
+    this.favoriteCourses = this.courseLists;
   }
   logOut() {
     this.authService.logOutApplication();
@@ -187,6 +194,26 @@ export class DashboardOverviewComponent {
   }
   btnMobileMenu() {
     this.isMobileNav = !this.isMobileNav;
+  }
+  async fetchDashboardOverview() {
+    this.dashboardOverview = await this.dashboardService.fetchUploadedCourseCount();
+  }
+
+  hasDashboardData(): boolean {
+    return this.dashboardOverview && Object.keys(this.dashboardOverview).length > 0;
+  }
+
+  navigateTo(route: string) {
+    this.router.navigate([route]);
+    // const panelMap: Record<string, string> = {
+    //   '/dashboard/teachers': this.dashboardService.SIDE_PANEL_LIST.TEACHERS_LISTING,
+    //   '/dashboard/students': this.dashboardService.SIDE_PANEL_LIST.STUDENTS_LISTING,
+    //   '/dashboard/courses': this.dashboardService.SIDE_PANEL_LIST.COURSE_LISTING,
+    // };
+    // const panel = panelMap[route];
+    // if (panel) {
+    //   this.dashboardService.setSidePanelChangeValue(panel);
+    // }
   }
 
   ngOnDestroy(): void {
