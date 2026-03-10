@@ -44,6 +44,8 @@ export class AppComponent implements OnInit {
               sessionStorage.setItem('application', JSON.stringify(app));
               const client_id = app.client_id;
               sessionStorage.setItem('client_id', client_id);
+              const app_id = app.id;
+              sessionStorage.setItem('app_id', app_id);
             }
           }
         },

@@ -15,15 +15,18 @@ export class HeaderInterceptors implements HttpInterceptor {
   constructor(private commonService: CommonService, private authService: AuthService) {}
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token: string | null = sessionStorage.getItem('authToken');
-    let clonedRequest;
+    const appId: string | null = sessionStorage.getItem('app_id');
+    const headers: Record<string, string> = {};
     if (token) {
-      clonedRequest = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      headers['Authorization'] = `Bearer ${token}`;
     }
-    return next.handle(clonedRequest ?? req).pipe(
+    if (appId) {
+      headers['x-app-id'] = appId;
+    }
+    const clonedRequest = Object.keys(headers).length > 0
+      ? req.clone({ setHeaders: headers })
+      : req;
+    return next.handle(clonedRequest).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
           this.authService.logOutApplication();
