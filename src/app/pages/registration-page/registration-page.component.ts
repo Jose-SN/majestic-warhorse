@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -8,12 +8,15 @@ import {
 } from '@angular/forms';
 import { FormValidators } from 'src/app/shared/form-validators';
 import { RegistrationPageService } from './registration-page.service';
-import { first, last, Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { UserModel } from '../login-page/model/user-model';
 import { CommonModule } from '@angular/common';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
+import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
+import { IOrganization } from 'src/app/services/api-service/organization-api.service';
+import { decodeText } from 'src/app/shared/utils/utils';
 
 @Component({
   selector: 'app-registration-page',
@@ -34,12 +37,15 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   public profileUrl: string = '../../../../assets/images/img-placeholder.jpg';
   public showPassword: boolean = false;
   public showConfirmPassword: boolean = false;
-  
+  public organizationsList: IOrganization[] = [];
+  @ViewChild('profileImageInput') profileImageInput!: ElementRef<HTMLInputElement>;
+
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private commonService: CommonService,
-    public registrationService: RegistrationPageService
+    public registrationService: RegistrationPageService,
+    private organizationApiService: OrganizationApiService
   ) {
     this.createAccountForm = this.formBuilder.group(
       {
@@ -59,6 +65,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
         confirmPassword: ['', [Validators.required]],
         role: ['student', [Validators.required]],
         status: ['active'],
+        organization_id: ['', [Validators.required]],
       },
       {
         validator: this.formValidator.passwordMatchValidator.bind(this.createAccountForm),
@@ -69,8 +76,13 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     this.isPasswordMismatch = this.formValidator.isPasswordMismatch;
   }
   ngOnInit(): void {
+    this.loadOrganizations();
+
     // Make password fields optional in edit mode
     if (this.isEditMode) {
+      // Clear required validator for organization (read-only in edit, may be empty for legacy users)
+      this.createAccountForm.get('organization_id')?.clearValidators();
+      this.createAccountForm.get('organization_id')?.updateValueAndValidity();
       // Clear required validators for password fields
       this.createAccountForm.get('password')?.clearValidators();
       // Set optional validators (only validate format if password is provided)
@@ -109,6 +121,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
         phone: phone,
         lastName: lastName,
         firstName: firstName,
+        organization_id: loginedUser?.organization_id || '',
       };
       this.profileUrl = this.commonService.decodeUrl(profileImage) as string;
       this.registrationService.imageUrl = this.profileUrl;
@@ -121,6 +134,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
         this.createAccountForm.get('confirmPassword')?.updateValueAndValidity();
       }
       this.createAccountForm?.get('role')?.disable();
+      this.createAccountForm?.get('organization_id')?.disable();
       this.createAccountForm.markAllAsTouched();
 
       if (this.profileUrl) {
@@ -128,9 +142,18 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
       }
     }
   }
+  unescapeHtml(text: string): string {
+    return decodeText(text);
+  }
+
+  triggerFileInput(): void {
+    this.profileImageInput?.nativeElement?.click();
+  }
+
   async onFileSelected(event: Event): Promise<void> {
     const target = event.target as HTMLInputElement;
-    const files = target.files as FileList;
+    const files = target.files;
+    if (!files?.length) return;
     const successData: { [key: string]: string | boolean } =
       await this.registrationService.onFileSelected(this.destroy$, files[0]);
     if (successData['success']) {
@@ -142,11 +165,12 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
         messageType: TOASTER_MESSAGE_TYPE.ERROR,
       });
     }
+    target.value = '';
   }
   onSubmit() {
     this.createAccountForm.markAllAsTouched();
     if (this.createAccountForm.valid) {
-      const userFormInfo = this.createAccountForm.value;
+      const userFormInfo = this.createAccountForm.getRawValue();
       userFormInfo.email = this.createAccountForm.get('email')?.value || this.commonService.loginedUserInfo?.contact?.email || '';
       userFormInfo.phone = this.createAccountForm.get('phone')?.value || this.commonService.loginedUserInfo?.contact?.phone || '';
       userFormInfo.firstName = this.createAccountForm.get('firstName')?.value;
@@ -156,6 +180,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
       userFormInfo.status = this.createAccountForm.get('status')?.value;
       userFormInfo.password = this.createAccountForm.get('password')?.value;
       userFormInfo.confirmPassword = this.createAccountForm.get('confirmPassword')?.value;
+      userFormInfo.organization_id = this.createAccountForm.get('organization_id')?.value;
       this.registrationService
         .registerUserInfo(this.destroy$, userFormInfo, this.isEditMode)
         .then((clearForms) => {
@@ -185,6 +210,24 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
       console.error('Form is invalid');
     }
   }
+  loadOrganizations(): void {
+    this.organizationApiService
+      .getOrganizations()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          const data = Array.isArray(response) ? response : (response as any)?.data;
+          this.organizationsList = data ?? [];
+          if (data.length > 0) {
+            this.createAccountForm.get('organization_id')?.setValue(this.organizationsList[0].id);
+          }
+        },
+        error: (err) => {
+          console.error('Error loading organizations:', err);
+        },
+      });
+  }
+
   navigateLogin() {
     this.router.navigate(['/login']);
   }

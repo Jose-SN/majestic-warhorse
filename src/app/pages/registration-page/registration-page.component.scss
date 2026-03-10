@@ -20,7 +20,8 @@ app-particle {
 .registration-wrapper {
   padding: 30px;
   border-radius: 15px;
-  box-shadow: 2px 2px 15px var(--bg-shadow);  
+  box-shadow: 2px 2px 15px var(--bg-shadow);
+  height: 100%;
   &.edit {
     padding: 0;
     box-shadow: none;
@@ -121,6 +122,56 @@ app-particle {
       overflow: hidden;
       border: 10px solid rgba(215,46,132, 0.32);
       position: relative;
+      cursor: pointer;
+      @include transition(all 0.3s ease-in-out);
+
+      &:hover {
+        .camera-icon-overlay {
+          opacity: 1;
+        }
+      }
+
+      figure {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      .camera-icon-overlay {
+        position: absolute;
+        bottom: 8px;
+        right: 45px;
+        width: 36px;
+        height: 36px;
+        @include border-radius(50%);
+        background: rgba(0, 0, 0, 0.6);
+        @include flex(flex, center, center, null);
+        opacity: 0.85;
+        @include transition(opacity 0.2s ease-in-out);
+
+        svg {
+          color: var(--white);
+          width: 18px;
+          height: 18px;
+          margin-top: 10px;
+        }
+      }
+
+      .hidden-file-input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
       
       &.edit-avatar {
         width: 120px;
@@ -134,36 +185,18 @@ app-particle {
           border-color: var(--bg-mit1);
           transform: scale(1.05);
           
-          .avatar-overlay {
+          .camera-icon-overlay {
             opacity: 1;
           }
         }
-        
-        figure {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          margin: 0;
-          
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-          }
-          
-          .avatar-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            @include flex(flex, null, center, center);
-            opacity: 0;
-            @include transition(all 0.3s ease-in-out);
-            
-            svg {
-              color: var(--white);
-              width: 24px;
-              height: 24px;
-            }
+
+        .camera-icon-overlay {
+          width: 30px;
+          height: 30px;
+
+          svg {
+            width: 14px;
+            height: 14px;
           }
         }
       }
@@ -176,6 +209,35 @@ app-particle {
     .input-holder {
       position: relative;
       flex: 1;
+
+      &.full-width {
+        flex: 1 1 100%;
+      }
+      
+      select {
+        font-weight: normal;
+        font-size: 1rem;
+        color: var(--bg-label);
+        border: 1px solid var(--bg-input-border);
+        background: var(--bg-input);
+        width: 100%;
+        @include border-radius(5px);
+        padding: 12px 15px;
+        @include transition(all 0.2s ease-in-out);
+        appearance: auto;
+        cursor: pointer;
+        &:focus {
+          border-color: var(--bg-mit1);
+          outline: none;
+        }
+        &:disabled {
+          background: var(--bg-list);
+          border-color: var(--bg-input-border);
+          cursor: not-allowed;
+          opacity: 1;
+          color: var(--bg-label);
+        }
+      }
       
       label {
         font-size: 0.75rem;

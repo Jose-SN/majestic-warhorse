@@ -157,6 +157,11 @@ export class RegistrationPageService {
       transformedPayload.app_id = registrationInfo.app_id;
     }
 
+    // Add organization_id if provided
+    if (shouldInclude(registrationInfo.organization_id)) {
+      transformedPayload.organization_id = registrationInfo.organization_id;
+    }
+
     return new Promise((resolve) => {
       if (isEditMode) {
         // Call update API for edit mode

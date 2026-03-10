@@ -15,4 +15,5 @@ export interface IRegistrationModel {
     phone?: string;
   };
   app_id?: string; // UUID for organization
+  organization_id?: string;
 }
