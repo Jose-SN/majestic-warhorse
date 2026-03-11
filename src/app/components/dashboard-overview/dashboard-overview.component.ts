@@ -169,7 +169,7 @@ export class DashboardOverviewComponent {
         }
       });
     });
-    this.favoriteCourses = this.courseLists;
+    // this.favoriteCourses = this.courseLists;
   }
   logOut() {
     this.authService.logOutApplication();

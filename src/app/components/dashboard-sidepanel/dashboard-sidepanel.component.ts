@@ -72,10 +72,10 @@ export class DashboardSidepanelComponent {
   }
   navigateToHome() {
     if (this.disableListItems()) return;
-    const defaultRoute = this.commonService.adminRoleType.includes(this.loginedUserPrivilege) 
-      ? '/dashboard/course-overview' 
-      : '/dashboard/overview';
-    this.router.navigate([defaultRoute]);
+    // const defaultRoute = this.commonService.adminRoleType.includes(this.loginedUserPrivilege) 
+    //   ? '/dashboard/course-overview' 
+    //   : '/dashboard/overview';
+    this.router.navigate(['/dashboard/overview']);
   }
   disableListItems() {
     return this.loginedUserPrivilege === 'student' && this.commonService.loginedUserInfo.assignedTo?.length === 0 || 
