@@ -45,6 +45,7 @@ app-particle {
     background: var(--bg-list);
     padding: 30px;
     @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
+    height: auto !important;
   }
   
   > figure {
