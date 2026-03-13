@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 @Component({
@@ -15,10 +16,12 @@ export class CommonSearchProfileComponent {
   public searchText: string = '';
   @Output() mobNavchild = new EventEmitter<void>();
   public mobMenu: boolean = false;
+  public loginedUserInfo: UserModel = {} as UserModel;
   constructor(
     private authService: AuthService,
     private commonService: CommonService
   ) {
+    this.loginedUserInfo = this.commonService.loginedUserInfo;
     this.profileUrl = (this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? '';
   }
   logOut() {

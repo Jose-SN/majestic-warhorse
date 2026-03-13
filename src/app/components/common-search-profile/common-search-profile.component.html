@@ -1,42 +1,67 @@
 <div class="search-and-profile">
-  <h1>
+  <h1 class="page-title">
     <figure>
       <img src="../../../assets/images/icon-home.svg" alt="Home" />
     </figure>
     <span>Home</span>
-  </h1>    
-    <div class="search-left">      
-      <div class="search-holder">        
-        <div class="input-holder">
-          <input type="text" placeholder="Search for..." [(ngModel)]="searchText" (input)="setInputSearch()"/>
-          <button aria-label="Search button"></button>
-        </div>
-        <!-- <div class="input-holder">
-          <select>
-            <option>This Year</option>
-          </select>
-        </div> -->
+  </h1>
+  <div class="search-left">
+    <div class="search-holder">
+      <div class="input-holder">
+        <input type="text" placeholder="Search for..." [(ngModel)]="searchText" (input)="setInputSearch()" />
+        <button type="button" aria-label="Search button"></button>
       </div>
-      <div class="profile-area">
-        <div class="common-holder">
-          <figure>
-            <img src="../../../assets/images/icon-notification.svg" alt="Notification" />
-          </figure>
-        </div>      
-        <div class="profile">
-          <figure>
-            <img [src]="profileUrl" alt="Profile" />
-          </figure>
-          <ul>
-            <li (click)="logOut()">Logout</li>
-            <!-- <li>Settings</li> -->
-          </ul>
+    </div>
+    <div class="profile-area">
+      <div class="notification-holder">
+        <figure>
+          <img src="../../../assets/images/icon-notification.svg" alt="Notification" />
+        </figure>
+      </div>
+      <div class="profile">
+        <figure class="profile-avatar">
+          <img [src]="profileUrl" alt="Profile" />
+        </figure>
+        <div class="profile-dropdown">
+          <div class="profile-header">
+            <figure class="dropdown-avatar">
+              <img [src]="profileUrl" alt="Profile" />
+
+              
+            </figure>
+            <div class="profile-info">
+              <strong>{{loginedUserInfo.firstName || loginedUserInfo.first_name}} {{loginedUserInfo.lastName || loginedUserInfo.last_name}}</strong>
+              <span class="role-badge">{{loginedUserInfo.role || 'User'}}</span>
+            </div>
+          </div>
+          <div class="profile-details">
+            @if(loginedUserInfo.email || loginedUserInfo.contact?.email) {
+              <div class="detail-row">
+                <span class="detail-label">Email</span>
+                <span class="detail-value">{{loginedUserInfo.email || loginedUserInfo.contact?.email}}</span>
+              </div>
+            }
+            @if(loginedUserInfo.phone || loginedUserInfo.contact?.phone) {
+              <div class="detail-row">
+                <span class="detail-label">Phone</span>
+                <span class="detail-value">{{loginedUserInfo.phone || loginedUserInfo.contact?.phone}}</span>
+              </div>
+            }
+          </div>
+          <button type="button" class="logout-btn" (click)="logOut()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </button>
         </div>
       </div>
     </div>
-    <div class="menu btn6" data-menu="6" [class.open]="isMobileNav" (click)="btnMob()">
-      <div class="icon"></div>
-    </div>
-    <!-- <div class="icon-mobile" (click)="btnMob()"></div> -->
   </div>
+  <div class="menu btn6" data-menu="6" [class.open]="isMobileNav" (click)="btnMob()">
+    <div class="icon"></div>
+  </div>
+</div>
 

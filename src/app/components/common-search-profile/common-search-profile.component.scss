@@ -1,161 +1,263 @@
 @import '../../../styles/index';
 .search-and-profile {
-    @include flex(flex, null, space-between, center);
-    .icon-mobile {
-      background: #CCC;
-      width: 37px;
-      height: 27px;
-      flex-shrink: 0;
-      position: relative;
-      @include flex(flex, null, center, center);
-      display: none;
-    }
-    h1 {
-      font-family: $poppins-bold;
-        font-size: 1.875rem;
-        color: var(--white);
-        line-height: 3.75rem;
-      figure {
-        width: 35px;
-        height: 35px;
-        margin-right: 10px;
-      }
-      @include flex(flex, null, null, center);
-    }
+  @include flex(flex, null, space-between, center);
+  gap: 24px;
+  padding: 4px 0;
 
-    .search-left {
-      @include flex(flex,null,space-between,null);
+  .icon-mobile {
+    background: #CCC;
+    width: 37px;
+    height: 27px;
+    flex-shrink: 0;
+    position: relative;
+    @include flex(flex, null, center, center);
+    display: none;
+  }
+
+  h1.page-title {
+    font-family: $poppins-bold;
+    font-size: 1.5rem;
+    color: var(--white);
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    figure {
+      width: 32px;
+      height: 32px;
+      margin-right: 12px;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
     }
-    .search-holder {
+    @include flex(flex, null, null, center);
+  }
+
+  .search-left {
+    @include flex(flex, null, space-between, center);
+    flex: 1;
+    max-width: 480px;
+  }
+
+  .search-holder {
+    flex: 1;
+    margin-right: 16px;
+    @include flex(flex, null, flex-end, null);
+
+    .input-holder {
+      position: relative;
       width: 100%;
-      margin-right: 15px;
-      @include flex(flex, null, flex-end, null);      
-      gap: 15px;
-      .input-holder {
-        position: relative;
-        input {
-          font-family: $archivo-regular;
-          font-size: 1rem;
+      max-width: 320px;
+
+      input {
+        font-family: $archivo-regular;
+        font-size: 0.9375rem;
+        color: var(--white);
+        border: 1px solid var(--bg-input-border);
+        background: rgba(0, 25, 59, 0.6);
+        width: 100%;
+        height: 44px;
+        padding: 10px 46px 10px 16px;
+        @include border-radius(12px);
+        @include transition(all 0.2s ease);
+        &::placeholder {
           color: var(--bg-label);
-          border: 2px solid var(--bg-input-border);
+        }
+        &:focus {
+          outline: none;
+          border-color: var(--bg-mit1);
           background: var(--bg-input);
-          max-width: 300px;
+          @include box-shadow(0, 0, 12px, rgba(255, 92, 56, 0.25));
+        }
+      }
+      button {
+        background: url(../../../assets/images/icon-search.svg) no-repeat center center;
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 50%;
+        right: 14px;
+        transform: translateY(-50%);
+        border: none;
+        cursor: pointer;
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .profile-area {
+    @include flex(flex, null, flex-end, center);
+    gap: 12px;
+
+    .notification-holder {
+      width: 44px;
+      height: 44px;
+      @include border-radius(12px);
+      border: 1px solid var(--bg-input-border);
+      background: rgba(0, 25, 59, 0.5);
+      @include flex(flex, null, center, center);
+      flex-shrink: 0;
+      @include transition(all 0.2s ease);
+      &:hover {
+        border-color: var(--bg-mit1);
+        background: rgba(255, 92, 56, 0.1);
+      }
+      figure {
+        width: 22px;
+        height: 22px;
+        img {
           width: 100%;
           height: 100%;
-          padding: 12px 50px 12px 15px;
-          @include border-radius(15px);
-          @include transition(all 0.2s ease-in-out);
-          &:focus {
-            border-color: var(--bg-mit1);
-          }
-        }
-        button {
-          background: url(../../../assets/images/icon-search.svg) no-repeat center center;
-          width: 20px;
-          height: 20px;
-          position: absolute;
-          top: 0;
-          right: 20px;
-          bottom: 0;
-          margin: auto;
-          border: none;
-          cursor: pointer;
-        }
-        select {
-          font-family: $archivo-regular;
-          font-size: 1rem;
-          color: var(--white);
-          width: 160px;
-          height: 100%;
-          border: 2px solid var(--bg-input-border);
-          background: transparent url(../../../assets/images/icon-arrow.svg) no-repeat 87% center;
-          @include border-radius(15px);
-          text-indent: 15px;
-          appearance: none;
-          transition: opacity 0.25s;
-          &:focus {
-            outline: none;
-            border-color: var(--bg-mit1);
-          }
+          object-fit: contain;
         }
       }
     }
-    .profile-area {
-      max-width: fit-content;
-      @include flex(flex, null, flex-end, center);
-      gap: 15px;
-      .common-holder {
-        width: 60px;
-        height: 60px;
-        @include border-radius(15px);
+
+    .profile {
+      position: relative;
+
+      .profile-avatar {
+        background: var(--bg-blue);
+        width: 44px;
+        height: 44px;
+        @include border-radius(50%);
         border: 2px solid var(--bg-input-border);
-        @include flex(flex, null, center, center);
+        overflow: hidden;
         flex-shrink: 0;
-        position: relative;
-        figure {
-          width: 26px;
-          height: 26px;
+        cursor: pointer;
+        margin: 0;
+        @include transition(all 0.2s ease);
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      &:hover .profile-avatar {
+        border-color: var(--bg-mit1);
+        @include box-shadow(0, 0, 16px, rgba(255, 92, 56, 0.35));
+      }
+
+      .profile-dropdown {
+        @include gradient();
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        width: 280px;
+        position: absolute;
+        right: 0;
+        top: 52px;
+        overflow: hidden;
+        @include border-radius(12px);
+        @include common-margin();
+        @include transition(all 0.25s ease);
+        z-index: 1000;
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(-8px);
+        @include box-shadow(0, 12px, 40px, rgba(0, 0, 0, 0.4));
+      }
+
+      &:hover .profile-dropdown {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .profile-header {
+        @include flex(flex, null, null, center);
+        gap: 12px;
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.08);
+
+        .dropdown-avatar {
+          width: 48px;
+          height: 48px;
+          @include border-radius(50%);
+          overflow: hidden;
+          flex-shrink: 0;
+          border: 2px solid rgba(255, 255, 255, 0.4);
+          margin: 0;
           img {
             width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .profile-info {
+          flex: 1;
+          min-width: 0;
+          strong {
+            display: block;
+            font-family: $poppins-medium;
+            font-size: 0.9375rem;
+            color: var(--white);
+            line-height: 1.3;
+            margin-bottom: 4px;
+          }
+          .role-badge {
+            display: inline-block;
+            font-family: $archivo-regular;
+            font-size: 0.6875rem;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            @include border-radius(6px);
+            text-transform: capitalize;
           }
         }
       }
-      .profile {
-        width: 60px;
-        height: 60px;
-        position: relative;
-        figure{
-          background: var(--bg-blue);
-          width: 60px;
-          height: 60px;
-          @include border-radius(100%);
-          position: relative;
-          border: 1px solid var(--bg-input-border);
-          overflow: hidden;
-          flex-shrink: 0;          
-        }       
-        ul {
-          @include gradient();
-          border: var(--bg-input-border);
-          width: 200px;
-          position: absolute;
-          right: 0;
-          top: 65px;
-          list-style: none;
-          overflow: hidden;
-          @include border-radius(5px);
-          @include common-margin();
-          @include transition(all 0.3s ease-out);  
-          z-index: 1000;
-          visibility: hidden;
-          opacity: 0;
-          li {
-            font-size: 0.875rem;
-            color: var(--white);
-            width: 100%;            
-            padding: 10px;
-            cursor: pointer;
-            height: 50px;
-            display: flex;
-            flex-direction: column-reverse;
-            @include transition(all 0.3s ease-out);
-            &:hover {
-              background: rgba(255,255,255, $alpha: 0.2);
-            }
-            &:not(:last-child){
-              border-bottom: 1px solid rgba(255,255,255, $alpha: 0.2);
-            }
-          }        
-        }
-        &:hover > {
-          ul {
-            top: 60px;
-            visibility: visible;
-            opacity: 1;
+
+      .profile-details {
+        padding: 12px 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+        .detail-row {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          padding: 6px 0;
+          &:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
           }
+          .detail-label {
+            font-family: $archivo-regular;
+            font-size: 0.6875rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+          }
+          .detail-value {
+            font-family: $archivo-regular;
+            font-size: 0.8125rem;
+            color: var(--white);
+            word-break: break-all;
+          }
+        }
+      }
+
+      .logout-btn {
+        @include flex(flex, null, center, center);
+        gap: 8px;
+        width: 100%;
+        padding: 12px 16px;
+        font-family: $poppins-medium;
+        font-size: 0.875rem;
+        color: var(--white);
+        background: rgba(255, 255, 255, 0.12);
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        @include transition(all 0.2s ease);
+        &:hover {
+          background: rgba(255, 255, 255, 0.22);
+        }
+        svg {
+          flex-shrink: 0;
         }
       }
     }
+  }
     .btn6{
       @include btn(15px, 35px);
       transform: scale(0.5);
@@ -238,17 +340,15 @@
         height: 45px
       }
       .profile-area {
-        @include flex(flex,null,flex-start,flex-start);
-        .common-holder {
-          width: 45px;
-          height: 45px;
-          @include border-radius(8px);
+        @include flex(flex, null, flex-start, flex-start);
+        .notification-holder {
+          width: 40px;
+          height: 40px;
+          @include border-radius(10px);
         }
-        .profile {
-          & figure {
-            width: 45px;
-            height: 45px;
-          }          
+        .profile .profile-avatar {
+          width: 40px;
+          height: 40px;
         }
       }      
     }
