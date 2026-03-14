@@ -55,8 +55,8 @@ export class DashboardService {
   async fetchUploadedCourseCount() {
     let role: string = this.commonService.loginedUserInfo?.role || '';
     
-    // For admin, calculate stats from allUsersList and teacher-student relationships
-    if (role === 'admin') {
+    // For organization, calculate stats from allUsersList and teacher-student relationships
+    if (role === 'organization') {
       const allUsers = this.commonService.allUsersList || [];
       
       // Filter users by role
@@ -104,7 +104,7 @@ export class DashboardService {
       };
     }
     
-    // For non-admin roles, call the API as before
+    // For non-organization roles, call the API as before
     const roleInfo: { [key: string]: string } = {
       teacher: `isTeacher=true&id=${this.commonService.loginedUserInfo?.id}`,
       student: `isStudent=true&id=${this.commonService.loginedUserInfo?.id}`,

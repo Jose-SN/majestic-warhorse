@@ -49,22 +49,29 @@ export class ViewAssignedStudentsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (result) => {
           this.isLoading = false;
-          const responseData = result.data || result;
+          const responseData = result?.data ?? result;
+          const userList = this.commonService.allUsersList;
           if (responseData) {
             let studentIds: string[] = [];
-            
-            // Handle different response structures
+
+            // Handle assignment records: { id, teacher_id, student_id, ... } - use student_id, not id
             if (Array.isArray(responseData) && responseData.length > 0) {
-              studentIds = responseData.map((student: any) => student.id || student.student_id || '');
+              studentIds = responseData
+                .map((item: any) => item.student_id || item.id)
+                .filter((id: string) => !!id);
             } else if (responseData.student_ids && Array.isArray(responseData.student_ids)) {
               studentIds = responseData.student_ids;
             } else if (responseData.students && Array.isArray(responseData.students)) {
-              studentIds = responseData.students.map((student: any) => student.id || student.student_id || '');
+              studentIds = responseData.students
+                .map((student: any) => student.student_id || student.id || '')
+                .filter((id: string) => !!id);
             }
-            
-            // Map assigned student IDs to student objects
-            this.assignedStudents = this.studentsList.filter((student) =>
-              studentIds.includes(student.id || '')
+
+            // Map assigned student IDs to full student objects from userList
+            this.assignedStudents = userList.filter(
+              (user) =>
+                (user.role?.toLowerCase() === 'student') &&
+                studentIds.includes(user.id || (user as any)._id || '')
             );
           }
         },

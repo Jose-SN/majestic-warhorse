@@ -301,7 +301,7 @@
           <div class="content-top">
             <div class="total-assessment">
               <div class="course-detail cursor-pointer"
-                (click)="navigateTo(['admin', 'teacher'].includes(loginedUserPrivilege) ? '/dashboard/teachers' : '/dashboard/students')">
+                (click)="navigateTo(['organization', 'teacher'].includes(loginedUserPrivilege) ? '/dashboard/teachers' : '/dashboard/students')">
                 <div class="detail-top">
                   <div class="icons mit1">
                     <figure>
@@ -314,13 +314,13 @@
                   </div>
                   <div class="detail-right">
                     <h2>{{dashboardOverview.totalTeachers ?? dashboardOverview.assignedStudents}}</h2>
-                    <span>{{['admin', 'teacher'].includes(loginedUserPrivilege) ? 'Total Teachers': 'Assigned
+                    <span>{{['organization', 'teacher'].includes(loginedUserPrivilege) ? 'Total Teachers': 'Assigned
                       Students'}}</span>
                   </div>
                 </div>
               </div>
               <div class="course-detail cursor-pointer"
-                (click)="navigateTo(['admin', 'teacher'].includes(loginedUserPrivilege) ? '/dashboard/students' : '/dashboard/courses')">
+                (click)="navigateTo(['organization', 'teacher'].includes(loginedUserPrivilege) ? '/dashboard/students' : '/dashboard/courses')">
                 <div class="detail-top">
                   <div class="icons mit2">
                     <figure>
@@ -333,7 +333,7 @@
                   </div>
                   <div class="detail-right">
                     <h2>{{dashboardOverview.totalStudents ?? dashboardOverview.uploadedCourses}}</h2>
-                    <span>{{['admin', 'teacher'].includes(loginedUserPrivilege) ? 'Total Students': 'Uploaded
+                    <span>{{['organization', 'teacher'].includes(loginedUserPrivilege) ? 'Total Students': 'Uploaded
                       Courses'}}</span>
                   </div>
                 </div>
@@ -351,12 +351,12 @@
                   </div>
                   <div class="detail-right">
                     <h2>{{dashboardOverview.unassignedTeachers ?? dashboardOverview.totalDownloads}}</h2>
-                    <span>{{['admin', 'teacher'].includes(loginedUserPrivilege) ? 'Unassigned Teachers': 'Total
+                    <span>{{['organization', 'teacher'].includes(loginedUserPrivilege) ? 'Unassigned Teachers': 'Total
                       Downloads'}}</span>
                   </div>
                 </div>
               </div>
-              @if(['admin', 'teacher'].includes(loginedUserPrivilege)){
+              @if(['organization', 'teacher'].includes(loginedUserPrivilege)){
               <div class="course-detail">
                 <div class="detail-top">
                   <div class="icons mit4">

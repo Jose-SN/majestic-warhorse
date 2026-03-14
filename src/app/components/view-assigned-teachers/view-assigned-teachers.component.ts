@@ -124,14 +124,14 @@ export class ViewAssignedTeachersComponent implements OnInit {
             this.commonService.closePopupModel(true);
           } else {
             this.commonService.openToaster({
-              message: 'Error while updating teachers, please contact admin',
+              message: 'Error while updating teachers, please contact your organization',
               messageType: TOASTER_MESSAGE_TYPE.ERROR,
             });
           }
         },
         error: () => {
           this.commonService.openToaster({
-            message: 'Error while updating teachers, please contact admin',
+            message: 'Error while updating teachers, please contact your organization',
             messageType: TOASTER_MESSAGE_TYPE.ERROR,
           });
         },

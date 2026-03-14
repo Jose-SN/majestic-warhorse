@@ -123,7 +123,7 @@ export class AssignTeachersComponent {
         },
         error: () => {
           this.commonService.openToaster({
-            message: 'Error while assigning teachers, please contact admin',
+            message: 'Error while assigning teachers, please contact your organization',
             messageType: TOASTER_MESSAGE_TYPE.ERROR,
           });
         },

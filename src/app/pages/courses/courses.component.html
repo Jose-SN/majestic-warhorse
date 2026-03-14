@@ -10,7 +10,7 @@
           <ul>
             <li *ngFor="let filter of filterList; trackBy: trackByIndex" [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}</li>
           </ul>
-          @if(["admin","teacher"].includes(loginedUserPrivilege)){
+          @if(["organization","teacher"].includes(loginedUserPrivilege)){
           <div class="data-refreshed-holder">
             <button (click)="showSliderView = !showSliderView;">
               <img src="../../../assets/images/icon-upload.svg" alt="Upload" />
@@ -51,7 +51,7 @@
                         <div class="card-content">
                           <div class="course-header">
                             <span>A Course by {{ course["createdBy"].firstName || course["createdBy"].first_name }} {{ course["createdBy"].lastName || course["createdBy"].last_name }}</span>
-                            @if(["admin","teacher"].includes(loginedUserPrivilege)){
+                            @if(["organization","teacher"].includes(loginedUserPrivilege)){
                             <button class="edit-course-btn" (click)="openEditCourse(course, $event)" aria-label="Edit course" title="Edit Course">
                               <img src="../../../assets/images/icon-edit.svg" alt="Edit" />
                             </button>
