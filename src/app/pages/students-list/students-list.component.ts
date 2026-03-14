@@ -64,6 +64,7 @@ export class StudentsListComponent {
       title: `Assigned Teachers - ${student.firstName || student.first_name} ${student.lastName || student.last_name}`,
       data: student,
       componentName: COMPONENT_NAME.VIEW_ASSIGNED_TEACHERS,
+      customStyle: { width: '700px', height: '700px', 'max-width': '90vw' },
     });
   }
   deleteStudent(deletedStudent: UserModel) {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
@@ -24,7 +24,8 @@ export class ViewAssignedTeachersComponent implements OnInit {
 
   constructor(
     public commonService: CommonService,
-    private assignTeacherService: AssignTeacherService
+    private assignTeacherService: AssignTeacherService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -39,8 +40,12 @@ export class ViewAssignedTeachersComponent implements OnInit {
   }
 
   loadAssignedTeachers() {
-    const studentId = this.popupModelInfo.data.id;
-    if (!studentId) return;
+    const studentId = this.popupModelInfo?.data?.id;
+    if (!studentId) {
+      this.isLoading = false;
+      this.cdr.detectChanges();
+      return;
+    }
 
     this.isLoading = true;
     this.assignTeacherService
@@ -49,31 +54,20 @@ export class ViewAssignedTeachersComponent implements OnInit {
       .subscribe({
         next: (result) => {
           this.isLoading = false;
-          // Handle different response structures
-          const responseData = result.data || result;
-          if (responseData) {
-            // If response has teacher_ids array
-            // if (responseData.teacher_ids && Array.isArray(responseData.teacher_ids)) {
-            //   this.selectedTeachers = responseData.teacher_ids;
-            // } 
-            // If response is an array of teacher objects
-            // else 
-            if (Array.isArray(responseData) && responseData.length > 0) {
-              this.selectedTeachers = responseData.map((teacher: any) => teacher.id || teacher.teacher_id || '');
-            }
-            // If response has teachers array
-            // else if (responseData.teachers && Array.isArray(responseData.teachers)) {
-            //   this.selectedTeachers = responseData.teachers.map((teacher: any) => teacher.id || teacher.teacher_id || '');
-            // }
-            
-            // Map assigned teacher IDs to teacher objects
-            this.assignedTeachers = this.teachersList.filter((teacher) =>
-              this.selectedTeachers.includes(teacher.id || '')
-            );
-          }
+          const responseData = result?.data ?? result;
+          const assignments = Array.isArray(responseData) ? responseData : [];
+          const teacherIds = assignments
+            .map((a: { teacher_id?: string; id?: string }) => a.teacher_id || a.id || '')
+            .filter((id: string) => !!id);
+          this.selectedTeachers = teacherIds;
+          this.assignedTeachers = teacherIds
+            .map((id) => this.commonService.allUsersList.find((u) => (u.id || '') === id))
+            .filter((u): u is UserModel => !!u);
+          this.cdr.detectChanges();
         },
         error: () => {
           this.isLoading = false;
+          this.cdr.detectChanges();
           this.commonService.openToaster({
             message: 'Error loading assigned teachers',
             messageType: TOASTER_MESSAGE_TYPE.ERROR,

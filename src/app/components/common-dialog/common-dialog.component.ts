@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Input,
   Output,
   ViewChild,
   ViewContainerRef,
@@ -33,6 +34,7 @@ export class CommonDialogComponent {
   @Output() closed = new EventEmitter<boolean>();
   @ViewChild('popupContainer', { read: ViewContainerRef, static: true })
   container!: ViewContainerRef;
+  @Input() customStyle: Record<string, string> = {};
 
   loadComponent(component: any, inputs?: { [key: string]: any }) {
     this.container.clear();

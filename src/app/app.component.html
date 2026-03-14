@@ -3,4 +3,4 @@
   <app-particle></app-particle>
 }
 <ngx-spinner size="medium" type="ball-clip-rotate-pulse"></ngx-spinner>
-<app-common-dialog [ngClass]="{'d-none': !isDialogOpen}" (closed)="closeModel();"></app-common-dialog>
+<app-common-dialog [ngClass]="{'d-none': !isDialogOpen}" [customStyle]="popupModelInfo.customStyle || {}" (closed)="closeModel();"></app-common-dialog>

@@ -1,8 +1,9 @@
 export interface IModelInfo {
   data: any;
   url?: string;
-  title:string;
-  fileType?:string;
+  title: string;
+  fileType?: string;
   componentName?: string;
-  isDynamicContent?: boolean
+  isDynamicContent?: boolean;
+  customStyle?: Record<string, string>;
 }

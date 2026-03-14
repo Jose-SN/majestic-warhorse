@@ -1,5 +1,5 @@
 <div class="dialog-overlay">
-    <div class="dialog-wrapper video" [@dialogAnimation]>
+    <div class="dialog-wrapper video" [ngStyle]="customStyle" [@dialogAnimation]>
         <div class="dialog-header">
             <h2>{{title}}</h2>
             <button class="btn-close" (click)="close()">X</button>
