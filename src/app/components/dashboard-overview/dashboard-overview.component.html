@@ -437,62 +437,64 @@
                 </div>
               </div>
             </div>
-          <div class="course-top">
-            <h3>Subscribed Courses</h3>
-            <!-- <ul>
-              <li *ngFor="let filter of filterList; trackBy: trackByIndex"
-                [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}
-              </li>
-            </ul> -->
-          </div>
-          <div class="scroll-container courses">
-            <div class="course-card-holder" *ngIf="courseLists.length > 0">
-              @for (course of courseLists; track $index) {
-              <div class="course-card" (click)="openCourseDetailsPage(course)">
-                <div class="card-content">
-                  <figure><img [src]="course.courseCoverImage" alt="" /></figure>
-                </div>
-                <div class="card-content">
-                  <span>A Course by {{ course["createdBy"].firstName || course["createdBy"].first_name }} {{
-                    course["createdBy"].lastName || course["createdBy"].last_name }}</span>
-                  <h3>{{course?.courseTitle}}
-                  </h3>
-                  <span class="lesson-label">
-                    <div class="lesson-holder">
-                      <star-rating [hoverEnabled]="false" [rating]="course.averageRating??0"></star-rating>
-                      <span>Lessons
-                        @if(course.chapterDetails.length){
-                        {{course.chapterCompletedCount}}/{{course.chapterDetails.length}}
-                        }
-                      </span>
+            <div class="content-holder subscribed-section" *ngIf="courseLists.length > 0">
+              <div class="course-top">
+                <h3>Subscribed Courses</h3>
+                <!-- <ul>
+                  <li *ngFor="let filter of filterList; trackBy: trackByIndex"
+                    [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}
+                  </li>
+                </ul> -->
+              </div>
+              <div class="scroll-container courses">
+                <div class="course-card-holder" *ngIf="courseLists.length > 0">
+                  @for (course of courseLists; track $index) {
+                  <div class="course-card" (click)="openCourseDetailsPage(course)">
+                    <div class="card-content">
+                      <figure><img [src]="course.courseCoverImage" alt="" /></figure>
                     </div>
-                  </span>
-                  <div class="loader-holder">
-                    <span [ngStyle]="{width: course.completionPercent}"></span>
+                    <div class="card-content">
+                      <span>A Course by {{ course["createdBy"].firstName || course["createdBy"].first_name }} {{
+                        course["createdBy"].lastName || course["createdBy"].last_name }}</span>
+                      <h3>{{course?.courseTitle}}
+                      </h3>
+                      <span class="lesson-label">
+                        <div class="lesson-holder">
+                          <star-rating [hoverEnabled]="false" [rating]="course.averageRating??0"></star-rating>
+                          <span>Lessons
+                            @if(course.chapterDetails.length){
+                            {{course.chapterCompletedCount}}/{{course.chapterDetails.length}}
+                            }
+                          </span>
+                        </div>
+                      </span>
+                      <div class="loader-holder">
+                        <span [ngStyle]="{width: course.completionPercent}"></span>
+                      </div>
+                    </div>
                   </div>
+                  }
                 </div>
+                @if (courseLists.length == 0) {
+                  <div class="no-courses-found">
+                    <figure>
+                      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z" fill="currentColor"/>
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" fill="none" opacity="0.2"/>
+                      </svg>
+                    </figure>
+                    <h3>Unable to Load Courses</h3>
+                    <p>We're having trouble fetching course data from the server. This could be due to:</p>
+                    <ul>
+                      <li>Network connectivity issues</li>
+                      <li>Server is temporarily unavailable</li>
+                      <li>Authentication session expired</li>
+                    </ul>
+                    <p class="help-text">Please check your internet connection and try refreshing the page. If the problem continues, contact support.</p>
+                  </div>
+                }
               </div>
-              }
             </div>
-            @if (courseLists.length == 0) {
-              <div class="no-courses-found">
-                <figure>
-                  <svg width="140" height="140" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z" fill="currentColor"/>
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" fill="none" opacity="0.2"/>
-                  </svg>
-                </figure>
-                <h3>Unable to Load Courses</h3>
-                <p>We're having trouble fetching course data from the server. This could be due to:</p>
-                <ul>
-                  <li>Network connectivity issues</li>
-                  <li>Server is temporarily unavailable</li>
-                  <li>Authentication session expired</li>
-                </ul>
-                <p class="help-text">Please check your internet connection and try refreshing the page. If the problem continues, contact support.</p>
-              </div>
-            }
-          </div>
         </div>
       </div>
     }

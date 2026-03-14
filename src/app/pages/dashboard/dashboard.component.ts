@@ -10,6 +10,7 @@ import { ICourseList } from '../courses/modal/course-list';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
+import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-teacher.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,7 +36,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private dashboardService: DashboardService,
     private commonService: CommonService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private assignTeacherService: AssignTeacherService
   ) {
     this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
   }
@@ -71,13 +73,45 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
 
     const loginedUserData = this.commonService.loginedUserInfo;
-    if (loginedUserData?.role === 'student' && !loginedUserData.assignedTo?.length) {
-      this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
-      this.infoMessage =
-        'You have not been assigned any teachers to view this course. Please contact your organization for assistance';
-      this.router.navigate(['/dashboard/approval-pending'], {
-        state: { infoMessage: this.infoMessage },
-      });
+    if (loginedUserData?.role === 'student') {
+      const studentId = loginedUserData.id;
+      if (studentId) {
+        this.assignTeacherService.getAssignedTeachers(studentId).subscribe({
+          next: (res: any) => {
+            const data = res?.data ?? res;
+            const list = Array.isArray(data) ? data : [];
+            const hasTeachers = list.length > 0;
+            this.commonService.hasAssignedTeachers = hasTeachers;
+            if (!hasTeachers) {
+              this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
+              this.infoMessage =
+                'You have not been assigned any teachers to view this course. Please contact your organization for assistance';
+              this.router.navigate(['/dashboard/approval-pending'], {
+                state: { infoMessage: this.infoMessage },
+              });
+            } else {
+              this.updateActivePanelFromRoute();
+            }
+          },
+          error: () => {
+            this.commonService.hasAssignedTeachers = false;
+            this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
+            this.infoMessage =
+              'Unable to verify your assignments. Please contact your organization for assistance.';
+            this.router.navigate(['/dashboard/approval-pending'], {
+              state: { infoMessage: this.infoMessage },
+            });
+          },
+        });
+      } else {
+        this.commonService.hasAssignedTeachers = false;
+        this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
+        this.infoMessage =
+          'You have not been assigned any teachers to view this course. Please contact your organization for assistance';
+        this.router.navigate(['/dashboard/approval-pending'], {
+          state: { infoMessage: this.infoMessage },
+        });
+      }
     } else if (
       loginedUserData?.role === 'teacher' &&
       loginedUserData.status === 'pending'

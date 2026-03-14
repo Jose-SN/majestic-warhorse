@@ -4,7 +4,7 @@
       <div class="question-inner">
         <div class="form-holder">
           <div class="scroll-content">
-            @if(isTeacher) {
+            @if(isTeacher || isOrganization) {
             <!-- Teacher View: Add Questions -->
             <div class="course-top">
               <h2>Create Assessment Questions</h2>
@@ -121,80 +121,6 @@
                 </div>
               </div>
               }
-            </div>
-            }
-            @if(isStudent) {
-            <!-- Student View: Answer Questions -->
-            <div class="course-top">
-              <h2>Start Your Assessment Test</h2>
-              <span>Please answer the questions before submit</span>
-            </div>
-            <div class="questionnire-form">
-              @for (question of questionsList; track $index) {
-              @switch (question.type) {
-              @case ("Textbox") {
-              <div class="input-holder">
-                <label class="sub-title">{{question.question}}</label>
-                <input type="text" [(ngModel)]="answers[question.id || $index]" />
-              </div>
-              }
-              @case ("Textarea") {
-              <div class="input-holder">
-                <label class="sub-title">{{question.question}}</label>
-                <textarea rows="5" [(ngModel)]="answers[question.id || $index]"></textarea>
-              </div>
-              }
-              @case ("Radio") {
-              <div class="checkbox-holder">
-                <span class="sub-title">{{question.question}}</span>
-                @if((question?.options?.length ?? 0) > 0){
-                @for (option of question.options; track $index) {
-                <label class="radio-label">
-                  <input type="radio" 
-                    [name]="'question_' + (question.id || $index)"
-                    [value]="$any(option).value"
-                    [(ngModel)]="answers[question.id || $index]" />
-                  <strong>{{$any(option).label}}</strong>
-                </label>
-                }
-                }
-              </div>
-              }
-              @case ("Checkbox") {
-              <div class="checkbox-holder">
-                <span class="sub-title">{{question.question}}</span>
-                @if((question?.options?.length ?? 0) > 0){
-                @for (option of question.options; track $index) {
-                <label class="checkbox-label">
-                  <input type="checkbox" 
-                    [value]="$any(option).value"
-                    [checked]="answers[question.id || $index]?.includes($any(option).value)"
-                    (change)="handleCheckboxChange(question.id || $index, $any(option).value, $event)" />
-                  <span class="checkmark"></span>
-                  <strong>{{$any(option).label}}</strong>
-                </label>
-                }
-                }
-              </div>
-              }
-              @case ("Dropdown") {
-              <div class="input-holder">
-                <label class="sub-title">{{question.question}}</label>
-                @if((question?.options?.length ?? 0) > 0){
-                <select [(ngModel)]="answers[question.id || $index]">
-                  <option value="">Select an option</option>
-                  @for (option of question.options; track $index) {
-                  <option [value]="$any(option).value">{{$any(option).label}}</option>
-                  }
-                </select>
-                }
-              </div>
-              }
-              }
-              }
-            </div>
-            <div class="data-refreshed-holder">
-              <button (click)="submitAnswers()">Submit</button>
             </div>
             }
           </div>

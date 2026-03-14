@@ -22,7 +22,6 @@ export class QuestionnaireComponent implements OnInit {
   public questionsList: IQuestion[] = [];
   public userRole: string = '';
   public isTeacher: boolean = false;
-  public isStudent: boolean = false;
 
   // Teacher form fields - matches question table structure
   public newQuestion: Partial<IQuestion> & { options?: IQuestionOption[] } = {
@@ -35,9 +34,7 @@ export class QuestionnaireComponent implements OnInit {
   public editingOption = '';
   public editingQuestionId: string | null = null;
   public expandedQuestionId: string | null = null;
-
-  // Student form answers
-  public answers: any = {};
+  public isOrganization: boolean = false;
 
   constructor(
     private questionnaireApiService: QuestionnaireApiService,
@@ -47,8 +44,8 @@ export class QuestionnaireComponent implements OnInit {
 
   ngOnInit() {
     this.userRole = this.commonService?.loginedUserInfo?.role ?? '';
-    this.isTeacher = this.userRole === 'teacher';
-    this.isStudent = this.userRole === 'student';
+    this.isTeacher = ['organization', 'teacher'].includes(this.userRole);
+    this.isOrganization = sessionStorage.getItem('loginType') === 'organization';
     
     // Load questions for both teacher and student
     this.loadQuestions();
@@ -59,17 +56,15 @@ export class QuestionnaireComponent implements OnInit {
       ? this.questionnaireApiService.getQuestionsByCourse(this.courseId)
       : this.questionnaireApiService.geAllQuestions();
     apiCall.pipe(takeUntil(this.destroy$)).subscribe((questionsList) => {
-      this.questionsList = questionsList ?? [];
-        // Initialize answers object based on question type
-        questionsList.forEach((question: any, index: number) => {
-          const questionId = question.id || index;
-          if (question.type === 'Checkbox') {
-            this.answers[questionId] = [];
-          } else {
-            this.answers[questionId] = '';
-          }
-        });
+      const rawList = questionsList ?? [];
+      this.questionsList = [...rawList].sort((a: any, b: any) => {
+        const dateA = a.creation_date || a.creationDate || a.created_at || a.createdAt || '';
+        const dateB = b.creation_date || b.creationDate || b.created_at || b.createdAt || '';
+        if (!dateA) return 1;
+        if (!dateB) return -1;
+        return new Date(dateA).getTime() - new Date(dateB).getTime();
       });
+    });
   }
 
   // Teacher methods
@@ -272,61 +267,6 @@ export class QuestionnaireComponent implements OnInit {
       options: [],
     };
     this.newOption = '';
-  }
-
-  // Student methods
-  handleCheckboxChange(questionId: any, optionValue: string, event: any) {
-    const id = questionId;
-    if (!this.answers[id] || !Array.isArray(this.answers[id])) {
-      this.answers[id] = [];
-    }
-    if (event.target.checked) {
-      if (!this.answers[id].includes(optionValue)) {
-        this.answers[id].push(optionValue);
-      }
-    } else {
-      this.answers[id] = this.answers[id].filter((val: string) => val !== optionValue);
-    }
-  }
-
-  submitAnswers() {
-    // Validate that all questions are answered
-    const unansweredQuestions = this.questionsList.filter((question: IQuestion, index: number) => {
-      const questionId = question.id ?? String(index);
-      const answer = this.answers[questionId];
-      if (question.type === 'Checkbox') {
-        return !answer || !Array.isArray(answer) || answer.length === 0;
-      }
-      return !answer || answer === '';
-    });
-
-    if (unansweredQuestions.length > 0) {
-      this.confirmationPopupService.showAlert(
-        `Please answer all questions. ${unansweredQuestions.length} question(s) remaining.`
-      );
-      return;
-    }
-
-    const answersData = {
-      answers: this.answers,
-      questions: this.questionsList
-    };
-
-    this.questionnaireApiService
-      .submitAnswers(answersData)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          this.confirmationPopupService.showAlert('Answers submitted successfully!', 'Success');
-          // Optionally reset answers
-          this.answers = {};
-          this.loadQuestions();
-        },
-        error: (error) => {
-          console.error('Error submitting answers:', error);
-          this.confirmationPopupService.showAlert('Error submitting answers. Please try again.', 'Error');
-        }
-      });
   }
 
   /** Format question type for display (e.g. "text" -> "Textbox") */

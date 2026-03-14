@@ -19,6 +19,7 @@ import { DashboardService } from '../dashboard/dashboard.service';
 import { Input } from '@angular/core';
 import { QuestionnaireComponent } from '../questionnaire/questionnaire.component';
 import { AssessmentAnswersComponent } from 'src/app/components/assessment-answers/assessment-answers.component';
+import { StudentAssessmentComponent } from 'src/app/components/student-assessment/student-assessment.component';
 import { FavoritesApiService } from 'src/app/services/api-service/favorites-api.service';
 
 @Component({
@@ -32,6 +33,7 @@ import { FavoritesApiService } from 'src/app/services/api-service/favorites-api.
     CommonSearchProfileComponent,
     QuestionnaireComponent,
     AssessmentAnswersComponent,
+    StudentAssessmentComponent,
   ],
   templateUrl: './course-details.component.html',
   styleUrl: './course-details.component.scss',
@@ -54,6 +56,7 @@ export class CourseDetailsComponent {
   public canAccessAnswers: boolean = false;
   public isCourseFavorited: boolean = false;
   private favoriteId: string | null = null;
+  public isOrganization: boolean = false;
   @Input() selectedCourseInfo: ICourseList = {} as ICourseList;
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   @ViewChild(VideoPlayerComponent) videoPlayerComponent!: VideoPlayerComponent;
@@ -92,6 +95,7 @@ export class CourseDetailsComponent {
 
     this.setDefaultVideo();
     this.loginedUserRole = this.commonService?.loginedUserInfo?.role ?? '';
+    this.isOrganization = sessionStorage.getItem('loginType') === 'organization';
     this.canAccessAnswers = this.commonService.adminRoleType.includes(this.loginedUserRole);
     await this.courseDetailsService.getCourseStatusList();
     this.checkActiveVideoStatus();
@@ -110,7 +114,7 @@ export class CourseDetailsComponent {
         fileDetails.videoDuration = this.commonService.formatTime(time);
       });
     });
-    this.checkAssesmentView();
+    // this.checkAssesmentView();
     this.checkFavoriteStatus();
   }
 
@@ -197,7 +201,7 @@ export class CourseDetailsComponent {
     this.activeVideoDescription = fileDetails.description;
   }
   handleStartAssessment() {
-    this.dashboardService.setSidePanelChangeValue(this.dashboardService.SIDE_PANEL_LIST.ASSESMENT);
+    this.setActiveTab('assessment');
   }
   logOut() {
     this.authService.logOutApplication();
@@ -315,5 +319,8 @@ export class CourseDetailsComponent {
   }
   setActiveTab(tab: string) {
     this.activeTab = tab;
+    if (tab === 'assessment') {
+      
+    }
   }
 }

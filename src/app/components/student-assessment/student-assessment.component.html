@@ -1,0 +1,104 @@
+<div class="student-assessment">
+  <div class="course-top">
+    <h2>Assessment Test</h2>
+    <span>Please answer all questions before submitting</span>
+  </div>
+
+  @if (loading) {
+  <div class="loading-state">
+    <p>Loading questions...</p>
+  </div>
+  } @else if (questionsList.length === 0) {
+  <div class="empty-state">
+    <p>No assessment questions available for this course.</p>
+    <p class="help-text">Questions may be added by your teacher or organization.</p>
+  </div>
+  } @else {
+  <div class="questionnire-form">
+    @for (question of questionsList; track question.id || $index) {
+    @let qId = question.id || $index;
+    @let qType = normalizeType(question.type);
+    @switch (qType) {
+    @case ("Textbox") {
+    <div class="input-holder">
+      <label class="sub-title">{{ question.question }}</label>
+      <input type="text" [(ngModel)]="answers[qId]" placeholder="Enter your answer" [disabled]="hasSubmitted" />
+    </div>
+    }
+    @case ("Textarea") {
+    <div class="input-holder">
+      <label class="sub-title">{{ question.question }}</label>
+      <textarea rows="5" [(ngModel)]="answers[qId]" placeholder="Enter your answer" [disabled]="hasSubmitted"></textarea>
+    </div>
+    }
+    @case ("Radio") {
+    <div class="checkbox-holder">
+      <span class="sub-title">{{ question.question }}</span>
+      @if ((question?.options?.length ?? 0) > 0) {
+      @for (option of question.options; track $any(option).value) {
+      <label class="radio-label">
+        <input
+          type="radio"
+          [name]="'question_' + qId"
+          [value]="$any(option).value"
+          [(ngModel)]="answers[qId]"
+          [disabled]="hasSubmitted" />
+        <strong>{{ $any(option).label }}</strong>
+      </label>
+      }
+      }
+    </div>
+    }
+    @case ("Checkbox") {
+    <div class="checkbox-holder">
+      <span class="sub-title">{{ question.question }}</span>
+      @if ((question?.options?.length ?? 0) > 0) {
+      @for (option of question.options; track $any(option).value) {
+      <label class="checkbox-label">
+        <input
+          type="checkbox"
+          [value]="$any(option).value"
+          [checked]="isCheckboxChecked(qId, $any(option).value)"
+          (change)="handleCheckboxChange(qId, $any(option).value, $event)"
+          [disabled]="hasSubmitted" />
+        <span class="checkmark"></span>
+        <strong>{{ $any(option).label }}</strong>
+      </label>
+      }
+      }
+    </div>
+    }
+    @case ("Dropdown") {
+    <div class="input-holder">
+      <label class="sub-title">{{ question.question }}</label>
+      @if ((question?.options?.length ?? 0) > 0) {
+      <select [(ngModel)]="answers[qId]" title="Select an option" aria-label="Select an option" [disabled]="hasSubmitted">
+        <option value="">Select an option</option>
+        @for (option of question.options; track $any(option).value) {
+        <option [value]="$any(option).value">{{ $any(option).label }}</option>
+        }
+      </select>
+      }
+    </div>
+    }
+    @default {
+    <div class="input-holder">
+      <label class="sub-title">{{ question.question }}</label>
+      <input type="text" [(ngModel)]="answers[qId]" placeholder="Enter your answer" [disabled]="hasSubmitted" />
+    </div>
+    }
+    }
+  }
+  </div>
+  @if (!hasSubmitted) {
+  <div class="disclaimer-holder">
+    <p class="disclaimer-text">Please validate everything before submitting, since you can't change answers once you submit.</p>
+  </div>
+  <div class="data-refreshed-holder">
+    <button type="button" (click)="submitAnswers()" [disabled]="submitting || !canSubmit">
+      {{ submitting ? 'Submitting...' : 'Submit Answers' }}
+    </button>
+  </div>
+  }
+  }
+</div>

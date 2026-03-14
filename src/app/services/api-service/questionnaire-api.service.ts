@@ -50,9 +50,10 @@ export class QuestionnaireApiService {
       .pipe(catchError(this.commonService.handleError));
   }
 
-  submitAnswers(answers: any) {
+  /** Submit assessment answers - payload: { course_id, question_id, answer, submitted_by } per answer */
+  submitAnswers(payload: Array<{ course_id: string; question_id: string; answer: string; submitted_by: string }>) {
     return this.http
-      .post<any>(`${this._apiUrl}question/submit`, answers)
+      .post<any>(`${this._apiUrl}answer/save`, payload)
       .pipe(catchError(this.commonService.handleError));
   }
 
@@ -60,6 +61,14 @@ export class QuestionnaireApiService {
   getSubmittedAnswers() {
     return this.http
       .get<any[]>(`${this._apiUrl}question/answers/get`)
+      .pipe(catchError(this.commonService.handleError));
+  }
+
+  /** Get student's submitted answers for a course */
+  getStudentAnswersByCourse(courseId: string, submittedBy: string) {
+    const params = { course_id: courseId, submitted_by: submittedBy };
+    return this.http
+      .get<any[]>(`${this._apiUrl}answer/get`, { params })
       .pipe(catchError(this.commonService.handleError));
   }
 

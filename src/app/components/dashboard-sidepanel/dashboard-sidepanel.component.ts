@@ -78,7 +78,9 @@ export class DashboardSidepanelComponent {
     this.router.navigate(['/dashboard/overview']);
   }
   disableListItems() {
-    return this.loginedUserPrivilege === 'student' && this.commonService.loginedUserInfo.assignedTo?.length === 0 || 
-      this.loginedUserPrivilege === 'teacher' && this.commonService.loginedUserInfo.status === 'pending';
+    return (
+      (this.loginedUserPrivilege === 'student' && this.commonService.hasAssignedTeachers === false) ||
+      (this.loginedUserPrivilege === 'teacher' && this.commonService.loginedUserInfo.status === 'pending')
+    );
   }
 }

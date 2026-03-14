@@ -280,8 +280,12 @@
       height: 100%;
       .content-holder {
         height: auto;
-        &.favorites-section {
-          margin-bottom: 30px;
+        &.favorites-section, &.subscribed-section {
+          margin-bottom: 20px;
+        }
+        &.favorites-section .course-top, &.subscribed-section .course-top {
+          box-shadow: 2px 2px 15px var(--bg-shadow);
+          padding: 15px;
         }
       }
       .courses {

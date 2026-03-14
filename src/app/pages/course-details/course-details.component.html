@@ -5,7 +5,8 @@
         <h2>{{selectedCourseInfo.courseTitle}}</h2>
         <ul class="tab-navigation">
           <li [ngClass]="{ 'active': activeTab === 'course' }" (click)="setActiveTab('course')">Course</li>
-          <li [ngClass]="{ 'active': activeTab === 'questionnaire' }" (click)="setActiveTab('questionnaire')">Questionnaire</li>
+          <li [ngClass]="{ 'active': activeTab === 'questionnaire' }" *ngIf="isOrganization || loginedUserRole === 'teacher'" (click)="setActiveTab('questionnaire')">Questionnaire</li>
+          <li [ngClass]="{ 'active': activeTab === 'assessment' }" *ngIf="loginedUserRole === 'student'" (click)="setActiveTab('assessment')">Assessment</li>
           @if (canAccessAnswers) {
           <li [ngClass]="{ 'active': activeTab === 'answers' }" (click)="setActiveTab('answers')">Answers</li>
           }
@@ -84,7 +85,7 @@
                   </div>
                   @if(loginedUserRole === 'student' && showQuestionAnswer){
                   <div class="btn-holder">
-                    <button (click)="handleStartAssessment()">Start Assessment Test</button>
+                    <button (click)="setActiveTab('assessment')">Start Assessment Test</button>
                   </div>
               }
               </div>
@@ -106,6 +107,11 @@
       @if(activeTab === 'questionnaire') {
       <div class="tab-content">
         <app-questionnaire [courseId]="selectedCourseInfo?.id ?? ''"></app-questionnaire>
+      </div>
+      }
+      @if(activeTab === 'assessment' && loginedUserRole === 'student') {
+      <div class="tab-content">
+        <app-student-assessment [courseId]="selectedCourseInfo?.id ?? ''"></app-student-assessment>
       </div>
       }
       @if(activeTab === 'answers' && canAccessAnswers) {

@@ -1,0 +1,218 @@
+@import '../../../styles/index';
+
+.student-assessment {
+  padding: 0;
+  .course-top {
+    margin-bottom: 24px;
+    h2 {
+      font-family: $titilliumWeb-bold;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 0 0 8px 0;
+    }
+    span {
+      font-size: 0.938rem;
+      color: var(--bg-light-grey);
+    }
+  }
+
+  .loading-state,
+  .empty-state {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--bg-light-grey);
+    .help-text {
+      font-size: 0.875rem;
+      margin-top: 12px;
+      opacity: 0.8;
+    }
+  }
+
+  .questionnire-form {
+    counter-reset: q-counter;
+    margin-bottom: 24px;
+
+    .input-holder {
+      margin-bottom: 24px;
+    }
+
+    input:disabled,
+    textarea:disabled,
+    select:disabled {
+      opacity: 0.9;
+      cursor: not-allowed;
+    }
+
+    .sub-title {
+      display: block;
+      font-size: 0.938rem;
+      color: var(--white);
+      line-height: 1.4;
+      margin-bottom: 10px;
+      &::before {
+        counter-increment: q-counter;
+        content: counter(q-counter) '. ';
+      }
+    }
+
+    input[type='text'] {
+      font-family: $archivo-regular;
+      font-size: 0.875rem;
+      color: var(--white);
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--bg-border-input);
+      padding: 11px 10px;
+      @include border-radius(8px);
+    }
+
+    textarea {
+      font-family: $archivo-regular;
+      font-size: 0.875rem;
+      color: var(--white);
+      width: 100%;
+      background: var(--bg-input);
+      padding: 11px 10px;
+      border: 1px solid var(--bg-border-input);
+      @include border-radius(8px);
+      resize: vertical;
+    }
+
+    select {
+      font-family: $archivo-regular;
+      font-size: 0.875rem;
+      color: var(--white);
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--bg-border-input);
+      padding: 11px 10px;
+      @include border-radius(8px);
+      option {
+        background: var(--bg-input);
+        color: var(--white);
+      }
+    }
+
+    .checkbox-holder {
+      margin-top: 20px;
+      margin-bottom: 24px;
+
+      .checkbox-label {
+        font-size: 0.938rem;
+        color: var(--white);
+        display: block;
+        position: relative;
+        cursor: pointer;
+        margin: 15px 0 15px 20px;
+        padding-left: 35px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        &:not(:last-child) {
+          margin-bottom: 12px;
+        }
+        input {
+          position: absolute;
+          opacity: 0;
+          cursor: pointer;
+          height: 0;
+          width: 0;
+        }
+        .checkmark {
+          border: 1px solid var(--white);
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 22px;
+          width: 22px;
+          @include border-radius(5px);
+        }
+        input:checked ~ .checkmark {
+          background-color: #fd7859;
+          border: none;
+          &::after {
+            display: block;
+          }
+        }
+        .checkmark::after {
+          content: '';
+          position: absolute;
+          display: none;
+          left: 7px;
+          top: 2px;
+          width: 5px;
+          height: 10px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+        }
+        strong {
+          font-weight: 500;
+        }
+      }
+
+      .radio-label {
+        font-size: 0.938rem;
+        color: var(--white);
+        display: block;
+        position: relative;
+        cursor: pointer;
+        margin: 15px 0 15px 20px;
+        padding-left: 32px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        &:not(:last-child) {
+          margin-bottom: 12px;
+        }
+        input[type='radio'] {
+          position: absolute;
+          left: 0;
+          top: 2px;
+          width: 20px;
+          height: 20px;
+          cursor: pointer;
+          accent-color: #fd7859;
+        }
+        strong {
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .disclaimer-holder {
+    margin: 20px 0 16px 0;
+    padding: 12px 16px;
+    background: rgba(253, 120, 89, 0.12);
+    border: 1px solid rgba(253, 120, 89, 0.3);
+    @include border-radius(8px);
+    .disclaimer-text {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--bg-light-grey);
+      line-height: 1.5;
+    }
+  }
+
+  .data-refreshed-holder {
+    margin-top: 24px;
+    button {
+      font-family: $archivo-medium;
+      font-size: 0.938rem;
+      color: var(--white);
+      padding: 12px 32px;
+      min-width: 180px;
+      @include border-radius(20px);
+      @include gradient();
+      border: none;
+      cursor: pointer;
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+    }
+  }
+}

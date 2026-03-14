@@ -69,6 +69,7 @@ export class LoginService {
             this.router.navigate(['/dashboard']);
             this.commonService.loginedUserInfo = mapOrganizationToUserShape(orgData);
             sessionStorage.setItem('login_details', JSON.stringify(this.commonService.loginedUserInfo));
+            sessionStorage.setItem('loginType', this.commonService.loginedUserInfo?.role ?? '');
             sessionStorage.setItem('authToken', orgData.jwt || orgData.token || '');
           } else {
             this.loginFailed();
@@ -92,6 +93,7 @@ export class LoginService {
             this.router.navigate(['/dashboard']);
             this.commonService.loginedUserInfo = mapUserToLegacy(userExist);
             sessionStorage.setItem('login_details', JSON.stringify(this.commonService.loginedUserInfo));
+            sessionStorage.setItem('loginType', this.commonService.loginedUserInfo?.role ?? '');
             sessionStorage.setItem('authToken', userExist.jwt || '');
           } else {
             this.loginFailed();

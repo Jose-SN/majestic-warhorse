@@ -59,6 +59,7 @@ export class AuthService {
   logOutApplication() {
     this.isAuthenticated = false;
     this.commonService.allUsersList = [];
+    this.commonService.hasAssignedTeachers = null;
     sessionStorage.clear();
     localStorage.clear();
     this.router.navigate(['/login']);
