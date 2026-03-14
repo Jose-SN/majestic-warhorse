@@ -44,7 +44,7 @@
             <button type="button" 
               class="mode-btn" 
               [class.active]="!isAdminLogin"
-              (click)="setRegistrationMode('user')">
+              (click)="setRegistrationMode('user'); loadOrganizations()">
               User
             </button>
             <button type="button" 
