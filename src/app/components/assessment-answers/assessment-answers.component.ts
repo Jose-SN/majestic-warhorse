@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -26,14 +26,12 @@ export interface AnswerSubmission {
   styleUrl: './assessment-answers.component.scss',
 })
 export class AssessmentAnswersComponent implements OnInit, OnDestroy {
+  @Input() courseId: string = '';
   private destroy$ = new Subject<void>();
   public submissions: AnswerSubmission[] = [];
   public questionsList: any[] = [];
   public loading = false;
-  public expandedSubmissionId: string | null = null;
-  public editingSubmissionId: string | null = null;
   public feedbackMap: { [submissionId: string]: string } = {};
-  public correctedAnswersMap: { [submissionId: string]: { [questionId: string]: string | string[] } } = {};
   public canAccess = false;
 
   constructor(
@@ -53,8 +51,9 @@ export class AssessmentAnswersComponent implements OnInit, OnDestroy {
   }
 
   loadQuestions(): void {
+    const courseId = this.courseId?.trim() || undefined;
     this.questionnaireApiService
-      .geAllQuestions()
+      .geAllQuestions(courseId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (questions) => {
@@ -65,14 +64,21 @@ export class AssessmentAnswersComponent implements OnInit, OnDestroy {
   }
 
   loadSubmissions(): void {
+    const courseId = this.courseId?.trim() ?? '';
+    if (!courseId) {
+      this.loading = false;
+      this.submissions = [];
+      return;
+    }
     this.loading = true;
     this.questionnaireApiService
-      .getSubmittedAnswers()
+      .getAnswersByCourse(courseId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
           const data = response?.data ?? response;
-          this.submissions = Array.isArray(data) ? data : [];
+          const rows = Array.isArray(data) ? data : [];
+          this.submissions = this.transformAnswerRowsToSubmissions(rows);
           this.loading = false;
         },
         error: (err) => {
@@ -81,22 +87,6 @@ export class AssessmentAnswersComponent implements OnInit, OnDestroy {
           this.submissions = [];
         },
       });
-  }
-
-  toggleExpand(submission: AnswerSubmission): void {
-    const id = submission.id ?? submission.userId ?? '';
-    this.expandedSubmissionId = this.expandedSubmissionId === id ? null : id;
-  }
-
-  startEditing(submission: AnswerSubmission): void {
-    const id = submission.id ?? submission.userId ?? '';
-    this.editingSubmissionId = id;
-    this.feedbackMap[id] = submission.feedback ?? '';
-    this.correctedAnswersMap[id] = { ...(submission.correctedAnswers ?? submission.answers) };
-  }
-
-  cancelEditing(): void {
-    this.editingSubmissionId = null;
   }
 
   getQuestionById(questionId: string): any {
@@ -108,6 +98,44 @@ export class AssessmentAnswersComponent implements OnInit, OnDestroy {
     return q?.question ?? `Question ${index + 1}`;
   }
 
+  private transformAnswerRowsToSubmissions(rows: any[]): AnswerSubmission[] {
+    const byUser = new Map<string, { [questionId: string]: string | string[] }>();
+    rows.forEach((row: any) => {
+      const userId = String(row.submitted_by ?? row.submittedBy ?? '');
+      const qId = String(row.question_id ?? row.questionId ?? '');
+      const answerStr = row.answer ?? '';
+      if (!userId || !qId) return;
+      if (!byUser.has(userId)) byUser.set(userId, {});
+      const answers = byUser.get(userId)!;
+      try {
+        const parsed = JSON.parse(answerStr);
+        answers[qId] = Array.isArray(parsed) ? parsed : String(parsed);
+      } catch {
+        answers[qId] = answerStr;
+      }
+    });
+    const allUsers = this.commonService.allUsersList ?? [];
+    return Array.from(byUser.entries()).map(([userId, answers]) => {
+      const user = allUsers.find((u) => (u.id ?? '') === userId);
+      const userName = this.getUserDisplayName(user);
+      const userEmail = this.getUserEmail(user);
+      return { userId, userName, userEmail, answers };
+    });
+  }
+
+  private getUserDisplayName(user: any): string {
+    if (!user) return '';
+    const first = user.firstName ?? user.first_name ?? '';
+    const last = user.lastName ?? user.last_name ?? '';
+    const name = [first, last].filter(Boolean).join(' ').trim();
+    return name || user.name || '';
+  }
+
+  private getUserEmail(user: any): string {
+    if (!user) return '';
+    return user.email ?? user.contact?.email ?? '';
+  }
+
   formatAnswer(value: string | string[]): string {
     if (Array.isArray(value)) return value.join(', ');
     return String(value ?? '');
@@ -116,16 +144,13 @@ export class AssessmentAnswersComponent implements OnInit, OnDestroy {
   saveFeedback(submission: AnswerSubmission): void {
     const id = submission.id ?? submission.userId ?? '';
     const feedback = this.feedbackMap[id] ?? '';
-    const correctedAnswers = this.correctedAnswersMap[id] ?? submission.answers;
 
     this.questionnaireApiService
-      .updateAnswerFeedback(id, { feedback, correctedAnswers })
+      .updateAnswerFeedback(id, { feedback, correctedAnswers: submission.answers })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
           submission.feedback = feedback;
-          submission.correctedAnswers = correctedAnswers;
-          this.editingSubmissionId = null;
           this.confirmationPopupService.showAlert('Feedback saved successfully.', 'Success');
         },
         error: (err) => {

@@ -50,11 +50,6 @@
   .submission-header {
     @include flex(flex, null, space-between, center);
     padding: 16px 20px;
-    cursor: pointer;
-    @include transition(background 0.2s);
-    &:hover {
-      background: rgba(255, 255, 255, 0.03);
-    }
     .user-info {
       display: flex;
       flex-direction: column;
@@ -69,10 +64,6 @@
         font-size: 0.813rem;
         color: var(--bg-grey);
       }
-    }
-    .expand-icon {
-      font-size: 0.75rem;
-      color: var(--bg-grey);
     }
   }
   .submission-content {
@@ -122,6 +113,29 @@
         resize: vertical;
         min-height: 60px;
       }
+    }
+  }
+  .feedback-edit {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--bg-border-input);
+    label {
+      display: block;
+      font-family: $archivo-medium;
+      font-size: 0.813rem;
+      color: var(--bg-grey);
+      margin-bottom: 8px;
+    }
+    textarea {
+      width: 100%;
+      font-family: $archivo-regular;
+      font-size: 0.875rem;
+      color: var(--white);
+      background: var(--bg-input);
+      border: 1px solid var(--bg-border-input);
+      padding: 10px 12px;
+      @include border-radius(5px);
+      resize: vertical;
     }
   }
   .feedback-row {

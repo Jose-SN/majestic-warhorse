@@ -116,7 +116,7 @@
       }
       @if(activeTab === 'answers' && canAccessAnswers) {
       <div class="tab-content">
-        <app-assessment-answers></app-assessment-answers>
+        <app-assessment-answers [courseId]="selectedCourseInfo?.id ?? ''"></app-assessment-answers>
       </div>
       }
     </div>

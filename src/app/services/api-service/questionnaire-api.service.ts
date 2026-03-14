@@ -60,13 +60,22 @@ export class QuestionnaireApiService {
   /** Get all submitted answers (for teachers/admins) */
   getSubmittedAnswers() {
     return this.http
-      .get<any[]>(`${this._apiUrl}question/answers/get`)
+      .get<any[]>(`${this._apiUrl}answer/get`)
       .pipe(catchError(this.commonService.handleError));
   }
 
-  /** Get student's submitted answers for a course */
+  /** Get student's submitted answers for a course (pass submittedBy for single user) */
   getStudentAnswersByCourse(courseId: string, submittedBy: string) {
     const params = { course_id: courseId, submitted_by: submittedBy };
+    return this.http
+      .get<any[]>(`${this._apiUrl}answer/get`, { params })
+      .pipe(catchError(this.commonService.handleError));
+  }
+
+  /** Get all submitted answers for a course (teachers - all students when submittedBy omitted) */
+  getAnswersByCourse(courseId: string, submittedBy?: string) {
+    const params: Record<string, string> = { course_id: courseId };
+    if (submittedBy?.trim()) params['submitted_by'] = submittedBy.trim();
     return this.http
       .get<any[]>(`${this._apiUrl}answer/get`, { params })
       .pipe(catchError(this.commonService.handleError));
