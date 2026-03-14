@@ -24,7 +24,7 @@
     </div>
     }
     <div class="form-wrapper" [ngClass]="{'edit-form': isEditMode}">
-      <div class="image-holder" [ngClass]="{'edit-avatar': isEditMode}" (click)="triggerFileInput()" role="button" tabindex="0" (keydown.enter)="triggerFileInput()" (keydown.space)="triggerFileInput()">
+      <div class="image-holder" [ngClass]="{'edit-avatar': isEditMode}" (click)="triggerFileInput()" tabindex="0" (keydown.enter)="triggerFileInput()" (keydown.space)="triggerFileInput()">
         <figure>
           <img [src]="profileUrl" alt="Profile Picture" />
           <div class="camera-icon-overlay">
@@ -34,44 +34,85 @@
             </svg>
           </div>
         </figure>
-        <input type="file" #profileImageInput formControlName="profileImage" (change)="onFileSelected($event)" accept="image/*" class="hidden-file-input" />
+        <input type="file" #profileImageInput formControlName="profileImage" (change)="onFileSelected($event)" accept="image/*" class="hidden-file-input" aria-label="Upload profile picture" />
       </div>
       <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
-        <div class="input-row">
-          <div class="input-holder">
-            <label for="role">
-              @if(isEditMode) {
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-              }
-              {{isEditMode ? 'Account Role' : 'Register As'}}
-            </label>
-            <div class="checkbox-holder" [ngClass]="{'edit-role': isEditMode}">
-              @if(isAdminLogin){
-              <label>
-                <strong>Admin</strong>
-                <input type="radio" name="role" formControlName="role" value="admin" [disabled]="isEditMode">
-                <span class="checkmark"></span>
-              </label>
-              }@else {
-              <label>
-                <strong>Student</strong>
-                <input type="radio" name="role" formControlName="role" value="student" [disabled]="isEditMode">
-                <span class="checkmark"></span>
-              </label>
-              <label>
-                <strong>Teacher</strong>
-                <input type="radio" name="role" formControlName="role" value="teacher" [disabled]="isEditMode">
-                <span class="checkmark"></span>
-              </label>
-              }
+        @if(!isEditMode){
+        <div class="mode-toggle mode-toggle-top">
+          <span class="mode-label">Registering as:</span>
+          <div class="mode-buttons">
+            <button type="button" 
+              class="mode-btn" 
+              [class.active]="!isAdminLogin"
+              (click)="setRegistrationMode('user')">
+              User
+            </button>
+            <button type="button" 
+              class="mode-btn" 
+              [class.active]="isAdminLogin"
+              (click)="setRegistrationMode('organization')">
+              Organization
+            </button>
+          </div>
+        </div>
+        }
+        <div class="form-section">
+          <div class="section-label">
+            <span class="section-badge">1</span>
+            {{isEditMode ? 'Account Role' : 'I am a'}}
+          </div>
+          <div class="input-row">
+            <div class="input-holder role-holder">
+              <div class="checkbox-holder" [ngClass]="{'edit-role': isEditMode}">
+                @if(isAdminLogin){
+                <label class="role-option">
+                  <input type="radio" name="role" formControlName="role" value="organization" [disabled]="isEditMode">
+                  <span class="checkmark"></span>
+                  <strong>Organization</strong>
+                  <span class="role-hint">Manage teachers and students</span>
+                </label>
+                }@else {
+                <label class="role-option">
+                  <input type="radio" name="role" formControlName="role" value="student" [disabled]="isEditMode">
+                  <span class="checkmark"></span>
+                  <strong>Student</strong>
+                  <span class="role-hint">Access courses and content</span>
+                </label>
+                <label class="role-option">
+                  <input type="radio" name="role" formControlName="role" value="teacher" [disabled]="isEditMode">
+                  <span class="checkmark"></span>
+                  <strong>Teacher</strong>
+                  <span class="role-hint">Manage students and courses</span>
+                </label>
+                }
+              </div>
             </div>
           </div>
+        </div>
+        <div class="form-section">
+          <div class="section-label">
+            <span class="section-badge">2</span>
+            {{isAdminLogin && createAccountForm.get('role')?.value === 'organization' ? 'Organization Details' : 'Account Details'}}
+          </div>
+        <div class="input-row">
           
+          @if(isAdminLogin && createAccountForm.get('role')?.value === 'organization') {
+          <div class="input-holder">
+            <label for="organizationName">
+              @if(isEditMode) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+              }
+              Organization Name
+            </label>
+            <input type="text" name="organizationName" placeholder="Enter Organization Name" formControlName="name" />
+            @if (isFieldInvalid(createAccountForm, 'name')) {
+              <span>Organization name is required.</span>
+            }
+          </div>
+          } @else {
           <div class="input-holder">
             <label for="organization">
               @if(isEditMode) {
@@ -95,7 +136,9 @@
               <span>Organization is required.</span>
             }
           </div>
+          }
         </div>
+        @if(createAccountForm.get('role')?.value !== 'organization') {
         <div class="input-row">
           <div class="input-holder">
             <label for="firstname">
@@ -128,6 +171,13 @@
             }
           </div>
         </div>
+        }
+        </div>
+        <div class="form-section">
+          <div class="section-label">
+            <span class="section-badge">3</span>
+            Contact & Security
+          </div>
         <div class="input-row">
           <div class="input-holder">
             <label>
@@ -282,9 +332,7 @@
             }
           </div>
         </div>
-        
-        
-        
+        </div>
         
         <button class="btn-login" [ngClass]="{'btn-update': isEditMode}" type="submit">
           @if(isEditMode) {
@@ -300,8 +348,7 @@
     </div>
     @if(!isEditMode){
     <div class="login-bottom">
-      <!-- <div class="divider" data-attr="or"></div> -->
-      <p>Do you have already an account? <a (click)="navigateLogin()">Log In</a></p>
+      <p class="login-link">Already have an account? <a (click)="navigateLogin()">Log In</a></p>
     </div>
     }
   </div>

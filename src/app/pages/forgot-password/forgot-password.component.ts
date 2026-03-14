@@ -29,6 +29,7 @@ export class ForgotPasswordComponent implements OnDestroy {
   private formValidator = new FormValidators();
   private destroy$ = new Subject<void>();
   public showOtpSection: boolean = false;
+  private selectedAccountType: string = 'user';
 
   constructor(
     private formGroup: FormBuilder,
@@ -37,6 +38,7 @@ export class ForgotPasswordComponent implements OnDestroy {
     private commonService: CommonService,
   ) {
     this.resetPasswordForm = this.formGroup.group({
+      accountType: ['user', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: [
         '',
@@ -57,9 +59,12 @@ export class ForgotPasswordComponent implements OnDestroy {
 
   onSubmit() {
     if (this.resetPasswordForm.valid) {
-      const resetPasswordForm = this.resetPasswordForm.value;
+      const resetPasswordForm = { ...this.resetPasswordForm.value };
+      const accountType = resetPasswordForm.accountType || 'user';
+      this.selectedAccountType = accountType;
       delete resetPasswordForm.confirmPassword;
-      this.forgotPasswordService.updatePassword(this.destroy$, resetPasswordForm).then((data: any) => {
+      delete resetPasswordForm.accountType;
+      this.forgotPasswordService.updatePassword(this.destroy$, resetPasswordForm, accountType).then((data: any) => {
         if (data.success) {
           this.commonService.openToaster({
             message: 'An OTP has been sent to your registered email.',
@@ -104,7 +109,7 @@ export class ForgotPasswordComponent implements OnDestroy {
         password: otpForm.password
       };
       
-      this.forgotPasswordService.validateOtp(this.destroy$, otpPayload).then((otpUpdated: any) => {
+      this.forgotPasswordService.validateOtp(this.destroy$, otpPayload, this.selectedAccountType).then((otpUpdated: any) => {
         const response = JSON.parse(otpUpdated);
         if (response.success) {
           this.commonService.openToaster({

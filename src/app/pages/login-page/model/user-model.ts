@@ -1,7 +1,10 @@
+import type { Organization } from 'src/app/models/organization.model';
+
 export interface UserModel {
   id: string;
-  first_name: string;
+  first_name?: string;
   last_name?: string;
+  name?: string; // Used when entity is organization
   profile_image?: string;
   password?: string;
   role?: string;
@@ -30,6 +33,17 @@ export interface UserModel {
   jwt?: string;
   assignedTo?: string[];
 }
+
+/** Union type for entities that can be either User or Organization */
+export type UserOrOrganization = UserModel | Organization;
+
+export function isOrganization(entity: UserOrOrganization | null | undefined): entity is Organization {
+  if (entity == null) return false;
+  // Organization has `name` as primary; User has `first_name`
+  return 'name' in entity && typeof (entity as Organization).name === 'string' &&
+    !('first_name' in entity && (entity as UserModel).first_name);
+}
+
 export interface UserLoginResponse {
   success?: boolean;
   data: UserModel;

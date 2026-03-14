@@ -1,6 +1,24 @@
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 
 /**
+ * Maps organization login response to UserModel shape (role: 'organization')
+ */
+export function mapOrganizationToUserShape(org: any): UserModel {
+  if (!org) return org;
+  const data = org.data ?? org;
+  return {
+    id: data.id || '',
+    first_name: '',
+    name: data.name || '',
+    contact: data.contact || { email: data.contact?.email || '', phone: data.contact?.phone },
+    profile_image: data.profile_image,
+    role: 'organization',
+    email: data.contact?.email || (data as any).email,
+    phone: data.contact?.phone || (data as any).phone,
+  } as UserModel;
+}
+
+/**
  * Maps new database structure to legacy fields for backward compatibility
  */
 export function mapUserToLegacy(user: UserModel): UserModel {

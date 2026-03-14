@@ -13,7 +13,7 @@ import { IModelInfo } from 'src/app/components/common-dialog/model/popupmodel';
 export class CommonService {
   public loginedUserInfo!: UserModel;
   public allUsersList: UserModel[] = [];
-  public adminRoleType: string[] = ['admin', 'teacher'];
+  public adminRoleType: string[] = ['organization', 'teacher'];
   private openpopupModel$: Subject<any> = new Subject<any>();
   private closePopupModel$: Subject<any> = new Subject<any>();
   private commonSearchText: Subject<string> = new BehaviorSubject('');

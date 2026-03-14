@@ -102,14 +102,13 @@ input {
   }
 }
 
-.input-holder {
-  span {
-    font-size: 0.75rem;
-    color: red;
-    position: absolute;
-    right: 1px;
-    top: 0;
-  }
+/* Error message spans only - exclude account-type cards to prevent position:absolute breaking layout */
+.input-holder:not(.account-type-holder) span {
+  font-size: 0.75rem;
+  color: red;
+  position: absolute;
+  right: 1px;
+  top: 0;
 }
 .suggestion-holder {
   position: absolute;

@@ -30,6 +30,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   ) {}
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
+      accountType: ['user', [Validators.required]],
       email: ['', Validators.required],
       password: ['', Validators.required],
     });
@@ -40,7 +41,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.loginForm.markAllAsTouched();
     if (this.loginForm.valid) {
-      this.loginService.userLogin(this.destroy$, this.loginForm.value);
+      const { accountType, email, password } = this.loginForm.value;
+      this.loginService.login(this.destroy$, { accountType, email, password });
     }
   }
   gotoPage(pageName: string) {

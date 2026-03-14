@@ -11,11 +11,11 @@ import { RegistrationPageService } from './registration-page.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/shared/services/common.service';
-import { UserModel } from '../login-page/model/user-model';
+import { UserModel, isOrganization } from '../login-page/model/user-model';
+import type { Organization } from 'src/app/models/organization.model';
 import { CommonModule } from '@angular/common';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
-import { IOrganization } from 'src/app/services/api-service/organization-api.service';
 import { decodeText } from 'src/app/shared/utils/utils';
 
 @Component({
@@ -33,11 +33,20 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   public createAccountForm!: FormGroup;
   private formValidator = new FormValidators();
   private destroy$ = new Subject<void>();
+  /** true when org is logged in OR user chose to register organization (public signup) */
   public isAdminLogin: boolean = false;
+  /** Toggle for public: register as user (student/teacher) vs organization */
+  public registrationMode: 'user' | 'organization' = 'user';
   public profileUrl: string = '../../../../assets/images/img-placeholder.jpg';
+
+  setRegistrationMode(mode: 'user' | 'organization') {
+    this.registrationMode = mode;
+    this.isAdminLogin = mode === 'organization';
+    this.createAccountForm.patchValue({ role: mode === 'organization' ? 'organization' : 'student' });
+  }
   public showPassword: boolean = false;
   public showConfirmPassword: boolean = false;
-  public organizationsList: IOrganization[] = [];
+  public organizationsList: Organization[] = [];
   @ViewChild('profileImageInput') profileImageInput!: ElementRef<HTMLInputElement>;
 
   constructor(
@@ -65,7 +74,8 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
         confirmPassword: ['', [Validators.required]],
         role: ['student', [Validators.required]],
         status: ['active'],
-        organization_id: ['', [Validators.required]],
+        organization_id: [''],
+        name: [''], // Organization name - required when role is organization
       },
       {
         validator: this.formValidator.passwordMatchValidator.bind(this.createAccountForm),
@@ -77,6 +87,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   }
   ngOnInit(): void {
     this.loadOrganizations();
+    this.setupRoleValidators();
 
     // Make password fields optional in edit mode
     if (this.isEditMode) {
@@ -99,33 +110,34 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
 
     if (this.commonService?.loginedUserInfo) {
       const loginedId = this.commonService.loginedUserInfo?.id;
-      const loginedUser = this.commonService.allUsersList.find(
+      const loginedUser: UserModel | Organization = this.commonService.allUsersList.find(
         (user: UserModel) => user.id === loginedId
-      ) || this.commonService.loginedUserInfo;
+      ) as UserModel || this.commonService.loginedUserInfo;
       
-      // Use new structure with fallback to legacy fields
-      const firstName = loginedUser?.first_name || loginedUser?.firstName || '';
-      const lastName = loginedUser?.last_name || loginedUser?.lastName || '';
-      const email = loginedUser?.contact?.email || loginedUser?.email || '';
-      const phone = loginedUser?.contact?.phone || loginedUser?.phone || '';
-      const profileImage = loginedUser?.profile_image || loginedUser?.profileImage || '';
-      const role = loginedUser?.role || 'student';
+      const firstName = !isOrganization(loginedUser) ? (loginedUser?.first_name || loginedUser?.firstName || '') : '';
+      const lastName = !isOrganization(loginedUser) ? (loginedUser?.last_name || loginedUser?.lastName || '') : '';
+      const email = loginedUser?.contact?.email || (loginedUser as UserModel)?.email || '';
+      const phone = loginedUser?.contact?.phone || (loginedUser as UserModel)?.phone || '';
+      const profileImage = loginedUser?.profile_image || (loginedUser as UserModel)?.profileImage || '';
+      const role = (loginedUser as UserModel)?.role || (isOrganization(loginedUser) ? 'organization' : 'student');
+      const orgName = isOrganization(loginedUser) ? loginedUser.name : (loginedUser as UserModel)?.name || '';
       
       const userFormInfo = {
         password: '',
         profileImage: '',
-        status: loginedUser?.status || 'active',
+        status: (loginedUser as UserModel)?.status || 'active',
         confirmPassword: '',
         role: role,
         email: email,
         phone: phone,
         lastName: lastName,
         firstName: firstName,
-        organization_id: loginedUser?.organization_id || '',
+        organization_id: (loginedUser as UserModel)?.organization_id || '',
+        name: orgName,
       };
       this.profileUrl = this.commonService.decodeUrl(profileImage) as string;
       this.registrationService.imageUrl = this.profileUrl;
-      this.isAdminLogin = role === 'admin';
+      this.isAdminLogin = role === 'organization';
       this.createAccountForm.setValue(userFormInfo);
       if (this.isEditMode) {
         this.createAccountForm?.get('email')?.disable();
@@ -139,6 +151,14 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
 
       if (this.profileUrl) {
         this.createAccountForm.get('profileImage')?.clearValidators();
+      }
+    } else if (!this.isEditMode) {
+      // Check URL for ?type=organization to allow public org signup
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('type') === 'organization') {
+        this.registrationMode = 'organization';
+        this.isAdminLogin = true;
+        this.createAccountForm.patchValue({ role: 'organization' });
       }
     }
   }
@@ -181,6 +201,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
       userFormInfo.password = this.createAccountForm.get('password')?.value;
       userFormInfo.confirmPassword = this.createAccountForm.get('confirmPassword')?.value;
       userFormInfo.organization_id = this.createAccountForm.get('organization_id')?.value;
+      userFormInfo.name = this.createAccountForm.get('name')?.value;
       this.registrationService
         .registerUserInfo(this.destroy$, userFormInfo, this.isEditMode)
         .then((clearForms) => {
@@ -210,6 +231,32 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
       console.error('Form is invalid');
     }
   }
+  private setupRoleValidators(): void {
+    const roleControl = this.createAccountForm.get('role');
+    const nameControl = this.createAccountForm.get('name');
+    const orgIdControl = this.createAccountForm.get('organization_id');
+    const firstNameControl = this.createAccountForm.get('firstName');
+
+    const updateValidators = () => {
+      const role = roleControl?.value;
+      if (role === 'organization') {
+        nameControl?.setValidators([Validators.required]);
+        orgIdControl?.clearValidators();
+        firstNameControl?.clearValidators();
+      } else {
+        nameControl?.clearValidators();
+        orgIdControl?.setValidators([Validators.required]);
+        firstNameControl?.setValidators([Validators.required]);
+      }
+      nameControl?.updateValueAndValidity();
+      orgIdControl?.updateValueAndValidity();
+      firstNameControl?.updateValueAndValidity();
+    };
+
+    roleControl?.valueChanges.subscribe(() => updateValidators());
+    updateValidators(); // Set initial validators based on current role
+  }
+
   loadOrganizations(): void {
     this.organizationApiService
       .getOrganizations()
