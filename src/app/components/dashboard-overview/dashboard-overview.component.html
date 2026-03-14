@@ -385,10 +385,18 @@
             </div>
           </div>
           <div class="courses-wrapper">
+            <div class="course-top">
+              <h2>All Courses</h2>
+              <ul>
+                <li *ngFor="let filter of filterList; trackBy: trackByIndex"
+                  [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}
+                </li>
+              </ul>
+            </div>
             <div class="content-holder favorites-section" *ngIf="favoriteCourses.length > 0">
               <div class="course-top clickable" (click)="toggleFavoriteSection()" role="button" tabindex="0"
                 (keydown.enter)="toggleFavoriteSection()" (keydown.space)="toggleFavoriteSection(); $event.preventDefault()">
-                <h2>Favorite Courses</h2>
+                <h3>Favorite Courses</h3>
                 <div class="favorite-header-actions">
                   <a class="view-all-link" (click)="navigateToFavorites(); $event.stopPropagation()">View all</a>
                   <span class="toggle-icon" [class.collapsed]="!favoriteSectionExpanded">
@@ -430,12 +438,12 @@
               </div>
             </div>
           <div class="course-top">
-            <h2>All Courses</h2>
-            <ul>
+            <h3>Subscribed Courses</h3>
+            <!-- <ul>
               <li *ngFor="let filter of filterList; trackBy: trackByIndex"
                 [ngClass]="{ 'active': activeFilterTab === filter }" (click)="setActiveFilterTab(filter)">{{ filter }}
               </li>
-            </ul>
+            </ul> -->
           </div>
           <div class="scroll-container courses">
             <div class="course-card-holder" *ngIf="courseLists.length > 0">

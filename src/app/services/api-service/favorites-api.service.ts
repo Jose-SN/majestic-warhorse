@@ -31,8 +31,9 @@ export class FavoritesApiService {
 
   /** Add a course to favorites */
   addFavorite(userId: string, courseId: string) {
+    const params = new URLSearchParams({ user_id: userId, courseId });
     return this.http
-      .post<any>(`${this._apiUrl}favorites/save`, { userId, courseId })
+      .post<any>(`${this._apiUrl}favorites/save?${params}`, { userId, courseId })
       .pipe(catchError(this.commonService.handleError));
   }
 

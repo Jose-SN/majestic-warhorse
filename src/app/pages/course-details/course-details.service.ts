@@ -30,21 +30,24 @@ export class CourseDetailsService {
     let service;
     let statusPayload;
     if (saveInfo.isVideo) {
+      const rawPercentage =
+        saveInfo.courseStatusInfo.percentage !== 100 ? saveInfo.videoPercentage || 0 : 100;
       statusPayload = {
         rating: null,
         createdBy: createdId,
         parentId: saveInfo.activeFile.id,
         parentType: 'File',
-        percentage:
-          saveInfo.courseStatusInfo.percentage !== 100 ? saveInfo.videoPercentage || 0 : 100,
+        percentage: Math.round(rawPercentage * 100) / 100,
         ...(saveInfo.videoStatusInfo.id && { id: saveInfo.videoStatusInfo.id }),
       };
     } else {
+      const rating =
+        saveInfo.rating != null ? Math.round(saveInfo.rating * 100) / 100 : null;
       statusPayload = {
         percentage: null,
         createdBy: createdId,
         parentType: 'Chapter',
-        rating: saveInfo.rating,
+        rating,
         parentId: saveInfo.activeChapter.id,
         ...(saveInfo.courseStatusInfo.id && { id: saveInfo.courseStatusInfo.id }),
       };

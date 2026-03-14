@@ -74,7 +74,9 @@ export class DashboardOverviewComponent {
         next: async (response: any) => {
           const data = response?.data ?? response;
           const favorites = Array.isArray(data) ? data : [];
-          const favoriteIds = new Set(favorites.map((f: any) => f.courseId));
+          const favoriteIds = new Set(
+            favorites.map((f: any) => f.courseId ?? f.course_id).filter(Boolean)
+          );
           if (favoriteIds.size === 0) {
             this.favoriteCourses = [];
             return;
