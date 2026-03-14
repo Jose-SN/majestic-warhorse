@@ -49,10 +49,10 @@
                         @for (teacher of teachersList; track getTeacherId(teacher) || $index) {
                             <label 
                                 class="common-list" 
-                                [class.selected]="selectedTeachers.includes(getTeacherId(teacher))">
+                                [class.selected]="isAssigned(teacher)">
                                 <input 
                                     type="checkbox" 
-                                    [checked]="selectedTeachers.includes(getTeacherId(teacher))"
+                                    [checked]="isAssigned(teacher)"
                                     (change)="onTeacherSelect(teacher, $event)"
                                     [value]="getTeacherId(teacher)">
                                 <span class="checkbox-indicator"></span>
@@ -65,6 +65,12 @@
                                         @if (teacher.contact?.email || teacher.email) {
                                             <span class="teacher-email">{{teacher.contact?.email || teacher.email}}</span>
                                         }
+                                        @if (wasInitiallyAssigned(teacher)) {
+                                            <span class="assigned-badge">Already assigned</span>
+                                        }
+                                        @if (isUnassigning(teacher)) {
+                                            <span class="unassign-badge">Unassign teacher</span>
+                                        }
                                     </div>
                                 </div>
                             </label>
@@ -74,13 +80,13 @@
                 <footer class="assign-footer">
                     <button 
                         class="btn-assign" 
-                        [disabled]="selectedTeachers.length === 0" 
+                        [disabled]="!hasPendingChanges()" 
                         (click)="handleTeacherUpdate()"
                         type="button"
                         aria-label="Update assigned teachers">
                         <span>Update Teachers</span>
-                        @if (selectedTeachers.length > 0) {
-                            <span class="selected-count">({{ selectedTeachers.length }})</span>
+                        @if (hasPendingChanges()) {
+                            <span class="selected-count">({{ selectedTeachers.length }} assigned)</span>
                         }
                     </button>
                 </footer>

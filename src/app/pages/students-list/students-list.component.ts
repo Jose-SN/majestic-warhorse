@@ -1,7 +1,7 @@
-import { Component, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Observable, of, Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { CommonSliderComponent } from 'src/app/components/common-slider/common-slider.component';
@@ -20,7 +20,7 @@ import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
   templateUrl: './students-list.component.html',
   styleUrl: './students-list.component.scss',
 })
-export class StudentsListComponent {
+export class StudentsListComponent implements OnInit {
   public profileUrl: string = '';
   public mobMenu: boolean = false;
   public studentList: UserModel[] = [];
@@ -34,16 +34,25 @@ export class StudentsListComponent {
     private commonApiService: CommonApiService,
     private dashboardService: DashboardService
   ) {
-    this.profileUrl = this.commonService.decodeUrl((this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? '')
-    this.studentList = this.commonService.allUsersList.filter(
-      (users) => users.role === 'student' && users.status === 'active'
-    );
+    this.profileUrl = this.commonService.decodeUrl((this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? '');
     this.commonService
-    .getCommonSearchText()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((searchText) => {
-      this.searchText = searchText;
-    });
+      .getCommonSearchText()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((searchText) => {
+        this.searchText = searchText;
+      });
+  }
+  ngOnInit(): void {
+    this.commonService
+      .getAllUsersList$()
+      .pipe(
+        map((users) => users.filter((u) => u.role === 'student' && u.status === 'active')),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((students) => {
+        this.studentList = students;
+      });
+    this.dashboardService.getAllUsers();
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -64,7 +73,7 @@ export class StudentsListComponent {
       title: `Assigned Teachers - ${student.firstName || student.first_name} ${student.lastName || student.last_name}`,
       data: student,
       componentName: COMPONENT_NAME.VIEW_ASSIGNED_TEACHERS,
-      customStyle: { width: '700px', height: '700px', 'max-width': '90vw' },
+      customStyle: { width: '800px', height: '800px', 'max-width': '90vw' },
     });
   }
   deleteStudent(deletedStudent: UserModel) {

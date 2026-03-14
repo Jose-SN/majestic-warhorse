@@ -1,4 +1,7 @@
 <div class="common-wrapper">
+  <header class="page-header">
+    <h1>Students List</h1>
+  </header>
   <div class="scoll-wrapper">
     <div class="scroll-container">
       @if (studentList.length === 0) {
@@ -32,6 +35,8 @@
                   </div>
                   <div class="icon-holder">
                     <button (click)="viewAssignedTeachers(student)" aria-label="View assigned teachers" title="View Assigned Teachers"><img src="../../../assets/images/icon-edit.svg" alt="View"></button>
+                  </div>
+                  <div class="icon-holder">
                     <button (click)="deleteStudent(student)" aria-label="Delete student" title="Delete Student"><img src="../../../assets/images/icon-delete.svg" alt="Delete"></button>
                   </div>
                 </div>

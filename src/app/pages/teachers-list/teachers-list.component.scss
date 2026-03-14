@@ -9,6 +9,21 @@
   height: 100%;
   position: relative;
   @include flex(flex, column, null, null);
+
+  .page-header {
+    flex-shrink: 0;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--bg-input-border);
+
+    h1 {
+      font-family: $poppins-bold;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--light-blue);
+      margin: 0;
+    }
+  }
 }
 
 .list-wrapper {

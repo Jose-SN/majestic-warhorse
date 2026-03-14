@@ -4,7 +4,7 @@ import { CommonService } from 'src/app/shared/services/common.service';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { AssignTeacherService } from '../assign-teachers/assign-teacher.service';
 import { IModelInfo } from '../common-dialog/model/popupmodel';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, switchMap } from 'rxjs';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 
 @Component({
@@ -18,6 +18,7 @@ export class ViewAssignedTeachersComponent implements OnInit {
   teachersList: UserModel[] = [];
   assignedTeachers: UserModel[] = [];
   selectedTeachers: string[] = [];
+  initiallyAssignedTeacherIds: string[] = [];
   @Input() popupModelInfo: IModelInfo = {} as IModelInfo;
   private destroy$ = new Subject<void>();
   isLoading: boolean = false;
@@ -29,14 +30,22 @@ export class ViewAssignedTeachersComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadTeachers();
+    this.commonService
+      .getAllUsersList$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((users) => {
+        this.teachersList = users.filter((u) => u.role === 'teacher');
+        this.updateAssignedTeachersFromIds();
+        this.cdr.detectChanges();
+      });
     this.loadAssignedTeachers();
   }
 
-  loadTeachers() {
-    this.teachersList = this.commonService.allUsersList.filter(
-      (users) => users.role === 'teacher'
-    );
+  private updateAssignedTeachersFromIds(): void {
+    const users = this.commonService.allUsersList;
+    this.assignedTeachers = this.selectedTeachers
+      .map((id) => users.find((u) => (u.id || '') === id))
+      .filter((u): u is UserModel => !!u);
   }
 
   loadAssignedTeachers() {
@@ -59,10 +68,9 @@ export class ViewAssignedTeachersComponent implements OnInit {
           const teacherIds = assignments
             .map((a: { teacher_id?: string; id?: string }) => a.teacher_id || a.id || '')
             .filter((id: string) => !!id);
-          this.selectedTeachers = teacherIds;
-          this.assignedTeachers = teacherIds
-            .map((id) => this.commonService.allUsersList.find((u) => (u.id || '') === id))
-            .filter((u): u is UserModel => !!u);
+          this.selectedTeachers = [...teacherIds];
+          this.initiallyAssignedTeacherIds = [...teacherIds];
+          this.updateAssignedTeachersFromIds();
           this.cdr.detectChanges();
         },
         error: () => {
@@ -78,6 +86,33 @@ export class ViewAssignedTeachersComponent implements OnInit {
 
   getTeacherId(teacher: UserModel): string {
     return teacher.id || '';
+  }
+
+  isAssigned(teacher: UserModel): boolean {
+    return this.selectedTeachers.includes(this.getTeacherId(teacher));
+  }
+
+  wasInitiallyAssigned(teacher: UserModel): boolean {
+    return (
+      this.initiallyAssignedTeacherIds.includes(this.getTeacherId(teacher)) &&
+      this.selectedTeachers.includes(this.getTeacherId(teacher))
+    );
+  }
+
+  isUnassigning(teacher: UserModel): boolean {
+    const id = this.getTeacherId(teacher);
+    return this.initiallyAssignedTeacherIds.includes(id) && !this.selectedTeachers.includes(id);
+  }
+
+  hasPendingChanges(): boolean {
+    const hasUnassigns =
+      this.initiallyAssignedTeacherIds.some(
+        (id) => !this.selectedTeachers.includes(id)
+      );
+    const hasNewAssigns = this.selectedTeachers.some(
+      (id) => !this.initiallyAssignedTeacherIds.includes(id)
+    );
+    return hasUnassigns || hasNewAssigns;
   }
 
   onTeacherSelect(teacher: any, event: Event) {
@@ -98,16 +133,35 @@ export class ViewAssignedTeachersComponent implements OnInit {
 
   handleTeacherUpdate() {
     const studentId = this.popupModelInfo.data.id;
-    const payload = [
+    const unassignTeacherIds = this.initiallyAssignedTeacherIds.filter(
+      (id) => !this.selectedTeachers.includes(id)
+    );
+
+    const assignPayload = [
       {
         student_id: studentId,
         teacher_ids: this.selectedTeachers,
+        ...(unassignTeacherIds.length > 0 && {
+          unassign_teacher_ids: unassignTeacherIds,
+        }),
       },
     ];
 
-    this.assignTeacherService
-      .assignTeachersToStudent(payload)
-      .pipe(takeUntil(this.destroy$))
+    const update$ =
+      unassignTeacherIds.length > 0
+        ? this.assignTeacherService
+            .unassignTeachersFromStudent({
+              student_id: studentId,
+              unassign_teacher_ids: unassignTeacherIds,
+            })
+            .pipe(
+              switchMap(() =>
+                this.assignTeacherService.assignTeachersToStudent(assignPayload)
+              )
+            )
+        : this.assignTeacherService.assignTeachersToStudent(assignPayload);
+
+    update$.pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (result) => {
           if (result.success) {

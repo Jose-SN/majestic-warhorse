@@ -12,7 +12,8 @@ import { IModelInfo } from 'src/app/components/common-dialog/model/popupmodel';
 })
 export class CommonService {
   public loginedUserInfo!: UserModel;
-  public allUsersList: UserModel[] = [];
+  private _allUsersList: UserModel[] = [];
+  private allUsersList$ = new BehaviorSubject<UserModel[]>([]);
   public adminRoleType: string[] = ['organization', 'teacher'];
   private openpopupModel$: Subject<any> = new Subject<any>();
   private closePopupModel$: Subject<any> = new Subject<any>();
@@ -21,8 +22,18 @@ export class CommonService {
   constructor(private toastrService: ToastrService) {
     this.initializeStatus();
   }
+  get allUsersList(): UserModel[] {
+    return this._allUsersList;
+  }
+  set allUsersList(value: UserModel[]) {
+    this._allUsersList = value ?? [];
+    this.allUsersList$.next(this._allUsersList);
+  }
   set alluserList(userList: UserModel[]) {
     this.allUsersList = userList;
+  }
+  getAllUsersList$() {
+    return this.allUsersList$.asObservable();
   }
   public openToaster(toasterData: IToasterModel) {
     const commonConfig = {

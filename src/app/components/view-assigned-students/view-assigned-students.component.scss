@@ -1,185 +1,338 @@
 @import '../../../styles/index';
 
 .common-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    .common-wrapper {
-        padding: 30px;
-        @include border-radius(15px);
-        @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
-        flex: 1;
-        margin: 30px 0 0;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-    }
-}
-
-.scoll-wrapper {
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .common-wrapper {
+    padding: 30px;
+    @include border-radius(15px);
+    @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
     flex: 1;
+    margin: 30px 0 0;
     display: flex;
     flex-direction: column;
-    min-height: 0;
     overflow: hidden;
-}
 
-.scroll-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    flex: 1;
-    min-height: 0;
-}
-
-.common-list-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 20px;
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 10px;
-    min-height: 0;
-}
-
-.common-list {
-    background: var(--bg-list);
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 14px 16px;
-    border-radius: 12px;
-    border: 2px solid var(--bg-input-border);
-    transition: all 0.3s ease;
-    min-height: 72px;
-
-    &:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        transform: translateY(-2px);
-    }
-
-    .list-left {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        flex: 1;
-        min-width: 0;
-    }
-
-    .student-avatar {
-        width: 48px;
-        height: 48px;
-        min-width: 48px;
-        max-width: 48px;
-        border-radius: 50%;
-        overflow: hidden;
-        border: 2px solid var(--bg-input-border);
-        background: var(--bg-input);
-        margin: 0;
-        flex-shrink: 0;
-
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-    }
-
-    .common-list-right {
-        flex: 1;
-        min-width: 0;
+    .scoll-wrapper {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+      .scroll-container {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        width: 100%;
+        flex: 1;
+        min-height: 0;
+        .common-list-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-top: 20px;
+          flex: 1;
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding-right: 10px;
+          min-height: 0;
 
-        h4 {
-            margin: 0;
-            font-size: 0.938rem;
-            font-weight: 600;
+          .section-heading {
+            margin: 0 0 12px 0;
+            font-size: 0.9rem;
             color: var(--light-blue);
-            line-height: 1.3;
+            font-weight: 600;
+          }
+          .section-heading-spaced {
+            margin: 16px 0 12px 0;
+            font-size: 0.9rem;
+            color: var(--light-blue);
+            font-weight: 600;
+          }
+          .assigned-students-section {
+            margin-bottom: 20px;
+          }
+          .assigned-student-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: var(--bg-list);
+            border: 1px solid var(--bg-input-border);
+            margin-bottom: 8px;
+            figure {
+              width: 40px;
+              height: 40px;
+              min-width: 40px;
+              border-radius: 50%;
+              overflow: hidden;
+              border: 2px solid var(--bg-input-border);
+              margin: 0;
+              img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+              }
+            }
+            .assigned-student-info {
+              flex: 1;
+              min-width: 0;
+            }
+            .assigned-student-name {
+              font-size: 0.9rem;
+              font-weight: 600;
+              color: var(--white);
+            }
+            .assigned-student-email {
+              font-size: 0.75rem;
+              color: var(--bg-label);
+            }
+          }
+          .loading-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            color: var(--light-blue);
+            font-family: $poppins-regular;
+            font-size: 1rem;
+          }
+
+          .no-students-found {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--light-blue);
+
+            figure {
+              margin-bottom: 20px;
+              svg {
+                color: var(--bg-light-grey);
+                opacity: 0.5;
+              }
+            }
+
+            h3 {
+              font-family: $poppins-bold;
+              font-size: 1.25rem;
+              margin-bottom: 12px;
+              color: var(--light-blue);
+            }
+
+            p {
+              font-family: $poppins-regular;
+              font-size: 0.938rem;
+              margin-bottom: 16px;
+              color: var(--bg-light-grey);
+              line-height: 1.5;
+            }
+
+            ul {
+              list-style: none;
+              padding: 0;
+              margin: 0 0 20px 0;
+              text-align: left;
+              max-width: 400px;
+
+              li {
+                font-family: $poppins-regular;
+                font-size: 0.875rem;
+                color: var(--bg-light-grey);
+                padding: 8px 0;
+                padding-left: 24px;
+                position: relative;
+
+                &::before {
+                  content: '•';
+                  position: absolute;
+                  left: 8px;
+                  color: var(--bg-text-orange);
+                  font-size: 1.2rem;
+                }
+              }
+            }
+
+            .help-text {
+              font-size: 0.813rem;
+              color: var(--bg-light-grey);
+              opacity: 0.7;
+              font-style: italic;
+            }
+          }
+        }
+        .assign-footer {
+          flex-shrink: 0;
+          padding: 20px 0 0;
+          border-top: 1px solid var(--bg-input-border);
+          background: var(--bg-left-panel);
+        }
+        .common-list {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          padding: 14px 16px;
+          min-height: 72px;
+          width: 100%;
+          position: relative;
+          border: 2px solid var(--bg-input-border);
+          border-radius: 12px;
+          background: var(--bg-list);
+          cursor: pointer;
+          transition: all 0.3s ease;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          &.selected {
+            border-color: var(--bg-mit1);
+            background: rgba(59, 130, 246, 0.08);
+            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
+          }
+          input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+          }
+          .checkbox-indicator {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            border: 2px solid var(--bg-input-border);
+            background: var(--bg-list);
+            flex-shrink: 0;
+            z-index: 2;
+            transition: all 0.2s ease;
+            &::after {
+              content: '';
+              display: none;
+              position: absolute;
+              left: 5px;
+              top: 2px;
+              width: 5px;
+              height: 10px;
+              border: solid var(--white);
+              border-width: 0 2px 2px 0;
+              transform: rotate(45deg);
+            }
+          }
+          &.selected .checkbox-indicator {
+            border-color: var(--bg-mit1);
+            background: var(--bg-mit1);
+            &::after {
+              display: block;
+            }
+          }
+          .list-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+            padding-left: 48px;
+            min-width: 0;
+            position: relative;
+            z-index: 1;
+          }
+          .student-avatar {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            max-width: 48px;
+            border-radius: 50%;
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            border: 2px solid var(--bg-input-border);
+            background: var(--bg-input);
+            margin: 0;
+            flex-shrink: 0;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              display: block;
+            }
+          }
+          .common-list-right {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            h4 {
+              margin: 0;
+              font-size: 0.938rem;
+              font-weight: 600;
+              color: var(--light-blue);
+              line-height: 1.3;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+            .student-email {
+              font-size: 0.75rem;
+              color: var(--bg-light-grey);
+              opacity: 0.85;
+              line-height: 1.4;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+            .assigned-badge {
+              display: inline-block;
+              margin-top: 6px;
+              padding: 4px 10px;
+              font-size: 0.75rem;
+              font-weight: 600;
+              color: var(--bg-mit1);
+              background: rgba(59, 130, 246, 0.15);
+              border-radius: 6px;
+              border: 1px solid rgba(59, 130, 246, 0.3);
+            }
+            .unassign-badge {
+              display: inline-block;
+              margin-top: 6px;
+              margin-left: 8px;
+              padding: 4px 10px;
+              font-size: 0.75rem;
+              font-weight: 600;
+              color: var(--bg-text-orange, #e67e22);
+              background: rgba(230, 126, 34, 0.15);
+              border-radius: 6px;
+              border: 1px solid rgba(230, 126, 34, 0.3);
+            }
+          }
         }
-
-        .student-email {
-            font-size: 0.75rem;
-            color: var(--bg-light-grey);
-            opacity: 0.85;
-            line-height: 1.4;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
+      }
     }
+  }
 }
 
-.no-students-found, .loading-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 40px 20px;
-    background: var(--bg-list);
-    border-radius: 12px;
-    border: 2px dashed var(--bg-input-border);
-    color: var(--bg-light-grey);
-    margin-top: 20px;
-
-    figure {
-        margin-bottom: 20px;
-        svg {
-            color: var(--bg-light-grey);
-            opacity: 0.6;
-        }
+.assign-footer {
+  .btn-assign {
+    font-family: $archivo-regular;
+    font-size: 1rem;
+    color: var(--white);
+    margin: 0;
+    @include button();
+    @include box-shadow(2px, 2px, 8px, var(--bg-magento));
+    width: 100%;
+    @include border-radius(50px);
+    &:not(:disabled) {
+      @include gradient();
+      border: 1px solid var(--bg-orange);
     }
-
-    h3 {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: var(--light-blue);
-        margin-bottom: 10px;
+    .selected-count {
+      margin-left: 8px;
+      font-weight: 600;
     }
-
-    p {
-        font-size: 0.938rem;
-        line-height: 1.5;
-        margin-bottom: 15px;
-        max-width: 400px;
-    }
-
-    .help-text {
-        font-size: 0.875rem;
-        font-style: italic;
-        opacity: 0.7;
-    }
-}
-
-.loading-state {
-    .spinner {
-        border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid var(--bg-mit1);
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin-bottom: 15px;
-    }
-
-    p {
-        color: var(--light-blue);
-        font-weight: 500;
-    }
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  }
 }

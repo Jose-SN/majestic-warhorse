@@ -194,6 +194,11 @@
                   background: rgba(59, 130, 246, 0.08);
                   box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
                 }
+                &.assigned-disabled {
+                  cursor: not-allowed;
+                  opacity: 0.85;
+                  pointer-events: none;
+                }
                 input[type="checkbox"] {
                   position: absolute;
                   opacity: 0;
@@ -285,6 +290,29 @@
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
+                  }
+                  .assigned-badge {
+                    display: inline-block;
+                    margin-top: 6px;
+                    padding: 4px 10px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    color: var(--bg-mit1);
+                    background: rgba(59, 130, 246, 0.15);
+                    border-radius: 6px;
+                    border: 1px solid rgba(59, 130, 246, 0.3);
+                  }
+                  .unassign-badge {
+                    display: inline-block;
+                    margin-top: 6px;
+                    margin-left: 8px;
+                    padding: 4px 10px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    color: var(--bg-text-orange, #e67e22);
+                    background: rgba(230, 126, 34, 0.15);
+                    border-radius: 6px;
+                    border: 1px solid rgba(230, 126, 34, 0.3);
                   }
                 }
               }
