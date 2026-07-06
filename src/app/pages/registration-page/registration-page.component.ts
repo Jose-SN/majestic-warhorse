@@ -17,6 +17,7 @@ import { CommonModule } from '@angular/common';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
 import { decodeText } from 'src/app/shared/utils/utils';
+import { OAuthService } from 'src/app/core/auth/oauth.service';
 
 @Component({
   selector: 'app-registration-page',
@@ -46,6 +47,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   }
   public showPassword: boolean = false;
   public showConfirmPassword: boolean = false;
+  public isGoogleLoading: boolean = false;
   public organizationsList: Organization[] = [];
   @ViewChild('profileImageInput') profileImageInput!: ElementRef<HTMLInputElement>;
 
@@ -54,7 +56,8 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     private formBuilder: FormBuilder,
     private commonService: CommonService,
     public registrationService: RegistrationPageService,
-    private organizationApiService: OrganizationApiService
+    private organizationApiService: OrganizationApiService,
+    private oauthService: OAuthService
   ) {
     this.createAccountForm = this.formBuilder.group(
       {
@@ -273,6 +276,20 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
           console.error('Error loading organizations:', err);
         },
       });
+  }
+
+  async signInWithGoogle(): Promise<void> {
+    if (this.isGoogleLoading) return;
+    this.isGoogleLoading = true;
+    try {
+      await this.oauthService.signInWithGoogle();
+    } catch (error: any) {
+      this.isGoogleLoading = false;
+      this.commonService.openToaster({
+        message: error?.message || 'Unable to start Google sign-in. Please try again.',
+        messageType: TOASTER_MESSAGE_TYPE.ERROR,
+      });
+    }
   }
 
   navigateLogin() {

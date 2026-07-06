@@ -23,6 +23,16 @@
       </div>
     </div>
     }
+    @if(!isEditMode){
+    <div class="social-login-top">
+      <button type="button" class="btn-google" (click)="signInWithGoogle()" [disabled]="isGoogleLoading">
+        <span class="recommended-badge">Recommended</span>
+        <figure><img src="../../../../assets/images/icon-google.svg" alt="Google" /></figure>
+        {{ isGoogleLoading ? 'Redirecting…' : 'Continue with Google' }}
+      </button>
+      <div class="divider" data-attr="or"></div>
+    </div>
+    }
     <div class="form-wrapper" [ngClass]="{'edit-form': isEditMode}">
       <div class="image-holder" [ngClass]="{'edit-avatar': isEditMode}" (click)="triggerFileInput()" tabindex="0" (keydown.enter)="triggerFileInput()" (keydown.space)="triggerFileInput()">
         <figure>

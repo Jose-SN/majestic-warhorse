@@ -58,6 +58,78 @@ app-particle {
       color: var(--white);
     }
   }
+  .social-login-top {
+    max-width: 510px;
+    width: 100%;
+    margin: 24px auto;
+    .btn-google {
+      position: relative;
+      width: 100%;
+      font-family: $archivo-regular;
+      font-size: 0.9375rem;
+      color: var(--bg-blue);
+      padding: 14px 20px;
+      @include border-radius(50px);
+      border: 1px solid var(--bg-blue);
+      @include flex(flex, row, center, center);
+      gap: 15px;
+      background: var(--bg-dark-blue);
+      cursor: pointer;
+      @include transition(all 0.3s ease-in-out);
+      figure {
+        width: 22px;
+        height: 22px;
+        @include flex(flex, null, center, center);
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+      }
+      &:hover {
+        background: transparent;
+      }
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .recommended-badge {
+        position: absolute;
+        top: -10px;
+        right: 18px;
+        font-size: 0.688rem;
+        font-family: $archivo-medium;
+        letter-spacing: 0.3px;
+        color: var(--white);
+        padding: 3px 10px;
+        border-radius: 20px;
+        background: var(--bg-orange);
+        line-height: 1.4;
+      }
+    }
+    .divider {
+      height: 23px;
+      position: relative;
+      margin-top: 24px;
+      @include flex(flex, null, center, center);
+      &::before {
+        content: '';
+        background: var(--bg-divider);
+        width: 100%;
+        height: 1px;
+      }
+      &::after {
+        content: attr(data-attr);
+        font-size: 0.9375rem;
+        text-align: center;
+        color: var(--white);
+        background: var(--bg-login);
+        width: 35px;
+        height: 100%;
+        position: absolute;
+      }
+    }
+  }
   .form-wrapper {
     max-width: 510px;
     width: 100%;
@@ -317,6 +389,10 @@ app-particle {
           &:last-child {
             background: transparent;
           }
+        }
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
         }
       }
     }

@@ -17,10 +17,12 @@ import { ApprovalPendingComponent } from './pages/approval-pending/approval-pend
 import { StudentTeacherAssignListComponent } from './pages/student-teacher-assign-list/student-teacher-assign-list.component';
 import { QuestionnaireComponent } from './pages/questionnaire/questionnaire.component';
 import { UnderConstructionComponent } from './components/under-construction/under-construction.component';
+import { AuthCallbackComponent } from './pages/auth-callback/auth-callback.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginPageComponent },
+  { path: 'auth/callback', component: AuthCallbackComponent },
   { path: 'forgetpassword', component: ForgotPasswordComponent },
   { path: 'signup', component: RegistrationPageComponent },
   {

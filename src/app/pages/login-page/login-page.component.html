@@ -37,6 +37,14 @@
               </label>
             </div>
           </div>
+          <div class="social-login-top">
+            <button type="button" class="btn-google" (click)="signInWithGoogle()" [disabled]="isGoogleLoading">
+              <span class="recommended-badge">Recommended</span>
+              <figure><img src="../../../assets/images/icon-google.svg" alt="Google" /></figure>
+              {{ isGoogleLoading ? 'Redirecting…' : 'Continue with Google' }}
+            </button>
+            <div class="divider" data-attr="or"></div>
+          </div>
           <div class="input-holder">
             <label for="email">Email</label>
             <input
@@ -68,17 +76,6 @@
         </form>
       </div>
       <div class="login-bottom">
-        <div class="divider" data-attr="or"></div>
-        <!-- <div class="btn-holder">
-          <button type="button">
-            <figure><img src="../../../assets/images/icon-google.svg" alt="Google" /></figure>
-            Google
-          </button>
-          <button type="button">
-            <figure><img src="../../../assets/images/icon-facebook.svg" alt="Faccebook" /></figure>
-            Facebook
-          </button>
-        </div> -->
         <p>Don’t You have an account? <a class="cursor-pointer" (click)="gotoPage('signup')">Sign Up</a></p>
       </div>
     </div>
