@@ -37,7 +37,9 @@
   flex-shrink: 0;
   align-self: stretch;
   padding: 30px;
-  border-right: 1px solid rgba(53, 69, 133, 0.25);
+  // border-right: 1px solid rgba(53, 69, 133, 0.25);
+  border-right: 1px solid rgb(149 62 39 / 50%);
+  box-shadow: 0 4px 20px #ff3d6559;
   @include flex(flex, column, null, null);
   min-height: 0;
   overflow: hidden;

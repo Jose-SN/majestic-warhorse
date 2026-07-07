@@ -587,7 +587,7 @@
       margin: 0;
       @include border-radius(50%);
       overflow: hidden;
-      background: radial-gradient(circle, rgba(0, 242, 255, 0.2) 0%, #040d1f 70%);
+      background: radial-gradient(circle, rgba(0, 242, 255, 0.2) 0%, #040d1f 50%);
       @include flex(flex, null, center, center);
 
       img {
