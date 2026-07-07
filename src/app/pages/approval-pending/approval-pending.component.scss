@@ -992,9 +992,26 @@ footer {
     }
   }
 }
-.scroll-container{
-  flex-direction: row;
-    align-items: center;
-    width: 100%;
-    justify-content: center;
+.join-options {
+  margin-top: 24px;
+  text-align: center;
+  p {
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  .btn-join {
+    font-family: $archivo-regular;
+    font-size: 0.9375rem;
+    color: var(--white);
+    margin: 0 8px 8px;
+    padding: 12px 24px;
+    @include border-radius(50px);
+    @include gradient();
+    border: 1px solid var(--bg-orange);
+    cursor: pointer;
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
 }

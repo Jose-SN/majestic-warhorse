@@ -1,0 +1,270 @@
+@import '../../../styles/index';
+
+.org-picker-container {
+  min-height: 100vh;
+  @include flex(flex, null, center, center);
+  padding: 40px 20px;
+}
+
+.org-picker-card {
+  max-width: 560px;
+  width: 100%;
+  padding: 40px 32px;
+  @include border-radius(24px);
+  @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
+
+  .logo {
+    max-width: 220px;
+    margin: 0 auto 28px;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    color: var(--light-blue);
+    text-align: center;
+    margin: 0 0 8px;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--white);
+    opacity: 0.85;
+    margin: 0 0 28px;
+    font-size: 0.9375rem;
+  }
+}
+
+.loading-state {
+  text-align: center;
+  color: var(--white);
+  padding: 32px 0;
+
+  .spinner {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--bg-input-border);
+    border-top-color: var(--bg-orange);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 12px;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.org-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.org-card {
+  width: 100%;
+  text-align: left;
+  padding: 16px 18px;
+  @include border-radius(14px);
+  border: 1px solid var(--bg-input-border);
+  background: var(--bg-list);
+  color: var(--white);
+  cursor: pointer;
+  @include flex(flex, row, null, center);
+  gap: 14px;
+  @include transition(all 0.2s ease-in-out);
+
+  &:hover:not(:disabled) {
+    border-color: var(--bg-orange);
+    background: var(--bg-dark-blue);
+  }
+
+  &.active {
+    border-color: var(--bg-blue);
+  }
+
+  &.selected {
+    border-color: var(--bg-orange);
+    background: var(--bg-dark-blue);
+  }
+
+  &.selecting {
+    opacity: 0.7;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  .org-icon {
+    width: 44px;
+    height: 44px;
+    @include flex(flex, null, center, center);
+    @include border-radius(10px);
+    background: var(--bg-input);
+    color: var(--bg-blue);
+    flex-shrink: 0;
+  }
+
+  .org-details {
+    @include flex(flex, column, null, flex-start);
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+
+    strong {
+      font-family: $poppins-regular;
+      font-size: 1rem;
+      color: var(--light-blue);
+    }
+
+    small {
+      font-size: 0.8125rem;
+      color: var(--bg-light-grey);
+    }
+
+    .role-badge {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: var(--bg-input);
+      color: var(--bg-blue);
+      text-transform: capitalize;
+    }
+  }
+
+  .current-badge {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--bg-orange);
+    color: var(--white);
+    flex-shrink: 0;
+  }
+}
+
+.btn-cancel {
+  margin-top: 24px;
+  width: 100%;
+  padding: 12px;
+  @include border-radius(50px);
+  border: 1px solid var(--bg-input-border);
+  background: transparent;
+  color: var(--white);
+  cursor: pointer;
+  font-family: $archivo-regular;
+
+  &:hover {
+    border-color: var(--bg-blue);
+    color: var(--bg-blue);
+  }
+}
+
+.section-label {
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--bg-light-grey);
+  margin: 0 0 10px;
+}
+
+.role-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.role-card {
+  width: 100%;
+  text-align: left;
+  padding: 16px 18px;
+  @include border-radius(14px);
+  border: 1px solid var(--bg-input-border);
+  background: var(--bg-list);
+  color: var(--white);
+  cursor: pointer;
+  @include flex(flex, row, null, center);
+  gap: 14px;
+  @include transition(all 0.2s ease-in-out);
+
+  &:hover:not(:disabled) {
+    border-color: var(--bg-orange);
+    background: var(--bg-dark-blue);
+  }
+
+  &.selected {
+    border-color: var(--bg-orange);
+    background: var(--bg-dark-blue);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.75;
+  }
+
+  &.teacher .role-icon {
+    color: var(--bg-blue);
+  }
+
+  &.student .role-icon {
+    color: var(--bg-orange);
+  }
+
+  .role-icon {
+    width: 44px;
+    height: 44px;
+    @include flex(flex, null, center, center);
+    @include border-radius(10px);
+    background: var(--bg-input);
+    flex-shrink: 0;
+  }
+
+  .role-details {
+    @include flex(flex, column, null, flex-start);
+    gap: 4px;
+
+    strong {
+      font-family: $poppins-regular;
+      font-size: 1rem;
+      color: var(--light-blue);
+    }
+
+    small {
+      font-size: 0.8125rem;
+      color: var(--bg-light-grey);
+      line-height: 1.4;
+    }
+  }
+}
+
+.btn-continue {
+  width: 100%;
+  padding: 14px;
+  @include border-radius(50px);
+  border: none;
+  background: var(--bg-orange);
+  color: var(--white);
+  font-family: $archivo-regular;
+  font-size: 1rem;
+  cursor: pointer;
+  @include transition(all 0.2s ease-in-out);
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.footnote {
+  margin: 16px 0 0;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--bg-light-grey);
+  line-height: 1.5;
+}

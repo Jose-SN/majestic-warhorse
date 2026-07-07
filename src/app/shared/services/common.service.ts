@@ -14,6 +14,7 @@ export class CommonService {
   public loginedUserInfo!: UserModel;
   /** For students: true = has teachers from teacher_students table, false = none, null = not yet checked */
   public hasAssignedTeachers: boolean | null = null;
+  public userPermissions: string[] = [];
   private _allUsersList: UserModel[] = [];
   private allUsersList$ = new BehaviorSubject<UserModel[]>([]);
   public adminRoleType: string[] = ['organization', 'teacher'];

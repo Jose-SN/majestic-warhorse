@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
-import { Router } from '@angular/router';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { Subject, takeUntil } from 'rxjs';
-import { mapUserToLegacy, mapOrganizationToUserShape } from 'src/app/shared/utils/user-mapper.util';
+import { PostLoginWorkflowService } from 'src/app/core/auth/post-login-workflow.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +13,8 @@ export class LoginService {
   constructor(
     private authService: AuthService,
     private organizationApiService: OrganizationApiService,
-    private router: Router,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private postLoginWorkflow: PostLoginWorkflowService
   ) {}
 
   public login(
@@ -59,18 +58,16 @@ export class LoginService {
       .login(credentials)
       .pipe(takeUntil(_destroy$))
       .subscribe({
-        next: (response) => {
+        next: async (response) => {
           const orgData = response?.data ?? response;
           if (orgData && (orgData.id || orgData.name)) {
-            this.authService.setLogin = true;
-            this.authService.getAllUsers().then(users => {
-              this.commonService.allUsersList = users || [];
-            }).catch(() => {});
-            this.router.navigate(['/dashboard']);
-            this.commonService.loginedUserInfo = mapOrganizationToUserShape(orgData);
-            sessionStorage.setItem('login_details', JSON.stringify(this.commonService.loginedUserInfo));
-            sessionStorage.setItem('loginType', this.commonService.loginedUserInfo?.role ?? '');
-            sessionStorage.setItem('authToken', orgData.jwt || orgData.token || '');
+            const jwt = orgData.jwt || orgData.token || '';
+            await this.postLoginWorkflow.completeLogin({
+              jwt,
+              loginType: 'organization',
+              profile: orgData,
+              authProvider: 'password',
+            });
           } else {
             this.loginFailed();
           }
@@ -86,15 +83,19 @@ export class LoginService {
       .loginUser(credentials)
       .pipe(takeUntil(_destroy$))
       .subscribe({
-        next: (response) => {
-          const userExist = response.success == true || response.success == false ? response.data : response;
+        next: async (response) => {
+          const userExist =
+            response.success === true || response.success === false ? response.data : response;
           if (Object.keys(userExist || {}).length) {
-            this.authService.setLogin = true;
-            this.router.navigate(['/dashboard']);
-            this.commonService.loginedUserInfo = mapUserToLegacy(userExist);
-            sessionStorage.setItem('login_details', JSON.stringify(this.commonService.loginedUserInfo));
-            sessionStorage.setItem('loginType', this.commonService.loginedUserInfo?.role ?? '');
-            sessionStorage.setItem('authToken', userExist.jwt || '');
+            const jwt = userExist.jwt || '';
+            const roleIntent = sessionStorage.getItem('pendingRoleIntent') as 'teacher' | 'student' | null;
+            await this.postLoginWorkflow.completeLogin({
+              jwt,
+              loginType: 'user',
+              profile: userExist,
+              authProvider: 'password',
+              roleIntent: roleIntent ?? undefined,
+            });
           } else {
             this.loginFailed();
           }
@@ -104,6 +105,7 @@ export class LoginService {
         },
       });
   }
+
   private loginFailed() {
     this.commonService.openToaster({
       message: 'Please verify login credential',

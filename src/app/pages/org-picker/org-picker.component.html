@@ -1,0 +1,115 @@
+<section class="org-picker-container">
+  <div class="org-picker-card">
+    <figure class="logo">
+      <img src="../../../assets/images/logo-mejestic-hourse-landing.svg" alt="Majestic Warhorse" />
+    </figure>
+
+    <h1>{{ isSwitchMode ? 'Switch Organization' : 'Join Your Organization' }}</h1>
+    <p class="subtitle">
+      @if (isSwitchMode) {
+        Choose which organization you want to work in.
+      } @else {
+        Select your organization and how you want to join.
+      }
+    </p>
+
+    @if (loading) {
+      <div class="loading-state">
+        <span class="spinner"></span>
+        <p>Loading your organizations…</p>
+      </div>
+    } @else if (organizations.length) {
+      <div class="section-label">Organization</div>
+      <div class="org-list">
+        @for (org of organizations; track org.id) {
+          <button
+            type="button"
+            class="org-card"
+            [class.active]="org.id === activeOrgId"
+            [class.selected]="org.id === selectedOrgId"
+            [class.selecting]="submitting && org.id === selectedOrgId"
+            [disabled]="submitting"
+            (click)="pickOrganization(org.id)">
+            <span class="org-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+            </span>
+            <span class="org-details">
+              <strong>{{ displayName(org.name) }}</strong>
+              @if (org.email) {
+                <small>{{ org.email }}</small>
+              }
+              @if (org.membershipRole) {
+                <span class="role-badge">{{ org.membershipRole }}</span>
+              }
+            </span>
+            @if (org.id === activeOrgId) {
+              <span class="current-badge">Current</span>
+            }
+          </button>
+        }
+      </div>
+
+      @if (!isSwitchMode && selectedOrgId) {
+        <div class="section-label">Join as</div>
+        <div class="role-options">
+          <button
+            type="button"
+            class="role-card teacher"
+            [class.selected]="selectedRole === 'teacher'"
+            [disabled]="submitting"
+            (click)="pickRole('teacher')">
+            <span class="role-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              </svg>
+            </span>
+            <span class="role-details">
+              <strong>Teacher</strong>
+              <small>Create courses and manage students after approval.</small>
+            </span>
+          </button>
+
+          <button
+            type="button"
+            class="role-card student"
+            [class.selected]="selectedRole === 'student'"
+            [disabled]="submitting"
+            (click)="pickRole('student')">
+            <span class="role-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+              </svg>
+            </span>
+            <span class="role-details">
+              <strong>Student</strong>
+              <small>Access courses from assigned teachers after approval.</small>
+            </span>
+          </button>
+        </div>
+
+        <button
+          type="button"
+          class="btn-continue"
+          [disabled]="!canContinue()"
+          (click)="continueToDashboard()">
+          @if (submitting) {
+            Joining…
+          } @else {
+            Continue to Dashboard
+          }
+        </button>
+
+        <p class="footnote">Your organization will review your request before full access is granted.</p>
+      }
+    }
+
+    @if (isSwitchMode && !loading) {
+      <button type="button" class="btn-cancel" (click)="cancelSwitch()">Back to Dashboard</button>
+    }
+  </div>
+</section>

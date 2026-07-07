@@ -8,9 +8,9 @@ import {
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CommonService } from 'src/app/shared/services/common.service';
-import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { AssignTeacherService } from '../assign-teachers/assign-teacher.service';
 import { IModelInfo } from '../common-dialog/model/popupmodel';
+import { RosterDisplayService, RosterDisplayUser } from 'src/app/services/api-service/roster-display.service';
 import { Subject, takeUntil, switchMap } from 'rxjs';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 
@@ -22,8 +22,8 @@ import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
   styleUrl: './view-assigned-students.component.scss',
 })
 export class ViewAssignedStudentsComponent implements OnInit, OnDestroy {
-  studentsList: UserModel[] = [];
-  assignedStudents: UserModel[] = [];
+  studentsList: RosterDisplayUser[] = [];
+  assignedStudents: RosterDisplayUser[] = [];
   selectedStudents: string[] = [];
   initiallyAssignedStudentIds: string[] = [];
   @Input() popupModelInfo: IModelInfo = {} as IModelInfo;
@@ -33,26 +33,26 @@ export class ViewAssignedStudentsComponent implements OnInit, OnDestroy {
   constructor(
     public commonService: CommonService,
     private assignTeacherService: AssignTeacherService,
+    private rosterDisplay: RosterDisplayService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.commonService
-      .getAllUsersList$()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((users) => {
-        this.studentsList = users.filter((u) => u.role === 'student');
+    const orgId = sessionStorage.getItem('organization_id') || '';
+    if (orgId) {
+      this.rosterDisplay.loadStudents(orgId, 'approved').then((students) => {
+        this.studentsList = students;
         this.updateAssignedStudentsFromIds();
         this.cdr.detectChanges();
       });
+    }
     this.loadAssignedStudents();
   }
 
   private updateAssignedStudentsFromIds(): void {
-    const users = this.commonService.allUsersList;
     this.assignedStudents = this.selectedStudents
-      .map((id) => users.find((u) => (u.id || '') === id))
-      .filter((u): u is UserModel => !!u);
+      .map((id) => this.studentsList.find((u) => (u.id || '') === id))
+      .filter((u): u is RosterDisplayUser => !!u);
   }
 
   loadAssignedStudents() {
@@ -103,22 +103,22 @@ export class ViewAssignedStudentsComponent implements OnInit, OnDestroy {
       });
   }
 
-  getStudentId(student: UserModel): string {
+  getStudentId(student: RosterDisplayUser): string {
     return student.id || '';
   }
 
-  isAssigned(student: UserModel): boolean {
+  isAssigned(student: RosterDisplayUser): boolean {
     return this.selectedStudents.includes(this.getStudentId(student));
   }
 
-  wasInitiallyAssigned(student: UserModel): boolean {
+  wasInitiallyAssigned(student: RosterDisplayUser): boolean {
     return (
       this.initiallyAssignedStudentIds.includes(this.getStudentId(student)) &&
       this.selectedStudents.includes(this.getStudentId(student))
     );
   }
 
-  isUnassigning(student: UserModel): boolean {
+  isUnassigning(student: RosterDisplayUser): boolean {
     const id = this.getStudentId(student);
     return (
       this.initiallyAssignedStudentIds.includes(id) &&
@@ -136,7 +136,7 @@ export class ViewAssignedStudentsComponent implements OnInit, OnDestroy {
     return hasUnassigns || hasNewAssigns;
   }
 
-  onStudentSelect(student: UserModel, event: Event) {
+  onStudentSelect(student: RosterDisplayUser, event: Event) {
     const input = event.target as HTMLInputElement;
     const isChecked = input.checked;
     const studentId = this.getStudentId(student);

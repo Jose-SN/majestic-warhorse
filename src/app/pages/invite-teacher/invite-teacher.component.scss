@@ -1,0 +1,115 @@
+@import '../../../styles/index';
+
+.invite-wrapper {
+  padding: 30px;
+  @include border-radius(15px);
+  @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
+  margin-top: 30px;
+
+  .page-header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--bg-input-border);
+
+    h1 {
+      font-family: $poppins-bold;
+      font-size: 1.5rem;
+      color: var(--light-blue);
+      margin: 0 0 8px;
+    }
+
+    p {
+      margin: 0;
+      color: var(--bg-light-grey);
+      font-size: 0.9375rem;
+    }
+  }
+}
+
+.invite-form {
+  max-width: 720px;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.input-holder {
+  label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--bg-label);
+    margin-bottom: 6px;
+  }
+
+  input {
+    width: 100%;
+    font-family: $archivo-regular;
+    font-size: 0.9375rem;
+    color: var(--white);
+    padding: 12px 14px;
+    border: 1px solid var(--bg-input-border);
+    background: var(--bg-input);
+    @include border-radius(12px);
+
+    &:focus {
+      outline: none;
+      border-color: var(--bg-mit1);
+    }
+  }
+
+  .error {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.8125rem;
+    color: #ff6b6b;
+  }
+}
+
+.form-actions {
+  margin-top: 24px;
+  @include flex(flex, row, null, center);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-submit {
+  font-family: $archivo-regular;
+  font-size: 0.9375rem;
+  color: var(--white);
+  padding: 12px 28px;
+  @include border-radius(50px);
+  @include gradient();
+  border: 1px solid var(--bg-orange);
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-secondary {
+  font-family: $archivo-regular;
+  font-size: 0.9375rem;
+  color: var(--bg-blue);
+  padding: 12px 28px;
+  @include border-radius(50px);
+  border: 1px solid var(--bg-blue);
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+
+  &:hover {
+    background: var(--bg-dark-blue);
+  }
+}

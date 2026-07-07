@@ -6,23 +6,23 @@ import { DashboardService } from '../dashboard/dashboard.service';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { RosterDisplayUser, RosterDisplayService } from 'src/app/services/api-service/roster-display.service';
 import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
-import { ApproveTeacherService } from './approve-teacher.service';
+import { ApproveTeacherService } from '../approval-list/approve-teacher.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 
 @Component({
-  selector: 'app-approval-list',
+  selector: 'app-student-approval-list',
   standalone: true,
   imports: [CommonSearchProfileComponent, SearchFilterPipe],
-  templateUrl: './approval-list.component.html',
-  styleUrl: './approval-list.component.scss',
+  templateUrl: './student-approval-list.component.html',
+  styleUrl: './student-approval-list.component.scss',
 })
-export class ApprovalListComponent implements OnInit, OnDestroy {
+export class StudentApprovalListComponent implements OnInit, OnDestroy {
   public profileUrl: string = '';
   public mobMenu: boolean = false;
   public searchText: string = '';
   public showSliderView: boolean = false;
-  public teachersList: RosterDisplayUser[] = [];
-  public selectedTeachers: string[] = [];
+  public studentsList: RosterDisplayUser[] = [];
+  public selectedStudents: string[] = [];
   private destroy$ = new Subject<void>();
 
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
@@ -48,76 +48,58 @@ export class ApprovalListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadPendingTeachers();
+    this.loadPendingStudents();
     this.dashboardService.getAllUsers();
   }
 
-  triggerMenu() {
-    this.btnTrigger.nativeElement.click();
-    this.mobMenu = false;
+  getRosterRowId(student: RosterDisplayUser): string {
+    return student.rosterRowId || '';
   }
 
-  mobileMenu() {
-    this.mobMenu = !this.mobMenu;
+  getStudentId(student: RosterDisplayUser): string {
+    return this.getRosterRowId(student);
   }
 
-  logOut() {
-    this.authService.logOutApplication();
-  }
-
-  sliderActiveRemove(): void {
-    this.showSliderView = false;
-  }
-
-  getRosterRowId(teacher: RosterDisplayUser): string {
-    return teacher.rosterRowId || '';
-  }
-
-  /** Template alias for roster row id used in approve URLs. */
-  getTeacherId(teacher: RosterDisplayUser): string {
-    return this.getRosterRowId(teacher);
-  }
-
-  onTeacherSelect(teacher: RosterDisplayUser, currentTarget: EventTarget | null) {
+  onStudentSelect(student: RosterDisplayUser, currentTarget: EventTarget | null) {
     const isChecked = (currentTarget as HTMLInputElement)?.checked ?? false;
-    const rosterRowId = this.getRosterRowId(teacher);
+    const rosterRowId = this.getRosterRowId(student);
     if (isChecked && rosterRowId) {
-      if (!this.selectedTeachers.includes(rosterRowId)) {
-        this.selectedTeachers.push(rosterRowId);
+      if (!this.selectedStudents.includes(rosterRowId)) {
+        this.selectedStudents.push(rosterRowId);
       }
     } else {
-      const index = rosterRowId ? this.selectedTeachers.indexOf(rosterRowId) : -1;
+      const index = rosterRowId ? this.selectedStudents.indexOf(rosterRowId) : -1;
       if (index > -1) {
-        this.selectedTeachers.splice(index, 1);
+        this.selectedStudents.splice(index, 1);
       }
     }
   }
 
-  loadPendingTeachers() {
+  loadPendingStudents() {
     const orgId = sessionStorage.getItem('organization_id') || '';
     if (!orgId) return;
-    this.rosterDisplay.loadTeachers(orgId, 'pending').then((teachers) => {
-      this.teachersList = teachers;
+    this.rosterDisplay.loadStudents(orgId, 'pending').then((students) => {
+      this.studentsList = students;
     });
   }
 
-  approveTeachers() {
-    if (!this.selectedTeachers.length) return;
+  approveStudents() {
+    if (!this.selectedStudents.length) return;
     this.approveTeacherService
-      .approveTeachers(this.selectedTeachers)
+      .approveStudents(this.selectedStudents)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          this.selectedTeachers = [];
-          this.loadPendingTeachers();
+          this.selectedStudents = [];
+          this.loadPendingStudents();
           this.commonService.openToaster({
-            message: 'Teachers approved successfully!',
+            message: 'Students approved successfully!',
             messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
           });
         },
         error: () => {
           this.commonService.openToaster({
-            message: 'Error while approving teachers!',
+            message: 'Error while approving students!',
             messageType: TOASTER_MESSAGE_TYPE.ERROR,
           });
         },

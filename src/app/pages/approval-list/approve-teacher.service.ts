@@ -1,22 +1,30 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError } from 'rxjs';
-import { CommonService } from 'src/app/shared/services/common.service';
-import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
+import { TeachersApiService } from 'src/app/services/api-service/teachers-api.service';
+import { StudentsApiService } from 'src/app/services/api-service/students-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApproveTeacherService {
-  private _iamApi: string = environment.iamApi;
-
   constructor(
-    private http: HttpClient,
-    private commonService: CommonService
+    private teachersApi: TeachersApiService,
+    private studentsApi: StudentsApiService
   ) {}
-  public approveTeachers(approveTeacher: any) {
-    return this.http
-      .put<any>(`${this._iamApi}user/approve-teachers`, approveTeacher)
-      .pipe(catchError(this.commonService.handleError));
+
+  /** Approve pending teachers by roster row ids (course backend). */
+  approveTeachers(rosterRowIds: string[]): Observable<unknown> {
+    if (rosterRowIds.length === 1) {
+      return this.teachersApi.approveTeacher(rosterRowIds[0], 'approved');
+    }
+    return this.teachersApi.approveTeachersBulk(rosterRowIds, 'approved');
+  }
+
+  /** Approve pending students by roster row ids (course backend). */
+  approveStudents(rosterRowIds: string[]): Observable<unknown> {
+    if (rosterRowIds.length === 1) {
+      return this.studentsApi.approveStudent(rosterRowIds[0], 'approved');
+    }
+    return this.studentsApi.approveStudentsBulk(rosterRowIds, 'approved');
   }
 }

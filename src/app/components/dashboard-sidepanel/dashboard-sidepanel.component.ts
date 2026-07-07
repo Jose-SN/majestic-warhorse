@@ -58,14 +58,22 @@ export class DashboardSidepanelComponent {
       [this.SIDE_PANEL_LIST['TEACHERS_LISTING']]: '/dashboard/teachers',
       [this.SIDE_PANEL_LIST['STUDENTS_LISTING']]: '/dashboard/students',
       [this.SIDE_PANEL_LIST['TEACHER_APPROVAL']]: '/dashboard/approval',
+      [this.SIDE_PANEL_LIST['STUDENT_APPROVAL']]: '/dashboard/student-approval',
       [this.SIDE_PANEL_LIST['APPROVAL_PENDING']]: '/dashboard/approval-pending',
       [this.SIDE_PANEL_LIST['ASSIGN_TEACHER']]: '/dashboard/assign-teacher',
+      [this.SIDE_PANEL_LIST['INVITE_TEACHER']]: '/dashboard/invite-teacher',
+      [this.SIDE_PANEL_LIST['INVITE_STUDENT']]: '/dashboard/invite-student',
+      [this.SIDE_PANEL_LIST['SWITCH_ORG']]: '/org-picker',
       [this.SIDE_PANEL_LIST['ASSESMENT']]: '/dashboard/assessment',
     };
 
     const route = routeMap[activePanel];
     if (route) {
-      this.router.navigate([route]);
+      if (activePanel === this.SIDE_PANEL_LIST['SWITCH_ORG']) {
+        this.router.navigate(['/org-picker'], { queryParams: { switch: true } });
+      } else {
+        this.router.navigate([route]);
+      }
       this.activePanel = activePanel;
       this.dashboardService.setSidePanelChangeValue(activePanel);
     }

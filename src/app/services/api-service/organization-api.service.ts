@@ -1,12 +1,19 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map } from 'rxjs';
+import { catchError, from, map, Observable, switchMap, throwError } from 'rxjs';
+import { AppContextService } from 'src/app/core/app-context.service';
+import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { environment } from 'src/environments/environment';
 import type { Organization, OrganizationCreatePayload, OrganizationResponse } from 'src/app/models/organization.model';
 
 /** @deprecated Use Organization from models/organization.model */
 export type IOrganization = Pick<Organization, 'id' | 'name'> & Record<string, unknown>;
+
+export interface OrganizationListParams {
+  userId?: string;
+  email?: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +23,8 @@ export class OrganizationApiService {
 
   constructor(
     private http: HttpClient,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private appContext: AppContextService
   ) {}
 
   getOrganizations() {
@@ -51,6 +59,53 @@ export class OrganizationApiService {
     return this.http
       .post<string>(`${this._apiUrl}organization/confirm-password`, updatePassword, interceptor)
       .pipe(catchError(this.commonService.handleError));
+  }
+
+  /** Orgs the authenticated user belongs to (requires Bearer JWT + x-app-id + user_id). */
+  listOrganizationsForUser(params: OrganizationListParams = {}) {
+    return from(this.appContext.ensureAppId()).pipe(
+      switchMap(() => {
+        const userContext = this.resolveListUserContext(params);
+        if (!userContext.userId) {
+          return throwError(
+            () => new Error('User id is required to list organizations for the current user.')
+          );
+        }
+
+        let httpParams = new HttpParams().set('user_id', userContext.userId);
+        if (userContext.email) {
+          httpParams = httpParams.set('email', userContext.email);
+        }
+
+        return this.http.get<{
+          data: Array<{ organization: Organization; membership?: Record<string, unknown> }>;
+        }>(`${this._apiUrl}organization/get-for-users`, { params: httpParams });
+      }),
+      catchError(this.commonService.handleError)
+    );
+  }
+
+  private resolveListUserContext(params: OrganizationListParams): { userId: string; email: string } {
+    const sessionUser = this.readUserFromSession();
+    const activeUser = this.commonService.loginedUserInfo ?? sessionUser;
+
+    const userId = params.userId ?? activeUser?.id ?? '';
+    const email =
+      params.email ??
+      activeUser?.email ??
+      activeUser?.contact?.email ??
+      '';
+
+    return { userId, email };
+  }
+
+  private readUserFromSession(): UserModel | null {
+    try {
+      const raw = sessionStorage.getItem('login_details');
+      return raw ? (JSON.parse(raw) as UserModel) : null;
+    } catch {
+      return null;
+    }
   }
 
   /** Login as organization - returns org data with role 'organization' */

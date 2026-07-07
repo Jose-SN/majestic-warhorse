@@ -49,6 +49,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (sessionStorage.getItem('needsOrgPicker') === 'true') {
+      this.router.navigate(['/org-picker']);
+      return;
+    }
+
     this.dashboardService
       .getSidePanelChange()
       .pipe(takeUntil(this.destroy$))
@@ -73,10 +78,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
 
     const loginedUserData = this.commonService.loginedUserInfo;
+    const organizationId = sessionStorage.getItem('organization_id') || loginedUserData?.organization_id || '';
+
     if (loginedUserData?.role === 'student') {
       const studentId = loginedUserData.id;
       if (studentId) {
-        this.assignTeacherService.getAssignedTeachers(studentId).subscribe({
+        this.assignTeacherService.getAssignedTeachers(studentId, organizationId).subscribe({
           next: (res: any) => {
             const data = res?.data ?? res;
             const list = Array.isArray(data) ? data : [];
@@ -160,8 +167,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         teachers: this.SIDE_PANEL_LIST['TEACHERS_LISTING'],
         students: this.SIDE_PANEL_LIST['STUDENTS_LISTING'],
         approval: this.SIDE_PANEL_LIST['TEACHER_APPROVAL'],
+        'student-approval': this.SIDE_PANEL_LIST['STUDENT_APPROVAL'],
         'approval-pending': this.SIDE_PANEL_LIST['APPROVAL_PENDING'],
         'assign-teacher': this.SIDE_PANEL_LIST['ASSIGN_TEACHER'],
+        'invite-teacher': this.SIDE_PANEL_LIST['INVITE_TEACHER'],
+        'invite-student': this.SIDE_PANEL_LIST['INVITE_STUDENT'],
         assessment: this.SIDE_PANEL_LIST['ASSESMENT'],
       };
       const panel = panelMap[routePath] || '';
@@ -182,8 +192,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         teachers: this.SIDE_PANEL_LIST['TEACHERS_LISTING'],
         students: this.SIDE_PANEL_LIST['STUDENTS_LISTING'],
         approval: this.SIDE_PANEL_LIST['TEACHER_APPROVAL'],
+        'student-approval': this.SIDE_PANEL_LIST['STUDENT_APPROVAL'],
         'approval-pending': this.SIDE_PANEL_LIST['APPROVAL_PENDING'],
         'assign-teacher': this.SIDE_PANEL_LIST['ASSIGN_TEACHER'],
+        'invite-teacher': this.SIDE_PANEL_LIST['INVITE_TEACHER'],
+        'invite-student': this.SIDE_PANEL_LIST['INVITE_STUDENT'],
         assessment: this.SIDE_PANEL_LIST['ASSESMENT'],
       };
       const panel = panelMap[routePath] || '';

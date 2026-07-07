@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { RegistrationApiService } from 'src/app/services/api-service/registration-api.service';
 import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
 import { AuthService } from 'src/app/services/api-service/auth.service';
+import { PostLoginWorkflowService } from 'src/app/core/auth/post-login-workflow.service';
 import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
@@ -22,7 +23,8 @@ export class RegistrationPageService {
     private organizationApiService: OrganizationApiService,
     private authService: AuthService,
     private commonApiService: CommonApiService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private postLoginWorkflow: PostLoginWorkflowService
   ) {}
 
   public onFileSelected(
@@ -260,13 +262,64 @@ export class RegistrationPageService {
           .saveUserInfo(transformedPayload)
           .pipe(takeUntil(_destroy$))
           .subscribe({
-            next: (userAdded) => {
+            next: async (userAdded) => {
               if (userAdded) {
-                this.showToasterMessage(
-                  'User registered successfully',
-                  TOASTER_MESSAGE_TYPE.SUCCESS
-                );
-                resolve(true);
+                if (isOrganization) {
+                  this.showToasterMessage(
+                    'Organization registered successfully',
+                    TOASTER_MESSAGE_TYPE.SUCCESS
+                  );
+                  resolve(true);
+                  return;
+                }
+
+                const role = registrationInfo.role === 'teacher' ? 'teacher' : 'student';
+                sessionStorage.setItem('pendingRoleIntent', role);
+                if (registrationInfo.organization_id) {
+                  sessionStorage.setItem('pendingOrganizationId', registrationInfo.organization_id);
+                }
+
+                this.authService
+                  .loginUser({
+                    email: registrationInfo.email!,
+                    password: registrationInfo.password!,
+                  })
+                  .pipe(takeUntil(_destroy$))
+                  .subscribe({
+                    next: async (response) => {
+                      const userExist =
+                        response.success === true || response.success === false
+                          ? response.data
+                          : response;
+                      if (userExist && Object.keys(userExist).length) {
+                        await this.postLoginWorkflow.completeLogin({
+                          jwt: userExist.jwt || '',
+                          loginType: 'user',
+                          profile: userExist,
+                          authProvider: 'password',
+                          roleIntent: role,
+                        });
+                        this.showToasterMessage(
+                          'Account created successfully',
+                          TOASTER_MESSAGE_TYPE.SUCCESS
+                        );
+                        resolve(true);
+                      } else {
+                        this.showToasterMessage(
+                          'Account created. Please sign in.',
+                          TOASTER_MESSAGE_TYPE.SUCCESS
+                        );
+                        resolve(true);
+                      }
+                    },
+                    error: () => {
+                      this.showToasterMessage(
+                        'Account created. Please sign in.',
+                        TOASTER_MESSAGE_TYPE.SUCCESS
+                      );
+                      resolve(true);
+                    },
+                  });
               } else {
                 this.showToasterMessage('Error while saving...', TOASTER_MESSAGE_TYPE.ERROR);
               }

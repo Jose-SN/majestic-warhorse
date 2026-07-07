@@ -18,6 +18,10 @@ import { StudentTeacherAssignListComponent } from './pages/student-teacher-assig
 import { QuestionnaireComponent } from './pages/questionnaire/questionnaire.component';
 import { UnderConstructionComponent } from './components/under-construction/under-construction.component';
 import { AuthCallbackComponent } from './pages/auth-callback/auth-callback.component';
+import { OrgPickerComponent } from './pages/org-picker/org-picker.component';
+import { InviteTeacherComponent } from './pages/invite-teacher/invite-teacher.component';
+import { InviteStudentComponent } from './pages/invite-student/invite-student.component';
+import { StudentApprovalListComponent } from './pages/student-approval-list/student-approval-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -25,10 +29,11 @@ const routes: Routes = [
   { path: 'auth/callback', component: AuthCallbackComponent },
   { path: 'forgetpassword', component: ForgotPasswordComponent },
   { path: 'signup', component: RegistrationPageComponent },
+  { path: 'org-picker', component: OrgPickerComponent, canActivate: [authGuard] },
   {
     path: 'dashboard',
     component: DashboardComponent,
-    // canActivate: [authGuard],
+    canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: DashboardOverviewComponent },
@@ -39,8 +44,11 @@ const routes: Routes = [
       { path: 'teachers', component: TeachersListComponent },
       { path: 'students', component: StudentsListComponent },
       { path: 'approval', component: ApprovalListComponent },
+      { path: 'student-approval', component: StudentApprovalListComponent },
       { path: 'approval-pending', component: ApprovalPendingComponent },
       { path: 'assign-teacher', component: StudentTeacherAssignListComponent },
+      { path: 'invite-teacher', component: InviteTeacherComponent },
+      { path: 'invite-student', component: InviteStudentComponent },
       { path: 'assessment', component: QuestionnaireComponent },
       { path: '**', component: UnderConstructionComponent },
     ],

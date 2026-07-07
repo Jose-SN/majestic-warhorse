@@ -4,7 +4,7 @@ import { IFileObjectInfo } from './model/file-object-info';
 import { IMainCourseInfo } from './model/course-info';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, firstValueFrom } from 'rxjs';
 import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
 import { CoursesApiService } from 'src/app/services/api-service/courses-api.service';
 import { HttpEventType } from '@angular/common/http';
@@ -81,6 +81,10 @@ export class CourseUploadService {
           ...{
             chapterDetails: courseDetails.chapterInfo,
             createdBy: this.commonService.loginedUserInfo.id,
+            organization_id:
+              sessionStorage.getItem('organization_id') ||
+              this.commonService.loginedUserInfo.organization_id ||
+              '',
           },
         })
           .pipe(takeUntil(_destroy$))
@@ -224,6 +228,33 @@ export class CourseUploadService {
     });
   }
   async fetchUploadedCourses() {
-    return await this.courseApi.fetchUploadedCourses();
+    const role = this.commonService.loginedUserInfo?.role || '';
+    const userId = this.commonService.loginedUserInfo?.id || '';
+    const orgId = sessionStorage.getItem('organization_id') || '';
+
+    if (role === 'student' && userId) {
+      const courses = await firstValueFrom(this.courseApi.getStudentCourses(userId, orgId)).catch(
+        () => [] as any[]
+      );
+      return courses;
+    }
+
+    const params: { createdBy?: string; organization_id?: string } = {};
+    if (orgId) params.organization_id = orgId;
+    if (role === 'teacher' && userId) params.createdBy = userId;
+
+    const courses = await this.courseApi.fetchUploadedCourses(params);
+    if (role === 'teacher' && userId) {
+      return courses.filter((course: any) => {
+        const createdBy = course.createdBy?.id ?? course.createdBy;
+        return createdBy === userId;
+      });
+    }
+    if (orgId) {
+      return courses.filter(
+        (course: any) => !course.organization_id || course.organization_id === orgId
+      );
+    }
+    return courses;
   }
 }

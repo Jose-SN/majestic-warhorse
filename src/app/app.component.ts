@@ -11,6 +11,7 @@ import { AssignTeachersComponent } from './components/assign-teachers/assign-tea
 import { ViewAssignedTeachersComponent } from './components/view-assigned-teachers/view-assigned-teachers.component';
 import { ViewAssignedStudentsComponent } from './components/view-assigned-students/view-assigned-students.component';
 import { ApplicationApiService } from './services/api-service/application-api.service';
+import { AppContextService } from './core/app-context.service';
 import { environment } from 'src/environments/environment';
 import { DashboardService } from './pages/dashboard/dashboard.service';
 @Component({
@@ -30,10 +31,15 @@ export class AppComponent implements OnInit {
     private router: Router,
     private commonService: CommonService,
     private applicationApiService: ApplicationApiService,
+    private appContext: AppContextService,
     private dashboardService: DashboardService
   ) {}
   ngOnInit() {
-    // Call application API on app load
+    this.appContext.ensureAppId().catch((error) => {
+      console.error('Error loading application context:', error);
+    });
+
+    // Legacy application bootstrap (kept for compatibility)
     this.applicationApiService.getApplications()
       .pipe(takeUntil(this.destroy$))
       .subscribe({

@@ -1,7 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { AppContextService } from '../app-context.service';
 
 export interface IamUser {
   id?: string;
@@ -42,17 +43,16 @@ export interface IamResponse<T = any> {
 export class UserOAuthService {
   private readonly _apiUrl: string = environment.iamApi;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private appContext: AppContextService
+  ) {}
 
-  private getAppId(): string {
-    return sessionStorage.getItem('app_id') || '';
-  }
-
-  private buildHeaders(json = false): HttpHeaders {
-    const appId = this.getAppId();
+  private buildHeaders(appId: string, json = false): HttpHeaders {
     return new HttpHeaders({
       ...(json ? { 'Content-Type': 'application/json' } : {}),
-      ...(appId ? { 'x-app-id': appId, app_id: appId } : {}),
+      'x-app-id': appId,
+      app_id: appId,
     });
   }
 
@@ -63,10 +63,11 @@ export class UserOAuthService {
   async getUserByEmail(email: string): Promise<IamUser | null> {
     if (!email) return null;
     try {
+      const appId = await this.appContext.ensureAppId();
       const response: any = await firstValueFrom(
         this.http.get<IamResponse<IamUser[]>>(
           `${this._apiUrl}user/get?email=${encodeURIComponent(email)}`,
-          { headers: this.buildHeaders() }
+          { headers: this.buildHeaders(appId) }
         )
       );
       const users: IamUser[] = response?.data ?? response ?? [];
@@ -82,9 +83,10 @@ export class UserOAuthService {
 
   /** POST /user/sync — idempotent find-or-create. Returns the synced user. */
   async syncUser(payload: UserSyncPayload): Promise<IamResponse<IamUser>> {
+    const appId = await this.appContext.ensureAppId();
     return firstValueFrom(
       this.http.post<IamResponse<IamUser>>(`${this._apiUrl}user/sync`, payload, {
-        headers: this.buildHeaders(true),
+        headers: this.buildHeaders(appId, true),
       })
     );
   }

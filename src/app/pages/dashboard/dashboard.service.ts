@@ -7,6 +7,7 @@ import { ICourseList } from '../courses/modal/course-list';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-teacher.service';
+import { RosterDisplayService } from 'src/app/services/api-service/roster-display.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,11 @@ export class DashboardService {
     TEACHERS_LISTING: 'TEACHERS_LISTING',
     STUDENTS_LISTING: 'STUDENTS_LISTING',
     ASSIGN_TEACHER: 'ASSIGN_TEACHER',
+    INVITE_TEACHER: 'INVITE_TEACHER',
+    INVITE_STUDENT: 'INVITE_STUDENT',
+    SWITCH_ORG: 'SWITCH_ORG',
     TEACHER_APPROVAL: 'TEACHER_APPROVAL',
+    STUDENT_APPROVAL: 'STUDENT_APPROVAL',
     APPROVAL_PENDING: 'APPROVAL_PENDING',
     ASSESMENT:"ASSESMENT"
   };
@@ -35,7 +40,8 @@ export class DashboardService {
     private authService: AuthService,
     private commonService: CommonService,
     private http: HttpClient,
-    private assignTeacherService: AssignTeacherService
+    private assignTeacherService: AssignTeacherService,
+    private rosterDisplay: RosterDisplayService
   ) {}
   async getAllUsers() {
     this.commonService.alluserList = await this.authService.getAllUsers();
@@ -57,45 +63,33 @@ export class DashboardService {
     
     // For organization, calculate stats from allUsersList and teacher-student relationships
     if (role === 'organization') {
-      const allUsers = this.commonService.allUsersList || [];
-      
-      // Filter users by role
-      const teachers = allUsers.filter(user => user.role === 'teacher');
-      const students = allUsers.filter(user => user.role === 'student');
-      
-      // Fetch all teacher-student relationships from the new API
-      let relationships: any[] = [];
-      try {
-        const relationshipsResponse = await lastValueFrom(
-          this.assignTeacherService.getAllTeacherStudentRelationships()
-        );
-        relationships = relationshipsResponse.data || relationshipsResponse || [];
-      } catch (error) {
-        console.error('Error fetching teacher-student relationships:', error);
-        // Continue with empty relationships array if API fails
+      const orgId = sessionStorage.getItem('organization_id') || '';
+      if (!orgId) {
+        return { totalTeachers: 0, totalStudents: 0, unassignedStudents: 0, unassignedTeachers: 0 };
       }
-      
-      // Create sets of assigned student IDs and teacher IDs from relationships
+
+      const [teachers, students, relationshipsResponse] = await Promise.all([
+        this.rosterDisplay.loadTeachers(orgId, 'approved'),
+        this.rosterDisplay.loadStudents(orgId, 'approved'),
+        lastValueFrom(this.assignTeacherService.getAllTeacherStudentRelationships()).catch(() => ({ data: [] })),
+      ]);
+
+      const relationships = (relationshipsResponse as any)?.data ?? relationshipsResponse ?? [];
+      const relList = Array.isArray(relationships) ? relationships : [];
+
       const assignedStudentIds = new Set<string>();
       const assignedTeacherIds = new Set<string>();
-      
-      relationships.forEach((rel: any) => {
+
+      relList.forEach((rel: any) => {
         const studentId = rel.student_id || rel.studentId;
         const teacherId = rel.teacher_id || rel.teacherId;
         if (studentId) assignedStudentIds.add(studentId);
         if (teacherId) assignedTeacherIds.add(teacherId);
       });
-      
-      // Count unassigned students (students not in any relationship)
-      const unassignedStudents = students.filter(student => 
-        !assignedStudentIds.has(student.id || '')
-      );
-      
-      // Count unassigned teachers (teachers not in any relationship)
-      const unassignedTeachers = teachers.filter(teacher => 
-        !assignedTeacherIds.has(teacher.id || '')
-      );
-      
+
+      const unassignedStudents = students.filter((s) => !assignedStudentIds.has(s.id || ''));
+      const unassignedTeachers = teachers.filter((t) => !assignedTeacherIds.has(t.id || ''));
+
       return {
         totalTeachers: teachers.length,
         totalStudents: students.length,

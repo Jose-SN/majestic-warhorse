@@ -4,6 +4,17 @@ import { catchError } from 'rxjs';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { environment } from 'src/environments/environment';
 
+export interface StudentAssignment {
+  teacher_id: string;
+  student_ids: string[];
+  unassign_student_ids?: string[];
+}
+
+export interface TeacherAssignment {
+  student_id: string;
+  teacher_ids: string[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -14,9 +25,25 @@ export class AssignTeacherService {
     private http: HttpClient,
     private commonService: CommonService
   ) {}
-  public assignTeachersToStudent(assignTeacherPayload: any) {
+
+  private getAssignmentContext() {
+    return {
+      organization_id:
+        sessionStorage.getItem('organization_id') ||
+        this.commonService.loginedUserInfo?.organization_id ||
+        '',
+      assigned_by: this.commonService.loginedUserInfo?.id || '',
+    };
+  }
+
+  public assignTeachersToStudent(assignments: TeacherAssignment[]) {
+    const ctx = this.getAssignmentContext();
     return this.http
-      .post<any>(`${this._apiUrl}teacher-students/assign-teachers`, assignTeacherPayload)
+      .post<any>(`${this._apiUrl}teacher-students/assign-teachers`, {
+        organization_id: ctx.organization_id,
+        assigned_by: ctx.assigned_by,
+        assignments,
+      })
       .pipe(catchError(this.commonService.handleError));
   }
 
@@ -24,26 +51,42 @@ export class AssignTeacherService {
     student_id: string;
     unassign_teacher_ids: string[];
   }) {
+    const orgId = this.getAssignmentContext().organization_id;
     return this.http
-      .post<any>(`${this._apiUrl}teacher-students/unassign-teachers`, payload)
+      .post<any>(`${this._apiUrl}teacher-students/unassign-teachers`, {
+        ...payload,
+        organization_id: orgId,
+      })
       .pipe(catchError(this.commonService.handleError));
   }
 
-  public getAssignedTeachers(studentId: string) {
+  public getAssignedTeachers(studentId: string, organizationId?: string) {
+    const orgId = organizationId || sessionStorage.getItem('organization_id') || '';
+    const query = orgId ? `?organization_id=${encodeURIComponent(orgId)}` : '';
     return this.http
-      .get<any>(`${this._apiUrl}teacher-students/student/${studentId}/teachers`)
+      .get<any>(`${this._apiUrl}teacher-students/student/${studentId}/teachers${query}`)
       .pipe(catchError(this.commonService.handleError));
   }
 
-  public getAssignedStudents(teacherId: string) {
+  public getAssignedStudents(teacherId: string, organizationId?: string) {
+    const orgId = organizationId || sessionStorage.getItem('organization_id') || '';
+    const query = orgId ? `?organization_id=${encodeURIComponent(orgId)}` : '';
     return this.http
-      .get<any>(`${this._apiUrl}teacher-students/teacher/${teacherId}/students`)
+      .get<any>(`${this._apiUrl}teacher-students/teacher/${teacherId}/students${query}`)
       .pipe(catchError(this.commonService.handleError));
   }
 
-  public assignStudentsToTeacher(payload: { teacher_id: string; student_ids: string[] }[]) {
+  public assignStudentsToTeacher(assignments: StudentAssignment[]) {
+    const ctx = this.getAssignmentContext();
     return this.http
-      .post<any>(`${this._apiUrl}teacher-students/assign-students`, payload)
+      .post<any>(`${this._apiUrl}teacher-students/assign-students`, {
+        organization_id: ctx.organization_id,
+        assigned_by: ctx.assigned_by,
+        assignments: assignments.map(({ teacher_id, student_ids }) => ({
+          teacher_id,
+          student_ids,
+        })),
+      })
       .pipe(catchError(this.commonService.handleError));
   }
 
@@ -51,8 +94,12 @@ export class AssignTeacherService {
     teacher_id: string;
     unassign_student_ids: string[];
   }) {
+    const orgId = this.getAssignmentContext().organization_id;
     return this.http
-      .post<any>(`${this._apiUrl}teacher-students/unassign-students`, payload)
+      .post<any>(`${this._apiUrl}teacher-students/unassign-students`, {
+        ...payload,
+        organization_id: orgId,
+      })
       .pipe(catchError(this.commonService.handleError));
   }
 

@@ -1,0 +1,46 @@
+<div class="invite-wrapper">
+  <header class="page-header">
+    <h1>Invite Teacher</h1>
+    <p>Add a teacher by email. If they already exist in IAM, they are linked by user id automatically.</p>
+  </header>
+
+  <form [formGroup]="inviteForm" (ngSubmit)="onSubmit()" class="invite-form">
+    <div class="input-row">
+      <div class="input-holder">
+        <label for="firstName">First Name</label>
+        <input id="firstName" type="text" formControlName="firstName" placeholder="Jane" />
+        @if (isInvalid('firstName')) {
+          <span class="error">First name is required.</span>
+        }
+      </div>
+      <div class="input-holder">
+        <label for="lastName">Last Name</label>
+        <input id="lastName" type="text" formControlName="lastName" placeholder="Doe" />
+        @if (isInvalid('lastName')) {
+          <span class="error">Last name is required.</span>
+        }
+      </div>
+    </div>
+
+    <div class="input-row">
+      <div class="input-holder">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" placeholder="teacher@school.com" />
+        @if (isInvalid('email')) {
+          <span class="error">A valid email is required.</span>
+        }
+      </div>
+      <div class="input-holder">
+        <label for="phone">Phone (optional)</label>
+        <input id="phone" type="text" formControlName="phone" placeholder="+44..." />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-submit" [disabled]="submitting">
+        {{ submitting ? 'Inviting…' : 'Invite Teacher' }}
+      </button>
+      <a class="btn-secondary" routerLink="/dashboard/teachers">View Teachers</a>
+    </div>
+  </form>
+</div>

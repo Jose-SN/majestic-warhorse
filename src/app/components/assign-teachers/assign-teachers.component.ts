@@ -1,12 +1,13 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { AssignTeacherService } from './assign-teacher.service';
 import { IModelInfo } from '../common-dialog/model/popupmodel';
-import { Subject, takeUntil, switchMap } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
+import { RosterDisplayService } from 'src/app/services/api-service/roster-display.service';
 
 @Component({
   selector: 'app-assign-teachers',
@@ -15,7 +16,7 @@ import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
   templateUrl: './assign-teachers.component.html',
   styleUrl: './assign-teachers.component.scss',
 })
-export class AssignTeachersComponent {
+export class AssignTeachersComponent implements OnInit, OnDestroy {
   teachersList: UserModel[] = [];
   selectedTeachers: string[] = [];
   selectedItems: UserModel[] = [];
@@ -30,9 +31,9 @@ export class AssignTeachersComponent {
   constructor(
     public commonService: CommonService,
     private authService: AuthService,
-    private assignTeacherService: AssignTeacherService
+    private assignTeacherService: AssignTeacherService,
+    private rosterDisplay: RosterDisplayService
   ) {
-    this.teachersList = this.commonService.allUsersList.filter((users) => users.role === 'teacher');
     this.selectedItems = [];
     this.dropdownSettings = {
       singleSelection: false,
@@ -43,6 +44,41 @@ export class AssignTeachersComponent {
       itemsShowLimit: 3,
       allowSearchFilter: true,
     };
+  }
+
+  ngOnInit(): void {
+    const orgId = sessionStorage.getItem('organization_id') || '';
+    if (orgId) {
+      this.rosterDisplay.loadTeachers(orgId, 'approved').then((teachers) => {
+        this.teachersList = teachers;
+      });
+    }
+    this.loadAssignedTeachers();
+  }
+
+  private loadAssignedTeachers(): void {
+    const studentId = this.popupModelInfo?.data?.id;
+    if (!studentId) return;
+
+    this.assignTeacherService
+      .getAssignedTeachers(studentId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (result) => {
+          const responseData = result?.data ?? result;
+          let teacherIds: string[] = [];
+
+          if (Array.isArray(responseData)) {
+            teacherIds = responseData
+              .map((item: any) => item.teacher_id || item.id || '')
+              .filter((id: string) => !!id);
+          } else if (responseData?.teacher_ids) {
+            teacherIds = responseData.teacher_ids;
+          }
+
+          this.selectedTeachers = [...teacherIds];
+        },
+      });
   }
 
   triggerMenu() {
@@ -62,7 +98,7 @@ export class AssignTeachersComponent {
   getTeacherId(teacher: UserModel): string {
     return teacher.id || '';
   }
-  
+
   onTeacherSelect(teacher: any, event: Event) {
     const input = event.target as HTMLInputElement;
     const isChecked = input.checked;
@@ -78,48 +114,33 @@ export class AssignTeachersComponent {
       }
     }
   }
+
   handleTeacherAssign() {
     const studentId = this.popupModelInfo.data.id;
-    const student = this.popupModelInfo.data;
     const payload = [
       {
         student_id: studentId,
-        teacher_ids: this.selectedTeachers
-      }
+        teacher_ids: this.selectedTeachers,
+      },
     ];
-    
+
     this.assignTeacherService
       .assignTeachersToStudent(payload)
-      .pipe(
-        switchMap((result) => {
-          if (result.success) {
-            // Update user status to approved
-            const updatePayload = {
-              ...student,
-              status: 'active',
-            };
-            return this.authService.updateUserInfo(updatePayload);
-          } else {
-            throw new Error('Failed to assign teachers');
-          }
-        }),
-        takeUntil(this.destroy$)
-      )
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (updateResult) => {
-          // Update local user list
-          const userIndex = this.commonService.allUsersList.findIndex(
-            (user) => user.id === studentId
-          );
-          if (userIndex > -1) {
-            this.commonService.allUsersList[userIndex].status = 'active';
+        next: (result) => {
+          if (result.success) {
+            this.commonService.openToaster({
+              message: 'Teachers assigned successfully!',
+              messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+            });
+            this.commonService.closePopupModel(true);
+          } else {
+            this.commonService.openToaster({
+              message: 'Error while assigning teachers, please contact your organization',
+              messageType: TOASTER_MESSAGE_TYPE.ERROR,
+            });
           }
-          
-          this.commonService.openToaster({
-            message: 'Teachers assigned successfully!',
-            messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
-          });
-          this.commonService.closePopupModel(true);
         },
         error: () => {
           this.commonService.openToaster({
@@ -129,6 +150,7 @@ export class AssignTeachersComponent {
         },
       });
   }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

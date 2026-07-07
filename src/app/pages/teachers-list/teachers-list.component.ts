@@ -1,15 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { map, Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
-import { CommonSliderComponent } from 'src/app/components/common-slider/common-slider.component';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
-import { UserModel } from '../login-page/model/user-model';
+import { RosterDisplayUser, RosterDisplayService } from 'src/app/services/api-service/roster-display.service';
 import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
-import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
 
@@ -20,21 +16,26 @@ import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
   templateUrl: './teachers-list.component.html',
   styleUrl: './teachers-list.component.scss',
 })
-export class TeachersListComponent implements OnInit {
+export class TeachersListComponent implements OnInit, OnDestroy {
   public profileUrl: string = '';
   public mobMenu: boolean = false;
   public showSliderView: boolean = false;
-  public teachersList: UserModel[] = [];
+  public teachersList: RosterDisplayUser[] = [];
   public searchText: string = '';
   private destroy$ = new Subject<void>();
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
+
   constructor(
     private authService: AuthService,
     public commonService: CommonService,
-    private commonApiService: CommonApiService,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private rosterDisplay: RosterDisplayService
   ) {
-    this.profileUrl = this.commonService.decodeUrl((this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? '');
+    this.profileUrl = this.commonService.decodeUrl(
+      (this.commonService.loginedUserInfo.profileImage ||
+        this.commonService.loginedUserInfo.profile_image) ??
+        ''
+    );
     this.commonService
       .getCommonSearchText()
       .pipe(takeUntil(this.destroy$))
@@ -42,22 +43,22 @@ export class TeachersListComponent implements OnInit {
         this.searchText = searchText;
       });
   }
+
   ngOnInit(): void {
-    this.commonService
-      .getAllUsersList$()
-      .pipe(
-        map((users) => users.filter((u) => u.role === 'teacher' && u.status === 'active')),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((teachers) => {
+    const orgId = sessionStorage.getItem('organization_id') || '';
+    if (orgId) {
+      this.rosterDisplay.loadTeachers(orgId, 'approved').then((teachers) => {
         this.teachersList = teachers;
       });
+    }
     this.dashboardService.getAllUsers();
   }
+
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
     this.mobMenu = false;
   }
+
   mobileMenu() {
     this.mobMenu = !this.mobMenu;
   }
@@ -65,10 +66,12 @@ export class TeachersListComponent implements OnInit {
   logOut() {
     this.authService.logOutApplication();
   }
+
   sliderActiveRemove(): void {
     this.showSliderView = false;
   }
-  viewAssignedStudents(teacher: UserModel) {
+
+  viewAssignedStudents(teacher: RosterDisplayUser) {
     this.commonService.openPopupModel({
       title: `Subscribed Students - ${teacher.firstName || teacher.first_name} ${teacher.lastName || teacher.last_name}`,
       data: teacher,
@@ -76,23 +79,7 @@ export class TeachersListComponent implements OnInit {
       customStyle: { width: '800px', height: '800px', 'max-width': '90vw' },
     });
   }
-  deleteTeacher(deletedTeacher: UserModel) {
-    this.commonApiService.deleteUser(takeUntil(this.destroy$)).subscribe({
-      next: async () => {
-        this.commonService.openToaster({
-          message: `Teacher ${deletedTeacher.firstName} ${deletedTeacher.lastName} successfully deleted`,
-          messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
-        });
-        this.commonService.alluserList = await this.authService.getAllUsers();
-      },
-      error: () => {
-        this.commonService.openToaster({
-          message: `Error while deleting Teacher ${deletedTeacher.firstName} ${deletedTeacher.lastName}`,
-          messageType: TOASTER_MESSAGE_TYPE.ERROR,
-        });
-      },
-    });
-  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

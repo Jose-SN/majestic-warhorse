@@ -224,9 +224,11 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
               // Optionally navigate to dashboard or refresh the page
               // this.router.navigate(['/dashboard/account']);
             } else {
-              // For new registration, reset form and navigate to login
-              this.createAccountForm.reset();
-              this.router.navigate(['/login']);
+              // For new registration, post-login workflow navigates for users; org goes to login
+              if (this.isAdminLogin || this.createAccountForm.get('role')?.value === 'organization') {
+                this.createAccountForm.reset();
+                this.router.navigate(['/login']);
+              }
             }
           }
         });

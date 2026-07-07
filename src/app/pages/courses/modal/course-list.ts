@@ -14,6 +14,7 @@ export interface ICourseList {
   courseStatusLevel?:string;
   completionPercent?: string;
   chapterDetails: ChapterDetail[];
+  organization_id?: string;
 }
 
 export interface ChapterDetail {

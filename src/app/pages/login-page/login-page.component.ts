@@ -40,7 +40,11 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       password: ['', Validators.required],
     });
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/dashboard']);
+      if (sessionStorage.getItem('needsOrgPicker') === 'true') {
+        this.router.navigate(['/org-picker']);
+      } else {
+        this.router.navigate(['/dashboard']);
+      }
     }
   }
   onSubmit(): void {

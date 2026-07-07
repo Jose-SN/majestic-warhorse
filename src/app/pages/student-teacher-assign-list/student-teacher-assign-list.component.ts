@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UserModel } from '../login-page/model/user-model';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
@@ -7,8 +7,7 @@ import { CommonSearchProfileComponent } from 'src/app/components/common-search-p
 import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
 import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
 import { Subject, takeUntil } from 'rxjs';
-import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
-import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
+import { RosterDisplayUser, RosterDisplayService } from 'src/app/services/api-service/roster-display.service';
 
 @Component({
   selector: 'app-student-teacher-assign-list',
@@ -17,52 +16,51 @@ import { CommonApiService } from 'src/app/shared/api-service/common-api.service'
   templateUrl: './student-teacher-assign-list.component.html',
   styleUrl: './student-teacher-assign-list.component.scss',
 })
-export class StudentTeacherAssignListComponent {
+export class StudentTeacherAssignListComponent implements OnInit, OnDestroy {
   public profileUrl: string = '';
   public mobMenu: boolean = false;
-  public studentList: UserModel[] = [];
+  public studentList: RosterDisplayUser[] = [];
   public showSliderView: boolean = false;
   private destroy$ = new Subject<void>();
-  private editedStudent: UserModel = {} as UserModel;
+  private editedStudent: RosterDisplayUser = {} as RosterDisplayUser;
   public searchText: string = '';
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
+
   constructor(
     private authService: AuthService,
     public commonService: CommonService,
-    private commonApiService: CommonApiService,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private rosterDisplay: RosterDisplayService
   ) {
-    this.profileUrl = this.commonService.decodeUrl((this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? '')
-    if (this.commonService.allUsersList.length === 0) {
-      this.dashboardService.getAllUsers();
-      this.getStudentList();
-    } else {
-      this.getStudentList();
-    }
+    this.profileUrl = this.commonService.decodeUrl(
+      (this.commonService.loginedUserInfo.profileImage ||
+        this.commonService.loginedUserInfo.profile_image) ??
+        ''
+    );
+    this.loadApprovedStudents();
   }
+
   ngOnInit() {
     this.commonService
       .closePopupModelHandle()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((closeModel) => {
-        this.commonService.allUsersList.forEach((student) => {
-          if (student.id === this.editedStudent.id) {
-            student.status = 'active';
-          }
-        });
-        this.getStudentList();
+      .subscribe(() => {
+        this.loadApprovedStudents();
       });
-      this.commonService
-        .getCommonSearchText()
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((searchText) => {
-          this.searchText = searchText;
-        }); 
+    this.commonService
+      .getCommonSearchText()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((searchText) => {
+        this.searchText = searchText;
+      });
+    this.dashboardService.getAllUsers();
   }
+
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
     this.mobMenu = false;
   }
+
   mobileMenu() {
     this.mobMenu = !this.mobMenu;
   }
@@ -70,19 +68,24 @@ export class StudentTeacherAssignListComponent {
   logOut() {
     this.authService.logOutApplication();
   }
+
   sliderActiveRemove(): void {
     this.showSliderView = false;
   }
-  getStudentId(student: UserModel): string {
+
+  getStudentId(student: RosterDisplayUser): string {
     return student.id || '';
   }
-  
-  getStudentList() {
-    this.studentList = this.commonService.allUsersList.filter(
-      (users) => users.role === 'student' && users.status === 'pending'
-    );
+
+  loadApprovedStudents() {
+    const orgId = sessionStorage.getItem('organization_id') || '';
+    if (!orgId) return;
+    this.rosterDisplay.loadStudents(orgId, 'approved').then((students) => {
+      this.studentList = students;
+    });
   }
-  assignTeacher(selectedStudent: UserModel) {
+
+  assignTeacher(selectedStudent: RosterDisplayUser) {
     this.editedStudent = selectedStudent;
     this.commonService.openPopupModel({
       data: selectedStudent,
@@ -90,25 +93,9 @@ export class StudentTeacherAssignListComponent {
       componentName: COMPONENT_NAME.ASSIGN_TEACHER,
     });
   }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-  deleteStudent(deletedStudent: UserModel) {
-    this.commonApiService.deleteUser(takeUntil(this.destroy$)).subscribe({
-      next: async () => {
-        this.commonService.openToaster({
-          message: `Student ${deletedStudent.firstName} ${deletedStudent.lastName} successfully deleted`,
-          messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
-        });
-        this.commonService.alluserList = await this.authService.getAllUsers();
-      },
-      error: () => {
-        this.commonService.openToaster({
-          message: `Error while deleting Student ${deletedStudent.firstName} ${deletedStudent.lastName}`,
-          messageType: TOASTER_MESSAGE_TYPE.ERROR,
-        });
-      },
-    });
   }
 }

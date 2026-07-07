@@ -8,7 +8,8 @@ import {
   OrganizationSyncPayload,
 } from './organization-oauth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
-import { mapOrganizationToUserShape, mapUserToLegacy } from 'src/app/shared/utils/user-mapper.util';
+import { PostLoginWorkflowService } from './post-login-workflow.service';
+import { AppContextService } from '../app-context.service';
 
 type LoginType = 'user' | 'organization';
 
@@ -23,6 +24,8 @@ export class OAuthService {
     private supabaseService: SupabaseService,
     private userOAuthService: UserOAuthService,
     private organizationOAuthService: OrganizationOAuthService,
+    private postLoginWorkflow: PostLoginWorkflowService,
+    private appContext: AppContextService,
     private commonService: CommonService,
     private router: Router
   ) {}
@@ -43,6 +46,8 @@ export class OAuthService {
 
   /** Start the Google OAuth (PKCE) redirect flow for a user or organization sign-in. */
   async signInWithGoogle(loginType: LoginType = 'user'): Promise<void> {
+    await this.appContext.ensureAppId();
+
     sessionStorage.setItem('loginType', loginType);
     sessionStorage.setItem('socialAuthMode', 'signin');
     sessionStorage.setItem('socialProvider', 'google');
@@ -50,6 +55,7 @@ export class OAuthService {
     localStorage.setItem('pendingSocialAuthMode', 'signin');
 
     this.clearIamSessionKeepAppId();
+    sessionStorage.setItem('loginType', loginType);
 
     const { data, error } = await this.supabaseService.client.auth.signInWithOAuth({
       provider: 'google',
@@ -72,6 +78,8 @@ export class OAuthService {
   async handleGoogleCallback(): Promise<void> {
     if (this.callbackHandled) return;
     this.callbackHandled = true;
+
+    await this.appContext.ensureAppId();
 
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
@@ -123,8 +131,6 @@ export class OAuthService {
     } else {
       await this.completeUserSignIn(googleContext);
     }
-
-    this.router.navigate(['/dashboard']);
   }
 
   /** user/get -> (if missing) user/sync -> persist session. */
@@ -172,9 +178,16 @@ export class OAuthService {
     }
 
     const user: IamUser = iamUser ?? { contact: { email: ctx.email } };
-    // IAM get/sync don't issue a JWT for OAuth users; fall back to the Supabase token.
     const jwt = user.jwt ?? ctx.accessToken;
-    this.persistUserSession(jwt, user, user.organization_id ?? '');
+    const roleIntent = sessionStorage.getItem('pendingRoleIntent') as 'teacher' | 'student' | null;
+
+    await this.postLoginWorkflow.completeLogin({
+      jwt,
+      loginType: 'user',
+      profile: user as Record<string, unknown>,
+      authProvider: 'google',
+      roleIntent: roleIntent ?? undefined,
+    });
   }
 
   /** organization/get -> (if missing) organization/sync -> persist session. */
@@ -222,39 +235,13 @@ export class OAuthService {
 
     const org: IamOrganization = iamOrg ?? { contact: { email: ctx.email } };
     const jwt = org.jwt ?? ctx.accessToken;
-    this.persistOrganizationSession(jwt, org);
-  }
 
-  /** Persist a user session using Majestic's storage conventions. */
-  private persistUserSession(jwt: string, user: any, organizationId: string): void {
-    const mappedUser = mapUserToLegacy({ ...user, jwt });
-
-    sessionStorage.setItem('authToken', jwt);
-    sessionStorage.setItem('token', jwt);
-    sessionStorage.setItem('isAuthenticated', 'true');
-    sessionStorage.setItem('authProvider', 'google');
-    sessionStorage.setItem('loginType', 'user');
-    sessionStorage.setItem('organization_id', organizationId);
-    sessionStorage.setItem('login_details', JSON.stringify(mappedUser));
-    sessionStorage.setItem('userRoles', JSON.stringify(user?.roles ?? []));
-
-    this.commonService.loginedUserInfo = mappedUser;
-  }
-
-  /** Persist an organization session using Majestic's storage conventions. */
-  private persistOrganizationSession(jwt: string, org: any): void {
-    const mappedOrg = mapOrganizationToUserShape({ ...org, jwt });
-
-    sessionStorage.setItem('authToken', jwt);
-    sessionStorage.setItem('token', jwt);
-    sessionStorage.setItem('isAuthenticated', 'true');
-    sessionStorage.setItem('authProvider', 'google');
-    sessionStorage.setItem('loginType', 'organization');
-    sessionStorage.setItem('organization_id', org?.id ?? '');
-    sessionStorage.setItem('login_details', JSON.stringify(mappedOrg));
-    sessionStorage.setItem('userRoles', JSON.stringify(org?.roles ?? []));
-
-    this.commonService.loginedUserInfo = mappedOrg;
+    await this.postLoginWorkflow.completeLogin({
+      jwt,
+      loginType: 'organization',
+      profile: org as Record<string, unknown>,
+      authProvider: 'google',
+    });
   }
 
   /** Sign out of Supabase and clear the app session (keeps app_id). */

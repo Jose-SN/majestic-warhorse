@@ -1,8 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IamResponse } from './user-oauth.service';
+import { AppContextService } from '../app-context.service';
 
 export interface IamOrganization {
   id?: string;
@@ -29,17 +30,16 @@ export interface OrganizationSyncPayload {
 export class OrganizationOAuthService {
   private readonly _apiUrl: string = environment.iamApi;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private appContext: AppContextService
+  ) {}
 
-  private getAppId(): string {
-    return sessionStorage.getItem('app_id') || '';
-  }
-
-  private buildHeaders(json = false): HttpHeaders {
-    const appId = this.getAppId();
+  private buildHeaders(appId: string, json = false): HttpHeaders {
     return new HttpHeaders({
       ...(json ? { 'Content-Type': 'application/json' } : {}),
-      ...(appId ? { 'x-app-id': appId, app_id: appId } : {}),
+      'x-app-id': appId,
+      app_id: appId,
     });
   }
 
@@ -50,10 +50,11 @@ export class OrganizationOAuthService {
   async getOrganizationByEmail(email: string): Promise<IamOrganization | null> {
     if (!email) return null;
     try {
+      const appId = await this.appContext.ensureAppId();
       const response: any = await firstValueFrom(
         this.http.get<IamResponse<IamOrganization | IamOrganization[]>>(
           `${this._apiUrl}organization/get?email=${encodeURIComponent(email)}`,
-          { headers: this.buildHeaders() }
+          { headers: this.buildHeaders(appId) }
         )
       );
       const data = response?.data ?? response ?? null;
@@ -69,11 +70,12 @@ export class OrganizationOAuthService {
 
   /** POST /organization/sync — idempotent find-or-create. */
   async syncOrganization(payload: OrganizationSyncPayload): Promise<IamResponse<IamOrganization>> {
+    const appId = await this.appContext.ensureAppId();
     return firstValueFrom(
       this.http.post<IamResponse<IamOrganization>>(
         `${this._apiUrl}organization/sync`,
         payload,
-        { headers: this.buildHeaders(true) }
+        { headers: this.buildHeaders(appId, true) }
       )
     );
   }
