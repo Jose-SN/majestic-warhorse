@@ -1,37 +1,69 @@
 @import '../../../styles/index';
 
+:host {
+  display: block;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
 .dashboard-container {
-  height: 100%;
-  @include flex(flex, null, null, null);
+  width: 100%;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(255, 61, 101, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(0, 242, 255, 0.08) 0%, transparent 50%),
+    var(--bg-main);
+  @include flex(flex, null, null, stretch);
+
   .dashboard-content {
     @include flex(flex, column, null, null);
   }
+
   .common-container {
     @include flex(flex, column, null, null);
-    height: 100%;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
   }
 }
+
 .dashboard-left {
   background: var(--bg-left-panel);
   max-width: 328px;
   width: 100%;
   flex-shrink: 0;
+  align-self: stretch;
   padding: 30px;
+  border-right: 1px solid rgba(53, 69, 133, 0.25);
   @include flex(flex, column, null, null);
+  min-height: 0;
+  overflow: hidden;
 }
 
 .dashboard-right {
   @include flex(flex, column, null, null);
-  flex-grow: 1;
-  padding: 30px 25px;
+  flex: 1;
+  align-self: stretch;
+  padding: 20px 25px 12px;
   position: relative;
   overflow: hidden;
+  min-width: 0;
+  min-height: 0;
 }
 
+@media screen and (min-width: 1025px) {
+  .dashboard-container {
+    zoom: var(--dashboard-scale);
+    height: calc(100vh / var(--dashboard-scale));
+    max-height: calc(100vh / var(--dashboard-scale));
+  }
+}
 
 @media screen and (min-width: 1921px) {
   .dashboard-right {
-    // max-width: 1592px;
     margin: 0 auto;
   }
 }
@@ -40,10 +72,12 @@
   .scroll-container {
     overflow: hidden;
     overflow-x: auto;
+
     &.overview {
       height: 240px !important;
     }
   }
+
   .content-top {
     padding: 10px;
   }
@@ -52,10 +86,15 @@
 @media screen and (max-width: 1024px) {
   .dashboard-container {
     display: block;
+    zoom: 1;
+    height: 100vh;
+    max-height: 100vh;
+
     .common-container {
-     height: min-content;
+      height: min-content;
     }
   }
+
   .dashboard-left {
     height: 100%;
     padding: 30px 10px;
@@ -65,12 +104,14 @@
     z-index: 100;
     transform: translateX(-100%);
     @include transition(transform, 0.3s ease-in-out);
+
     &.active {
       transform: translateX(0);
     }
   }
+
   .dashboard-right {
-    @include flex(flex,column,null,null);
+    @include flex(flex, column, null, null);
     height: 100%;
     overflow-y: auto;
   }
@@ -80,12 +121,14 @@
   .header-small {
     margin-top: 20px;
     display: block !important;
+
     figure {
       max-width: 233px;
       width: 100%;
       margin: 0 auto;
     }
   }
+
   .dashboard-left {
     max-width: 255px;
     height: 100%;
@@ -93,52 +136,66 @@
     left: 0;
     top: 0;
     z-index: 100;
+
     header {
       display: none;
     }
   }
+
   .dashboard-container {
     @include flex(flex, column, null, null);
   }
+
   .dashboard-right {
     .profile-area {
       width: 50px;
       height: 50px;
+
       .common-holder {
         width: 50px;
         height: 50px;
+
         figure {
           width: 21px;
           height: 21px;
         }
       }
     }
+
     .icon-mobile {
       position: absolute !important;
       top: 30px;
       right: 20px;
       display: block !important;
     }
+
     .search-holder {
       padding-right: 0;
       margin-right: 0;
     }
+
     .search-and-profile {
       @include flex(flex, column, null, null);
     }
+
     .profile-area {
       justify-content: center;
     }
+
     .title-holder {
       @include flex(flex, column, null, null);
     }
+
     .data-refreshed-holder {
       @include flex(flex, column, null, null);
     }
+
     .content-area {
       @include flex(flex, column, null, null);
+
       .content-left {
         order: 2;
+
         .courses-wrapper {
           .course-card-holder {
             .course-card {
@@ -147,23 +204,15 @@
             }
           }
         }
+
         .course-title {
           @include flex(flex, column, null, null);
         }
       }
-      .content-right {
+
+      .content-right.right-insights-panel {
         order: 1;
         max-width: 100%;
-        .content-box {
-          .reading-list-wrapper {
-            .reading-list {
-              figure {
-                width: 35px;
-                flex-shrink: 0;
-              }
-            }
-          }
-        }
       }
     }
   }

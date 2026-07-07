@@ -1,0 +1,23 @@
+// Match 100% browser zoom to prior 67% zoom density (67 / 100)
+$dashboard-scale: 0.6705882353;
+
+@function ds($px) {
+  @return $px * $dashboard-scale;
+}
+
+@mixin dashboard-glass-card {
+  background: rgba(0, 25, 59, 0.72);
+  border: 1px solid rgba(79, 137, 252, 0.18);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+@mixin dashboard-nav-active {
+  background: linear-gradient(135deg, #ff3d5d 0%, #ff7e67 45%, #cd1aa7 100%);
+  box-shadow: 0 4px 20px rgba(255, 61, 101, 0.35);
+}
+
+@mixin dashboard-cyan-glow {
+  color: #00f2ff;
+  text-shadow: 0 0 12px rgba(0, 242, 255, 0.45);
+}

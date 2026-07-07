@@ -1,7 +1,16 @@
 @import '../styles/mixins';
+app-dashboard {
+  display: block;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
 app-dashboard-sidepanel,
 app-dashboard-overview {
   @include flex(flex, null, null, null);
+}
+app-search-profile {
+  flex-shrink: 0;
 }
 app-dashboard-sidepanel {
   max-width: 328px;

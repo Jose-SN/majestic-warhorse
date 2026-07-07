@@ -1,223 +1,145 @@
 @import '../../../styles/index';
 
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
 ::-webkit-scrollbar {
   height: 10px;
   width: 10px;
 }
 
-::-webkit-scrollbar-thumb:horizontal {
-  background: var(--bg-shadow);
-  border-radius: 10px;
-}
-
+::-webkit-scrollbar-thumb:horizontal,
 ::-webkit-scrollbar-thumb:vertical {
   background: var(--bg-shadow);
   border-radius: 10px;
 }
 
-.dashboard-container {
-  height: 100%;
-  @include flex(flex, null, null, null);
+.logo-main {
+  margin-bottom: 50px;
 
-  .dashboard-content {
-    @include flex(flex, column, null, null);
+  img {
+    margin: 0 auto;
+    cursor: pointer;
+    max-width: 220px;
   }
+}
 
-  .header-small {
+.left-navigation {
+  flex-grow: 1;
+}
+
+header {
+  @include flex(flex, null, null, null);
+  gap: 22px;
+
+  .icon-mobile {
     display: none;
   }
+}
 
-  .btn-close {
-    @include btn(null, null);
-    width: 30px;
-    height: 26px;
-    transform: scale(0.8);
+ul {
+  @include common-margin;
+  list-style: none;
 
-    .icon-left {
-      @include icon(4px, 15px);
-      top: 11px;
+  .disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.45;
+  }
 
-      &:before {
-        @include icon-before(4px, 15px, -10px);
+  li {
+    font-size: 1.125rem;
+    position: relative;
+    margin-bottom: 4px;
+
+    figure {
+      width: 30px;
+      height: 30px;
+      margin-right: 20px;
+      @include flex(flex, column, center, center);
+    }
+
+    a {
+      svg path {
+        fill: var(--bg-nav-color);
       }
 
-      &:after {
-        @include icon-after(4px, 15px, 10px);
+      color: var(--bg-nav-color);
+      padding: 14px 18px;
+      @include flex(flex, null, null, center);
+      @include border-radius(14px);
+      @include transition(all 0.25s ease-in-out);
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        @include dashboard-nav-active;
+        width: 100%;
+        height: 100%;
+        @include border-radius(14px);
+        @include transition(all 0.25s ease-in-out);
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        z-index: 0;
       }
 
-      &:hover {
-        cursor: pointer;
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 20px;
+        bottom: 0;
+        margin: auto;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 6px 0 6px 7px;
+        border-color: transparent transparent transparent var(--white);
+        opacity: 0;
+        @include transition(all 0.2s ease-in-out);
+      }
+
+      &:hover,
+      &.active {
+        color: var(--white);
+
+        svg path {
+          fill: var(--white);
+        }
+
+        &::before {
+          opacity: 1;
+        }
+
+        &::after {
+          right: 14px;
+          opacity: 1;
+        }
       }
     }
 
-    .icon-right {
-      @include icon(4px, 15px);
-      top: 11px;
-      left: 15px;
-
-      &:before {
-        @include icon-before(4px, 15px, -10px);
-      }
-
-      &:after {
-        @include icon-after(4px, 15px, 10px);
-      }
-    }
-
-    &.open {
-      .icon-left {
-        transition-duration: 0.5s;
-        background: transparent;
-
-        &:before {
-          transform: rotateZ(45deg) scaleX(1.4) translate(2px, 2px);
-        }
-
-        &:after {
-          transform: rotateZ(-45deg) scaleX(1.4) translate(2px, -2px);
-        }
-      }
-
-      .icon-right {
-        transition-duration: 0.5s;
-        background: transparent;
-
-        &:before {
-          transform: rotateZ(-45deg) scaleX(1.4) translate(-2px, 2px);
-        }
-
-        &:after {
-          transform: rotateZ(45deg) scaleX(1.4) translate(-2px, -2px);
-        }
-      }
-    }
-
-    &:hover {
-      cursor: pointer;
+    figure,
+    span {
+      position: relative;
+      z-index: 1;
     }
   }
 }
 
-
-
-
-  .logo-main {
-    margin-bottom: 50px;
-
-    img {
-      margin: 0 auto;
-      cursor: pointer;
-    }
-  }
-
-  .left-navigation {
-    flex-grow: 1;
-  }
-
-  header {
-    @include flex(flex, null, null, null);
-    gap: 22px;
-
-    .icon-mobile {
-      display: none;
-    }
-  }
-
-  ul {
-    @include common-margin;
-    list-style: none;
-
-    .disabled {
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-    li {
-      font-size: 1.125rem;
-      position: relative;
-      margin-bottom: 2px;
-      figure {
-        width: 30px;
-        height: 30px;
-        margin-right: 30px;
-        @include flex(flex, column, center, center);
-      }
-
-      a {
-        svg {
-          path {
-            fill: var(--bg-nav-color);
-          }
-        }
-
-        color: var(--bg-nav-color);
-        padding: 20px;
-        @include flex(flex, null, null, center);
-        @include border-radius(18px);
-        @include transition(all 0.3s ease-in-out);
-
-        &::before {
-          content: '';
-          @include gradient();
-          width: 100%;
-          height: 100%;
-          @include border-radius(18px);
-          @include transition(all 0.3s ease-in-out);
-          position: absolute;
-          top: 0;
-          left: 0;
-          opacity: 0;
-          z-index: 0;
-        }
-
-        &::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          right: 28px;
-          bottom: 0;
-          margin: auto;
-          width: 0px;
-          height: 0px;
-          border-style: solid;
-          border-width: 6px 0 6px 7px;
-          border-color: transparent transparent transparent var(--white);
-          transform: rotate(0deg);
-          @include transition(all 0.2s ease-in-out);
-          opacity: 0;
-        }
-
-        &:hover,
-        &.active {
-          color: var(--white);
-
-          svg {
-            path {
-              fill: var(--white);
-            }
-          }
-
-          &::before {
-            opacity: 1;
-          }
-
-          &::after {
-            right: 20px;
-            opacity: 1;
-          }
-        }
-      }
-
-      figure,
-      span {
-        position: relative;
-        z-index: 1;
-      }
-    }
-  }
-
 footer {
   color: var(--bg-grey);
-  line-height: 1.313rem;
+  line-height: 1.4;
+  padding-top: 16px;
+  border-top: 1px solid rgba(53, 69, 133, 0.2);
 
   span {
     font-size: 0.75rem;
@@ -229,14 +151,17 @@ footer {
     ul {
       li {
         font-size: 1rem;
+
         a {
           padding: 10px 15px;
           @include border-radius(8px);
+
           figure {
             width: 20px;
             height: 25px;
           }
         }
+
         figure {
           margin-right: 12px;
         }
