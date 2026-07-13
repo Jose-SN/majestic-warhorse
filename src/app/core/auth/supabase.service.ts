@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from 'src/environments/environment';
+import { getOAuthCallbackUrl } from './auth-redirect.util';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,7 @@ export class SupabaseService {
         autoRefreshToken: true,
         detectSessionInUrl: false,
         storage: localStorage,
+        redirectTo: getOAuthCallbackUrl(),
       },
     });
   }

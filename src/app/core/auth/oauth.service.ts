@@ -10,7 +10,7 @@ import {
 import { CommonService } from 'src/app/shared/services/common.service';
 import { PostLoginWorkflowService } from './post-login-workflow.service';
 import { AppContextService } from '../app-context.service';
-import { environment } from 'src/environments/environment';
+import { getOAuthCallbackUrl } from './auth-redirect.util';
 
 type LoginType = 'user' | 'organization';
 
@@ -30,14 +30,6 @@ export class OAuthService {
     private commonService: CommonService,
     private router: Router
   ) {}
-
-  /** Use the live browser origin so OAuth returns to the deployed host, not a baked-in dev URL. */
-  private getAuthCallbackUrl(): string {
-    if (typeof window !== 'undefined' && window.location?.origin) {
-      return window.location.origin;
-    }
-    return environment.appUrl;
-  }
 
   /** Preserve app_id while clearing any previous IAM session state. */
   private clearIamSessionKeepAppId(): void {
@@ -69,7 +61,7 @@ export class OAuthService {
     const { data, error } = await this.supabaseService.client.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${this.getAuthCallbackUrl()}/auth/callback`,
+        redirectTo: getOAuthCallbackUrl(),
         queryParams: { access_type: 'offline', prompt: 'consent' },
       },
     });
