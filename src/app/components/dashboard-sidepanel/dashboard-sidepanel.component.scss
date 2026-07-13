@@ -21,17 +21,287 @@
 }
 
 .logo-main {
-  margin-bottom: 50px;
+  margin-bottom: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  text-align: center;
 
-  img {
-    margin: 0 auto;
-    cursor: pointer;
-    max-width: 220px;
+  &__mark {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 14px rgba(255, 107, 44, 0.4));
+  }
+
+  &__text {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__eyebrow {
+    font-family: $archivo-regular;
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    color: var(--mc-on-surface-variant);
+  }
+
+  &__title {
+    font-family: $poppins-bold;
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    line-height: 1.25;
   }
 }
 
 .left-navigation {
   flex-grow: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.sidenav-user {
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--mc-outline-variant);
+
+  &__popup {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(100% + 8px);
+    z-index: 20;
+    text-align: center;
+    padding: 12px;
+    gap: 8px;
+    justify-content: center;
+    @include dashboard-glass-card;
+    @include mc-luminous-stroke;
+    @include border-radius(8px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .hologram-ring {
+    position: relative;
+    flex-shrink: 0;
+
+    &--popup {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 8px;
+    }
+
+    &--compact {
+      width: 40px;
+      height: 40px;
+      margin: 0;
+    }
+
+    &__glow {
+      position: absolute;
+      inset: -4px;
+      @include border-radius(50%);
+      background: var(--mc-brand-gradient);
+      opacity: 0.75;
+      filter: blur(8px);
+      box-shadow: 0 0 16px rgba(255, 107, 44, 0.45);
+    }
+  }
+
+  .hologram-ring--compact .hologram-ring__glow {
+    inset: -2px;
+    filter: blur(4px);
+    box-shadow: 0 0 10px rgba(255, 107, 44, 0.4);
+  }
+
+  .hologram-ai-tag {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    z-index: 2;
+    font-family: var(--mc-font-label);
+    font-size: 0.5625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: var(--mc-brand-gradient);
+    padding: 2px 8px;
+    @include border-radius(999px);
+    box-shadow: 0 0 10px rgba(255, 107, 44, 0.55);
+
+    &--compact {
+      bottom: -1px;
+      right: -4px;
+      font-size: 0.4375rem;
+      letter-spacing: 0.06em;
+      padding: 1px 4px;
+      box-shadow: 0 0 6px rgba(255, 107, 44, 0.45);
+    }
+  }
+
+  .hologram-figure {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    @include border-radius(50%);
+    overflow: hidden;
+    border: 2px solid var(--mc-surface);
+    background: radial-gradient(circle, rgba(255, 107, 44, 0.18) 0%, var(--mc-surface-container-lowest) 55%);
+    @include flex(flex, null, center, center);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+
+      &.is-brand-fallback {
+        width: 62%;
+        height: 62%;
+        object-fit: contain;
+        filter: drop-shadow(0 0 12px rgba(255, 107, 44, 0.45));
+      }
+    }
+  }
+
+  .hologram-name {
+    margin: 0;
+    font-family: var(--mc-font-headline);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--mc-on-surface);
+    line-height: 1.3;
+  }
+
+  .hologram-email {
+    margin: 0;
+    font-family: var(--mc-font-body);
+    font-size: 0.8125rem;
+    color: var(--mc-on-surface-variant);
+    word-break: break-all;
+  }
+
+  .hologram-account-type {
+    display: inline-block;
+    font-family: var(--mc-font-label);
+    font-size: 0.625rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mc-on-surface);
+    background: rgba(255, 107, 44, 0.14);
+    border: 1px solid rgba(255, 107, 44, 0.28);
+    padding: 2px 10px;
+    @include border-radius(999px);
+  }
+
+  .hologram-label {
+    margin: 0;
+    font-family: var(--mc-font-label);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--mc-brand-text-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+    word-break: break-word;
+  }
+
+  .hologram-profile-btn {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--mc-outline-variant);
+    @include border-radius(8px);
+    background: rgba(31, 31, 34, 0.75);
+    color: var(--mc-on-surface);
+    font-family: $archivo-regular;
+    font-size: 0.75rem;
+    cursor: pointer;
+    @include transition(all 0.2s ease);
+
+    &:hover {
+      border-color: var(--mc-primary-container);
+      background: rgba(255, 107, 44, 0.1);
+    }
+
+    &--logout {
+      color: #f87171;
+
+      &:hover {
+        border-color: rgba(248, 113, 113, 0.45);
+        background: rgba(248, 113, 113, 0.1);
+      }
+    }
+  }
+
+  &__text {
+    font-size: 1.125rem;
+    color: var(--mc-on-surface-variant);
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &--sub {
+      font-size: 1rem;
+    }
+  }
+
+  &__trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 6px;
+    border: 0;
+    background: transparent;
+    @include border-radius(10px);
+    cursor: pointer;
+    text-align: left;
+    @include transition(background 0.15s ease);
+
+    &:hover,
+    .is-open & {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  &__meta {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__chevron {
+    flex-shrink: 0;
+    color: var(--mc-on-surface-variant);
+    @include transition(transform 0.2s ease);
+
+    .is-open & {
+      transform: rotate(180deg);
+    }
+  }
 }
 
 header {
@@ -67,10 +337,10 @@ ul {
 
     a {
       svg path {
-        fill: var(--bg-nav-color);
+        fill: var(--mc-on-surface-variant);
       }
 
-      color: var(--bg-nav-color);
+      color: var(--mc-on-surface-variant);
       padding: 14px 18px;
       @include flex(flex, null, null, center);
       @include border-radius(14px);
@@ -136,10 +406,11 @@ ul {
 }
 
 footer {
-  color: var(--bg-grey);
+  color: var(--mc-outline);
   line-height: 1.4;
-  padding-top: 16px;
-  border-top: 1px solid rgba(53, 69, 133, 0.2);
+  padding-top: 10px;
+  margin-top: 8px;
+  flex-shrink: 0;
 
   span {
     font-size: 0.75rem;

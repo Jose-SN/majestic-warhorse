@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -26,7 +26,7 @@ import {
   templateUrl: './dashboard-overview.component.html',
   styleUrl: './dashboard-overview.component.scss',
 })
-export class DashboardOverviewComponent {
+export class DashboardOverviewComponent implements AfterViewInit, OnDestroy {
   public isMobileNav = false;
   public activePanel: string = '';
   public courseLists: ICourseList[] = [];
@@ -43,7 +43,10 @@ export class DashboardOverviewComponent {
   viewModel: DashboardDemoViewModel = structuredClone(DASHBOARD_DEMO_DATA);
 
   recommendationIndex = 0;
+  carouselOffset = 0;
+  readonly carouselPageSize = 4;
   readonly ringCircumference = 2 * Math.PI * 15;
+  readonly brandLogo = 'assets/images/logo-majestic-hourse.svg';
 
   readonly chartYLabels = [
     { text: '100%', y: 18 },
@@ -65,6 +68,10 @@ export class DashboardOverviewComponent {
   public dashboardOverview: any = { coursesUploaded: 0 };
 
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
+  @ViewChild('futuristicDashboard') futuristicDashboard?: ElementRef<HTMLElement>;
+  @ViewChild('subscribedGridViewport') subscribedGridViewport?: ElementRef<HTMLElement>;
+
+  private subscribedCardResizeObserver?: ResizeObserver;
 
   constructor(
     private courseUploadService: CourseUploadService,
@@ -95,18 +102,75 @@ export class DashboardOverviewComponent {
     this.getCurrentTime();
   }
 
+  ngAfterViewInit(): void {
+    this.syncRecommendationCardSize();
+    const viewport = this.subscribedGridViewport?.nativeElement;
+    if (!viewport || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    this.subscribedCardResizeObserver = new ResizeObserver(() => this.syncRecommendationCardSize());
+    this.subscribedCardResizeObserver.observe(viewport);
+  }
+
+  private syncRecommendationCardSize(): void {
+    const dashboard = this.futuristicDashboard?.nativeElement;
+    const viewport = this.subscribedGridViewport?.nativeElement;
+    if (!dashboard || !viewport) {
+      return;
+    }
+
+    const subscribedCard = viewport.querySelector('.subscribed-card') as HTMLElement | null;
+    const rowHeight = subscribedCard?.offsetHeight
+      ?? Math.max(0, (viewport.clientHeight - 12) / 2);
+
+    dashboard.style.setProperty('--subscribed-card-row-height', `${rowHeight}px`);
+  }
+
   get recommendationsDisplay(): RecommendedCourseItem[] {
-    const demo = DASHBOARD_DEMO_DATA.recommendations;
-    return Array.from({ length: 4 }, (_, i) => {
-      return this.viewModel.recommendations[i] ?? { ...demo[i] };
-    });
+    return this.viewModel.recommendations?.length
+      ? this.viewModel.recommendations
+      : DASHBOARD_DEMO_DATA.recommendations;
+  }
+
+  get visibleRecommendations(): RecommendedCourseItem[] {
+    const all = this.recommendationsDisplay;
+    if (all.length <= this.carouselPageSize) {
+      return all;
+    }
+    return all.slice(this.carouselOffset, this.carouselOffset + this.carouselPageSize);
+  }
+
+  get canSlideRecommendationsPrev(): boolean {
+    return this.recommendationsDisplay.length > 1;
+  }
+
+  get canSlideRecommendationsNext(): boolean {
+    return this.recommendationsDisplay.length > 1;
+  }
+
+  private get recommendationPageOffset(): number {
+    const total = this.recommendationsDisplay.length;
+    if (!total) {
+      return 0;
+    }
+    return Math.floor(this.recommendationIndex / this.carouselPageSize) * this.carouselPageSize;
+  }
+
+  private syncCarouselOffsetToSelection(): void {
+    const total = this.recommendationsDisplay.length;
+    if (!total) {
+      this.carouselOffset = 0;
+      return;
+    }
+    const maxOffset = Math.max(0, Math.floor((total - 1) / this.carouselPageSize) * this.carouselPageSize);
+    this.carouselOffset = Math.min(this.recommendationPageOffset, maxOffset);
   }
 
   get subscribedCoursesDisplay(): SubscribedCourseItem[] {
-    const demo = DASHBOARD_DEMO_DATA.subscribedCourses;
-    return Array.from({ length: 8 }, (_, i) => {
-      return this.viewModel.subscribedCourses[i] ?? { ...demo[i] };
-    });
+    return this.viewModel.subscribedCourses?.length
+      ? this.viewModel.subscribedCourses
+      : DASHBOARD_DEMO_DATA.subscribedCourses;
   }
 
   get filterList(): string[] {
@@ -129,9 +193,43 @@ export class DashboardOverviewComponent {
     );
   }
 
-  /** Reference uses horse logo hologram, not profile photo. */
+  get isOrganizationAccount(): boolean {
+    return (
+      sessionStorage.getItem('loginType') === 'organization' ||
+      this.loginedUserInfo.role === 'organization'
+    );
+  }
+
+  get userAccountTypeLabel(): string {
+    return this.isOrganizationAccount ? 'Organization' : 'User';
+  }
+
+  get userDisplayName(): string {
+    const info = this.loginedUserInfo;
+    if (this.isOrganizationAccount) {
+      return (
+        info.name?.trim() ||
+        sessionStorage.getItem('activeOrganizationName')?.trim() ||
+        ''
+      );
+    }
+
+    const first = (info.firstName || info.first_name || '').trim();
+    const last = (info.lastName || info.last_name || '').trim();
+    return [first, last].filter(Boolean).join(' ');
+  }
+
+  get hasProfileImage(): boolean {
+    return !!(this.loginedUserInfo.profileImage || this.loginedUserInfo.profile_image)?.trim();
+  }
+
   get hologramImage(): string {
-    return '../../../assets/images/logo-majestic-hourse.svg';
+    const profile = (
+      this.loginedUserInfo.profileImage ||
+      this.loginedUserInfo.profile_image ||
+      ''
+    ).trim();
+    return profile || this.brandLogo;
   }
 
   ringOffset(percent: number, radius = 15): number {
@@ -150,12 +248,60 @@ export class DashboardOverviewComponent {
 
   slideRecommendations(direction: -1 | 1): void {
     const total = this.recommendationsDisplay.length;
-    if (!total) return;
-    this.recommendationIndex = (this.recommendationIndex + direction + total) % total;
+    if (total <= 1) {
+      return;
+    }
+
+    this.syncCarouselOffsetToSelection();
+    const pageSize = this.carouselPageSize;
+    const visibleCount = Math.min(pageSize, total - this.carouselOffset);
+    const localIndex = this.recommendationIndex - this.carouselOffset;
+
+    if (direction === 1) {
+      if (localIndex < visibleCount - 1) {
+        this.recommendationIndex++;
+        return;
+      }
+
+      const nextOffset = this.carouselOffset + pageSize;
+      if (nextOffset < total) {
+        this.carouselOffset = nextOffset;
+        this.recommendationIndex = this.carouselOffset;
+        return;
+      }
+
+      this.carouselOffset = 0;
+      this.recommendationIndex = 0;
+      return;
+    }
+
+    if (localIndex > 0) {
+      this.recommendationIndex--;
+      return;
+    }
+
+    const prevOffset = this.carouselOffset - pageSize;
+    if (prevOffset >= 0) {
+      this.carouselOffset = prevOffset;
+      const prevVisibleCount = Math.min(pageSize, total - this.carouselOffset);
+      this.recommendationIndex = this.carouselOffset + prevVisibleCount - 1;
+      return;
+    }
+
+    const lastOffset = Math.max(0, Math.floor((total - 1) / pageSize) * pageSize);
+    this.carouselOffset = lastOffset;
+    this.recommendationIndex = total - 1;
   }
 
   goToRecommendation(index: number): void {
-    this.recommendationIndex = index;
+    const total = this.recommendationsDisplay.length;
+    if (!total) {
+      return;
+    }
+
+    const safeIndex = Math.max(0, Math.min(index, total - 1));
+    this.recommendationIndex = safeIndex;
+    this.syncCarouselOffsetToSelection();
   }
 
   /** Map API courses into demo view model slots — extend when connecting real endpoints. */
@@ -168,20 +314,19 @@ export class DashboardOverviewComponent {
       this.mapCourseToSubscribedItem(course, index)
     );
 
-    const demo = DASHBOARD_DEMO_DATA.subscribedCourses;
-    this.viewModel.subscribedCourses = Array.from({ length: 8 }, (_, i) => {
-      return mapped[i] ?? { ...demo[i % demo.length], id: demo[i % demo.length].id };
-    });
+    if (mapped.length) {
+      this.viewModel.subscribedCourses = mapped;
+    }
 
     const demoRecs = DASHBOARD_DEMO_DATA.recommendations;
-    this.viewModel.recommendations = Array.from({ length: 4 }, (_, i) => {
-      const course = this.courseLists[i];
-      const fallback = demoRecs[i];
+    this.viewModel.recommendations = this.courseLists.map((course, i) => {
+      const fallback = demoRecs[i % demoRecs.length];
       return {
-        id: course?.id || fallback.id,
-        title: 'Military Strategy Course',
+        id: course.id || `${fallback.id}-${i}`,
+        title: course.courseTitle || fallback.title,
         subtitle: fallback.subtitle,
         coverStyle: fallback.coverStyle,
+        ctaLabel: fallback.ctaLabel,
       };
     });
 
@@ -210,6 +355,8 @@ export class DashboardOverviewComponent {
       }
       this.viewModel.insights.weekProgress = progress.slice(0, 7);
     }
+
+    queueMicrotask(() => this.syncRecommendationCardSize());
   }
 
   private mapCourseToSubscribedItem(course: ICourseList, index: number): SubscribedCourseItem {
@@ -381,6 +528,7 @@ export class DashboardOverviewComponent {
   }
 
   ngOnDestroy(): void {
+    this.subscribedCardResizeObserver?.disconnect();
     this.destroy$.next();
     this.destroy$.complete();
   }

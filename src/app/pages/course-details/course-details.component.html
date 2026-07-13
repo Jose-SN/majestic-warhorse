@@ -1,229 +1,189 @@
-<div class="content-area">
-  <div class="content-left">
-    <div class="courses-wrapper">
-      <div class="course-top">
-        <h2>{{selectedCourseInfo.courseTitle}}</h2>
-        <ul class="tab-navigation">
-          <li [ngClass]="{ 'active': activeTab === 'course' }" (click)="setActiveTab('course')">Course</li>
-          <li [ngClass]="{ 'active': activeTab === 'questionnaire' }" *ngIf="isOrganization || loginedUserRole === 'teacher'" (click)="setActiveTab('questionnaire')">Questionnaire</li>
-          <li [ngClass]="{ 'active': activeTab === 'assessment' }" *ngIf="loginedUserRole === 'student'" (click)="setActiveTab('assessment')">Assessment</li>
-          @if (canAccessAnswers) {
-          <li [ngClass]="{ 'active': activeTab === 'answers' }" (click)="setActiveTab('answers')">Answers</li>
+<div class="course-details-page">
+  <div class="cd-layout">
+    <!-- Left: video + title + description -->
+    <section class="cd-main">
+      @if (activeTab === 'course') {
+        <div class="cd-video-block">
+          <img class="cd-video-block__logo" src="../../../assets/images/logo-majestic-hourse.svg" alt="" />
+          <app-video-player
+            [videoUrl]="{ url: activeVideoInfo.fileURL }"
+            (videoDuration)="videoDurationHandler($event)"
+            (videoStatusUpdate)="videoStatusUpdateHandler($event)">
+          </app-video-player>
+        </div>
+
+        <div class="cd-course-header">
+          <h1>{{ heroTitle }}</h1>
+          <p class="cd-course-header__subtitle">{{ demo.heroSubtitle }}</p>
+        </div>
+
+        <div class="cd-description">
+          <p [innerHTML]="descriptionHtml"></p>
+        </div>
+
+        @if (loginedUserRole === 'student' && showQuestionAnswer) {
+          <div class="cd-assessment-cta">
+            <button type="button" (click)="setActiveTab('assessment')">Start Assessment Test</button>
+          </div>
+        }
+      }
+
+      @if (activeTab === 'questionnaire') {
+        <div class="cd-tab-panel">
+          <app-questionnaire [courseId]="selectedCourseInfo?.id ?? ''"></app-questionnaire>
+        </div>
+      }
+      @if (activeTab === 'assessment' && loginedUserRole === 'student') {
+        <div class="cd-tab-panel">
+          <app-student-assessment [courseId]="selectedCourseInfo?.id ?? ''"></app-student-assessment>
+        </div>
+      }
+      @if (activeTab === 'answers' && canAccessAnswers) {
+        <div class="cd-tab-panel">
+          <app-assessment-answers [courseId]="selectedCourseInfo?.id ?? ''"></app-assessment-answers>
+        </div>
+      }
+    </section>
+
+    <!-- Middle: tabs + lessons + instructor -->
+    <aside class="cd-lessons">
+      <ul class="cd-tabs">
+        <li [class.active]="activeTab === 'course'" (click)="setActiveTab('course')">Course</li>
+        @if (isOrganization || loginedUserRole === 'teacher') {
+          <li [class.active]="activeTab === 'questionnaire'" (click)="setActiveTab('questionnaire')">Questionnaire</li>
+        }
+        @if (loginedUserRole === 'student') {
+          <li [class.active]="activeTab === 'assessment'" (click)="setActiveTab('assessment')">Assessment</li>
+        }
+        @if (canAccessAnswers) {
+          <li [class.active]="activeTab === 'answers'" (click)="setActiveTab('answers')">Answers</li>
+        }
+      </ul>
+
+      <h3 class="cd-section-title">Lesson List</h3>
+      <div class="cd-lesson-list">
+        @for (chapterDetails of selectedCourseInfo.chapterDetails; track chapterDetails.id; let i = $index) {
+          <div class="cd-lesson-item" [class.active]="chapterDetails.id === activeChapter.id">
+            <button type="button" class="cd-lesson-item__head" (click)="openCourseAccordian($event, chapterDetails)">
+              <span class="cd-lesson-ring">
+                <svg viewBox="0 0 36 36" aria-hidden="true">
+                  <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
+                  <circle cx="18" cy="18" r="15" fill="none" stroke="url(#lessonRingGrad)" stroke-width="3" stroke-linecap="round"
+                    [attr.stroke-dasharray]="ringCircumference"
+                    [attr.stroke-dashoffset]="ringOffset(chapterProgress(chapterDetails))"
+                    transform="rotate(-90 18 18)"/>
+                </svg>
+                <span class="cd-lesson-ring__value">{{ chapterProgress(chapterDetails) }}%</span>
+              </span>
+              <span class="cd-lesson-item__title">{{ chapterLabel(chapterDetails, i) }}</span>
+              <svg class="cd-lesson-item__chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </button>
+            <div class="cd-lesson-panel panel">
+              <div class="panel-content">
+                @for (item of chapterDetails.fileDetails; track item.id) {
+                  <button type="button" class="cd-lesson-video" [class.active]="item.id === activeVideoInfo.id" (click)="changeVideoUrl(item)">
+                    <svg width="25" height="25" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M10.28 8.04C9.19 8.43 9 10.52 9 12.04C9 13.56 9.19 15.6 10.28 16.04C11.37 16.48 16 13.75 16 12.04C16 10.33 11.44 7.62 10.28 8.04Z" stroke="currentColor" stroke-width="1.5"/>
+                      <rect x="2" y="3" width="20" height="18" rx="3" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <span>{{ item.description }}</span>
+                    <small>{{ item.videoDuration }}</small>
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+
+      <div class="cd-instructor">
+        <h3 class="cd-instructor__title">Instructor Profile</h3>
+        <div class="cd-instructor__body">
+          <figure class="cd-instructor__avatar">
+            <img [src]="instructorImage" [alt]="instructorName" />
+            <figcaption class="cd-instructor__name">{{ instructorName }}</figcaption>
+          </figure>
+          <div class="cd-instructor__bio">
+            <strong>Bio</strong>
+            <p>{{ demo.instructorBio }}</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right: materials + discussions -->
+    <aside class="cd-sidebar">
+      <div class="cd-materials">
+        <h3 class="cd-section-title cd-section-title--icon">
+          <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          Course Materials
+        </h3>
+        <div class="cd-materials-list">
+          @for (material of materialsDisplay; track material.id) {
+            <article class="cd-material-card">
+              <span class="cd-material-card__icon" [class]="'cd-material-card__icon--' + material.type">
+                {{ materialTypeLabel(material.type) }}
+              </span>
+              <span class="cd-material-card__name">{{ material.name }}</span>
+              <div class="cd-material-card__actions">
+                <button type="button" class="cd-material-card__preview" (click)="previewMaterialItem(material)" [attr.aria-label]="'Preview ' + material.name">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M2 12C2 12 5.5 5 12 5C18.5 5 22 12 22 12C22 12 18.5 19 12 19C5.5 19 2 12 2 12Z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+                <button type="button" class="cd-material-card__download" (click)="downloadMaterialItem(material)" [attr.aria-label]="'Download ' + material.name">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M12 16L7 11L8.4 9.6L11 12.2V4H13V12.2L15.6 9.6L17 11L12 16Z"/>
+                    <path d="M20 18H4V20H20V18Z"/>
+                  </svg>
+                </button>
+              </div>
+            </article>
           }
-        </ul>
-      </div>
-      @if(activeTab === 'course') {
-      <div class="tab-content">
-        <div class="chapter-title">
-          <span>{{activeChapter.chapterTitle}}</span>
-        </div>
-      <div class="video-wrapper">
-        <div class="video-holder">
-          <div class="video-left">
-            <!-- <figure><img src="../../../assets/images/img-video.png" alt="" /></figure> -->
-            <app-video-player [videoUrl]="{url:activeVideoInfo.fileURL}" (videoDuration)="videoDurationHandler($event)"
-              (videoStatusUpdate)="videoStatusUpdateHandler($event)"></app-video-player>
-            <div class="video-bottom">
-                <div class="common-video-holder">
-                  <div class="bottom-holder">
-                    <div class="profile">
-                      <figure>
-                        <img [src]="commonService.decodeUrl((activeChapter?.createdBy?.profileImage || activeChapter?.createdBy?.profile_image) ?? '')" alt="" />
-                      </figure>
-                      <div class="profile-right">
-                        <span>{{(activeChapter?.createdBy?.firstName || activeChapter?.createdBy?.first_name)}} {{(activeChapter?.createdBy?.lastName || activeChapter?.createdBy?.last_name)}}</span>
-                        <strong>{{selectedCourseInfo?.chapterDetails?.length}}</strong>
-                      </div>
-                    </div>
-                    <div class="time">
-                      <figure>
-                        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                          <path
-                            d="M10 20C4.477 20 0 15.523 0 10C0 4.477 4.477 0 10 0C15.523 0 20 4.477 20 10C20 15.523 15.523 20 10 20ZM10 18C12.1217 18 14.1566 17.1571 15.6569 15.6569C17.1571 14.1566 18 12.1217 18 10C18 7.87827 17.1571 5.84344 15.6569 4.34315C14.1566 2.84285 12.1217 2 10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18ZM11 10H15V12H9V5H11V10Z"
-                            fill="" />
-                        </svg>
-                      </figure>
-                      <span>{{videoDuration}}</span>
-                    </div>
-                    <div class="download cursor-pointer">
-                      <figure>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M12 16L7 11L8.4 9.6L11 12.2V4H13V12.2L15.6 9.6L17 11L12 16Z" fill="#FD7859"/>
-                          <path d="M20 18H4V20H20V18Z" fill="#FD7859"/>
-                        </svg>
-                      </figure>
-                      <span (click)="downloadMaterial('VIDEO')">Download video</span>
-                    </div>
-                    <div class="download cursor-pointer">
-                      <figure>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M16.5 12L12 16.5L7.5 12" stroke="#FD7859" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                          <path d="M12 16.5V3" stroke="#FD7859" stroke-width="2" stroke-linecap="round"/>
-                          <path d="M20 21H4" stroke="#FD7859" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                      </figure>
-                      <span (click)="downloadMaterial('ATTACHMENT')">Download Attachments</span>
-                    </div>
-                    <div class="favorite cursor-pointer" (click)="toggleFavorite()">
-                      <figure>
-                        @if (isCourseFavorited) {
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#FD7859" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z"/>
-                        </svg>
-                        } @else {
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FD7859" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                        </svg>
-                        }
-                      </figure>
-                      <span>{{ isCourseFavorited ? 'Remove from Favorites' : 'Add to Favorites' }}</span>
-                    </div>
-                    <div class="rating">
-                      <star-rating [hoverEnabled]="true" (starClickChange)="updateVideoStatus($event)"
-                        [rating]="videoRating"></star-rating>
-                    </div>
-                  </div>
-                  @if(loginedUserRole === 'student' && showQuestionAnswer){
-                  <div class="btn-holder">
-                    <button (click)="setActiveTab('assessment')">Start Assessment Test</button>
-                  </div>
-              }
-              </div>
-            </div>
-            <div class="content-bottom">
-              <div class="scroll-content">
-                <h5>About this course</h5>
-                <strong>{{activeVideoDescription}}</strong>
-                <p>
-                  {{selectedCourseInfo.courseDescription}}
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
-      </div>
-      }
-      @if(activeTab === 'questionnaire') {
-      <div class="tab-content">
-        <app-questionnaire [courseId]="selectedCourseInfo?.id ?? ''"></app-questionnaire>
-      </div>
-      }
-      @if(activeTab === 'assessment' && loginedUserRole === 'student') {
-      <div class="tab-content">
-        <app-student-assessment [courseId]="selectedCourseInfo?.id ?? ''"></app-student-assessment>
-      </div>
-      }
-      @if(activeTab === 'answers' && canAccessAnswers) {
-      <div class="tab-content">
-        <app-assessment-answers [courseId]="selectedCourseInfo?.id ?? ''"></app-assessment-answers>
-      </div>
-      }
-    </div>
-  </div>
-  <div class="content-right">
-    <div class="content-box">
-      <!-- <h3>Last Submitted</h3> -->
-      <div class="reading-list-wrapper">
-        <div class="reading-list-content">
-          <div class="scroll-content">
-            <div class="courses-list">
-              <div class="course-list-holder">
-                <div class="scroll-content accordion-content">
-                  <ul>
-                    @for (chapterDetails of selectedCourseInfo.chapterDetails; track $index) {
-                    <li (click)="openCourseAccordian($event,chapterDetails)"
-                      [ngClass]="{'active': chapterDetails.id === activeChapter.id}">
-                      <figure>
-                        <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M0 0h48v48H0z" fill="none" />
-                          <g id="Shopicon">
-                            <rect x="16.002" y="22.002" width="25.997" height="4" />
-                            <rect x="16.002" y="11.995" width="25.997" height="4" />
-                            <rect x="16.002" y="32.008" width="25.997" height="4" />
-                            <rect x="6" y="12" width="4" height="4" />
-                            <rect x="6" y="22.006" width="4" height="4" />
-                            <rect x="6" y="32.013" width="4" height="4" />
-                          </g>
-                        </svg>
-                      </figure>
-                      <span>
-                        {{ chapterDetails.chapterTitle }}</span>
-                      <!-- <strong>1:49</strong> -->
-                    </li>
-                    <div class="panel">
-                      <div class="panel-content">
-                        @for (item of chapterDetails.fileDetails; track $index) {
-                        <div class="panel-list" (click)="changeVideoUrl(item)">
-                          <p class="align-center-video">
-                          <figure>
-                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none"
-                              xmlns="http://www.w3.org/2000/svg">
-                              <path
-                                d="M18 3H6C3.79086 3 2 4.79086 2 7V17C2 19.2091 3.79086 21 6 21H18C20.2091 21 22 19.2091 22 17V7C22 4.79086 20.2091 3 18 3Z"
-                                stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                              <path
-                                d="M10.28 8.03994C9.19003 8.42994 9 10.5199 9 12.0399C9 13.5599 9.19003 15.5999 10.28 16.0399C11.37 16.4799 16 13.7499 16 12.0399C16 10.3299 11.44 7.61994 10.28 8.03994Z"
-                                stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                          </figure>
-                          <span class="full-width">{{item.description}}</span>
-                          <strong>{{item.videoDuration}}</strong>
-                          </p>
-                        </div>
-                        }
-                      </div>
-                    </div>
-                    }
-                  </ul>
+
+      <div class="cd-discussions">
+        <h3 class="cd-section-title">Community Discussions</h3>
+        <div class="cd-discussion-list">
+          @for (item of demo.discussions; track item.id) {
+            <article class="cd-discussion-card">
+              <div class="cd-discussion-card__top">
+                <figure class="cd-discussion-card__avatar">
+                  <span>{{ item.author.charAt(0) }}</span>
+                </figure>
+                <div class="cd-discussion-card__meta">
+                  <strong>{{ item.chapterLabel }}</strong>
+                  <small>{{ item.chapterTitle }}</small>
                 </div>
+                <img class="cd-discussion-card__logo" src="../../../assets/images/logo-majestic-hourse.svg" alt="" />
               </div>
-            </div>
-            <div class="courses-list">
-              <div class="course-list-holder">
-                <div class="scroll-content accordion-content">
-                  <ul>
-                    <li (click)="openAttachmentAccordian($event)">
-                      <figure>
-                        <svg width="20" height="20" viewBox="-8 0 32 32" version="1.1"
-                          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                          xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-                          <defs>
-                          </defs>
-                          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"
-                            sketch:type="MSPage">
-                            <g id="Icon-Set" sketch:type="MSLayerGroup" transform="translate(-212.000000, -151.000000)"
-                              fill="#000000">
-                              <path
-                                d="M226,155 L226,175 C226,178.313 223.313,181 220,181 C216.687,181 214,178.313 214,175 L214,157 C214,154.791 215.791,153 218,153 C220.209,153 222,154.791 222,157 L222,175 C222,176.104 221.104,177 220,177 C218.896,177 218,176.104 218,175 L218,159 L216,159 L216,175 C216,177.209 217.791,179 220,179 C222.209,179 224,177.209 224,175 L224,157 C224,153.687 221.313,151 218,151 C214.687,151 212,153.687 212,157 L212,176 C212.493,179.945 215.921,183 220,183 C224.079,183 227.507,179.945 228,176 L228,155 L226,155"
-                                id="attachment" sketch:type="MSShapeGroup">
-                              </path>
-                            </g>
-                          </g>
-                        </svg>
-                      </figure>
-                      <span>Attachments</span>
-                    </li>
-                    <div class="panel">
-                      <div class="panel-content">
-                        @for (item of selectedAttachmentList; track $index) {
-                        <div class="panel-list">
-                          <p> {{item.name}}</p>
-                          <ul class="flex-direction-row">
-                            <li (click)="previewDocument(item)">Preview</li>
-                            <li (click)="downloadFile(item)">Download</li>
-                          </ul>
-                        </div>
-                        }
-                      </div>
-                    </div>
-                  </ul>
-                </div>
+              <p>{{ item.comment }}</p>
+              <div class="cd-discussion-card__footer">
+                <span>{{ item.timeAgo }}</span>
+                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>
+                </svg>
               </div>
-            </div>
-          </div>
+            </article>
+          }
+        </div>
+        <div class="cd-comment-box">
+          <input type="text" class="cd-comment-input" placeholder="Write a comment..." />
+          <button type="button" class="cd-comment-send" aria-label="Send comment">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>
+            </svg>
+          </button>
         </div>
       </div>
-    </div>
+    </aside>
   </div>
 </div>

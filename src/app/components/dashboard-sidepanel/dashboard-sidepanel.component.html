@@ -1,6 +1,10 @@
 <header (click)="navigateToHome()">
   <figure class="logo-main">
-    <img src="../../../assets/images/logo-majestic-hourse.svg" alt="Mejestic Hourse" />
+    <img class="logo-main__mark" src="assets/images/logo-majestic-hourse.svg" alt="Majestic Warhorse" />
+    <!-- <figcaption class="logo-main__text">
+      <span class="logo-main__eyebrow">MAKING OF</span>
+      <span class="logo-main__title">MAJESTIC WARHORSE</span>
+    </figcaption> -->
   </figure>
 </header>
 <div class="left-navigation">
@@ -198,8 +202,91 @@
       </li> -->
   </ul>
 </div>
+
+<div #userMenu class="sidenav-user" [class.is-open]="userMenuOpen">
+  @if (userMenuOpen) {
+    <div class="sidenav-user__popup insight-card hologram-card" role="menu">
+      <div class="hologram-ring hologram-ring--popup">
+        <div class="hologram-ring__glow" aria-hidden="true"></div>
+        <figure class="hologram-figure">
+          <img
+            [src]="profileImageUrl"
+            [alt]="userDisplayName || 'Profile'"
+            [class.is-brand-fallback]="!hasProfileImage"
+          />
+        </figure>
+        <!-- <span class="hologram-ai-tag">AI</span> -->
+      </div>
+
+      @if (userDisplayName) {
+        <h3 class="hologram-name">{{ userDisplayName }}</h3>
+      }
+      @if (userRoleLabel) {
+        <span class="hologram-account-type">{{ userRoleLabel }}</span>
+      }
+      @if (userEmail) {
+        <p class="hologram-email">{{ userEmail }}</p>
+      }
+      @if (userPhone) {
+        <p class="hologram-email">{{ userPhone }}</p>
+      }
+      @if (organizationName) {
+        <p class="hologram-label">{{ organizationName }}</p>
+      }
+
+      <div class="sidenav-user__actions">
+        <button type="button" class="hologram-profile-btn" role="menuitem" (click)="goToAccount()">
+          Account
+        </button>
+        @if (showSwitchOrganization) {
+          <button type="button" class="hologram-profile-btn" role="menuitem" (click)="goToSwitchOrganization()">
+            Switch Organization
+          </button>
+        }
+        <button
+          type="button"
+          class="hologram-profile-btn hologram-profile-btn--logout"
+          role="menuitem"
+          (click)="logOut()"
+        >
+          Log out
+        </button>
+      </div>
+    </div>
+  }
+
+  <button
+    type="button"
+    class="sidenav-user__trigger"
+    [attr.aria-expanded]="userMenuOpen"
+    aria-haspopup="menu"
+    (click)="toggleUserMenu($event)"
+  >
+    <div class="hologram-ring hologram-ring--compact">
+      <div class="hologram-ring__glow" aria-hidden="true"></div>
+      <figure class="hologram-figure">
+        <img
+          [src]="profileImageUrl"
+          [alt]="userDisplayName || 'Profile'"
+          [class.is-brand-fallback]="!hasProfileImage"
+        />
+      </figure>
+      <!-- <span class="hologram-ai-tag hologram-ai-tag--compact">AI</span> -->
+    </div>
+    <span class="sidenav-user__meta">
+      <span class="sidenav-user__text">{{ userDisplayName || 'Account' }}</span>
+      <span class="sidenav-user__text sidenav-user__text--sub">{{ userRoleLabel || 'User' }}</span>
+    </span>
+    <span class="sidenav-user__chevron" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="18 15 12 9 6 15"/><polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </span>
+  </button>
+</div>
+
 <footer>
-  {{ commonService.transformText(loginedUserPrivilege) }} Dashboard<br />
+  <!-- {{ commonService.transformText(loginedUserPrivilege) }} Dashboard<br /> -->
   <span>© {{ currentYear }} All Rights Reserved</span><br>
   <span> App Version: {{ appService.getAppVersion() }}</span>
 </footer>

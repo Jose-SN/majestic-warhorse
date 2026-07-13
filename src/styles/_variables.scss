@@ -17,7 +17,7 @@ $titilliumWeb-semibold: 'TitilliumWeb-SemiBold';
 $titilliumWeb-light: 'TitilliumWeb-Light';
 $titilliumWeb-regular: 'TitilliumWeb-Regular';
 :root {
-  --bg-main: #060b19;
+  --bg-main: #131316;
   --bg-login: #021732;
   --light-blue: #d8e9ff;
   --white: #fff;
@@ -30,7 +30,7 @@ $titilliumWeb-regular: 'TitilliumWeb-Regular';
   --bg-orange: #e65d3f;
   --bg-divider: rgba(39, 50, 65, 1);
   --bg-dark-blue: #0a1628;
-  --bg-left-panel: #040d1f;
+  --bg-left-panel: #0e0e11;
   --bg-nav-color: #8b95a8;
   --bg-hover: #cd1aa7;
   --bg-grey: #9fa4a6;
@@ -69,4 +69,27 @@ $titilliumWeb-regular: 'TitilliumWeb-Regular';
   --dashboard-accent-magenta: #ff3d5d;
   --dashboard-glass: rgba(0, 25, 59, 0.72);
   --dashboard-scale: 0.6705882353;
+
+  // Majestic Cyber design tokens (src/assets/screens/DESIGN.md)
+  --mc-surface: #131316;
+  --mc-surface-container-lowest: #0e0e11;
+  --mc-surface-container-low: #1b1b1e;
+  --mc-surface-container: #1f1f22;
+  --mc-surface-container-high: #2a2a2d;
+  --mc-surface-container-highest: #353438;
+  --mc-on-surface: #e4e1e6;
+  --mc-on-surface-variant: #e2bfb3;
+  --mc-outline: #a98a7f;
+  --mc-outline-variant: #594139;
+  --mc-primary: #ffb59a;
+  --mc-primary-container: #ff6b2c;
+  --mc-secondary: #ffb0cc;
+  --mc-secondary-container: #ab0063;
+  --mc-tertiary: #dcb8ff;
+  --mc-tertiary-container: #bb7bff;
+  --mc-brand-gradient: linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #4a0084 100%);
+  --mc-brand-text-gradient: linear-gradient(135deg, #ffb59a 0%, #ffb0cc 100%);
+  --mc-font-display: 'Space Grotesk', 'Poppins-Bold', sans-serif;
+  --mc-font-body: 'Geist', 'Archivo-Regular', sans-serif;
+  --mc-font-label: 'JetBrains Mono', 'Archivo-Regular', monospace;
 }
