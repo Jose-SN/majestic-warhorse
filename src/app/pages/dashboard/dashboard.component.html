@@ -8,4 +8,46 @@
       <router-outlet></router-outlet>
     </div>
   </div>
+
+  <nav class="dashboard-mobile-nav" aria-label="Mobile navigation">
+    <button
+      type="button"
+      class="dashboard-mobile-nav__item"
+      [class.is-active]="isMobileNavActive('overview')"
+      (click)="navigateMobile('overview')"
+    >
+      <span class="material-symbols-outlined" [style.font-variation-settings]="isMobileNavActive('overview') ? '\'FILL\' 1' : '\'FILL\' 0'">dashboard</span>
+      <span>Home</span>
+    </button>
+    <button
+      type="button"
+      class="dashboard-mobile-nav__item"
+      [class.is-active]="isMobileNavActive('courses')"
+      (click)="navigateMobile('courses')"
+    >
+      <span class="material-symbols-outlined">menu_book</span>
+      <span>Courses</span>
+    </button>
+    <button type="button" class="dashboard-mobile-nav__fab" aria-label="Quick action" (click)="navigateMobile('courses')">
+      <span class="material-symbols-outlined">add</span>
+    </button>
+    <button
+      type="button"
+      class="dashboard-mobile-nav__item"
+      [class.is-active]="isMobileNavActive('network')"
+      (click)="navigateMobile('network')"
+    >
+      <span class="material-symbols-outlined">group</span>
+      <span>Network</span>
+    </button>
+    <button
+      type="button"
+      class="dashboard-mobile-nav__item"
+      [class.is-active]="isMobileNavActive('account')"
+      (click)="navigateMobile('account')"
+    >
+      <span class="material-symbols-outlined">account_circle</span>
+      <span>Profile</span>
+    </button>
+  </nav>
 </section>

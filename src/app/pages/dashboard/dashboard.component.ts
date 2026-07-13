@@ -210,4 +210,42 @@ export class DashboardComponent implements OnInit, OnDestroy {
   btnMobileMenu() {
     this.isMobileNav = !this.isMobileNav;
   }
+
+  isMobileNavActive(section: 'overview' | 'courses' | 'network' | 'account'): boolean {
+    const url = this.router.url;
+    switch (section) {
+      case 'overview':
+        return url.includes('/dashboard/overview') || url.includes('/dashboard/course-overview') || url === '/dashboard';
+      case 'courses':
+        return url.includes('/dashboard/courses') || url.includes('/dashboard/course-details');
+      case 'account':
+        return url.includes('/dashboard/account');
+      case 'network': {
+        const role = this.commonService.loginedUserInfo?.role || '';
+        if (role === 'organization' || role === 'teacher') {
+          return url.includes('/dashboard/teachers') || url.includes('/dashboard/students');
+        }
+        return url.includes('/dashboard/teachers');
+      }
+      default:
+        return false;
+    }
+  }
+
+  navigateMobile(section: 'overview' | 'courses' | 'network' | 'account'): void {
+    this.isMobileNav = false;
+    const role = this.commonService.loginedUserInfo?.role || '';
+
+    const routes: Record<string, string> = {
+      overview: '/dashboard/overview',
+      courses: '/dashboard/courses',
+      account: '/dashboard/account',
+      network:
+        role === 'organization' || role === 'teacher'
+          ? '/dashboard/teachers'
+          : '/dashboard/teachers',
+    };
+
+    this.router.navigate([routes[section]]);
+  }
 }

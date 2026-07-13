@@ -83,11 +83,11 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
   statWidgets: [
     {
       id: 'real-time',
-      title: 'Real-Time',
+      title: 'Real-Time Activity',
       variant: 'bar-chart',
-      headerRight: 'Active Users',
+      headerRight: 'LIVE HUD',
       headerRightAccent: true,
-      bars: [38, 42, 45, 48, 52, 55, 58, 62, 65, 68, 72, 76, 82, 88],
+      bars: [30, 50, 80, 65, 40, 90, 55, 100, 45],
     },
     {
       id: 'students-rings',

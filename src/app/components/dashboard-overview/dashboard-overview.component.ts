@@ -246,6 +246,28 @@ export class DashboardOverviewComponent implements AfterViewInit, OnDestroy {
     return Math.max(8, Math.round((value / max) * 100));
   }
 
+  recIcon(index: number): string {
+    return ['terminal', 'dataset', 'shield_lock'][index % 3];
+  }
+
+  recMatchPercent(index: number): number {
+    return Math.max(72, 98 - index * 3);
+  }
+
+  recReadTime(index: number): string {
+    return `${8 + (index % 4) * 4} min read`;
+  }
+
+  get realtimeActivityWidget() {
+    return this.viewModel.statWidgets.find((widget) => widget.variant === 'bar-chart');
+  }
+
+  get mobileStatRingWidgets() {
+    return this.viewModel.statWidgets.filter(
+      (widget) => widget.variant === 'dual-rings' || widget.variant === 'ring-bars'
+    );
+  }
+
   slideRecommendations(direction: -1 | 1): void {
     const total = this.recommendationsDisplay.length;
     if (total <= 1) {

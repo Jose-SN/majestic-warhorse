@@ -121,10 +121,62 @@
         }
       </div>
 
+      <div class="mobile-stats-rings">
+        @for (widget of mobileStatRingWidgets; track widget.id) {
+          <div class="mobile-stat-ring-card">
+            @if (widget.variant === 'dual-rings') {
+              @if (widget.rings?.[0]; as primaryRing) {
+              <div class="progress-ring-wrap">
+                <svg viewBox="0 0 80 80" class="progress-ring">
+                  <defs>
+                    <linearGradient [attr.id]="'mobile-ring-' + widget.id" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#ff6b2c"></stop>
+                      <stop offset="100%" stop-color="#ab0063"></stop>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+                  <circle cx="40" cy="40" r="34" fill="none" [attr.stroke]="'url(#mobile-ring-' + widget.id + ')'"
+                    stroke-width="6" stroke-linecap="round"
+                    [attr.stroke-dasharray]="ringCircumferenceFor(34)"
+                    [attr.stroke-dashoffset]="ringOffset(primaryRing.value, 34)"
+                    transform="rotate(-90 40 40)"/>
+                </svg>
+                <strong>{{ primaryRing.value }}</strong>
+              </div>
+              }
+            }
+            @if (widget.variant === 'ring-bars') {
+              <div class="progress-ring-wrap">
+                <svg viewBox="0 0 80 80" class="progress-ring">
+                  <defs>
+                    <linearGradient [attr.id]="'mobile-ring-' + widget.id" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#ab0063"></stop>
+                      <stop offset="100%" stop-color="#ffb0cc"></stop>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+                  <circle cx="40" cy="40" r="34" fill="none" [attr.stroke]="'url(#mobile-ring-' + widget.id + ')'"
+                    stroke-width="6" stroke-linecap="round"
+                    [attr.stroke-dasharray]="ringCircumferenceFor(34)"
+                    [attr.stroke-dashoffset]="ringOffset(widget.ringValue || 0, 34)"
+                    transform="rotate(-90 40 40)"/>
+                </svg>
+                <strong>{{ widget.ringValue }}%</strong>
+              </div>
+            }
+            <p>{{ widget.title }}</p>
+          </div>
+        }
+      </div>
+
       <!-- AI Recommendations carousel -->
       <section class="panel-block recommendations-panel">
         <div class="panel-block__header">
-          <h2>AI-Personalized Recommendations</h2>
+          <h2>
+            <span class="panel-block__title-desktop">AI-Personalized Recommendations</span>
+            <span class="panel-block__title-mobile">AI Recommendations</span>
+          </h2>
+          <a class="panel-block__view-all" href="javascript:void(0)">View All</a>
         </div>
         <div class="recommendations-carousel">
           <button type="button" class="carousel-nav prev" (click)="slideRecommendations(-1)" [disabled]="!canSlideRecommendationsPrev" aria-label="Previous">
@@ -152,6 +204,30 @@
         <div class="carousel-dots">
           @for (item of recommendationsDisplay; track item.id; let i = $index) {
             <button type="button" [class.active]="i === recommendationIndex" (click)="goToRecommendation(i)"></button>
+          }
+        </div>
+
+        <div class="mobile-recommendations-list">
+          @for (item of recommendationsDisplay; track item.id; let i = $index) {
+            <article class="mobile-rec-card" [class.is-dimmed]="i > 1">
+              <span class="mobile-rec-card__accent" aria-hidden="true"></span>
+              <div class="mobile-rec-card__content">
+                <div class="mobile-rec-card__icon" [class.mobile-rec-card__icon--secondary]="i % 3 === 1" [class.mobile-rec-card__icon--tertiary]="i % 3 === 2">
+                  <span class="material-symbols-outlined">{{ recIcon(i) }}</span>
+                </div>
+                <div class="mobile-rec-card__body">
+                  <h3>{{ item.title }}</h3>
+                  <p>{{ item.subtitle }}</p>
+                  <div class="mobile-rec-card__meta">
+                    <span class="mobile-rec-card__match">
+                      <span class="material-symbols-outlined">bolt</span>
+                      {{ recMatchPercent(i) }}% Match
+                    </span>
+                    <span class="mobile-rec-card__time">{{ recReadTime(i) }}</span>
+                  </div>
+                </div>
+              </div>
+            </article>
           }
         </div>
       </section>

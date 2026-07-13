@@ -7,6 +7,20 @@
   overflow: hidden;
 }
 
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
 .dashboard-container {
   width: 100%;
   height: 100vh;
@@ -120,7 +134,138 @@
   .dashboard-right {
     @include flex(flex, column, null, null);
     height: 100%;
-    overflow-y: auto;
+    overflow: hidden;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .dashboard-container {
+    --mobile-dashboard-nav-height: 72px;
+
+    .dashboard-left {
+      display: none;
+    }
+
+    .dashboard-right {
+      width: 100%;
+      height: 100vh;
+      max-height: 100vh;
+      padding: 0;
+      overflow: hidden;
+      @include flex(flex, column, null, null);
+
+      app-search-profile {
+        flex-shrink: 0;
+        width: 100%;
+        z-index: 110;
+        padding: 12px 16px 16px;
+        background:
+          radial-gradient(ellipse 80% 50% at 20% -10%, rgba(255, 107, 44, 0.14) 0%, transparent 55%),
+          radial-gradient(ellipse 60% 40% at 90% 10%, rgba(74, 0, 132, 0.16) 0%, transparent 50%),
+          var(--bg-main);
+        border-bottom: 1px solid rgba(89, 65, 57, 0.35);
+      }
+
+      .common-container {
+        flex: 1;
+        min-height: 0;
+        height: auto;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 12px 16px calc(16px + var(--mobile-dashboard-nav-height));
+
+        router-outlet + * {
+          display: block;
+          width: 100%;
+          min-height: min-content;
+          height: auto;
+        }
+      }
+    }
+  }
+
+  .dashboard-mobile-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 120;
+    height: 72px;
+    padding: 0 20px;
+    @include dashboard-glass-card;
+    border-top: 1px solid rgba(89, 65, 57, 0.35);
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    backdrop-filter: blur(20px);
+    background: rgba(19, 19, 22, 0.88);
+
+    &__item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      border: 0;
+      background: transparent;
+      color: var(--mc-on-surface-variant);
+      cursor: pointer;
+      min-width: 52px;
+      padding: 4px 0;
+      @include transition(color 0.2s ease);
+
+      .material-symbols-outlined {
+        font-size: 22px;
+      }
+
+      span:last-child {
+        font-family: var(--mc-font-label);
+        font-size: 0.625rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      &.is-active,
+      &:hover {
+        color: var(--mc-primary);
+      }
+    }
+
+    &__fab {
+      width: 56px;
+      height: 56px;
+      margin-top: -28px;
+      border: 4px solid var(--mc-surface);
+      @include border-radius(50%);
+      background: var(--mc-brand-gradient);
+      color: var(--white);
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255, 107, 44, 0.35);
+      @include flex(flex, null, center, center);
+      @include transition(transform 0.2s ease);
+
+      .material-symbols-outlined {
+        font-size: 30px;
+      }
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .dashboard-mobile-nav {
+    display: none;
   }
 }
 
@@ -169,32 +314,9 @@
       }
     }
 
-    .icon-mobile {
-      position: absolute !important;
-      top: 30px;
-      right: 20px;
-      display: block !important;
-    }
-
     .search-holder {
       padding-right: 0;
       margin-right: 0;
-    }
-
-    .search-and-profile {
-      @include flex(flex, column, null, null);
-    }
-
-    .profile-area {
-      justify-content: center;
-    }
-
-    .title-holder {
-      @include flex(flex, column, null, null);
-    }
-
-    .data-refreshed-holder {
-      @include flex(flex, column, null, null);
     }
 
     .content-area {

@@ -42,10 +42,36 @@ app-under-construction {
   align-items: center;
   justify-content: center;
 }
-@media screen and (max-width: 1024px){
+@media screen and (max-width: 1024px) {
   app-students-list {
     .common-wrapper {
-      height: calc(100vh - 210px)!important;
+      height: calc(100vh - 210px) !important;
     }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  app-search-profile {
+    display: block;
+    width: 100%;
+  }
+
+  app-dashboard-overview,
+  app-courses,
+  app-course-overview,
+  app-questionnaire,
+  app-edit-account,
+  app-teachers-list,
+  app-students-list,
+  app-approval-list,
+  app-course-detils,
+  app-assign-teachers,
+  app-approval-pending,
+  app-student-teacher-assign-list {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: min-content;
+    flex-grow: 0;
   }
 }

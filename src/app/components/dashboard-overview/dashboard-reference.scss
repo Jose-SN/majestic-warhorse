@@ -160,6 +160,11 @@
     flex-direction: column;
     overflow: hidden;
 
+    &__title-mobile,
+    &__view-all {
+      display: none;
+    }
+
     &__header {
       display: flex;
       align-items: center;
