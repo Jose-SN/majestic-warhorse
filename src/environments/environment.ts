@@ -2,13 +2,18 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-export const environment = {
+import { Environment } from './environment.model';
+
+export const environment: Environment = {
   production: false,
   appVersion: '1.0.0',
-  client_id: 'majestic_warhorse',
-  apiUrl: 'https://rehobothlondonapi.netlify.app/.netlify/functions/api/',
-  iamApi: 'https://iamapi.thechurchmanager.com/api/',//'http://localhost:5000/api/',
-  majesticWarhorseApi: 'https://majesticapi.thechurchmanager.com/'//'http://localhost:3000/'// 'https://majesticapi.rehoboth.london/',
+  client_id: 'majestic-warhorse',
+  // iamApi: 'https://iamapi.thechurchmanager.com/api/',//'http://localhost:5000/api/',
+  iamApi: 'http://localhost:5000/auth/api/',
+  // majesticWarhorseApi: 'https://majesticapi.thechurchmanager.com/'//'http://localhost:3000/'// 'https://majesticapi.rehoboth.london/',
+  majesticWarhorseApi: 'http://localhost:8081/',// 'https://majesticapi.rehoboth.london/',
+  supabaseUrl: 'https://umskkgoddrmdqvvaiezu.supabase.co',
+  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtc2trZ29kZHJtZHF2dmFpZXp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNjg0NDMsImV4cCI6MjA5NTY0NDQ0M30.LlpGAktLK6nS7xjIWFNSMnuMq3VK6Qc2B2y8xwh9nVI',
 };
 
 /*
