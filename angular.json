@@ -29,9 +29,7 @@
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/ngx-spinner/animations/ball-clip-rotate-pulse.css"
             ],
-            "scripts": ["node_modules/particles.js/particles.js"],
-            "serviceWorker": true,
-            "ngswConfigPath": "ngsw-config.json"
+            "scripts": ["node_modules/particles.js/particles.js"]
           },
           "configurations": {
             "production": {

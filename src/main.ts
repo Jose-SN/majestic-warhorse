@@ -5,9 +5,11 @@ import { environment } from './environments/environment';
 
 if (environment.production) {
   enableProdMode();
+
+  // Clear any previously registered service workers so stale cached bundles are not served.
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/ngsw-worker.js').then(() => {
-      console.log('Service Worker Registered');
+    void navigator.serviceWorker.getRegistrations().then((registrations) => {
+      registrations.forEach((registration) => registration.unregister());
     });
   }
 }
