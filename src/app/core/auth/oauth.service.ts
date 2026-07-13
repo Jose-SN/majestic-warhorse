@@ -31,6 +31,14 @@ export class OAuthService {
     private router: Router
   ) {}
 
+  /** Use the live browser origin so OAuth returns to the deployed host, not a baked-in dev URL. */
+  private getAuthCallbackUrl(): string {
+    if (typeof window !== 'undefined' && window.location?.origin) {
+      return window.location.origin;
+    }
+    return environment.appUrl;
+  }
+
   /** Preserve app_id while clearing any previous IAM session state. */
   private clearIamSessionKeepAppId(): void {
     const appId = sessionStorage.getItem('app_id');
@@ -61,7 +69,7 @@ export class OAuthService {
     const { data, error } = await this.supabaseService.client.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${environment.appUrl}/auth/callback`,
+        redirectTo: `${this.getAuthCallbackUrl()}/auth/callback`,
         queryParams: { access_type: 'offline', prompt: 'consent' },
       },
     });
