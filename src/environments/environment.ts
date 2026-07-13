@@ -8,6 +8,7 @@ export const environment: Environment = {
   production: false,
   appVersion: '1.0.0',
   client_id: 'majestic-warhorse',
+  appUrl: 'http://localhost:4200',
   // iamApi: 'https://iamapi.thechurchmanager.com/api/',//'http://localhost:5000/api/',
   iamApi: 'http://localhost:5000/auth/api/',
   // majesticWarhorseApi: 'https://majesticapi.thechurchmanager.com/'//'http://localhost:3000/'// 'https://majesticapi.rehoboth.london/',

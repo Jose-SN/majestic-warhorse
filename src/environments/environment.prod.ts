@@ -4,6 +4,7 @@ export const environment: Environment = {
   production: true,
   appVersion: '1.0.0',
   client_id: 'majestic-warhorse',
+  appUrl: 'https://majestic.petaxai.com',
   iamApi: 'https://iam-production-e81f.up.railway.app/auth/api/',
   majesticWarhorseApi: 'https://majestic-warhorse-backend-production.up.railway.app/',
   supabaseUrl: 'https://umskkgoddrmdqvvaiezu.supabase.co',

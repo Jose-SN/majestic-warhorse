@@ -10,6 +10,7 @@ import {
 import { CommonService } from 'src/app/shared/services/common.service';
 import { PostLoginWorkflowService } from './post-login-workflow.service';
 import { AppContextService } from '../app-context.service';
+import { environment } from 'src/environments/environment';
 
 type LoginType = 'user' | 'organization';
 
@@ -60,7 +61,7 @@ export class OAuthService {
     const { data, error } = await this.supabaseService.client.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${environment.appUrl}/auth/callback`,
         queryParams: { access_type: 'offline', prompt: 'consent' },
       },
     });
