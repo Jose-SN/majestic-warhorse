@@ -30,17 +30,17 @@
 
       @if (activeTab === 'questionnaire') {
         <div class="cd-tab-panel">
-          <app-questionnaire [courseId]="selectedCourseInfo?.id ?? ''"></app-questionnaire>
+          <app-questionnaire [courseId]="selectedCourseInfo.id"></app-questionnaire>
         </div>
       }
       @if (activeTab === 'assessment' && loginedUserRole === 'student') {
         <div class="cd-tab-panel">
-          <app-student-assessment [courseId]="selectedCourseInfo?.id ?? ''"></app-student-assessment>
+          <app-student-assessment [courseId]="selectedCourseInfo.id"></app-student-assessment>
         </div>
       }
       @if (activeTab === 'answers' && canAccessAnswers) {
         <div class="cd-tab-panel">
-          <app-assessment-answers [courseId]="selectedCourseInfo?.id ?? ''"></app-assessment-answers>
+          <app-assessment-answers [courseId]="selectedCourseInfo.id"></app-assessment-answers>
         </div>
       }
     </section>
