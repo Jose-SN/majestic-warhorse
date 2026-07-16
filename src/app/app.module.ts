@@ -1,7 +1,8 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
@@ -24,6 +25,10 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
     LoginPageComponent,
     HttpClientModule,
     ParticleComponent,
