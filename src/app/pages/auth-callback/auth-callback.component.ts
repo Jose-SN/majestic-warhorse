@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { OAuthService } from 'src/app/core/auth/oauth.service';
+import { LoaderComponent } from 'src/app/shared/loader/loader.component';
 
 @Component({
   selector: 'app-auth-callback',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoaderComponent],
   templateUrl: './auth-callback.component.html',
   styleUrl: './auth-callback.component.scss',
 })

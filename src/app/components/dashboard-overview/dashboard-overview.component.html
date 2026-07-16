@@ -178,6 +178,26 @@
           </h2>
           <a class="panel-block__view-all" href="javascript:void(0)">View All</a>
         </div>
+        @if (isCoursesContentLoading) {
+          <div class="panel-state panel-state--loading" role="status" aria-live="polite">
+            <div class="panel-state__spinner" aria-hidden="true"></div>
+            <p class="panel-state__eyebrow">{{ isDemoTransitionLoading ? 'Preparing' : 'Syncing' }}</p>
+            @if (isDemoTransitionLoading) {
+              <p class="panel-state__message">Loading demo recommendations…</p>
+              <p class="panel-state__hint">Preparing sample course recommendations for preview.</p>
+            } @else {
+              <p class="panel-state__message">Loading AI recommendations…</p>
+              <p class="panel-state__hint">Fetching personalized course matches from the network.</p>
+            }
+          </div>
+        } @else if (isRecommendationsEmpty) {
+          <div class="panel-state panel-state--empty">
+            <span class="panel-state__icon material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+            <p class="panel-state__eyebrow">No data</p>
+            <p class="panel-state__message">No AI recommendations found</p>
+            <p class="panel-state__hint">Recommendations will appear when courses are available for your account.</p>
+          </div>
+        } @else {
         <div class="recommendations-carousel">
           <button type="button" class="carousel-nav prev" (click)="slideRecommendations(-1)" [disabled]="!canSlideRecommendationsPrev" aria-label="Previous">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
@@ -230,6 +250,7 @@
             </article>
           }
         </div>
+        }
       </section>
 
       <!-- Subscribed courses grid -->
@@ -242,6 +263,26 @@
             }
           </ul>
         </div>
+        @if (isCoursesContentLoading) {
+          <div class="panel-state panel-state--loading" role="status" aria-live="polite">
+            <div class="panel-state__spinner" aria-hidden="true"></div>
+            <p class="panel-state__eyebrow">{{ isDemoTransitionLoading ? 'Preparing' : 'Syncing' }}</p>
+            @if (isDemoTransitionLoading) {
+              <p class="panel-state__message">Loading demo courses…</p>
+              <p class="panel-state__hint">Preparing sample subscribed courses for preview.</p>
+            } @else {
+              <p class="panel-state__message">Loading subscribed courses…</p>
+              <p class="panel-state__hint">Fetching your enrolled courses from the network.</p>
+            }
+          </div>
+        } @else if (isSubscribedCoursesEmpty) {
+          <div class="panel-state panel-state--empty panel-state--subscribed">
+            <span class="panel-state__icon material-symbols-outlined" aria-hidden="true">menu_book</span>
+            <p class="panel-state__eyebrow">No data</p>
+            <p class="panel-state__message">No subscribed courses found</p>
+            <p class="panel-state__hint">Courses you subscribe to will appear here once they are available.</p>
+          </div>
+        } @else {
         <div class="subscribed-grid-viewport" #subscribedGridViewport>
           <div class="subscribed-grid">
           @for (course of subscribedCoursesDisplay; track course.id) {
@@ -307,6 +348,7 @@
           }
           </div>
         </div>
+        }
       </section>
     </div>
   </div>
@@ -338,22 +380,36 @@
         <h3 class="insight-title">Badge Awards</h3>
         <a class="insight-link" href="javascript:void(0)">View All</a>
       </div>
-      <div class="badge-row">
-        <span class="badge-icon ribbon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+      <div class="badge-row" [class.is-empty]="!hasBadgeAwards">
+        <span class="badge-icon ribbon" [class.is-empty]="!hasBadgeAwards">
+          <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
             <circle cx="12" cy="9" r="5"/><path d="M8.5 15.5L7 22l5-3 5 3-1.5-6.5"/>
           </svg>
         </span>
         <span class="badge-center">
-          <strong>{{ viewModel.insights.badgeTitle }}</strong>
+          <strong [class.is-empty]="!hasBadgeAwards">{{ badgeTitleDisplay }}</strong>
           <span class="badge-stars">
             @for (star of [1,2,3,4,5]; track star) {
-              <svg width="25" height="25" viewBox="0 0 17 16" fill="#ffb59a"><path d="M7.6534 0.556158L5.72614 4.69366L1.41416 5.35928C0.640899 5.47803 0.331004 6.48741 0.891767 7.06553L4.01138 10.2843L3.27354 14.8312C3.14073 15.653 3.95826 16.2687 4.64298 15.8843L8.50045 13.7374L12.3579 15.8843C13.0426 16.2655 13.8602 15.653 13.7274 14.8312L12.9895 10.2843L16.1091 7.06553C16.6699 6.48741 16.36 5.47803 15.5867 5.35928L11.2748 4.69366L9.3475 0.556158C9.00218 -0.181342 8.00166 -0.190717 7.6534 0.556158Z"/></svg>
+              <svg
+                width="25"
+                height="25"
+                viewBox="0 0 17 16"
+                [class.is-filled]="star <= badgeStarsCount"
+                [class.is-empty]="star > badgeStarsCount"
+                aria-hidden="true"
+              >
+                <path
+                  d="M7.6534 0.556158L5.72614 4.69366L1.41416 5.35928C0.640899 5.47803 0.331004 6.48741 0.891767 7.06553L4.01138 10.2843L3.27354 14.8312C3.14073 15.653 3.95826 16.2687 4.64298 15.8843L8.50045 13.7374L12.3579 15.8843C13.0426 16.2655 13.8602 15.653 13.7274 14.8312L12.9895 10.2843L16.1091 7.06553C16.6699 6.48741 16.36 5.47803 15.5867 5.35928L11.2748 4.69366L9.3475 0.556158C9.00218 -0.181342 8.00166 -0.190717 7.6534 0.556158Z"
+                  [attr.fill]="star <= badgeStarsCount ? '#ffb59a' : 'transparent'"
+                  stroke="rgba(255, 181, 154, 0.45)"
+                  stroke-width="1"
+                />
+              </svg>
             }
           </span>
         </span>
-        <span class="badge-icon gold">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <span class="badge-icon gold" [class.is-empty]="!hasBadgeAwards">
+          <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
             <circle cx="12" cy="10" r="6"/><path d="M9 16.5L8 22l4-2.5L16 22l-1-5.5"/>
             <path d="M12 7.5l.9 1.8 2 .3-1.45 1.4.35 2-1.8-.95-1.8.95.35-2L9.1 9.6l2-.3z" fill="currentColor" stroke="none"/>
           </svg>
@@ -363,45 +419,87 @@
 
     <div class="insight-card">
       <h3 class="insight-title">AI-suggested Daily Goals</h3>
-      <ul class="daily-goals">
-        @for (goal of dailyGoals; track $index) {
-          <li class="goal-item">
-            <span class="goal-icon" [class.trophy]="goal.icon === 'trophy'" [class.check]="goal.icon === 'check'">
-              @if (goal.icon === 'trophy') {
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
-              } @else {
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-              }
-            </span>
-            <span class="goal-body">
-              <strong>{{ goal.title }}</strong>
-              <small>{{ goal.subtitle }}</small>
-              <span class="goal-bar"><span [style.width.%]="goal.percent"></span></span>
-            </span>
-            <span class="goal-percent">{{ goal.percent }}%</span>
-          </li>
-        }
-      </ul>
+      @if (isDailyGoalsLoading) {
+        <div class="panel-state panel-state--compact panel-state--loading" role="status" aria-live="polite">
+          <div class="panel-state__spinner" aria-hidden="true"></div>
+          <p class="panel-state__eyebrow">{{ isDemoTransitionLoading ? 'Preparing' : 'Syncing' }}</p>
+          @if (isDemoTransitionLoading) {
+            <p class="panel-state__message">Loading demo goals…</p>
+            <p class="panel-state__hint">Preparing sample daily goals for preview.</p>
+          } @else {
+            <p class="panel-state__message">Loading daily goals…</p>
+            <p class="panel-state__hint">Fetching AI-suggested targets for today.</p>
+          }
+        </div>
+      } @else if (isDailyGoalsEmpty) {
+        <div class="panel-state panel-state--compact panel-state--empty">
+          <span class="panel-state__icon material-symbols-outlined" aria-hidden="true">flag</span>
+          <p class="panel-state__eyebrow">No data</p>
+          <p class="panel-state__message">No daily goals found</p>
+          <p class="panel-state__hint">AI-suggested goals will appear when learning activity is available.</p>
+        </div>
+      } @else {
+        <ul class="daily-goals">
+          @for (goal of dailyGoals; track $index) {
+            <li class="goal-item">
+              <span class="goal-icon" [class.trophy]="goal.icon === 'trophy'" [class.check]="goal.icon === 'check'">
+                @if (goal.icon === 'trophy') {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+                } @else {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                }
+              </span>
+              <span class="goal-body">
+                <strong>{{ goal.title }}</strong>
+                <small>{{ goal.subtitle }}</small>
+                <span class="goal-bar"><span [style.width.%]="goal.percent"></span></span>
+              </span>
+              <span class="goal-percent">{{ goal.percent }}%</span>
+            </li>
+          }
+        </ul>
+      }
     </div>
 
     <div class="insight-card">
       <h3 class="insight-title">Activity Feed &amp; Goals</h3>
-      <ul class="activity-feed">
-        @for (item of activityFeedItems; track $index) {
-          <li class="activity-item">
-            <span class="activity-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </span>
-            <span class="activity-text">
-              <strong>{{ item.title }}</strong>
-              <small>{{ item.subtitle }}</small>
-            </span>
-            <span class="activity-dot"></span>
-          </li>
-        }
-      </ul>
+      @if (isActivityFeedLoading) {
+        <div class="panel-state panel-state--compact panel-state--loading" role="status" aria-live="polite">
+          <div class="panel-state__spinner" aria-hidden="true"></div>
+          <p class="panel-state__eyebrow">{{ isDemoTransitionLoading ? 'Preparing' : 'Syncing' }}</p>
+          @if (isDemoTransitionLoading) {
+            <p class="panel-state__message">Loading demo activity…</p>
+            <p class="panel-state__hint">Preparing sample activity feed for preview.</p>
+          } @else {
+            <p class="panel-state__message">Loading activity feed…</p>
+            <p class="panel-state__hint">Fetching your recent learning activity.</p>
+          }
+        </div>
+      } @else if (isActivityFeedEmpty) {
+        <div class="panel-state panel-state--compact panel-state--empty">
+          <span class="panel-state__icon material-symbols-outlined" aria-hidden="true">timeline</span>
+          <p class="panel-state__eyebrow">No data</p>
+          <p class="panel-state__message">No activity found</p>
+          <p class="panel-state__hint">Recent completions and milestones will show up here.</p>
+        </div>
+      } @else {
+        <ul class="activity-feed">
+          @for (item of activityFeedItems; track $index) {
+            <li class="activity-item">
+              <span class="activity-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="activity-text">
+                <strong>{{ item.title }}</strong>
+                <small>{{ item.subtitle }}</small>
+              </span>
+              <span class="activity-dot"></span>
+            </li>
+          }
+        </ul>
+      }
     </div>
 
     <!-- <div class="insight-card analytics-card">

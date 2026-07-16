@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -22,6 +22,7 @@ import { AssessmentAnswersComponent } from 'src/app/components/assessment-answer
 import { StudentAssessmentComponent } from 'src/app/components/student-assessment/student-assessment.component';
 import { FavoritesApiService } from 'src/app/services/api-service/favorites-api.service';
 import { COURSE_DETAILS_DEMO, CourseMaterialItem } from './data/course-details-demo.data';
+import { DemoModeService } from 'src/app/shared/services/demo-mode.service';
 import { UserModel } from '../login-page/model/user-model';
 import { CourseDiscussionsApiService } from 'src/app/services/api-service/course-discussions-api.service';
 import {
@@ -84,7 +85,9 @@ export class CourseDetailsComponent {
     private dashboardService: DashboardService,
     private router: Router,
     private favoritesApiService: FavoritesApiService,
-    private courseDiscussionsApi: CourseDiscussionsApiService
+    private courseDiscussionsApi: CourseDiscussionsApiService,
+    public demoModeService: DemoModeService,
+    private cdr: ChangeDetectorRef
   ) {
     this.profileUrl = this.commonService.decodeUrl(
       (this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? ''
@@ -108,6 +111,10 @@ export class CourseDetailsComponent {
       this.router.navigate(['/dashboard/courses']);
       return;
     }
+
+    this.demoModeService.demoMode$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.cdr.markForCheck());
 
     this.setDefaultVideo();
     this.loginedUserRole = this.commonService?.loginedUserInfo?.role ?? '';
@@ -559,8 +566,20 @@ export class CourseDetailsComponent {
     return (this.selectedCourseInfo?.courseTitle || 'MAJESTIC WARHORSE').toUpperCase();
   }
 
+  get heroSubtitle(): string {
+    if (!this.demoModeService.isDemoMode) {
+      return '';
+    }
+    return this.demo.heroSubtitle;
+  }
+
   get descriptionHtml(): string {
-    const raw = this.selectedCourseInfo?.courseDescription || this.demo.descriptionFallback;
+    const raw =
+      this.selectedCourseInfo?.courseDescription ||
+      (this.demoModeService.isDemoMode ? this.demo.descriptionFallback : '');
+    if (!raw) {
+      return '';
+    }
     const escaped = raw
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
@@ -593,7 +612,7 @@ export class CourseDetailsComponent {
         attachment: item,
       })) as (CourseMaterialItem & { attachment?: IAttachmentObjectInfo })[];
     }
-    return this.demo.materials;
+    return this.demoModeService.isDemoMode ? this.demo.materials : [];
   }
 
   chapterLabel(chapter: ChapterDetail, index: number): string {
@@ -675,7 +694,10 @@ export class CourseDetailsComponent {
 
   get instructorBio(): string {
     const about = this.instructorDetails?.about?.trim();
-    return about || this.demo.instructorBio;
+    if (about) {
+      return about;
+    }
+    return this.demoModeService.isDemoMode ? this.demo.instructorBio : '';
   }
 
   get courseCompletionPercent(): number {

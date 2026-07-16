@@ -426,3 +426,65 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
     suggestedProgress: [43, 40, 50, 52, 59, 66, 70],
   },
 };
+
+export function createEmptyStatWidgets(): DashboardStatWidget[] {
+  return [
+    {
+      id: 'real-time',
+      title: 'Real-Time Activity',
+      variant: 'bar-chart',
+      headerRight: 'LIVE HUD',
+      headerRightAccent: true,
+      bars: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    },
+    {
+      id: 'students-rings',
+      title: 'Total Students',
+      variant: 'dual-rings',
+      headerRight: '0',
+      rings: [
+        { value: 0, color: '#ff6b2c', style: 'progress' },
+        { value: 0, style: 'concentric' },
+      ],
+    },
+    {
+      id: 'students-mixed',
+      title: 'Enrollment',
+      variant: 'ring-bars',
+      headerRight: '0',
+      ringValue: 0,
+      ringColor: '#ff6b2c',
+      miniBars: [0, 0, 0, 0, 0, 0, 0, 0],
+    },
+    {
+      id: 'real-goals',
+      title: 'Real Goals',
+      variant: 'goal-rings',
+      headerRight: '0',
+      rings: [
+        { value: 0, color: '#ffb59a', style: 'progress' },
+        { value: 0, style: 'concentric' },
+      ],
+    },
+  ];
+}
+
+export function createEmptyDashboardViewModel(): DashboardDemoViewModel {
+  return {
+    filterTabs: ['All', 'New', 'Pending', 'Completed'],
+    statWidgets: createEmptyStatWidgets(),
+    recommendations: [],
+    subscribedCourses: [],
+    insights: {
+      hologramLabel: '',
+      hologramEmail: '',
+      activityFeed: [],
+      badgeTitle: '',
+      badgeStars: 0,
+      dailyGoals: [],
+      analyticsSubtitle: '',
+      weekProgress: [],
+      suggestedProgress: [],
+    },
+  };
+}

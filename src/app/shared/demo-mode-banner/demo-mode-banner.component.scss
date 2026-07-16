@@ -1,0 +1,98 @@
+@import '../../../styles/index';
+
+.demo-mode-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  @include border-radius(12px);
+  border: 1px solid rgba(255, 107, 44, 0.45);
+  background: linear-gradient(90deg, rgba(255, 107, 44, 0.18) 0%, rgba(74, 0, 132, 0.14) 100%);
+  box-shadow: 0 8px 24px rgba(255, 107, 44, 0.12);
+  flex-shrink: 0;
+
+  &__content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  &__label {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    @include border-radius(999px);
+    background: rgba(255, 107, 44, 0.22);
+    border: 1px solid rgba(255, 107, 44, 0.45);
+    color: #ffb59a;
+    font-family: $archivo-medium;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  &__message {
+    margin: 0;
+    color: var(--white);
+    font-family: $archivo-regular;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  &__close {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    @include border-radius(999px);
+    background: rgba(31, 31, 34, 0.72);
+    color: var(--white);
+    font-family: $archivo-medium;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    @include transition(all 0.2s ease);
+
+    span[aria-hidden='true'] {
+      font-size: 1.125rem;
+      line-height: 1;
+    }
+
+    &:hover {
+      border-color: rgba(255, 107, 44, 0.55);
+      background: rgba(255, 107, 44, 0.16);
+      color: #ffb59a;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .demo-mode-banner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+
+    &__content {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    &__close {
+      align-self: flex-end;
+    }
+
+    &__close-text {
+      display: none;
+    }
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .demo-mode-banner__close span[aria-hidden='true'] {
+    display: none;
+  }
+}

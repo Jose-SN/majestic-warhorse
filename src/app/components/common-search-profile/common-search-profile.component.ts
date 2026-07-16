@@ -1,12 +1,15 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
+import { DemoModeService } from 'src/app/shared/services/demo-mode.service';
+
 @Component({
   selector: 'app-search-profile',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './common-search-profile.component.html',
   styleUrl: './common-search-profile.component.scss'
 })
@@ -19,7 +22,8 @@ export class CommonSearchProfileComponent {
   public loginedUserInfo: UserModel = {} as UserModel;
   constructor(
     private authService: AuthService,
-    private commonService: CommonService
+    public commonService: CommonService,
+    public demoModeService: DemoModeService
   ) {
     this.loginedUserInfo = this.commonService.loginedUserInfo;
     this.profileUrl = (this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? '';
@@ -34,5 +38,9 @@ export class CommonSearchProfileComponent {
   }
   setInputSearch() {
     this.commonService.setCommonSearchText(this.searchText);
+  }
+
+  toggleDemoMode(): void {
+    this.demoModeService.toggleDemoMode();
   }
 }

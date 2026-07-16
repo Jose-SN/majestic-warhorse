@@ -9,6 +9,16 @@
         <p>MAJESTIC WARHORSE</p>
       </div>
     </div>
+    <button
+      type="button"
+      class="mobile-brand-header__demo"
+      [class.is-active]="demoModeService.isDemoMode"
+      [disabled]="demoModeService.isDemoLoading"
+      [attr.aria-busy]="demoModeService.isDemoLoading"
+      (click)="toggleDemoMode()"
+    >
+      {{ demoModeService.isDemoLoading ? 'Loading…' : (demoModeService.isDemoMode ? 'Exit Demo' : 'Demo') }}
+    </button>
     <button type="button" class="mobile-brand-header__notify" aria-label="Notifications">
       <span class="material-symbols-outlined">notifications</span>
       <span class="mobile-brand-header__notify-dot" aria-hidden="true"></span>
@@ -29,6 +39,17 @@
       </div>
     </div>
     <div class="profile-area">
+      <button
+        type="button"
+        class="demo-mode-btn"
+        [class.is-active]="demoModeService.isDemoMode"
+        [disabled]="demoModeService.isDemoLoading"
+        [attr.aria-busy]="demoModeService.isDemoLoading"
+        (click)="toggleDemoMode()"
+        [attr.aria-pressed]="demoModeService.isDemoMode"
+      >
+        {{ demoModeService.isDemoLoading ? 'Loading…' : (demoModeService.isDemoMode ? 'Exit Demo' : 'Demo') }}
+      </button>
       <div class="notification-holder">
         <figure>
           <img src="../../../assets/images/icon-notification.svg" alt="Notification" />

@@ -102,6 +102,39 @@
     @include flex(flex, null, flex-end, center);
     gap: 12px;
 
+    .demo-mode-btn {
+      height: 44px;
+      padding: 0 16px;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 107, 44, 0.35);
+      @include border-radius(12px);
+      background: rgba(31, 31, 34, 0.65);
+      color: var(--mc-on-surface);
+      font-family: $archivo-medium;
+      font-size: 0.8125rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      @include transition(all 0.2s ease);
+
+      &:hover {
+        border-color: var(--mc-primary-container);
+        color: var(--mc-primary);
+      }
+
+      &.is-active {
+        color: var(--white);
+        border-color: var(--mc-primary-container);
+        background: rgba(255, 107, 44, 0.18);
+        box-shadow: 0 0 16px rgba(255, 107, 44, 0.2);
+      }
+
+      &:disabled {
+        opacity: 0.65;
+        cursor: wait;
+      }
+    }
+
     .notification-holder {
       width: 44px;
       height: 44px;
@@ -400,6 +433,33 @@
           text-transform: uppercase;
           color: var(--mc-primary);
           opacity: 0.85;
+        }
+      }
+
+      &__demo {
+        height: 40px;
+        padding: 0 14px;
+        flex-shrink: 0;
+        border: 1px solid rgba(255, 107, 44, 0.35);
+        @include border-radius(999px);
+        background: rgba(31, 31, 34, 0.65);
+        color: var(--mc-on-surface);
+        font-family: $archivo-medium;
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: pointer;
+        @include transition(all 0.2s ease);
+
+        &.is-active {
+          color: var(--white);
+          border-color: var(--mc-primary-container);
+          background: rgba(255, 107, 44, 0.18);
+        }
+
+        &:disabled {
+          opacity: 0.65;
+          cursor: wait;
         }
       }
 

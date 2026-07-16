@@ -39,7 +39,7 @@ import { FormsModule } from '@angular/forms';
     PortalModule,
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true },
+    // { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HeaderInterceptors,

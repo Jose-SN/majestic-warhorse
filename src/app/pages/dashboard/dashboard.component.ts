@@ -10,6 +10,7 @@ import { CommonService } from 'src/app/shared/services/common.service';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-teacher.service';
 import { DASHBOARD_NAV_ROUTES } from './dashboard-routes.config';
+import { DemoModeBannerComponent } from 'src/app/shared/demo-mode-banner/demo-mode-banner.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +21,7 @@ import { DASHBOARD_NAV_ROUTES } from './dashboard-routes.config';
     RouterModule,
     DashboardSidepanelComponent,
     CommonSearchProfileComponent,
+    DemoModeBannerComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',

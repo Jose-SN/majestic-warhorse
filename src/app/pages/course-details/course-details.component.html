@@ -14,12 +14,16 @@
 
         <div class="cd-course-header">
           <h1>{{ heroTitle }}</h1>
-          <p class="cd-course-header__subtitle">{{ demo.heroSubtitle }}</p>
+          @if (heroSubtitle) {
+            <p class="cd-course-header__subtitle">{{ heroSubtitle }}</p>
+          }
         </div>
 
+        @if (descriptionHtml) {
         <div class="cd-description">
           <p [innerHTML]="descriptionHtml"></p>
         </div>
+        }
 
         @if (loginedUserRole === 'student' && showQuestionAnswer) {
           <div class="cd-assessment-cta">

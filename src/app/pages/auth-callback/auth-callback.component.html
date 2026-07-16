@@ -1,11 +1,10 @@
 <section class="auth-callback">
   <div class="callback-card">
     @if (loading) {
-    <div class="loading-state">
-      <div class="spinner"></div>
-      <h2>Signing you in…</h2>
-      <p>Please wait while we complete your Google sign-in.</p>
-    </div>
+    <app-loader
+      message="Signing you in…"
+      subMessage="Please wait while we complete your Google sign-in."
+    />
     } @else if (errorMessage) {
     <div class="error-state">
       <div class="error-icon">!</div>

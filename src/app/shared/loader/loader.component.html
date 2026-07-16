@@ -1,0 +1,9 @@
+<div class="app-loader" role="status" aria-live="polite">
+  <div class="app-loader__spinner" aria-hidden="true"></div>
+  @if (message) {
+    <h2 class="app-loader__message">{{ message }}</h2>
+  }
+  @if (subMessage) {
+    <p class="app-loader__sub-message">{{ subMessage }}</p>
+  }
+</div>
