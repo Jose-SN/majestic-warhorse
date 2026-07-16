@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
-import { DashboardService } from 'src/app/pages/dashboard/dashboard.service';
-import { ISidepanel } from 'src/app/pages/dashboard/modal/dashboard-modal';
+import { Router, RouterModule } from '@angular/router';
+import { Subject } from 'rxjs';
+import {
+  DASHBOARD_NAV_ACTIVE_SEGMENTS,
+  DASHBOARD_NAV_ROUTES,
+  isDashboardNavActive,
+} from 'src/app/pages/dashboard/dashboard-routes.config';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { AppService } from 'src/app/shared/services/app.service';
 import { CommonService } from 'src/app/shared/services/common.service';
@@ -14,14 +17,12 @@ import { AuthService } from 'src/app/services/api-service/auth.service';
 @Component({
   selector: 'app-dashboard-sidepanel',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './dashboard-sidepanel.component.html',
   styleUrl: './dashboard-sidepanel.component.scss',
 })
 export class DashboardSidepanelComponent implements OnInit, OnDestroy {
   public mobMenu: boolean = false;
-  public activePanel: string = '';
-  public SIDE_PANEL_LIST: ISidepanel = this.dashboardService.SIDE_PANEL_LIST;
   public loginedUserPrivilege: string = '';
   public loginedUserInfo: UserModel = {} as UserModel;
   public userMenuOpen = false;
@@ -29,6 +30,8 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   public showAssigningPopup: boolean = false;
   readonly brandLogo = 'assets/images/logo-majestic-hourse.svg';
+  readonly navRoutes = DASHBOARD_NAV_ROUTES;
+  readonly navActiveSegments = DASHBOARD_NAV_ACTIVE_SEGMENTS;
 
   @ViewChild('userMenu') userMenuRef?: ElementRef<HTMLElement>;
   public popupModelInfo: IModelInfo = {
@@ -37,18 +40,14 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
     data: null,
   } as IModelInfo;
   public assignedTo: FormControl = new FormControl([]);
+
   constructor(
-    private dashboardService: DashboardService,
     public commonService: CommonService,
     private router: Router,
     public appService: AppService,
     public authService: AuthService
   ) {
-    this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
     this.loginedUserPrivilege = this.commonService.loginedUserInfo?.role || '';
-    this.dashboardService.sidePanelChange$.pipe(takeUntil(this.destroy$)).subscribe((activePanel: string) => {
-      this.activePanel = activePanel;
-    });
   }
 
   ngOnInit(): void {
@@ -62,45 +61,26 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
-  setActivePanel(activePanel: string) {
-    if (this.disableListItems() && activePanel !== this.SIDE_PANEL_LIST['APPROVAL_PENDING']) return;
-    
-    const routeMap: { [key: string]: string } = {
-      [this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW']]: '/dashboard/overview',
-      [this.SIDE_PANEL_LIST['COURSE_LISTING']]: '/dashboard/courses',
-      [this.SIDE_PANEL_LIST['ACCOUNT']]: '/dashboard/account',
-      [this.SIDE_PANEL_LIST['TEACHERS_LISTING']]: '/dashboard/teachers',
-      [this.SIDE_PANEL_LIST['STUDENTS_LISTING']]: '/dashboard/students',
-      [this.SIDE_PANEL_LIST['TEACHER_APPROVAL']]: '/dashboard/approval',
-      [this.SIDE_PANEL_LIST['STUDENT_APPROVAL']]: '/dashboard/student-approval',
-      [this.SIDE_PANEL_LIST['APPROVAL_PENDING']]: '/dashboard/approval-pending',
-      [this.SIDE_PANEL_LIST['ASSIGN_TEACHER']]: '/dashboard/assign-teacher',
-      [this.SIDE_PANEL_LIST['INVITE_TEACHER']]: '/dashboard/invite-teacher',
-      [this.SIDE_PANEL_LIST['INVITE_STUDENT']]: '/dashboard/invite-student',
-      [this.SIDE_PANEL_LIST['SWITCH_ORG']]: '/org-picker',
-      [this.SIDE_PANEL_LIST['ASSESMENT']]: '/dashboard/assessment',
-      [this.SIDE_PANEL_LIST['AI_MODE']]: '/dashboard/ai-mode',
-    };
 
-    const route = routeMap[activePanel];
-    if (route) {
-      if (activePanel === this.SIDE_PANEL_LIST['SWITCH_ORG']) {
-        this.router.navigate(['/org-picker'], { queryParams: { switch: true } });
-      } else {
-        this.router.navigate([route]);
-      }
-      this.activePanel = activePanel;
-      this.dashboardService.setSidePanelChangeValue(activePanel);
+  isNavActive(segments: readonly string[]): boolean {
+    return isDashboardNavActive(this.router.url, segments);
+  }
+
+  onNavClick(event: Event): void {
+    if (this.disableListItems()) {
+      event.preventDefault();
+      event.stopPropagation();
     }
   }
-  navigateToHome() {
-    if (this.disableListItems()) return;
-    // const defaultRoute = this.commonService.adminRoleType.includes(this.loginedUserPrivilege) 
-    //   ? '/dashboard/course-overview' 
-    //   : '/dashboard/overview';
-    this.router.navigate(['/dashboard/overview']);
+
+  navigateToHome(): void {
+    if (this.disableListItems()) {
+      return;
+    }
+    void this.router.navigate([DASHBOARD_NAV_ROUTES.overview]);
   }
-  disableListItems() {
+
+  disableListItems(): boolean {
     return (
       (this.loginedUserPrivilege === 'student' && this.commonService.hasAssignedTeachers === false) ||
       (this.loginedUserPrivilege === 'teacher' && this.commonService.loginedUserInfo.status === 'pending')
@@ -121,11 +101,7 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
   get userDisplayName(): string {
     const info = this.loginedUserInfo;
     if (this.isOrganizationAccount) {
-      return (
-        info.name?.trim() ||
-        sessionStorage.getItem('activeOrganizationName')?.trim() ||
-        ''
-      );
+      return info.name?.trim() || sessionStorage.getItem('activeOrganizationName')?.trim() || '';
     }
 
     const first = (info.firstName || info.first_name || '').trim();
@@ -150,11 +126,7 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
   }
 
   get profileImageUrl(): string {
-    return (
-      this.loginedUserInfo.profileImage ||
-      this.loginedUserInfo.profile_image ||
-      this.brandLogo
-    );
+    return this.loginedUserInfo.profileImage || this.loginedUserInfo.profile_image || this.brandLogo;
   }
 
   get userInitial(): string {
@@ -174,6 +146,7 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
 
     return '';
   }
+
   get showSwitchOrganization(): boolean {
     return !this.isOrganizationAccount && this.loginedUserPrivilege !== 'organization';
   }
@@ -201,12 +174,12 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
 
   goToAccount(): void {
     this.closeUserMenu();
-    this.setActivePanel(this.SIDE_PANEL_LIST['ACCOUNT']);
+    void this.router.navigate([DASHBOARD_NAV_ROUTES.account]);
   }
 
   goToSwitchOrganization(): void {
     this.closeUserMenu();
-    this.setActivePanel(this.SIDE_PANEL_LIST['SWITCH_ORG']);
+    void this.router.navigate([DASHBOARD_NAV_ROUTES.switchOrg], { queryParams: { switch: true } });
   }
 
   logOut(): void {

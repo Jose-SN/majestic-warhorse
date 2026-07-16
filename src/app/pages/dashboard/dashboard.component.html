@@ -1,5 +1,5 @@
 <section class="dashboard-container">
-  <div class="dashboard-left" [ngClass]="{'active': isMobileNav}" [style.pointer-events]="activePanel === SIDE_PANEL_LIST['APPROVAL_PENDING'] ? 'none' : 'auto'">
+  <div class="dashboard-left" [ngClass]="{'active': isMobileNav}" [style.pointer-events]="isApprovalPendingRoute ? 'none' : 'auto'">
     <app-dashboard-sidepanel></app-dashboard-sidepanel>
   </div>
   <div class="dashboard-right">

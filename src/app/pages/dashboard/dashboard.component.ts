@@ -1,16 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Router, RouterModule } from '@angular/router';
 import { DashboardSidepanelComponent } from 'src/app/components/dashboard-sidepanel/dashboard-sidepanel.component';
 import { DashboardService } from './dashboard.service';
-import { ISidepanel } from './modal/dashboard-modal';
 import { ICourseList } from '../courses/modal/course-list';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-teacher.service';
+import { DASHBOARD_NAV_ROUTES } from './dashboard-routes.config';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,25 +26,24 @@ import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   public isMobileNav = false;
-  public activePanel: string = '';
   public infoMessage: string = '';
-  public SIDE_PANEL_LIST: ISidepanel = this.dashboardService.SIDE_PANEL_LIST;
   private destroy$ = new Subject<void>();
 
   constructor(
     private dashboardService: DashboardService,
     private commonService: CommonService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
     private assignTeacherService: AssignTeacherService
-  ) {
-    this.activePanel = this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'];
-  }
+  ) {}
 
   get isAdminLogin() {
     return this.commonService.adminRoleType.includes(
       this.commonService?.loginedUserInfo?.role ?? ''
     );
+  }
+
+  get isApprovalPendingRoute(): boolean {
+    return this.router.url.includes(DASHBOARD_NAV_ROUTES.approvalPending);
   }
 
   ngOnInit(): void {
@@ -55,26 +53,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     this.dashboardService
-      .getSidePanelChange()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((activePanel: string) => {
-        this.activePanel = activePanel;
-      });
-
-    this.dashboardService
       .getCourseDetailsInfo()
       .pipe(takeUntil(this.destroy$))
       .subscribe((courseInfo: { [key: string]: boolean | ICourseList }) => {
         this.handleCourseDetailsView(courseInfo);
-      });
-
-    this.router.events
-      .pipe(
-        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-        takeUntil(this.destroy$)
-      )
-      .subscribe(() => {
-        this.updateActivePanelFromRoute();
       });
 
     const loginedUserData = this.commonService.loginedUserInfo;
@@ -90,47 +72,36 @@ export class DashboardComponent implements OnInit, OnDestroy {
             const hasTeachers = list.length > 0;
             this.commonService.hasAssignedTeachers = hasTeachers;
             if (!hasTeachers) {
-              this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
               this.infoMessage =
                 'You have not been assigned any teachers to view this course. Please contact your organization for assistance';
-              this.router.navigate(['/dashboard/approval-pending'], {
+              this.router.navigate([DASHBOARD_NAV_ROUTES.approvalPending], {
                 state: { infoMessage: this.infoMessage },
               });
-            } else {
-              this.updateActivePanelFromRoute();
             }
           },
           error: () => {
             this.commonService.hasAssignedTeachers = false;
-            this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
             this.infoMessage =
               'Unable to verify your assignments. Please contact your organization for assistance.';
-            this.router.navigate(['/dashboard/approval-pending'], {
+            this.router.navigate([DASHBOARD_NAV_ROUTES.approvalPending], {
               state: { infoMessage: this.infoMessage },
             });
           },
         });
       } else {
         this.commonService.hasAssignedTeachers = false;
-        this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
         this.infoMessage =
           'You have not been assigned any teachers to view this course. Please contact your organization for assistance';
-        this.router.navigate(['/dashboard/approval-pending'], {
+        this.router.navigate([DASHBOARD_NAV_ROUTES.approvalPending], {
           state: { infoMessage: this.infoMessage },
         });
       }
-    } else if (
-      loginedUserData?.role === 'teacher' &&
-      loginedUserData.status === 'pending'
-    ) {
-      this.activePanel = this.SIDE_PANEL_LIST['APPROVAL_PENDING'];
+    } else if (loginedUserData?.role === 'teacher' && loginedUserData.status === 'pending') {
       this.infoMessage =
         'Your request is pending approval from your organization. Please reach out to your organization for assistance.';
-      this.router.navigate(['/dashboard/approval-pending'], {
+      this.router.navigate([DASHBOARD_NAV_ROUTES.approvalPending], {
         state: { infoMessage: this.infoMessage },
       });
-    } else {
-      this.updateActivePanelFromRoute();
     }
   }
 
@@ -146,66 +117,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const selectedCourse = showCourseView['selectedCourse'] as ICourseList;
 
     if (showCourseDetail && selectedCourse) {
-      this.router.navigate(['/dashboard/course-details'], {
+      this.router.navigate([DASHBOARD_NAV_ROUTES.courseDetails], {
         state: { selectedCourse },
       });
     } else {
-      this.router.navigate(['/dashboard/courses']);
-    }
-  }
-
-  private updateActivePanelFromRoute() {
-    const route = this.activatedRoute.firstChild;
-    if (route) {
-      const routePath = route.snapshot.routeConfig?.path || '';
-      const panelMap: { [key: string]: string } = {
-        overview: this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'],
-        'ai-mode': this.SIDE_PANEL_LIST['AI_MODE'],
-        'course-overview': this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'],
-        courses: this.SIDE_PANEL_LIST['COURSE_LISTING'],
-        'course-details': this.SIDE_PANEL_LIST['COURSE_LISTING'],
-        account: this.SIDE_PANEL_LIST['ACCOUNT'],
-        teachers: this.SIDE_PANEL_LIST['TEACHERS_LISTING'],
-        students: this.SIDE_PANEL_LIST['STUDENTS_LISTING'],
-        approval: this.SIDE_PANEL_LIST['TEACHER_APPROVAL'],
-        'student-approval': this.SIDE_PANEL_LIST['STUDENT_APPROVAL'],
-        'approval-pending': this.SIDE_PANEL_LIST['APPROVAL_PENDING'],
-        'assign-teacher': this.SIDE_PANEL_LIST['ASSIGN_TEACHER'],
-        'invite-teacher': this.SIDE_PANEL_LIST['INVITE_TEACHER'],
-        'invite-student': this.SIDE_PANEL_LIST['INVITE_STUDENT'],
-        assessment: this.SIDE_PANEL_LIST['ASSESMENT'],
-      };
-      const panel = panelMap[routePath] || '';
-      if (panel) {
-        this.activePanel = panel;
-        this.dashboardService.setSidePanelChangeValue(panel);
-      }
-    } else {
-      const currentUrl = this.router.url;
-      const urlParts = currentUrl.split('/');
-      const routePath = urlParts[urlParts.length - 1] || '';
-      const panelMap: { [key: string]: string } = {
-        overview: this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'],
-        'ai-mode': this.SIDE_PANEL_LIST['AI_MODE'],
-        'course-overview': this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'],
-        courses: this.SIDE_PANEL_LIST['COURSE_LISTING'],
-        'course-details': this.SIDE_PANEL_LIST['COURSE_LISTING'],
-        account: this.SIDE_PANEL_LIST['ACCOUNT'],
-        teachers: this.SIDE_PANEL_LIST['TEACHERS_LISTING'],
-        students: this.SIDE_PANEL_LIST['STUDENTS_LISTING'],
-        approval: this.SIDE_PANEL_LIST['TEACHER_APPROVAL'],
-        'student-approval': this.SIDE_PANEL_LIST['STUDENT_APPROVAL'],
-        'approval-pending': this.SIDE_PANEL_LIST['APPROVAL_PENDING'],
-        'assign-teacher': this.SIDE_PANEL_LIST['ASSIGN_TEACHER'],
-        'invite-teacher': this.SIDE_PANEL_LIST['INVITE_TEACHER'],
-        'invite-student': this.SIDE_PANEL_LIST['INVITE_STUDENT'],
-        assessment: this.SIDE_PANEL_LIST['ASSESMENT'],
-      };
-      const panel = panelMap[routePath] || '';
-      if (panel) {
-        this.activePanel = panel;
-        this.dashboardService.setSidePanelChangeValue(panel);
-      }
+      this.router.navigate([DASHBOARD_NAV_ROUTES.courses]);
     }
   }
 
@@ -217,19 +133,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const url = this.router.url;
     switch (section) {
       case 'overview':
-        return url.includes('/dashboard/overview') || url.includes('/dashboard/course-overview') || url === '/dashboard';
+        return url.includes(DASHBOARD_NAV_ROUTES.overview) || url.includes(DASHBOARD_NAV_ROUTES.courseOverview) || url === '/dashboard';
       case 'ai-mode':
-        return url.includes('/dashboard/ai-mode');
+        return url.includes(DASHBOARD_NAV_ROUTES.aiMode);
       case 'courses':
-        return url.includes('/dashboard/courses') || url.includes('/dashboard/course-details');
+        return url.includes(DASHBOARD_NAV_ROUTES.courses) || url.includes(DASHBOARD_NAV_ROUTES.courseDetails);
       case 'account':
-        return url.includes('/dashboard/account');
+        return url.includes(DASHBOARD_NAV_ROUTES.account);
       case 'network': {
         const role = this.commonService.loginedUserInfo?.role || '';
         if (role === 'organization' || role === 'teacher') {
-          return url.includes('/dashboard/teachers') || url.includes('/dashboard/students');
+          return url.includes(DASHBOARD_NAV_ROUTES.teachers) || url.includes(DASHBOARD_NAV_ROUTES.students);
         }
-        return url.includes('/dashboard/teachers');
+        return url.includes(DASHBOARD_NAV_ROUTES.teachers);
       }
       default:
         return false;
@@ -241,14 +157,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const role = this.commonService.loginedUserInfo?.role || '';
 
     const routes: Record<string, string> = {
-      overview: '/dashboard/overview',
-      'ai-mode': '/dashboard/ai-mode',
-      courses: '/dashboard/courses',
-      account: '/dashboard/account',
+      overview: DASHBOARD_NAV_ROUTES.overview,
+      'ai-mode': DASHBOARD_NAV_ROUTES.aiMode,
+      courses: DASHBOARD_NAV_ROUTES.courses,
+      account: DASHBOARD_NAV_ROUTES.account,
       network:
         role === 'organization' || role === 'teacher'
-          ? '/dashboard/teachers'
-          : '/dashboard/teachers',
+          ? DASHBOARD_NAV_ROUTES.teachers
+          : DASHBOARD_NAV_ROUTES.teachers,
     };
 
     this.router.navigate([routes[section]]);

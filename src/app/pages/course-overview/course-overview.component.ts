@@ -11,11 +11,11 @@ import { CommonService } from 'src/app/shared/services/common.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { CourseDetailsService } from '../course-details/course-details.service';
 import { Router } from '@angular/router';
+import { DASHBOARD_NAV_ROUTES } from '../dashboard/dashboard-routes.config';
 import { UserModel } from '../login-page/model/user-model';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { SearchFilterPipe } from 'src/app/shared/pipes/search-filter.pipe';
 import { StarRatingModule } from 'angular-star-rating';
-import { ISidepanel } from '../dashboard/modal/dashboard-modal';
 
 @Component({
   selector: 'app-course-overview',
@@ -44,14 +44,14 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
   public studentsList: UserModel[] = [];
   private destroy$ = new Subject<void>();
   public searchText: string = '';
-  public SIDE_PANEL_LIST: ISidepanel = this.dashboardService.SIDE_PANEL_LIST;
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private courseUploadService: CourseUploadService,
     private authService: AuthService,
     public commonService: CommonService,
     public dashboardService: DashboardService,
-    private courseDetailsService: CourseDetailsService
+    private courseDetailsService: CourseDetailsService,
+    private router: Router
   ) {
     this.fetchCourseList();
     this.profileUrl = this.commonService.decodeUrl(
@@ -153,6 +153,20 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
   
   hasDashboardData(): boolean {
     return this.dashboardOverview && Object.keys(this.dashboardOverview).length > 0;
+  }
+
+  navigateToPrimaryStat(): void {
+    const route = ['organization', 'teacher'].includes(this.loginedUserPrivilege)
+      ? DASHBOARD_NAV_ROUTES.teachers
+      : DASHBOARD_NAV_ROUTES.students;
+    void this.router.navigate([route]);
+  }
+
+  navigateToSecondaryStat(): void {
+    const route = ['organization', 'teacher'].includes(this.loginedUserPrivilege)
+      ? DASHBOARD_NAV_ROUTES.students
+      : DASHBOARD_NAV_ROUTES.courses;
+    void this.router.navigate([route]);
   }
   
   ngOnDestroy(): void {

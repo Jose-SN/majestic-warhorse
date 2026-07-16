@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -26,7 +26,7 @@ import {
   templateUrl: './dashboard-overview.component.html',
   styleUrl: './dashboard-overview.component.scss',
 })
-export class DashboardOverviewComponent implements AfterViewInit, OnDestroy {
+export class DashboardOverviewComponent implements OnDestroy {
   public isMobileNav = false;
   public activePanel: string = '';
   public courseLists: ICourseList[] = [];
@@ -69,9 +69,6 @@ export class DashboardOverviewComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   @ViewChild('futuristicDashboard') futuristicDashboard?: ElementRef<HTMLElement>;
-  @ViewChild('subscribedGridViewport') subscribedGridViewport?: ElementRef<HTMLElement>;
-
-  private subscribedCardResizeObserver?: ResizeObserver;
 
   constructor(
     private courseUploadService: CourseUploadService,
@@ -100,30 +97,6 @@ export class DashboardOverviewComponent implements AfterViewInit, OnDestroy {
     );
     this.mergeLiveData();
     this.getCurrentTime();
-  }
-
-  ngAfterViewInit(): void {
-    this.syncRecommendationCardSize();
-    const viewport = this.subscribedGridViewport?.nativeElement;
-    if (!viewport || typeof ResizeObserver === 'undefined') {
-      return;
-    }
-
-    this.subscribedCardResizeObserver = new ResizeObserver(() => this.syncRecommendationCardSize());
-    this.subscribedCardResizeObserver.observe(viewport);
-  }
-
-  private syncRecommendationCardSize(): void {
-    const viewport = this.subscribedGridViewport?.nativeElement;
-    if (!viewport) {
-      return;
-    }
-
-    const subscribedCard = viewport.querySelector('.subscribed-card') as HTMLElement | null;
-    const rowHeight = subscribedCard?.offsetHeight
-      ?? Math.max(0, (viewport.clientHeight - 10) / 2);
-
-    viewport.style.setProperty('--subscribed-card-row-height', `${rowHeight}px`);
   }
 
   get recommendationsDisplay(): RecommendedCourseItem[] {
@@ -376,8 +349,6 @@ export class DashboardOverviewComponent implements AfterViewInit, OnDestroy {
       }
       this.viewModel.insights.weekProgress = progress.slice(0, 7);
     }
-
-    queueMicrotask(() => this.syncRecommendationCardSize());
   }
 
   private mapCourseToSubscribedItem(course: ICourseList, index: number): SubscribedCourseItem {
@@ -549,7 +520,6 @@ export class DashboardOverviewComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscribedCardResizeObserver?.disconnect();
     this.destroy$.next();
     this.destroy$.complete();
   }
