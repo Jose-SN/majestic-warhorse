@@ -1,0 +1,56 @@
+<section class="ai-mode" aria-label="AI Mode">
+  <div class="ai-mode__center">
+    <h1 class="ai-mode__greeting">
+      Hi {{ greetingName }}, what's on your mind?
+    </h1>
+
+    <div class="ai-mode__composer" (click)="focusInput()">
+      <button
+        type="button"
+        class="ai-mode__composer-btn ai-mode__composer-btn--add"
+        aria-label="Add attachment"
+        (click)="$event.stopPropagation()"
+      >
+        <span class="material-symbols-outlined">add</span>
+      </button>
+
+      <label class="ai-mode__input-wrap">
+        <span class="visually-hidden">Ask anything</span>
+        <textarea
+          #promptInput
+          class="ai-mode__input"
+          [(ngModel)]="query"
+          rows="1"
+          placeholder="Ask anything"
+          (keydown)="onPromptKeydown($event)"
+        ></textarea>
+      </label>
+
+      <button
+        type="button"
+        class="ai-mode__composer-btn ai-mode__composer-btn--mic"
+        aria-label="Voice input"
+        (click)="$event.stopPropagation()"
+      >
+        <span class="material-symbols-outlined">mic</span>
+      </button>
+    </div>
+
+    <ul class="ai-mode__suggestions" aria-label="Suggested prompts">
+      @for (suggestion of suggestions; track suggestion.id) {
+        <li>
+          <button
+            type="button"
+            class="ai-mode__suggestion"
+            (click)="applySuggestion(suggestion)"
+          >
+            <span class="material-symbols-outlined ai-mode__suggestion-icon" aria-hidden="true">
+              auto_awesome
+            </span>
+            <span class="ai-mode__suggestion-text">{{ suggestion.text }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+  </div>
+</section>

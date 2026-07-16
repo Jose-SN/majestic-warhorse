@@ -22,6 +22,7 @@ import { OrgPickerComponent } from './pages/org-picker/org-picker.component';
 import { InviteTeacherComponent } from './pages/invite-teacher/invite-teacher.component';
 import { InviteStudentComponent } from './pages/invite-student/invite-student.component';
 import { StudentApprovalListComponent } from './pages/student-approval-list/student-approval-list.component';
+import { AiModeComponent } from './pages/ai-mode/ai-mode.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -37,6 +38,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: DashboardOverviewComponent },
+      { path: 'ai-mode', component: AiModeComponent },
       { path: 'course-overview', component: CourseOverviewComponent },
       { path: 'courses', component: CoursesComponent },
       { path: 'course-details', component: CourseDetailsComponent },

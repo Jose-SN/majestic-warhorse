@@ -29,7 +29,8 @@ export class DashboardService {
     TEACHER_APPROVAL: 'TEACHER_APPROVAL',
     STUDENT_APPROVAL: 'STUDENT_APPROVAL',
     APPROVAL_PENDING: 'APPROVAL_PENDING',
-    ASSESMENT:"ASSESMENT"
+    ASSESMENT:"ASSESMENT",
+    AI_MODE: 'AI_MODE',
   };
   public sidePanelChange$: BehaviorSubject<string> = new BehaviorSubject(
     this.SIDE_PANEL_LIST.DASHBOARD_OVERVIEW

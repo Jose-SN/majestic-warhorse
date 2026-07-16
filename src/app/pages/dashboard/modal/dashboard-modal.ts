@@ -15,4 +15,5 @@ export interface ISidepanel {
   STUDENT_APPROVAL: string;
   APPROVAL_PENDING: string;
   ASSESMENT: string;
+  AI_MODE: string;
 }

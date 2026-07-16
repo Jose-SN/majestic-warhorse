@@ -160,6 +160,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const routePath = route.snapshot.routeConfig?.path || '';
       const panelMap: { [key: string]: string } = {
         overview: this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'],
+        'ai-mode': this.SIDE_PANEL_LIST['AI_MODE'],
         'course-overview': this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'],
         courses: this.SIDE_PANEL_LIST['COURSE_LISTING'],
         'course-details': this.SIDE_PANEL_LIST['COURSE_LISTING'],
@@ -185,6 +186,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const routePath = urlParts[urlParts.length - 1] || '';
       const panelMap: { [key: string]: string } = {
         overview: this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'],
+        'ai-mode': this.SIDE_PANEL_LIST['AI_MODE'],
         'course-overview': this.SIDE_PANEL_LIST['DASHBOARD_OVERVIEW'],
         courses: this.SIDE_PANEL_LIST['COURSE_LISTING'],
         'course-details': this.SIDE_PANEL_LIST['COURSE_LISTING'],
@@ -211,11 +213,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.isMobileNav = !this.isMobileNav;
   }
 
-  isMobileNavActive(section: 'overview' | 'courses' | 'network' | 'account'): boolean {
+  isMobileNavActive(section: 'overview' | 'courses' | 'network' | 'account' | 'ai-mode'): boolean {
     const url = this.router.url;
     switch (section) {
       case 'overview':
         return url.includes('/dashboard/overview') || url.includes('/dashboard/course-overview') || url === '/dashboard';
+      case 'ai-mode':
+        return url.includes('/dashboard/ai-mode');
       case 'courses':
         return url.includes('/dashboard/courses') || url.includes('/dashboard/course-details');
       case 'account':
@@ -232,12 +236,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  navigateMobile(section: 'overview' | 'courses' | 'network' | 'account'): void {
+  navigateMobile(section: 'overview' | 'courses' | 'network' | 'account' | 'ai-mode'): void {
     this.isMobileNav = false;
     const role = this.commonService.loginedUserInfo?.role || '';
 
     const routes: Record<string, string> = {
       overview: '/dashboard/overview',
+      'ai-mode': '/dashboard/ai-mode',
       courses: '/dashboard/courses',
       account: '/dashboard/account',
       network:

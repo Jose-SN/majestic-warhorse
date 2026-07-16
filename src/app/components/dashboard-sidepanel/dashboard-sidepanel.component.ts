@@ -79,6 +79,7 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
       [this.SIDE_PANEL_LIST['INVITE_STUDENT']]: '/dashboard/invite-student',
       [this.SIDE_PANEL_LIST['SWITCH_ORG']]: '/org-picker',
       [this.SIDE_PANEL_LIST['ASSESMENT']]: '/dashboard/assessment',
+      [this.SIDE_PANEL_LIST['AI_MODE']]: '/dashboard/ai-mode',
     };
 
     const route = routeMap[activePanel];
