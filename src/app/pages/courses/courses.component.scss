@@ -1,874 +1,484 @@
 @import '../../../styles/index';
 
-.dashboard-inner {
-  @include flex(flex, column, null, null);  
-  flex-grow: 1;
-  height: 100%;
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
 }
-  .content-area {
-    @include flex(flex, null, space-between, null);
-    gap: 22px;
-    flex-grow: 1;
-    margin: 30px 0 0;
-    .content-left {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      .scroll-container {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        overflow-y: auto;
-        &.overview {
-          height: 220px;
-        }
-        
-        .no-courses-found {
-          @include flex(flex, column, center, center);
-          padding: 60px 40px;
-          text-align: center;
-          min-height: 400px;
-          max-width: 600px;
-          margin: 0 auto;
-          
-          figure {
-            margin: 0 0 30px 0;
-            opacity: 0.7;
-            
-            svg {
-              width: 140px;
-              height: 140px;
-              color: var(--bg-light-grey);
-            }
-          }
-          
-          h3 {
-            font-family: $poppins-bold;
-            font-size: 1.75rem;
-            color: var(--white);
-            margin: 0 0 20px 0;
-            font-weight: 600;
-          }
-          
-          p {
-            font-family: $archivo-regular;
-            font-size: 1rem;
-            color: var(--bg-light-grey);
-            margin: 0 0 15px 0;
-            opacity: 0.9;
-            line-height: 1.6;
-          }
-          
-          ul {
-            text-align: left;
-            margin: 15px auto 20px;
-            padding-left: 0;
-            list-style: none;
-            max-width: 500px;
-            
-            li {
-              font-family: $archivo-regular;
-              font-size: 0.938rem;
-              color: var(--bg-light-grey);
-              margin: 10px 0;
-              padding-left: 25px;
-              position: relative;
-              opacity: 0.85;
-              line-height: 1.5;
-              
-              &::before {
-                content: '•';
-                position: absolute;
-                left: 10px;
-                color: var(--bg-mit1);
-                font-size: 1.2rem;
-                font-weight: bold;
-              }
-            }
-          }
-          
-          .help-text {
-            font-family: $archivo-medium;
-            font-size: 0.875rem;
-            color: var(--bg-light-grey);
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid var(--bg-input-border);
-            opacity: 0.7;
-            font-style: italic;
-          }
-        }
-      }
-      .content-top {
-        @include flex(flex, null, space-between, null);
-        position: absolute;
-        left: 0;
-        top: 0;
-        // width: 1195px;
-        gap: 18px;
-        .course-detail {
-          max-width: 282px;
-          width: 100%;
-          padding: 24px;
-          @include border-radius(15px);
-          @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
-          position: relative;
-          overflow: hidden;
-          .detail-top {
-            @include flex(flex, null, null, center);
-            position: relative;
-            z-index: 1;
-            gap: 20px;
-            .icons {
-              @include flex(flex, null, center, center);
-              width: 52px;
-              height: 52px;
-              @include border-radius(100%);
-              &.mit1,
-              &.mit2,
-              &.mit3,
-              &.mit4 {
-                @include transition(all 0.3s ease-in-out);
-              }
-              &.mit1 {
-                background: var(--bg-mit1);
-              }
-              &.mit2 {
-                background: var(--bg-mit2);
-              }
-              &.mit3 {
-                background: var(--bg-mit3);
-              }
-              &.mit4 {
-                background: var(--bg-mit4);
-              }
-            }
-            .detail-right {
-              flex-shrink: 0;
-            }
-            h2 {
-              font-family: $league-spartan-regular;
-              font-size: 1.375rem;
-              font-weight: normal;
-              color: var(--light-blue);
-              margin-bottom: 10px;
-              max-width: 196px;
-              text-overflow: ellipsis;
-              overflow: hidden;
-              white-space: nowrap;
-            }
-            span {
-              font-family: $league-spartan-light;
-              font-size: 1rem;
-              color: var(--bg-light-grey);
-            }
-          }
-          .detail-bottom {
-            @include flex(flex, null, null, null);
-            margin-top: 30px;
-            position: relative;
-            z-index: 1;
-            span {
-              font-family: $league-spartan-light;
-              font-size: 1rem;
-              color: var(--bg-light-grey);
-              margin-bottom: 10px;
-              display: block;
-            }
-            .rate {
-              flex: 1;
-              .rate-holder {
-                @include flex(flex, null, null, null);
-                gap: 10px;
-                .rate-icon,
-                .rate-content {
-                  figure {
-                    width: 18px;
-                  }
-                  strong,
-                  small {
-                    font-family: $league-spartan-light;
-                    color: var(--white);
-                    font-weight: normal;
-                    display: block;
-                  }
-                  strong {
-                    font-family: $league-spartan-regular;
-                    font-size: 1.563rem;
-                    line-height: 1.313rem;
-                  }
-                  small {
-                    font-family: $league-spartan-light;
-                    font-size: 0.75rem;
-                    margin-top: 10px;
-                  }
-                }
-              }
-            }
-            .type {
-              flex: 1;
-              strong {
-                font-family: $league-spartan-regular;
-                font-size: 1rem;
-                font-weight: normal;
-                color: var(--white);
-                line-height: 1.5rem;
-              }
-            }
-          }
-          &::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            @include gradient-course();
-            @include border-radius(15px);
-            @include transition(all 0.3s ease-in-out);
-            opacity: 0;
-            z-index: 0;
-          }
-          &::after {
-            content: '';
-            background: #fb6959b5;
-            width: 185px;
-            height: 185px;
-            @include border-radius(100%);
-            position: absolute;
-            bottom: -90px;
-            right: -15px;
-            @include transition(all 0.35s ease-in-out);
-            opacity: 0;
-          }
-          &:hover {
-            &::before {
-              opacity: 1;
-            }
-            &::after {
-              bottom: -75px;
-              opacity: 1;
-            }
-            .icons {
-              &.mit1,
-              &.mit2,
-              &.mit3,
-              &.mit4 {
-                background: var(--white);
-              }
-            }
-          }
-        }
-      }
-      .courses-wrapper {
-        padding: 30px;
-        @include border-radius(15px);
-        @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
-        @include flex(flex, column, null, null);
-        flex-grow: 1;
-        margin: 20px 0 0;
-        @include flex(flex, column, null, null);
-        .scroll-container {
-          &.courses {
-            overflow: hidden;
-            overflow-y: auto;
-          }
-        }
-        .course-top {
-          @include flex(flex, null, space-between, null);
-          margin-bottom: 20px;
-          h2 {
-            font-family: $poppins-bold;
-            font-size: 1.875rem;
-            font-weight: normal;
-            color: var(--white);
-            letter-spacing: 1.5px;
-          }
-          a {
-            font-size: 1.25rem;
-            color: var(--bg-text-orange);
-            height: 26px;
-            position: relative;
-            &::before {
-              content: '';
-              width: 0%;
-              height: 1px;
-              background: var(--bg-text-orange);
-              position: absolute;
-              bottom: 0;
-              left: 0;
-              right: 0;
-              margin: auto;
-              @include transition(all 0.35s ease-in-out);
-            }
-            &:hover {
-              color: var(--white);
-              &::before {
-                width: 100%;
-              }
-            }
-          }
-          ul {
-            max-width: fit-content;
-            background: var(--bg-tab-nav);
-            list-style: none;
-            margin: 0;
-            padding: 5px;
-            @include border-radius(15px);
-            @include flex(flex, null, null, center);
-            li {
-              font-family: $archivo-light;
-              font-size: 0.875rem;
-              font-weight: normal;
-              @include border-radius(15px);
-              color: var(--white);
-              padding: 15px 24px;
-              cursor: pointer;
-              @include transition(all 0.3s ease-in-out);
-              &.active {
-                background: var(--bg-tab-active);
-              }
-            }
-          }
-        }
-        .course-card-holder {
-          width: 100%;
-          @include flex(flex, null, null, null);
-          flex-flow: column wrap;
-          flex-direction: row;
-          gap: 15px;
-          position: absolute;
-          top: 0;
-          left: 0;
-          .course-card {
-            background: var(--bg-left-panel);
-            max-width: 268px;
-            width: 23.5%;
-            @include border-radius(10px);
-            border: 1px solid var(--bg-card-border);
-            @include flex(flex, column, null, null);
-            overflow: hidden;
-            cursor: pointer;
-            @include transition(all 0.3s ease-in-out);
-            &:hover {
-              transform: translateY(-2px);
-              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            }
-            .card-content {  
-              figure {
-                min-height: 142px;
-                max-height: 142px;                
-                overflow: hidden;
-                img {
-                  width: 100%;
-                  height: 100%;
-                  object-fit: cover;
-                }
-              }
-              &:first-child {
-                background: var(--bg-light-grey);                
-                padding: 25px 25px 0;
-                overflow: hidden;
-                cursor: pointer;
-                figure {
-                  @include flex(flex, column, flex-end, null);
-                }
-              }
-              &:last-child {
-                position: relative;
-                padding: 20px;
-                .course-header {
-                  @include flex(flex, null, space-between, center);
-                  margin-bottom: 8px;
-                  span {
-                    font-family: $league-spartan-light;
-                    font-size: 0.75rem;
-                    color: var(--bg-light-grey);
-                    flex: 1;
-                  }
-                  .edit-course-btn {
-                    background: transparent;
-                    border: none;
-                    cursor: pointer;
-                    padding: 4px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    @include transition(all 0.2s ease-in-out);
-                    opacity: 0.7;
-                    &:hover {
-                      opacity: 1;
-                      transform: scale(1.1);
-                    }
-                    img {
-                      width: 25px;
-                      height: 25px;
-                    }
-                  }
-                }
-                span {
-                  font-family: $league-spartan-light;
-                  font-size: 0.75rem;
-                  color: var(--bg-light-grey);
-                }
-                h3 {
-                  font-family: $league-spartan-regular;
-                  font-size: 1.125rem;
-                  color: var(--light-blue);
-                  line-height: 1.25rem;
-                  font-weight: normal;
-                  min-height: 45px;
-                  max-height: 45px;
-                  margin: 10px 0 0;
-                  @include text-ellipsis($lines: 1);
-                  cursor: pointer;
-                }
-                .lesson-label {
-                  margin-top: 8px;
-                  .lesson-holder {
-                    width: 100%;
-                    @include flex(flex, null, space-between, center);
-                    position: relative;
-                    span {
-                      font-family: $league-spartan-light;
-                      font-size: 0.75rem;
-                      color: var(--bg-light-grey);
-                    }
-                  }
-                }
-                .loader-holder {
-                  background: var(--white);
-                  width: 100%;
-                  height: 10px;                  
-                  margin-top: 10px;
-                  max-width: 223px;
-                  width: 100%;
-                  position: relative;
-                  @include border-radius(10px);
-                  span {
-                    @include gradient();
-                    @include border-radius(10px);
-                    height: 100%;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                  }                 
-                }
-              }
-            }
-          }
-        }
-      }
+
+.dashboard-inner {
+  position: relative;
+  flex: 1;
+  min-height: 100%;
+  padding: 24px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 107, 44, 0.45) rgba(255, 255, 255, 0.06);
+
+  @media screen and (max-width: 768px) {
+    padding: 16px;
+    min-height: min-content;
+  }
+}
+
+.courses-page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 24px;
+  margin-bottom: 48px;
+
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+  }
+
+  &__intro {
+    min-width: 0;
+  }
+
+  &__title {
+    margin: 0 0 8px;
+    font-family: var(--mc-font-display);
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--mc-on-surface);
+  }
+
+  &__subtitle {
+    margin: 0;
+    max-width: 32rem;
+    font-family: var(--mc-font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--mc-on-surface-variant);
+  }
+
+  &__controls {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    flex-shrink: 0;
+
+    @media screen and (min-width: 768px) {
+      align-items: flex-end;
     }
-    .content-right {
-      max-width: 320px;
+  }
+}
+
+.courses-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border: 1px solid var(--mc-primary);
+  @include border-radius(2px);
+  background: transparent;
+  color: var(--mc-primary);
+  font-family: var(--mc-font-label);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  @include transition(background 0.2s ease, box-shadow 0.2s ease);
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  &:hover {
+    background: rgba(255, 181, 154, 0.08);
+    box-shadow: 0 0 20px -8px rgba(255, 107, 44, 0.45);
+  }
+}
+
+.courses-filter-tabs {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  @include border-radius(2px);
+  border: 1px solid var(--mc-outline-variant);
+  background: var(--mc-surface-container-low);
+
+  li {
+    padding: 8px 24px;
+    @include border-radius(2px);
+    font-family: var(--mc-font-label);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: var(--mc-on-surface-variant);
+    cursor: pointer;
+    @include transition(color 0.2s ease, background 0.2s ease, border-color 0.2s ease);
+
+    &:hover:not(.active) {
+      color: var(--mc-on-surface);
+    }
+
+    &.active {
+      color: var(--mc-on-surface);
+      font-weight: 700;
+      background: var(--mc-surface-container-high);
+      border: 1px solid var(--mc-outline-variant);
+    }
+  }
+}
+
+.courses-page-body {
+  min-height: 0;
+
+  &.common-slider {
+    pointer-events: none;
+    opacity: 0.35;
+  }
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+
+  @media screen and (min-width: 768px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media screen and (min-width: 1280px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.course-glass-card {
+  @include dashboard-glass-card;
+  @include mc-luminous-stroke;
+  @include border-radius(12px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  @include transition(box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease);
+
+  &:hover {
+    box-shadow: 0 0 40px -10px rgba(255, 107, 44, 0.15);
+    border-color: rgba(255, 181, 154, 0.4);
+    transform: translateY(-2px);
+  }
+
+  &__media {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    cursor: pointer;
+
+    img {
       width: 100%;
-      flex-shrink: 0;
-      @include flex(flex, column, null, null);
-      gap: 25px;
-      .content-box {
-        @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
-        @include border-radius(15px);
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        > figure {
-          background: var(--bg-img);
-          width: 110px;
-          height: 110px;
-          @include border-radius(100%);
-          margin: 0 auto;
-          position: relative;
-          &::before {
-            content: '';
-            background: var(--bg-notification-green);
-            width: 35px;
-            height: 35px;
-            position: absolute;
-            bottom: 1px;
-            right: -4px;
-            @include border-radius(100%);
-          }
-        }
-        > span {
-          font-family: $archivo-bold;
-          font-size: 1.5rem;
-          color: var(--light-blue);
-          text-align: center;
-          margin: 20px 0;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: nowrap;
-          display: block;
-        }
-        strong {
-          font-size: 0.813rem;
-          font-family: $archivo-semi-bold;
-          background: var(--bg-notification-red);
-          padding: 5px 10px;
-          margin: 10px auto 0;
-          @include border-radius(5px);
-          display: table;
-          margin-bottom: 10px;
-        }
-        .contact-area {
-          list-style: none;
-          @include common-margin;
-          li {
-            text-align: center;
-            margin-bottom: 5px;
-            display: block;
-            a {
-              font-family: $archivo-regular;
-              font-size: 0.875rem;
-              color: var(--bg-blue);
-              position: relative;
-              @include transition(all 0.3s ease-in-out);
-              &:hover {
-                color: var(--white);
-              }
-              &::before {
-                content: '';
-                position: absolute;
-                left: -24px;
-                top: 2px;
-              }
-            }
-            a[href^='mailto'] {
-              &::before {
-                width: 16px;
-                height: 15px;
-                background: url(../../../assets/images/icon-mail.svg) no-repeat center;
-              }
-            }
-            a[href^='tel'] {
-              &::before {
-                width: 18px;
-                height: 18px;
-                background: url(../../../assets/images/icon-contact.svg) no-repeat center;
-              }
-            }
-          }
-        }
-        .status-wrapper {
-          @include flex(flex, row, space-between, null);
-          margin-top: 20px;
-          .status-holder {
-            @include flex(flex, column, null, center);
-            .status {
-              font-family: $poppins-bold;
-              font-size: 1.5rem;
-              width: 55px;
-              height: 55px;
-              color: var(--white);
-              margin-bottom: 5px;
-              @include flex(flex, column, center, center);
-              @include border-radius(15px);
-              &.green {
-                background: var(--bg-green);
-              }
-              &.yellow {
-                background: var(--bg-yellow);
-              }
-            }
-            span {
-              font-family: $poppins-regular;
-              font-size: 0.875rem;
-              color: var(--white);
-            }
-          }
-        }
-        h3 {
-          font-family: $poppins-medium;
-          font-size: 1.25rem;
-          font-weight: normal;
-          color: var(--light-blue);
-          padding: 10px 15px;
-        }
-        .reading-list-wrapper {
-          height: 100%;
-          position: relative;
-          overflow: hidden;
-          display: flex;
-          overflow-y: auto;
-          flex-direction: column;
-          .reading-list-content {
-            height: 100%;
-            padding-right: 10px;
-            position: absolute;
-            top: 0;
-            width: 100%;
-          }
-          .reading-list {
-            @include flex(flex, row, null, null);
-            padding: 10px 76px 10px 10px;
-            gap: 15px;
-            position: relative;
-            &:not(:last-child) {
-              border-bottom: 1px solid var(--color-blue);
-              margin-bottom: 10px;
-            }
-            h4 {
-              font-family: $poppins-regular;
-              font-size: 0.938rem;
-              color: var(--light-blue);
-              font-weight: normal;
-              line-height: 18px;
-              margin-bottom: 5px;
-              @include text-ellipsis($lines: 2);
-            }
-            figure {
-              width: 50px;
-              height: 50px;
-              @include border-radius(100%);
-              overflow: hidden;
-            }
-            span {
-              font-family: $league-spartan-light;
-              font-size: 1rem;
-              color: var(--bg-light-grey);
-              display: block;
-              &:not(:last-child) {
-                margin-bottom: 5px;
-              }
-            }
-            button {
-              width: 67px;
-              height: 22px;
-              @include border-radius(18px);
-              @include gradient();
-              border: 0;
-              color: #fff;
-              position: absolute;
-              right: 0;
-              top: 0;
-              bottom: 0;
-              margin: auto;
-              cursor: pointer;
-            }
-          }
-        }
-        &:last-child {
-          @include flex(flex, column, null, null);
-        }
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.2) contrast(1.1);
+      @include transition(transform 0.7s ease);
+    }
+
+    .course-glass-card:hover & img {
+      transform: scale(1.05);
+    }
+  }
+
+  &__media-fade {
+    position: absolute;
+    inset: auto 0 0;
+    height: 50%;
+    background: linear-gradient(to top, #030304, transparent);
+    pointer-events: none;
+  }
+
+  &__badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    padding: 4px 12px;
+    @include border-radius(2px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(3, 3, 4, 0.6);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    font-family: var(--mc-font-label);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mc-on-surface);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 24px;
+    gap: 12px;
+  }
+
+  &__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+
+    h3 {
+      margin: 0;
+      flex: 1;
+      min-width: 0;
+      font-family: var(--mc-font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.25;
+      color: var(--mc-on-surface);
+      cursor: pointer;
+      @include transition(color 0.2s ease);
+      @include text-ellipsis($lines: 2);
+
+      .course-glass-card:hover & {
+        color: var(--mc-primary);
       }
     }
   }
 
-  .data-refreshed-holder {
+  &__rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    color: var(--mc-primary);
+    font-family: var(--mc-font-label);
+    font-size: 0.875rem;
+
+    .material-symbols-outlined {
+      font-size: 18px;
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  }
+
+  &__author {
+    margin: 0;
+    font-family: var(--mc-font-label);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #94a3b8;
+  }
+
+  &__description {
+    margin: 0;
+    font-family: var(--mc-font-body);
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--mc-on-surface-variant);
+    @include text-ellipsis($lines: 2);
+  }
+
+  &__progress {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+  }
+
+  &__progress-labels {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-family: var(--mc-font-label);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mc-on-surface-variant);
+
+    span:last-child {
+      color: var(--mc-on-surface);
+    }
+  }
+
+  &__progress-track {
+    height: 6px;
+    @include border-radius(999px);
+    background: var(--mc-surface-container-high);
+    overflow: hidden;
+
     span {
-      font-size: 0.875rem;
-      white-space: nowrap;
-      margin-right: 33px;
-      color: var(--white);
       display: block;
+      height: 100%;
+      background: var(--mc-brand-gradient);
+      @include border-radius(999px);
+      box-shadow: 0 0 10px rgba(255, 107, 44, 0.35);
     }
-    .refresh-date {
-      font-family: $archivo-medium;
+  }
+
+  &__lessons {
+    margin: 0;
+    font-family: var(--mc-font-body);
+    font-size: 0.75rem;
+    color: #94a3b8;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  &__cta {
+    flex: 1;
+    padding: 12px 16px;
+    border: 0;
+    @include border-radius(2px);
+    background: var(--mc-brand-gradient);
+    color: var(--mc-on-surface);
+    font-family: var(--mc-font-label);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    @include transition(opacity 0.2s ease, box-shadow 0.2s ease);
+
+    &:hover {
+      opacity: 0.92;
+      box-shadow: 0 0 20px rgba(255, 107, 44, 0.35);
+    }
+  }
+
+  &__menu {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--mc-outline-variant);
+    @include border-radius(2px);
+    background: transparent;
+    color: var(--mc-on-surface-variant);
+    cursor: pointer;
+    @include transition(background 0.2s ease, border-color 0.2s ease, color 0.2s ease);
+
+    &:hover {
+      background: var(--mc-surface-container-high);
+      border-color: rgba(255, 181, 154, 0.35);
+      color: var(--mc-on-surface);
+    }
+  }
+}
+
+.courses-empty-state {
+  @include dashboard-glass-card;
+  @include mc-luminous-stroke;
+  @include border-radius(12px);
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 32px;
+  text-align: center;
+
+  &__icon {
+    display: block;
+    margin: 0 auto 16px;
+    font-size: 3rem;
+    color: rgba(247, 147, 26, 0.75);
+    filter: drop-shadow(0 0 12px rgba(247, 147, 26, 0.35));
+  }
+
+  &__spinner {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 16px;
+    border: 3px solid rgba(247, 147, 26, 0.2);
+    border-top-color: #f7931a;
+    border-radius: 50%;
+    animation: courses-spin 0.8s linear infinite;
+  }
+
+  h3 {
+    margin: 0 0 12px;
+    font-family: var(--mc-font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--mc-on-surface);
+  }
+
+  p {
+    margin: 0 0 16px;
+    font-family: var(--mc-font-body);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: #94a3b8;
+  }
+
+  ul {
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+    max-width: 28rem;
+    text-align: left;
+
+    li {
+      position: relative;
+      padding-left: 1.25rem;
+      margin: 8px 0;
+      font-family: var(--mc-font-body);
       font-size: 0.875rem;
+      color: #94a3b8;
+      line-height: 1.5;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.55em;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #f7931a;
+        box-shadow: 0 0 8px rgba(247, 147, 26, 0.5);
+      }
+    }
+  }
+}
+
+@keyframes courses-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .courses-page-header {
+    margin-bottom: 32px;
+
+    &__controls {
+      align-items: stretch;
+    }
+  }
+
+  .courses-filter-tabs {
+    width: 100%;
+    justify-content: stretch;
+
+    li {
+      flex: 1;
       text-align: center;
-      letter-spacing: 1px;
-      color: var(--white);
-      max-width: 312px;
-      padding: 15px 46px;
-      @include border-radius(5px);
-      border: 1px solid var(--bg-input-border);
-      background: var(--bg-input);
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-    button {
-      font-family: $archivo-medium;
-      font-size: 0.875rem;
-      color: var(--white);
-      width: 211px;
-      height: 44px;
-      @include border-radius(20px);
-      @include gradient();
-      border: none;
-      cursor: pointer;
-      @include flex(flex, null, center, center);
-    }
-    & {
-      @include flex(flex, null, center, center);
-    }
-    img {
-      margin-right: 10px;
+      padding-inline: 12px;
     }
   }
-  @media screen and (max-width: 1919px) {
-    .content-area {
-      .content-left {
-        .content-top  {
-          min-height: 132px;
-          max-height: 132px;
-        }
-      }
-      .course-detail {
-        &:last-child {
-          margin-right: 8px;
-        }
-       }
-    }
-    .scroll-container {
-      overflow: hidden;
-      overflow-x: auto;
-      &.overview {
-        height: 240px !important;
-      }
-    }
+
+  .courses-upload-btn {
+    width: 100%;
   }
-  @media screen and (max-width: 1650px) {
-    .content-area {
-      .content-left {
-        .courses-wrapper {
-          .course-card-holder {
-            .course-card {
-              max-width: 100%;
-              width: 23.5%;
-            }
-          }
-        }
-      }
-    }
-  }
-  @media screen and (max-width: 1400px) {
-    .content-area {
-      .content-left {
-        .courses-wrapper {
-          .course-card-holder {
-            .course-card {
-              max-width: 100%;
-              width: 31.5%;
-            }
-          }
-        }
-      }
-    }
-  }
-  
-  @media screen and (max-width: 1280px) {
-    .content-area {
-      .content-left {
-        .courses-wrapper {
-          .course-top {
-            @include flex(flex,column,null,center);
-            gap: 15px;
-          }
-          .course-card-holder {
-            .course-card {
-              width: 48%; 
-              .card-content {
-                &:last-child {
-                  .loader-holder {
-                    max-width: 100%;
-                  }
-                }
-              }          
-            }
-          }
-        }
-      }
-    }
-  }
-  @media screen and (max-width: 1024px) {
-   .content-area {
-    @include flex(flex, column, null, null);
-    .content-left {
-      .courses-wrapper {
-        .scroll-container {
-          height: 500px;
-        }
-        .course-card-holder {
-          position: static;
-          .course-card {
-            width: 31.5%;
-            .card-content {
-              &:last-child {
-                .loader-holder {
-                  max-width: 100%;
-                }
-              }
-            }      
-          }
-        }
-      }
-    }
-    .content-right {
-      @include flex(flex,row, null, null);
-      max-width: 100%;
-      .content-box {
-        .reading-list-wrapper {
-          height: 500px;
-        }
-      }
-    }
-   }
-  }
-  
-  @media screen and (max-width: 880px) {
-    .content-area {
-      margin-top: 0;
-      @include flex(flex, column, null, null);
-      .content-left {      
-        .courses-wrapper {
-          .course-top {
-            h2 {
-              font-size: 25px;
-              margin: 0 auto;
-              display: block;
-            }
-          } 
-          .scroll-container {
-            height: 500px;
-          }
-          .course-card-holder {
-            position: static;
-            .course-card {
-              width: 48%;
-              .card-content {
-                &:last-child {
-                  .loader-holder {
-                    max-width: 100%;
-                  }
-                }
-              }      
-            }
-          }
-        }
-      }
-     }
-  }
-  
-  @media screen and (max-width: 640px) {
-    .content-area {
-      margin: 0;
-      @include flex(flex, column, null, null);
-      .content-left {
-        .courses-wrapper {          
-          .scroll-container {
-            height: 965px;
-          }
-          .course-card-holder {
-            position: static;
-            .course-card {
-              width: 97%;
-              .card-content {
-                &:last-child {
-                  .loader-holder {
-                    max-width: 100%;
-                  }
-                }
-              }      
-            }
-          }
-        }
-      }
-      .content-right {
-        @include flex(flex,column, null, null);
-       }
-     }
-  }
-  
+}

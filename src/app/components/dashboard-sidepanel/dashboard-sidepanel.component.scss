@@ -65,10 +65,101 @@
   overflow-y: auto;
 }
 
+.sidebar-bottom {
+  flex-shrink: 0;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-upgrade-pro {
+  position: relative;
+  padding: 16px;
+  @include border-radius(12px);
+  overflow: hidden;
+  background: rgba(27, 27, 30, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  @include transition(box-shadow 0.3s ease, border-color 0.3s ease);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 107, 44, 0.3),
+      rgba(171, 0, 99, 0.1),
+      rgba(72, 0, 129, 0.3)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  &:hover {
+    box-shadow: 0 0 40px -10px rgba(255, 107, 44, 0.15);
+    border-color: rgba(255, 181, 154, 0.35);
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__eyebrow {
+    margin: 0 0 4px;
+    font-family: var(--mc-font-label);
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #ffb59a;
+  }
+
+  &__message {
+    margin: 0 0 16px;
+    font-family: var(--mc-font-display);
+    font-size: 0.875rem;
+    line-height: 1.35;
+    color: var(--mc-on-surface);
+  }
+
+  &__cta {
+    width: 100%;
+    padding: 8px 12px;
+    border: 0;
+    @include border-radius(2px);
+    background: var(--mc-brand-gradient);
+    color: var(--mc-on-surface);
+    font-family: var(--mc-font-label);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 16px rgba(255, 107, 44, 0.2);
+    @include transition(opacity 0.2s ease, box-shadow 0.2s ease);
+
+    &:hover {
+      opacity: 0.92;
+      box-shadow: 0 0 24px rgba(255, 107, 44, 0.35);
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(255, 181, 154, 0.65);
+      outline-offset: 2px;
+    }
+  }
+}
+
 .sidenav-user {
   position: relative;
   flex-shrink: 0;
-  margin-top: 12px;
+  margin-top: 0;
   padding-top: 12px;
   border-top: 1px solid var(--mc-outline-variant);
 
@@ -418,6 +509,15 @@ footer {
 }
 
 @media screen and (max-width: 768px) {
+  .sidebar-upgrade-pro {
+    padding: 14px;
+
+    &__message {
+      font-size: 0.8125rem;
+      margin-bottom: 12px;
+    }
+  }
+
   .left-navigation {
     ul {
       li {

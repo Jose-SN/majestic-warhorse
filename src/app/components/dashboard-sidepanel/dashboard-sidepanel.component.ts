@@ -186,4 +186,8 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
     this.closeUserMenu();
     this.authService.logOutApplication();
   }
+
+  onUpgradeToPro(): void {
+    void this.router.navigate([DASHBOARD_NAV_ROUTES.account]);
+  }
 }

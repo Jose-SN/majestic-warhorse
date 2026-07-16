@@ -255,6 +255,17 @@
   </ul>
 </div>
 
+<div class="sidebar-bottom">
+  <section class="sidebar-upgrade-pro" aria-label="Upgrade to Pro">
+    <div class="sidebar-upgrade-pro__content">
+      <p class="sidebar-upgrade-pro__eyebrow">Pro Account</p>
+      <p class="sidebar-upgrade-pro__message">Upgrade to unlock advanced neural labs.</p>
+      <button type="button" class="sidebar-upgrade-pro__cta" (click)="onUpgradeToPro()">
+        Upgrade to Pro
+      </button>
+    </div>
+  </section>
+
 <div #userMenu class="sidenav-user" [class.is-open]="userMenuOpen">
   @if (userMenuOpen) {
     <div class="sidenav-user__popup insight-card hologram-card" role="menu">
@@ -335,6 +346,7 @@
       </svg>
     </span>
   </button>
+</div>
 </div>
 
 <footer>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Majestic Warhorse | Cyber Academy Courses</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Geist:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            background-color: #0F0F12;
+            color: #e4e1e6;
+            font-family: 'Geist', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .gradient-brand {
+            background: linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #480081 100%);
+        }
+
+        .gradient-border {
+            position: relative;
+            background: rgba(27, 27, 30, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .gradient-border::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255, 107, 44, 0.3), rgba(171, 0, 99, 0.1), rgba(72, 0, 129, 0.3));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .glass-panel {
+            background: rgba(19, 19, 22, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .hover-backglow {
+            transition: all 0.3s ease;
+        }
+
+        .hover-backglow:hover {
+            box-shadow: 0 0 40px -10px rgba(255, 107, 44, 0.15);
+            border-color: rgba(255, 181, 154, 0.4);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .active-left-glow {
+            position: relative;
+        }
+
+        .active-left-glow::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20%;
+            height: 60%;
+            width: 2px;
+            background: #ff6b2c;
+            box-shadow: 0 0 10px #ff6b2c;
+        }
+
+        .nav-item-transition {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .course-card-img {
+            filter: saturate(1.2) contrast(1.1);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#1b1b1e",
+                        "on-secondary-container": "#ffbad2",
+                        "inverse-primary": "#a83900",
+                        "surface-container": "#1f1f22",
+                        "outline-variant": "#594139",
+                        "surface-container-lowest": "#0e0e11",
+                        "secondary": "#ffb0cc",
+                        "on-primary-fixed": "#380d00",
+                        "on-background": "#e4e1e6",
+                        "surface-container-high": "#2a2a2d",
+                        "inverse-surface": "#e4e1e6",
+                        "error-container": "#93000a",
+                        "surface-dim": "#131316",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#ffb0cc",
+                        "on-tertiary-fixed-variant": "#6700b5",
+                        "tertiary": "#dcb8ff",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#ab0063",
+                        "on-primary-container": "#5c1c00",
+                        "primary-fixed-dim": "#ffb59a",
+                        "primary-fixed": "#ffdbcf",
+                        "tertiary-fixed-dim": "#dcb8ff",
+                        "on-tertiary-fixed": "#2c0051",
+                        "on-secondary": "#640038",
+                        "tertiary-fixed": "#efdbff",
+                        "on-secondary-fixed": "#3e0020",
+                        "surface-variant": "#353438",
+                        "inverse-on-surface": "#303033",
+                        "on-tertiary-container": "#4a0084",
+                        "on-surface": "#e4e1e6",
+                        "surface-tint": "#ffb59a",
+                        "outline": "#a98a7f",
+                        "surface-bright": "#39393c",
+                        "surface": "#131316",
+                        "on-tertiary": "#480081",
+                        "on-secondary-fixed-variant": "#8d0051",
+                        "on-primary-fixed-variant": "#802900",
+                        "on-error": "#690005",
+                        "background": "#131316",
+                        "primary": "#ffb59a",
+                        "on-surface-variant": "#e2bfb3",
+                        "secondary-fixed": "#ffd9e4",
+                        "surface-container-highest": "#353438",
+                        "on-primary": "#5b1b00",
+                        "tertiary-container": "#bb7bff",
+                        "primary-container": "#ff6b2c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "margin-desktop": "64px",
+                        "unit": "4px",
+                        "container-max": "1440px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Geist"],
+                        "headline-lg": ["Space Grotesk"],
+                        "label-sm": ["JetBrains Mono"],
+                        "display-lg": ["Space Grotesk"],
+                        "headline-lg-mobile": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Sidebar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-outline-variant bg-surface-container-lowest flex flex-col py-8 px-4 z-50">
+<div class="mb-12 px-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 gradient-brand rounded-sm flex items-center justify-center shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-white font-bold" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div>
+<h1 class="font-display-lg text-[22px] tracking-tighter text-primary leading-none">WARHORSE</h1>
+<p class="font-label-sm text-[10px] text-on-surface-variant tracking-[0.2em] uppercase">Cyber Academy</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-4 px-4 py-3 rounded-sm text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-sm text-primary border-l-2 border-primary bg-primary/10 font-bold font-label-sm text-label-sm active-left-glow" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">school</span>
+                All Courses
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-sm text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+                Learning Path
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-sm text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+                Resources
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-sm text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="mt-auto space-y-6">
+<div class="p-4 rounded-xl gradient-border relative overflow-hidden group">
+<div class="relative z-10">
+<p class="font-label-sm text-[10px] text-primary-fixed-dim mb-1">PRO ACCOUNT</p>
+<p class="font-headline-lg text-[14px] leading-tight mb-4 text-on-surface">Upgrade to unlock advanced neural labs.</p>
+<button class="w-full py-2 rounded-sm gradient-brand text-on-surface font-label-sm text-[11px] font-bold uppercase tracking-wider">Upgrade to Pro</button>
+</div>
+</div>
+<div class="space-y-1">
+<a class="flex items-center gap-4 px-4 py-2 rounded-sm text-on-surface-variant hover:text-on-surface transition-all font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined">help</span>
+                    Support
+                </a>
+<a class="flex items-center gap-4 px-4 py-2 rounded-sm text-on-surface-variant hover:text-error transition-all font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined">logout</span>
+                    Sign Out
+                </a>
+</div>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="flex justify-between items-center w-full px-gutter h-20 ml-64 max-w-[calc(100%-16rem)] sticky top-0 bg-surface/80 backdrop-blur-xl z-40 border-b border-outline-variant">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-transparent border-b border-outline-variant focus:border-primary-container focus:ring-0 text-body-md font-body-md py-2 pl-10 transition-all outline-none" placeholder="Search across courses and modules..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="px-6 py-2.5 rounded-sm border border-primary text-primary font-label-sm font-bold uppercase tracking-widest hover:bg-primary/5 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+                Upload Course
+            </button>
+<div class="flex items-center gap-4 border-l border-outline-variant pl-6">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all">dark_mode</button>
+<div class="w-10 h-10 rounded-full border border-outline-variant overflow-hidden cursor-pointer hover:border-primary transition-all p-0.5">
+<img class="w-full h-full object-cover rounded-full" data-alt="A futuristic professional portrait of a cybersecurity engineer, wearing technical sleek dark apparel with orange accents, lit by a subtle purple ambient glow in a high-tech lab setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnvQzBpyuGW1UR1w1RWqH1s7lTXXFa4PDbLLkjRsXwyiRop1rH_Mwe7iP-5nbiltr26m98AsRrenQM0AAsTvzL8tfL3rpyaFsUG1jCnaSJpeNvv8FTUysZwi-ObiVanQtWiyqH1GyhB7xfDjAdt2vMZ6eA3Zw5saL6BYivYrY5zYXydNGxBozegdHPDmFge-udJWrY_CvJmcJKjdV0mM8Rc9dgFOKN5yKDbH9xEZ1lpPkFFmcSRifpig"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 p-gutter min-h-screen">
+<!-- Dashboard Header -->
+<div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Academy Courseware</h2>
+<p class="text-on-surface-variant font-body-md max-w-lg">Advanced tactical training modules for cyberwarfare specialists and neural system architects.</p>
+</div>
+<div class="flex bg-surface-container-low p-1 rounded-sm border border-outline-variant">
+<button class="px-6 py-2 rounded-sm font-label-sm text-on-surface bg-surface-container-high border border-outline-variant font-bold">All</button>
+<button class="px-6 py-2 rounded-sm font-label-sm text-on-surface-variant hover:text-on-surface transition-all">New</button>
+<button class="px-6 py-2 rounded-sm font-label-sm text-on-surface-variant hover:text-on-surface transition-all">Pending</button>
+<button class="px-6 py-2 rounded-sm font-label-sm text-on-surface-variant hover:text-on-surface transition-all">Completed</button>
+</div>
+</div>
+<!-- Bento Grid / Courses Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Course Card 1 -->
+<div class="glass-panel rounded-xl overflow-hidden flex flex-col group hover-backglow">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 course-card-img" data-alt="A high-fidelity digital illustration of complex neural networking nodes pulsating with vibrant orange energy against a deep purple and black digital void. Sharp crystalline structures and floating data streams create a professional cybernetic atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdbTqm0uQNe1WHfGiI6wAp-DZHAzsxwLXf1-zKyhKWSeNx2k-IIOOpGSDuzBhbgnTmZoRBUstVEOW7QxQjuMse8PRixm-332ioimZ9u3_lJ9hd7bwFKoTx-oB2wmxStb3gGcNetQjcTB87u5rQD15OfZIml3BM9_stKpqH3mHDLgeIoky_QJ6TJBTRU_Woa082rWDVo5sW_KeK0zZhtemPd-0vZA31R5D6ixv8xMrdzKEBLkQAdy4JpA"/>
+<div class="absolute top-4 left-4 bg-background/60 backdrop-blur-md px-3 py-1 rounded-sm border border-white/10 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-sm text-[10px] uppercase tracking-widest text-on-surface">Live Now</span>
+</div>
+<div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-background to-transparent"></div>
+</div>
+<div class="p-6 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-3">
+<h3 class="font-headline-lg text-[20px] text-on-surface group-hover:text-primary transition-colors">Advanced Neural Systems</h3>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-[14px]">4.9</span>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md text-sm mb-6 line-clamp-2">Master the architecture of synthetic consciousness and bio-digital synchronization protocols.</p>
+<div class="space-y-2 mb-8">
+<div class="flex justify-between font-label-sm text-[11px] text-on-surface-variant uppercase tracking-wider">
+<span>Progress</span>
+<span class="text-on-surface">65%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full gradient-brand" style="width: 65%;"></div>
+</div>
+</div>
+<div class="mt-auto flex gap-4">
+<button class="flex-1 py-3 rounded-sm gradient-brand text-on-surface font-label-sm font-bold uppercase tracking-widest hover:opacity-90 transition-all">Join Session</button>
+<button class="w-12 h-12 flex items-center justify-center rounded-sm border border-outline-variant hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Course Card 2 -->
+<div class="glass-panel rounded-xl overflow-hidden flex flex-col group hover-backglow">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 course-card-img" data-alt="Futuristic cybersecurity visual showing glowing orange holographic code locks and purple translucent shields intersecting in a dark 3D space. The aesthetic is sharp, technical, and high-contrast, representing high-level quantum security protocols." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqLcnnUSq-_bx7SmDgSkZoFkt1VnklUeuffqQ0hc8-MtNxNwf01zFcvsgwj6Wp2izFZBKnWFxZ74gzzum3yG0jHLDCrAlknXj6J7zEZ1efCVHfGRayRcuWz8dqWbZYRnAy7MVDKVgvkVaFTUr7exX0V_AQi_xsTQ3w8lSIN5dr-IT75S16Rjh6bcYqN3Hc3nB8ybNBief-8-wDTsFqhWFOnkVeRFP7cxhZedziGoB-EjPmxXAA7EtAiA"/>
+<div class="absolute top-4 left-4 bg-background/60 backdrop-blur-md px-3 py-1 rounded-sm border border-white/10 flex items-center gap-2">
+<span class="font-label-sm text-[10px] uppercase tracking-widest text-on-surface-variant">Self-Paced</span>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-3">
+<h3 class="font-headline-lg text-[20px] text-on-surface group-hover:text-primary transition-colors">Quantum Cybersecurity</h3>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-[14px]">5.0</span>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md text-sm mb-6 line-clamp-2">Encryption theory and defensive logic in the era of quantum computation and adversarial AI.</p>
+<div class="space-y-2 mb-8">
+<div class="flex justify-between font-label-sm text-[11px] text-on-surface-variant uppercase tracking-wider">
+<span>Progress</span>
+<span class="text-on-surface">12%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full gradient-brand" style="width: 12%;"></div>
+</div>
+</div>
+<div class="mt-auto flex gap-4">
+<button class="flex-1 py-3 rounded-sm gradient-brand text-on-surface font-label-sm font-bold uppercase tracking-widest hover:opacity-90 transition-all">Enter Lab</button>
+<button class="w-12 h-12 flex items-center justify-center rounded-sm border border-outline-variant hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Course Card 3 -->
+<div class="glass-panel rounded-xl overflow-hidden flex flex-col group hover-backglow">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 course-card-img" data-alt="Microscopic view of bio-integrated circuitry glowing with neon purple light, weaving through organic tissue structures. The style is hyper-detailed cyber-medical, using a dark professional palette with intense warm orange focal points." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbcvPus47g3FZG8Cv6rX0wx0XgGx6s1h5da8ewPmXhzvVQLUTS3CvHJ5b5fverWUvNnUTuSLy1futLPJXcwNB5joWEq9FZt7idiI_Q_4-MPZqh9LeYlIBgIaFVITtgAQyJAcbzKemNx2nN_W2eHTKdnbYiA1JtUFjtfSypCS8gKeOrOCcVvERhrTCsupJ2MzDlY8_Ks3WLt8jGRZCBWhQuXY5VA05qF8qJ8I_DrnKDA_8SVN-yWtfSQw"/>
+<div class="absolute bottom-4 left-4 bg-tertiary-container/20 backdrop-blur-md px-3 py-1 rounded-sm border border-tertiary/30 flex items-center gap-2">
+<span class="font-label-sm text-[10px] uppercase tracking-widest text-tertiary">Advanced</span>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-3">
+<h3 class="font-headline-lg text-[20px] text-on-surface group-hover:text-primary transition-colors">Cybernetic Biology</h3>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-[14px]">4.7</span>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md text-sm mb-6 line-clamp-2">Exploration of neural-link hardware and its integration with biological nervous systems.</p>
+<div class="space-y-2 mb-8">
+<div class="flex justify-between font-label-sm text-[11px] text-on-surface-variant uppercase tracking-wider">
+<span>Progress</span>
+<span class="text-on-surface">88%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full gradient-brand" style="width: 88%;"></div>
+</div>
+</div>
+<div class="mt-auto flex gap-4">
+<button class="flex-1 py-3 rounded-sm gradient-brand text-on-surface font-label-sm font-bold uppercase tracking-widest hover:opacity-90 transition-all">Resume Path</button>
+<button class="w-12 h-12 flex items-center justify-center rounded-sm border border-outline-variant hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Feature / Logo Visual Card -->
+<div class="xl:col-span-2 glass-panel rounded-xl overflow-hidden flex flex-col md:flex-row group relative">
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+
+</div>
+<div class="w-full md:w-1/2 p-10 flex flex-col justify-center relative z-10">
+<div class="inline-block px-3 py-1 rounded-sm border border-primary/40 text-primary font-label-sm text-[11px] mb-6 uppercase tracking-widest">Master Class Series</div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-4">Tactical AI Integration</h3>
+<p class="text-on-surface-variant font-body-md mb-8">Specialized training for deploying autonomous agents in contested digital environments. Includes simulated war-games and real-time red-team scenarios.</p>
+<div class="flex gap-4">
+<button class="px-8 py-3 rounded-sm gradient-brand text-on-surface font-label-sm font-bold uppercase tracking-widest hover:shadow-lg transition-all">Begin Training</button>
+<button class="px-8 py-3 rounded-sm border border-outline-variant text-on-surface font-label-sm font-bold uppercase tracking-widest hover:bg-surface-container-high transition-all">Syllabus</button>
+</div>
+</div>
+<div class="w-full md:w-1/2 relative bg-surface-container-low/50">
+<img class="w-full h-full object-contain p-8 md:p-12 opacity-90 group-hover:opacity-100 transition-opacity duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVbLMV1EWwTVgXNxfTCXaAhAWiANV6Dny_uFwr5Znzg4WRH47dmKHr52u7T4Hcft3NCOvJPBGnts0Qqm9uNOXtrI4TmrlP5pPzFFJTfBQhM9gyDMez2pOkkOYm1d6K_ZqxswDToc1fou7GBbINt4RNr-m2Lx3iXJL7fji8ahHuoEnNFPBaKRUD82ccz7pBC8Nt8GHltSBtg5mRGw2icFtyK9U_ESEE40_9CuWBsU8SLjyySJhajWhNdbhCn_S1Frvw2bQ"/>
+</div>
+</div>
+<!-- Statistics / Quick Stats Card -->
+<div class="glass-panel rounded-xl p-8 flex flex-col justify-between hover-backglow relative overflow-hidden">
+<div class="absolute -top-10 -right-10 w-40 h-40 bg-primary/5 blur-[80px] rounded-full"></div>
+<div>
+<h4 class="font-label-sm text-[12px] text-on-surface-variant uppercase tracking-[0.2em] mb-8">Performance Metrics</h4>
+<div class="space-y-8">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-sm bg-surface-container-high flex items-center justify-center border border-outline-variant text-primary">
+<span class="material-symbols-outlined">timer</span>
+</div>
+<span class="font-body-md text-on-surface">Time Logged</span>
+</div>
+<span class="font-headline-lg text-[20px]">42.5h</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-sm bg-surface-container-high flex items-center justify-center border border-outline-variant text-secondary">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<span class="font-body-md text-on-surface">XP Earned</span>
+</div>
+<span class="font-headline-lg text-[20px]">8,420</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-sm bg-surface-container-high flex items-center justify-center border border-outline-variant text-tertiary">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<span class="font-body-md text-on-surface">Certificates</span>
+</div>
+<span class="font-headline-lg text-[20px]">3</span>
+</div>
+</div>
+</div>
+<button class="mt-8 w-full py-4 rounded-sm border border-outline-variant font-label-sm font-bold uppercase tracking-widest hover:border-primary/50 hover:bg-primary/5 transition-all">View All Activity</button>
+</div>
+</div>
+<!-- Pagination / Footer Loading -->
+<div class="mt-16 mb-8 flex justify-center">
+<button class="group flex items-center gap-3 px-8 py-4 glass-panel rounded-full hover:border-primary/40 transition-all">
+<span class="material-symbols-outlined group-hover:rotate-180 transition-transform duration-500 text-primary">sync</span>
+<span class="font-label-sm font-bold uppercase tracking-widest">Load More Academy Modules</span>
+</button>
+</div>
+</main>
+<!-- Floating Atmosphere Elements -->
+<div class="fixed top-0 left-0 w-full h-screen pointer-events-none z-[-1] opacity-20">
+<div class="absolute top-[20%] right-[10%] w-[500px] h-[500px] bg-primary/10 blur-[150px] rounded-full"></div>
+<div class="absolute bottom-[10%] left-[30%] w-[600px] h-[600px] bg-secondary/10 blur-[180px] rounded-full"></div>
+</div>
+<script>
+        // Micro-interaction for cards
+        document.querySelectorAll('.glass-panel').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>
