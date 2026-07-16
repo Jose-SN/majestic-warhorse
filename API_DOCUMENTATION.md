@@ -44,6 +44,7 @@ Complete reference for the **course backend** HTTP API (rosters, RBAC, assignmen
 | [Favorites](#favorites--favorites) | `/favorites` |
 | [Teachers roster](#teachers-roster--teachers) | `/teachers` |
 | [Students roster](#students-roster--students) | `/students` |
+| [Course discussions](#course-discussions--discussion) | `/discussion` |
 | [Teacher–Students assignments](#teacherstudents--teacher-students) | `/teacher-students` |
 | [HTTP status codes](#http-status-codes) | — |
 
@@ -71,6 +72,8 @@ Complete reference for the **course backend** HTTP API (rosters, RBAC, assignmen
 | Assign role (generic) | `POST` | `/user-role/save` | `Authorization: Bearer` (IAM sync) |
 | Assign students to teacher | `POST` | `/teacher-students/assign-students` | — |
 | Student course feed | `GET` | `/course/student/:studentUserId?organization_id=` | — |
+| Course discussions (list) | `GET` | `/discussion/get?course_id=&organization_id=` | — |
+| Course discussions (post) | `POST` | `/discussion/save` | — |
 | Create course | `POST` | `/course/save` | — |
 
 See [UI_WORKFLOW.md](./UI_WORKFLOW.md) for step-by-step flows per role.
@@ -1069,6 +1072,102 @@ Also accepts `user_id` / `course_id`.
   "message": "Removed from favorites"
 }
 ```
+
+### List discussions
+`GET /discussion/get`
+
+**Query params:**
+
+| Param | Required | Description |
+|-------|----------|-------------|
+| `course_id` | Yes | Course UUID |
+| `chapter_id` | No | Filter to one chapter |
+| `organization_id` | No | Filter by organization |
+
+**Response `200`:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "discussion-uuid",
+      "course_id": "course-uuid",
+      "chapter_id": "chapter-uuid",
+      "organization_id": "org-uuid",
+      "comment": "The lighting breakdown really helped.",
+      "created_by": "user-uuid",
+      "created_at": "2026-07-16T12:00:00.000Z",
+      "updated_at": "2026-07-16T12:00:00.000Z"
+    }
+  ]
+}
+```
+
+**Response `404`:** Course not found (Angular client treats as empty list).
+
+---
+
+### Create discussion
+`POST /discussion/save`
+
+**Body:**
+```json
+{
+  "course_id": "course-uuid",
+  "chapter_id": "chapter-uuid",
+  "organization_id": "org-uuid",
+  "comment": "My comment text",
+  "created_by": "user-uuid"
+}
+```
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| `course_id` | Yes | Must reference an existing course |
+| `comment` | Yes | Non-empty after trim |
+| `created_by` | Yes | IAM user UUID |
+| `chapter_id` | No | Must belong to `course_id` when provided |
+| `organization_id` | No | From org login / session |
+
+**Response `201`:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "discussion-uuid",
+    "course_id": "course-uuid",
+    "chapter_id": "chapter-uuid",
+    "organization_id": "org-uuid",
+    "comment": "My comment text",
+    "created_by": "user-uuid",
+    "created_at": "2026-07-16T12:05:00.000Z",
+    "updated_at": "2026-07-16T12:05:00.000Z"
+  }
+}
+```
+
+**Response `400`:** Missing/blank `comment`, invalid `chapter_id` for course.
+
+**Response `404`:** Course not found.
+
+---
+
+### Delete discussion (soft)
+`DELETE /discussion/delete/:id`
+
+Sets `deleted_at = NOW()`. Optional for v1 UI; included for moderation.
+
+**Response `200`:**
+```json
+{
+  "success": true,
+  "message": "Discussion deleted"
+}
+```
+
+**Response `404`:** Discussion not found or already deleted.
+
+---
 
 ---
 
