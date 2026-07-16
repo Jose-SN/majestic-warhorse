@@ -1,15 +1,5 @@
 /** Demo data for course-details reference UI — swap for API later. */
 
-export interface CourseDiscussionItem {
-  id: string;
-  author: string;
-  avatarUrl?: string;
-  chapterLabel: string;
-  chapterTitle: string;
-  comment: string;
-  timeAgo: string;
-}
-
 export interface CourseMaterialItem {
   id: string;
   name: string;
@@ -27,30 +17,4 @@ export const COURSE_DETAILS_DEMO = {
     { id: 'm2', name: '3D Model Files.obj/.blend', type: 'zip' },
     { id: 'm3', name: 'Reference Board.pdf', type: 'pdf' },
   ] as CourseMaterialItem[],
-  discussions: [
-    {
-      id: 'd1',
-      author: 'Alex Rivera',
-      chapterLabel: 'Chapter 1',
-      chapterTitle: 'The Conceptual Sketch',
-      comment: 'The lighting breakdown in this chapter really helped me understand form and depth.',
-      timeAgo: '2 minutes ago',
-    },
-    {
-      id: 'd2',
-      author: 'Jordan Lee',
-      chapterLabel: 'Chapter 2',
-      chapterTitle: 'Blocking & Silhouette',
-      comment: 'Great tips on silhouette readability — my horse model reads much better now.',
-      timeAgo: '18 minutes ago',
-    },
-    {
-      id: 'd3',
-      author: 'Sam Ortiz',
-      chapterLabel: 'Chapter 3',
-      chapterTitle: 'Detail Pass',
-      comment: 'Would love a follow-up on texture painting workflows for the mane.',
-      timeAgo: '1 hour ago',
-    },
-  ] as CourseDiscussionItem[],
 };

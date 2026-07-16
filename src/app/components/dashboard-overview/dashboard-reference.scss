@@ -12,13 +12,11 @@
   .futuristic-dashboard {
     container-type: size;
     display: grid;
-    grid-template-rows: 0.75fr minmax(150px, 1.15fr) minmax(140px, 2fr);
+    grid-template-rows: 0.55fr minmax(150px, 0.90fr) minmax(140px, 2fr);
     gap: 12px;
     flex: 1;
     min-height: 0;
     height: 100%;
-    // Match subscribed-card row height for recommendation cards (2fr panel, 2 rows, minus title area)
-    --subscribed-card-row-height: calc(((100cqh * 2 / 4.1) - 52px) / 2);
 
     > .subscribed-panel {
       min-height: 0;
@@ -28,14 +26,15 @@
   .stats-widget-row {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
+    gap: 10px;
+    min-height: 0;
   }
 
   .stat-widget {
     @include dashboard-glass-card;
     @include mc-luminous-stroke;
     @include border-radius(8px);
-    padding: 16px;
+    padding: 12px;
     min-height: 0;
     display: flex;
     flex-direction: column;
@@ -44,8 +43,8 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: 6px;
+      margin-bottom: 6px;
       flex-shrink: 0;
     }
 
@@ -81,12 +80,12 @@
   .mini-bar-chart {
     display: flex;
     align-items: flex-end;
-    gap: 5px;
+    gap: 4px;
     width: 100%;
-    height: 64px;
+    height: 52px;
 
     &.compact {
-      height: 52px;
+      height: 44px;
       flex: 1;
     }
 
@@ -109,7 +108,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 12px;
     width: 100%;
   }
 
@@ -119,17 +118,12 @@
 
   .progress-ring-wrap {
     position: relative;
-    width: 115px;
-    height: 115px;
-    
-    // &.right {
-    //   width: 140px;
-    //   height: 140px;
-    // }
+    width: 96px;
+    height: 96px;
 
     &.large {
-      width: 115px;
-      height: 115px;
+      width: 96px;
+      height: 96px;
     }
 
     .progress-ring {
@@ -144,7 +138,7 @@
       align-items: center;
       justify-content: center;
       font-family: $archivo-medium;
-      font-size: 1.35rem;
+      font-size: 1.15rem;
       color: var(--white);
       font-weight: normal;
     }
@@ -154,7 +148,7 @@
     @include dashboard-glass-card;
     @include mc-luminous-stroke;
     @include border-radius(8px);
-    padding: 16px;
+    padding: 12px;
     min-height: 0;
     display: flex;
     flex-direction: column;
@@ -169,16 +163,16 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
+      gap: 10px;
+      margin-bottom: 8px;
       flex-shrink: 0;
-      padding-bottom: 8px;
+      padding-bottom: 6px;
       border-bottom: 1px solid rgba(89, 65, 57, 0.35);
 
       h2 {
         margin: 0;
         font-family: var(--mc-font-display);
-        font-size: 1.125rem;
+        font-size: 1rem;
         font-weight: 600;
         color: var(--mc-primary);
         letter-spacing: 0.02em;
@@ -197,9 +191,9 @@
     border: 1px solid rgba(89, 65, 57, 0.35);
 
     li {
-      padding: 6px 14px;
+      padding: 5px 12px;
       font-family: var(--mc-font-label);
-      font-size: 1rem;
+      font-size: 0.875rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--mc-on-surface-variant);
@@ -217,6 +211,35 @@
         color: var(--mc-on-surface);
         background: rgba(53, 52, 56, 0.65);
       }
+    }
+  }
+
+  .recommendations-panel {
+    min-height: 0;
+    overflow: hidden;
+
+    .recommendations-carousel {
+      overflow: hidden;
+    }
+
+    .carousel-track {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      height: auto;
+      max-height: 100%;
+      grid-template-rows: minmax(0, 1fr);
+      align-content: stretch;
+    }
+
+    .recommendation-card {
+      height: 100%;
+      max-height: 100%;
+      min-height: 0;
+    }
+
+    .carousel-dots {
+      margin-top: 4px;
     }
   }
 
@@ -268,15 +291,13 @@
     width: 100%;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-template-rows: var(--subscribed-card-row-height);
-    gap: 12px;
+    gap: 10px;
     min-height: 0;
     align-items: stretch;
   }
 
   .recommendation-card {
     position: relative;
-    height: 100%;
     min-height: 0;
     @include border-radius(8px);
     overflow: hidden;
@@ -302,38 +323,45 @@
     &__overlay {
       position: absolute;
       inset: 0;
-      padding: 16px;
+      padding: 10px;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
+      gap: 4px;
+      overflow: hidden;
       background: linear-gradient(180deg, transparent 25%, rgba(19, 19, 22, 0.92) 100%);
 
       h3 {
-        margin: 0 0 4px;
+        margin: 0;
         font-family: var(--mc-font-display);
-        font-size: 1.125rem;
+        font-size: 0.9375rem;
         color: var(--mc-on-surface);
         font-weight: 600;
         line-height: 1.2;
+        flex-shrink: 1;
+        min-width: 0;
+        @include text-ellipsis($lines: 2);
       }
 
       p {
         margin: 0;
         font-family: var(--mc-font-body);
-        font-size: 0.75rem;
+        font-size: 0.6875rem;
         color: var(--mc-on-surface-variant);
+        flex-shrink: 1;
+        min-width: 0;
+        @include text-ellipsis($lines: 1);
       }
     }
 
     &__cta {
-      position: absolute;
-      right: 12px;
-      bottom: 12px;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 8px 12px;
-      min-height: 32px;
+      gap: 4px;
+      padding: 5px 9px;
+      min-height: 26px;
+      flex-shrink: 0;
+      align-self: flex-end;
       @include border-radius(6px);
       border: 1px solid rgba(89, 65, 57, 0.45);
       background: rgba(42, 42, 45, 0.8);
@@ -359,7 +387,7 @@
     display: flex;
     justify-content: center;
     gap: 6px;
-    margin-top: 10px;
+    margin-top: 6px;
     flex-shrink: 0;
 
     button {
@@ -385,9 +413,9 @@
     overflow: hidden;
 
     &__title {
-      margin: 0 0 14px;
+      margin: 0 0 10px;
       font-family: var(--mc-font-display);
-      font-size: 1.25rem;
+      font-size: 1.125rem;
       color: var(--mc-on-surface);
       font-weight: 600;
       flex-shrink: 0;
@@ -401,7 +429,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: 4px;
-    --subscribed-card-row-height: calc((100cqh - 12px) / 2);
+    --subscribed-card-row-height: calc((100cqh - 10px) / 2);
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 107, 44, 0.45) rgba(255, 255, 255, 0.06);
 
@@ -431,7 +459,7 @@
     @include dashboard-glass-card;
     @include mc-luminous-stroke;
     @include border-radius(8px);
-    padding: 16px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -462,8 +490,8 @@
     }
 
     &__icon {
-      width: 100px;
-      height: 100px;
+      width: 84px;
+      height: 84px;
       margin: 0;
       flex-shrink: 0;
       @include border-radius(8px);
@@ -473,8 +501,8 @@
       border: 1px solid rgba(89, 65, 57, 0.35);
 
       &.featured {
-        width: 200px;
-        height: 100px;
+        width: 250px;
+        height: 150px;
       }
 
       img {
@@ -501,8 +529,8 @@
 
     &__ring {
       position: relative;
-      width: 100px;
-      height: 100px;
+      width: 84px;
+      height: 84px;
       flex-shrink: 0;
 
       .progress-ring {
@@ -539,8 +567,8 @@
     &__body {
       flex: 1;
       min-height: 0;
-      margin-top: 10px;
-      margin-bottom: 8px;
+      margin-top: 8px;
+      margin-bottom: 6px;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -557,7 +585,7 @@
     &__title {
       margin: 0;
       font-family: var(--mc-font-display);
-      font-size: 1.125rem;
+      font-size: 1rem;
       color: var(--mc-on-surface);
       font-weight: 600;
       line-height: 1.25;

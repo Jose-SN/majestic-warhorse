@@ -108,7 +108,7 @@
           </figure>
           <div class="cd-instructor__bio">
             <strong>Bio</strong>
-            <p>{{ demo.instructorBio }}</p>
+            <p>{{ instructorBio }}</p>
           </div>
         </div>
       </div>
@@ -153,31 +153,54 @@
       <div class="cd-discussions">
         <h3 class="cd-section-title">Community Discussions</h3>
         <div class="cd-discussion-list">
-          @for (item of demo.discussions; track item.id) {
-            <article class="cd-discussion-card">
-              <div class="cd-discussion-card__top">
-                <figure class="cd-discussion-card__avatar">
-                  <span>{{ item.author.charAt(0) }}</span>
-                </figure>
-                <div class="cd-discussion-card__meta">
-                  <strong>{{ item.chapterLabel }}</strong>
-                  <small>{{ item.chapterTitle }}</small>
+          @if (discussionsLoading) {
+            <p class="cd-discussions-empty">Loading discussions...</p>
+          } @else if (!discussions.length) {
+            <p class="cd-discussions-empty">No discussions yet. Be the first to comment.</p>
+          } @else {
+            @for (item of discussions; track item.id) {
+              <article class="cd-discussion-card">
+                <div class="cd-discussion-card__top">
+                  <figure class="cd-discussion-card__avatar">
+                    @if (item.avatarUrl) {
+                      <img [src]="item.avatarUrl" [alt]="item.author" />
+                    } @else {
+                      <span>{{ discussionInitials(item.author) }}</span>
+                    }
+                  </figure>
+                  <div class="cd-discussion-card__meta">
+                    <strong>{{ item.author }}</strong>
+                    <small>{{ item.chapterLabel }}: {{ item.chapterTitle }}</small>
+                  </div>
+                  <img class="cd-discussion-card__logo" src="../../../assets/images/logo-majestic-hourse.svg" alt="" />
                 </div>
-                <img class="cd-discussion-card__logo" src="../../../assets/images/logo-majestic-hourse.svg" alt="" />
-              </div>
-              <p>{{ item.comment }}</p>
-              <div class="cd-discussion-card__footer">
-                <span>{{ item.timeAgo }}</span>
-                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>
-                </svg>
-              </div>
-            </article>
+                <p>{{ item.comment }}</p>
+                <div class="cd-discussion-card__footer">
+                  <span>{{ item.timeAgo }}</span>
+                  <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>
+                  </svg>
+                </div>
+              </article>
+            }
           }
         </div>
         <div class="cd-comment-box">
-          <input type="text" class="cd-comment-input" placeholder="Write a comment..." />
-          <button type="button" class="cd-comment-send" aria-label="Send comment">
+          <input
+            type="text"
+            class="cd-comment-input"
+            placeholder="Write a comment..."
+            [(ngModel)]="newCommentText"
+            (keydown)="onCommentKeydown($event)"
+            [disabled]="submittingComment"
+          />
+          <button
+            type="button"
+            class="cd-comment-send"
+            aria-label="Send comment"
+            (click)="submitComment()"
+            [disabled]="submittingComment || !newCommentText.trim()"
+          >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>
             </svg>

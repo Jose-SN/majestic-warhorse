@@ -14,6 +14,7 @@ import { ICourseStatus } from './model/course-status';
 import { IAttachmentObjectInfo } from '../course-upload/model/file-object-info';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
+import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { VideoDurationService } from 'src/app/shared/services/video-duration.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { QuestionnaireComponent } from '../questionnaire/questionnaire.component';
@@ -21,6 +22,13 @@ import { AssessmentAnswersComponent } from 'src/app/components/assessment-answer
 import { StudentAssessmentComponent } from 'src/app/components/student-assessment/student-assessment.component';
 import { FavoritesApiService } from 'src/app/services/api-service/favorites-api.service';
 import { COURSE_DETAILS_DEMO, CourseMaterialItem } from './data/course-details-demo.data';
+import { UserModel } from '../login-page/model/user-model';
+import { CourseDiscussionsApiService } from 'src/app/services/api-service/course-discussions-api.service';
+import {
+  CourseDiscussionItem,
+  CourseDiscussionRecord,
+} from './model/course-discussion.model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-course-detils',
@@ -57,6 +65,11 @@ export class CourseDetailsComponent {
   public isCourseFavorited: boolean = false;
   private favoriteId: string | null = null;
   public isOrganization: boolean = false;
+  public instructorDetails: UserModel | null = null;
+  public discussions: CourseDiscussionItem[] = [];
+  public discussionsLoading = false;
+  public newCommentText = '';
+  public submittingComment = false;
   readonly demo = COURSE_DETAILS_DEMO;
   readonly ringCircumference = 2 * Math.PI * 15;
   @Input() selectedCourseInfo: ICourseList = {} as ICourseList;
@@ -70,7 +83,8 @@ export class CourseDetailsComponent {
     private videoDurationService: VideoDurationService,
     private dashboardService: DashboardService,
     private router: Router,
-    private favoritesApiService: FavoritesApiService
+    private favoritesApiService: FavoritesApiService,
+    private courseDiscussionsApi: CourseDiscussionsApiService
   ) {
     this.profileUrl = this.commonService.decodeUrl(
       (this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? ''
@@ -118,6 +132,219 @@ export class CourseDetailsComponent {
     });
     // this.checkAssesmentView();
     this.checkFavoriteStatus();
+    await this.loadInstructorDetails();
+    await this.loadDiscussions();
+  }
+
+  private async loadDiscussions(): Promise<void> {
+    const courseId = this.selectedCourseInfo?.id;
+    if (!courseId) {
+      return;
+    }
+
+    this.discussionsLoading = true;
+    try {
+      const organizationId =
+        sessionStorage.getItem('organization_id') ||
+        this.commonService.loginedUserInfo?.organization_id ||
+        undefined;
+
+      const records = await firstValueFrom(
+        this.courseDiscussionsApi
+          .getDiscussions({
+            course_id: courseId,
+            organization_id: organizationId,
+          })
+          .pipe(takeUntil(this.destroy$))
+      );
+
+      this.discussions = records
+        .slice()
+        .sort((a, b) => {
+          const aTime = new Date(a.created_at ?? 0).getTime();
+          const bTime = new Date(b.created_at ?? 0).getTime();
+          return bTime - aTime;
+        })
+        .map((record) => this.mapDiscussionRecord(record));
+    } catch {
+      this.discussions = [];
+    } finally {
+      this.discussionsLoading = false;
+    }
+  }
+
+  submitComment(): void {
+    const comment = this.newCommentText.trim();
+    const courseId = this.selectedCourseInfo?.id;
+    const createdBy = this.commonService.loginedUserInfo?.id;
+
+    if (!comment || !courseId || !createdBy || this.submittingComment) {
+      return;
+    }
+
+    this.submittingComment = true;
+    const organizationId =
+      sessionStorage.getItem('organization_id') ||
+      this.commonService.loginedUserInfo?.organization_id ||
+      undefined;
+
+    this.courseDiscussionsApi
+      .saveDiscussion({
+        course_id: courseId,
+        chapter_id: this.activeChapter?.id,
+        organization_id: organizationId,
+        comment,
+        created_by: createdBy,
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (saved) => {
+          this.submittingComment = false;
+          this.newCommentText = '';
+          if (saved) {
+            this.discussions = [this.mapDiscussionRecord(saved), ...this.discussions];
+          } else {
+            void this.loadDiscussions();
+          }
+        },
+        error: () => {
+          this.submittingComment = false;
+          this.commonService.openToaster({
+            message: 'Unable to post comment. Discussions API may not be available yet.',
+            messageType: TOASTER_MESSAGE_TYPE.ERROR,
+          });
+        },
+      });
+  }
+
+  onCommentKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.submitComment();
+    }
+  }
+
+  private mapDiscussionRecord(record: CourseDiscussionRecord): CourseDiscussionItem {
+    const chapterMeta = this.resolveChapterMeta(record.chapter_id ?? undefined);
+    const authorUser = this.commonService.allUsersList?.find(
+      (user) => user.id === record.created_by
+    );
+
+    return {
+      id: record.id,
+      author: this.resolveAuthorName(record.created_by, authorUser),
+      avatarUrl: authorUser?.profile_image || authorUser?.profileImage,
+      chapterLabel: chapterMeta.label,
+      chapterTitle: chapterMeta.title,
+      comment: record.comment,
+      timeAgo: this.formatTimeAgo(record.created_at),
+    };
+  }
+
+  private resolveAuthorName(userId: string, user?: UserModel): string {
+    if (user) {
+      const first = (user.first_name ?? user.firstName ?? '').trim();
+      const last = (user.last_name ?? user.lastName ?? '').trim();
+      const fullName = `${first} ${last}`.trim();
+      return fullName || user.contact?.email || 'Member';
+    }
+    return userId ? 'Member' : 'Anonymous';
+  }
+
+  private resolveChapterMeta(chapterId?: string): { label: string; title: string } {
+    const courseTitle = this.selectedCourseInfo?.courseTitle || 'Course';
+    if (!chapterId) {
+      return { label: 'Course', title: courseTitle };
+    }
+
+    const chapters = this.selectedCourseInfo?.chapterDetails ?? [];
+    const index = chapters.findIndex((chapter) => chapter.id === chapterId);
+    const chapter = chapters[index];
+    if (!chapter) {
+      return { label: 'Course', title: courseTitle };
+    }
+
+    const title = chapter.chapterTitle?.trim() || `Lesson ${index + 1}`;
+    return { label: `Chapter ${index + 1}`, title };
+  }
+
+  private formatTimeAgo(isoDate?: string): string {
+    if (!isoDate) {
+      return 'Just now';
+    }
+
+    const then = new Date(isoDate).getTime();
+    if (Number.isNaN(then)) {
+      return 'Recently';
+    }
+
+    const diffMs = Date.now() - then;
+    const minutes = Math.floor(diffMs / 60000);
+    if (minutes < 1) return 'Just now';
+    if (minutes < 60) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days} day${days === 1 ? '' : 's'} ago`;
+
+    return new Date(isoDate).toLocaleDateString();
+  }
+
+  discussionInitials(author: string): string {
+    return (author.trim().charAt(0) || '?').toUpperCase();
+  }
+
+  private resolveCreatorId(): string | null {
+    const creator = this.selectedCourseInfo?.createdBy as CreatedBy | string | undefined;
+    if (!creator) {
+      return null;
+    }
+    if (typeof creator === 'string') {
+      return creator.trim() || null;
+    }
+    return creator.id?.trim() || null;
+  }
+
+  private mapUserToInstructor(user: UserModel | CreatedBy): UserModel {
+    return {
+      id: user.id,
+      first_name: user.first_name ?? user.firstName ?? '',
+      last_name: user.last_name ?? user.lastName,
+      firstName: user.firstName ?? user.first_name,
+      lastName: user.lastName ?? user.last_name,
+      profile_image: user.profile_image ?? user.profileImage,
+      profileImage: user.profileImage ?? user.profile_image,
+      contact: user.contact,
+      role: user.role,
+      email: user.email ?? user.contact?.email,
+      about: (user as UserModel).about,
+    };
+  }
+
+  private async loadInstructorDetails(): Promise<void> {
+    const creatorId = this.resolveCreatorId();
+    const embeddedCreator = this.courseCreator;
+
+    if (embeddedCreator?.first_name || embeddedCreator?.firstName) {
+      this.instructorDetails = this.mapUserToInstructor(embeddedCreator);
+    }
+
+    if (!creatorId) {
+      return;
+    }
+
+    const cachedUser = this.commonService.allUsersList?.find((user) => user.id === creatorId);
+    if (cachedUser) {
+      this.instructorDetails = this.mapUserToInstructor(cachedUser);
+      return;
+    }
+
+    const fetchedUser = await this.authService.getUserById(creatorId);
+    if (fetchedUser) {
+      this.instructorDetails = this.mapUserToInstructor(fetchedUser);
+    }
   }
 
   checkFavoriteStatus(): void {
@@ -423,12 +650,15 @@ export class CourseDetailsComponent {
   }
 
   get courseCreator(): CreatedBy | undefined {
-    const creator = this.selectedCourseInfo?.createdBy;
-    return creator && typeof creator === 'object' ? creator : undefined;
+    const creator = this.selectedCourseInfo?.createdBy as CreatedBy | string | undefined;
+    if (!creator || typeof creator === 'string') {
+      return undefined;
+    }
+    return creator;
   }
 
   get instructorName(): string {
-    const creator = this.courseCreator;
+    const creator = this.instructorDetails ?? this.courseCreator;
     if (!creator) {
       return 'Instructor';
     }
@@ -438,9 +668,14 @@ export class CourseDetailsComponent {
   }
 
   get instructorImage(): string {
-    const creator = this.courseCreator;
+    const creator = this.instructorDetails ?? this.courseCreator;
     const img = creator?.profileImage || creator?.profile_image || '';
     return img ? this.commonService.decodeUrl(img) : '../../../assets/images/logo-majestic-hourse.svg';
+  }
+
+  get instructorBio(): string {
+    const about = this.instructorDetails?.about?.trim();
+    return about || this.demo.instructorBio;
   }
 
   get courseCompletionPercent(): number {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { catchError, lastValueFrom, map } from 'rxjs';
+import { catchError, lastValueFrom, map, of } from 'rxjs';
 import { UserLogin, UserLoginResponse, UserModel } from 'src/app/pages/login-page/model/user-model';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { IPassWordUpdate } from 'src/app/pages/forgot-password/model';
@@ -34,6 +34,27 @@ export class AuthService {
         map((res) => res.data || res),
         catchError(this.commonService.handleError)
       )
+    );
+  }
+
+  getUserById(userId: string): Promise<UserModel | null> {
+    if (!userId) {
+      return Promise.resolve(null);
+    }
+
+    return lastValueFrom(
+      this.http
+        .get<{ data: UserModel[] | UserModel }>(`${this._apiUrl}user/get`, {
+          params: { id: userId },
+        })
+        .pipe(
+          map((res) => {
+            const data = (res as { data?: UserModel[] | UserModel })?.data ?? res;
+            const list = Array.isArray(data) ? data : data ? [data as UserModel] : [];
+            return list.find((user) => user?.id === userId) ?? list[0] ?? null;
+          }),
+          catchError(() => of(null))
+        )
     );
   }
   loginUser(loginInfo: UserLogin) {

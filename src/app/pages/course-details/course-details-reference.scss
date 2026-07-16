@@ -506,6 +506,15 @@
   overflow: hidden;
 }
 
+.cd-discussions-empty {
+  margin: 0;
+  padding: 16px 8px;
+  font-family: $archivo-regular;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+}
+
 .cd-discussion-list {
   display: flex;
   flex-direction: column;
@@ -538,6 +547,13 @@
     @include border-radius(50%);
     background: linear-gradient(135deg, #3a2458, #1a1230);
     @include flex(flex, null, center, center);
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
     span {
       font-family: $archivo-medium;
@@ -636,6 +652,11 @@
   border: 1px solid rgba(79, 137, 252, 0.25);
   color: #4f89fc;
   @include flex(flex, null, center, center);
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
 }
 
 @media screen and (max-width: 1200px) {

@@ -114,17 +114,16 @@ export class DashboardOverviewComponent implements AfterViewInit, OnDestroy {
   }
 
   private syncRecommendationCardSize(): void {
-    const dashboard = this.futuristicDashboard?.nativeElement;
     const viewport = this.subscribedGridViewport?.nativeElement;
-    if (!dashboard || !viewport) {
+    if (!viewport) {
       return;
     }
 
     const subscribedCard = viewport.querySelector('.subscribed-card') as HTMLElement | null;
     const rowHeight = subscribedCard?.offsetHeight
-      ?? Math.max(0, (viewport.clientHeight - 12) / 2);
+      ?? Math.max(0, (viewport.clientHeight - 10) / 2);
 
-    dashboard.style.setProperty('--subscribed-card-row-height', `${rowHeight}px`);
+    viewport.style.setProperty('--subscribed-card-row-height', `${rowHeight}px`);
   }
 
   get recommendationsDisplay(): RecommendedCourseItem[] {
