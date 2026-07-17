@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -22,6 +22,7 @@ import { AuthService } from 'src/app/services/api-service/auth.service';
   styleUrl: './dashboard-sidepanel.component.scss',
 })
 export class DashboardSidepanelComponent implements OnInit, OnDestroy {
+  @Input() navDisabled = false;
   public mobMenu: boolean = false;
   public loginedUserPrivilege: string = '';
   public loginedUserInfo: UserModel = {} as UserModel;
@@ -82,9 +83,15 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
 
   disableListItems(): boolean {
     return (
+      this.navDisabled ||
       (this.loginedUserPrivilege === 'student' && this.commonService.hasAssignedTeachers === false) ||
       (this.loginedUserPrivilege === 'teacher' && this.commonService.loginedUserInfo.status === 'pending')
     );
+  }
+
+  @HostBinding('class.sidepanel--nav-disabled')
+  get isNavLocked(): boolean {
+    return this.disableListItems();
   }
 
   get isOrganizationAccount(): boolean {
@@ -151,6 +158,10 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
     return !this.isOrganizationAccount && this.loginedUserPrivilege !== 'organization';
   }
 
+  get hasDashboardPermission(): boolean {
+    return !this.disableListItems();
+  }
+
   toggleUserMenu(event: Event): void {
     event.stopPropagation();
     this.userMenuOpen = !this.userMenuOpen;
@@ -173,11 +184,17 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
   }
 
   goToAccount(): void {
+    if (!this.hasDashboardPermission) {
+      return;
+    }
     this.closeUserMenu();
     void this.router.navigate([DASHBOARD_NAV_ROUTES.account]);
   }
 
   goToSwitchOrganization(): void {
+    if (!this.hasDashboardPermission) {
+      return;
+    }
     this.closeUserMenu();
     void this.router.navigate([DASHBOARD_NAV_ROUTES.switchOrg], { queryParams: { switch: true } });
   }

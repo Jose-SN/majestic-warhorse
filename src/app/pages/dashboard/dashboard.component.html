@@ -1,7 +1,8 @@
 <section class="dashboard-container">
-  <div class="dashboard-left" [ngClass]="{'active': isMobileNav}" [style.pointer-events]="isApprovalPendingRoute ? 'none' : 'auto'">
-    <app-dashboard-sidepanel></app-dashboard-sidepanel>
+  <div class="dashboard-left" [ngClass]="{ active: isMobileNav }">
+    <app-dashboard-sidepanel [navDisabled]="isApprovalPendingRoute"></app-dashboard-sidepanel>
   </div>
+
   <div class="dashboard-right">
     <app-demo-mode-banner></app-demo-mode-banner>
     <app-search-profile (mobNavchild)="btnMobileMenu()"></app-search-profile>

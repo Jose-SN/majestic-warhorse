@@ -298,11 +298,25 @@
       }
 
       <div class="sidenav-user__actions">
-        <button type="button" class="hologram-profile-btn" role="menuitem" (click)="goToAccount()">
+        <button
+          type="button"
+          class="hologram-profile-btn"
+          role="menuitem"
+          [disabled]="!hasDashboardPermission"
+          [attr.aria-disabled]="!hasDashboardPermission"
+          (click)="goToAccount()"
+        >
           Account
         </button>
         @if (showSwitchOrganization) {
-          <button type="button" class="hologram-profile-btn" role="menuitem" (click)="goToSwitchOrganization()">
+          <button
+            type="button"
+            class="hologram-profile-btn"
+            role="menuitem"
+            [disabled]="!hasDashboardPermission"
+            [attr.aria-disabled]="!hasDashboardPermission"
+            (click)="goToSwitchOrganization()"
+          >
             Switch Organization
           </button>
         }

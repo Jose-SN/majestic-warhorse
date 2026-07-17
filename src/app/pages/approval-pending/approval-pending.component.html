@@ -1,21 +1,86 @@
-<section class="dashboard-container">
-    <div class="dashboard-right">
-        <div class="dashboard-inner">
-            <div class="common-container">
-                <div class="common-wrapper">
-                    <div class="scoll-wrapper">
-                        <div class="scroll-container">
-                            <div class="common-list-wrapper">
-                                <img src="../../../assets/images/pending-approval.png" />
-                                <h1 class="info-message-text">{{infoMessage}}</h1>
-                                @if (isPolling) {
-                                  <p class="polling-note">Checking for approval status…</p>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<div class="ap-page">
+  <div class="ap-page__grid" aria-hidden="true"></div>
+  <div class="ap-page__glow ap-page__glow--primary" aria-hidden="true"></div>
+  <div class="ap-page__glow ap-page__glow--secondary" aria-hidden="true"></div>
+
+  <main class="ap-main">
+    <div class="ap-content">
+      <div class="ap-status-indicator">
+        <div class="ap-status-indicator__pulse"></div>
+        <div class="ap-status-indicator__pulse ap-status-indicator__pulse--delay"></div>
+
+        <div class="ap-status-indicator__core">
+          <div class="ap-status-indicator__scan"></div>
+          <div class="ap-status-indicator__icon-wrap">
+            <span class="material-symbols-outlined ap-status-indicator__icon">shield_person</span>
+            <div class="ap-status-indicator__label">Verifying_Node</div>
+          </div>
+          <div class="ap-status-indicator__meta">
+            <span>SYS_LOG: {{ sysLogCode }}</span>
+            <span>LATENCY: {{ latencyMs }}ms</span>
+          </div>
+        </div>
+
+        <div class="ap-status-indicator__hover-glow" aria-hidden="true"></div>
+      </div>
+
+      <div class="ap-copy">
+        <h1 class="ap-copy__title">
+          ACCESS_RESTRICTED:
+          <span class="ap-copy__title-accent">{{ headlineStatus }}</span>
+        </h1>
+        <div class="ap-copy__divider" aria-hidden="true"></div>
+        <p class="ap-copy__message">{{ bodyMessage }}</p>
+
+        <div class="ap-status-board">
+          <div class="ap-status-board__item">
+            <div class="ap-status-board__label">Ticket ID</div>
+            <div class="ap-status-board__value ap-status-board__value--primary">{{ ticketId }}</div>
+          </div>
+          <div class="ap-status-board__item">
+            <div class="ap-status-board__label">Status</div>
+            <div class="ap-status-board__value ap-status-board__value--secondary">
+              <span class="ap-status-board__dot" [class.ap-status-board__dot--active]="isPolling || isRefreshing"></span>
+              {{ queueStatusLabel }}
+            </div>
+          </div>
+          <div class="ap-status-board__item">
+            <div class="ap-status-board__label">Node</div>
+            <div class="ap-status-board__value">{{ nodeName }}</div>
+          </div>
+        </div>
+
+        <div class="ap-actions">
+          <button
+            type="button"
+            class="ap-actions__refresh"
+            (click)="refreshStatus()"
+            [disabled]="isRefreshing"
+          >
+            <span
+              class="material-symbols-outlined"
+              [class.ap-actions__refresh-icon--spin]="isRefreshing"
+            >
+              sync
+            </span>
+            <span>Refresh Status</span>
+            <span class="ap-actions__refresh-glow" aria-hidden="true"></span>
+          </button>
+
+          <a class="ap-actions__support" href="mailto:support@majesticcyber.com">
+            <span class="material-symbols-outlined">support_agent</span>
+            Contact Support
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="ap-footer">
+    <div class="ap-footer__meta">
+      <span><span class="material-symbols-outlined">lock</span> Encrypted_Session</span>
+      <span><span class="material-symbols-outlined">verified_user</span> Auth_v2.4.0</span>
+    </div>
+    <div class="ap-footer__copy">© 2024 MAJESTIC_CYBER_PLATFORM // ALL_RIGHTS_RESERVED</div>
+  </footer>
+</div>

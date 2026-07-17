@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -28,6 +28,11 @@ import { OAuthService } from 'src/app/core/auth/oauth.service';
 })
 export class RegistrationPageComponent implements OnDestroy, OnInit {
   @Input() isEditMode: boolean = false;
+
+  @HostBinding('class.signup-standalone')
+  get isSignupStandalone(): boolean {
+    return !this.isEditMode;
+  }
   public getPasswordError: (arg1: FormGroup, arg2: string) => boolean;
   public isFieldInvalid: (arg1: FormGroup, arg2: string) => boolean | undefined;
   public isPasswordMismatch: (arg1: FormGroup, arg2: string, arg3: string) => boolean | null;
@@ -76,7 +81,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
         ],
         confirmPassword: ['', [Validators.required]],
         role: ['student', [Validators.required]],
-        status: ['active'],
+        status: ['pending'],
         organization_id: [''],
         name: [''], // Organization name - required when role is organization
       },

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login: Minimalist Glass Variant - MAJESTIC WARHORSE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Geist:wght@100;300;400;500;600;700&amp;family=JetBrains+Mono:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    /* Custom Scrollbar for dark theme */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0e0e11; }
+    ::-webkit-scrollbar-thumb { background: #353438; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ffb59a; }
+
+    .glass-panel {
+      background: rgba(27, 27, 30, 0.4);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+    }
+
+    .brand-gradient-text {
+      background: linear-gradient(90deg, #ffb59a 0%, #ffb0cc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-gradient-bg {
+      background: linear-gradient(135deg, #ff6b2c 0%, #ab0063 100%);
+    }
+
+    .input-glow:focus-within {
+      box-shadow: 0 0 15px rgba(255, 181, 154, 0.2);
+      border-bottom: 2px solid #ffb59a;
+    }
+
+    .backglow-hover:hover {
+      background: radial-gradient(circle at center, rgba(255, 107, 44, 0.15) 0%, transparent 70%);
+    }
+
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+    .animate-pulse-slow { animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-low": "#1b1b1e",
+            "outline-variant": "#594139",
+            "on-error-container": "#ffdad6",
+            "secondary-container": "#ab0063",
+            "on-surface": "#e4e1e6",
+            "on-secondary-fixed": "#3e0020",
+            "on-tertiary-fixed": "#2c0051",
+            "on-primary-fixed-variant": "#802900",
+            "secondary-fixed-dim": "#ffb0cc",
+            "primary": "#ffb59a",
+            "on-surface-variant": "#e2bfb3",
+            "surface-container-lowest": "#0e0e11",
+            "inverse-surface": "#e4e1e6",
+            "on-tertiary": "#480081",
+            "tertiary": "#dcb8ff",
+            "on-secondary": "#640038",
+            "on-secondary-container": "#ffbad2",
+            "on-primary-fixed": "#380d00",
+            "on-secondary-fixed-variant": "#8d0051",
+            "surface-bright": "#39393c",
+            "inverse-on-surface": "#303033",
+            "surface-container-high": "#2a2a2d",
+            "surface": "#131316",
+            "on-tertiary-fixed-variant": "#6700b5",
+            "background": "#131316",
+            "on-error": "#690005",
+            "surface-dim": "#131316",
+            "primary-fixed-dim": "#ffb59a",
+            "surface-container": "#1f1f22",
+            "primary-container": "#ff6b2c",
+            "error": "#ffb4ab",
+            "secondary": "#ffb0cc",
+            "inverse-primary": "#a83900",
+            "on-primary-container": "#5c1c00",
+            "tertiary-fixed": "#efdbff",
+            "on-tertiary-container": "#4a0084",
+            "primary-fixed": "#ffdbcf",
+            "on-background": "#e4e1e6",
+            "tertiary-fixed-dim": "#dcb8ff",
+            "surface-variant": "#353438",
+            "secondary-fixed": "#ffd9e4",
+            "error-container": "#93000a",
+            "on-primary": "#5b1b00",
+            "outline": "#a98a7f",
+            "tertiary-container": "#bb7bff",
+            "surface-container-highest": "#353438",
+            "surface-tint": "#ffb59a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "container-max": "1440px",
+            "gutter": "24px",
+            "margin-desktop": "64px",
+            "unit": "4px",
+            "margin-mobile": "20px"
+          },
+          "fontFamily": {
+            "label-sm": ["JetBrains Mono"],
+            "body-md": ["Geist"],
+            "headline-lg": ["Space Grotesk"],
+            "display-lg": ["Space Grotesk"],
+            "headline-lg-mobile": ["Space Grotesk"]
+          },
+          "fontSize": {
+            "label-sm": ["12px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500" }],
+            "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+            "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+            "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden selection:bg-primary/30 selection:text-primary">
+<main class="flex h-screen w-full relative overflow-hidden">
+<!-- LEFT PANE: Immersive Server Room (60%) -->
+<section class="hidden lg:flex lg:w-[60%] relative overflow-hidden group">
+<div class="absolute inset-0 w-full h-full transform scale-105 group-hover:scale-110 transition-transform duration-10000 ease-out" data-alt="A high-tech, futuristic server room filled with glowing racks of servers and data processing units. The lighting is dominated by deep cyan and magenta neon accents, reflecting off polished metallic surfaces. A heavy atmospheric dark gradient fades from the left edge toward the center, creating a sense of infinite depth. The aesthetic is ultra-modern, echoing the MAJESTIC WARHORSE brand with cybernetic energy and professional technical precision." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB1KPaNHKXSvmcTZuoCSi7T2wMwiRLBjwt9mOe4qz1s9OAuuHHlCTHY-oPCs9hpM34hJTuQle7s_YbGf3Q7sKFo5cLDIgEKpp4pKuPfLlLfQ-CNTixG31PUOmxcv_l5z6CY3a72yff7XyTWOJQKssZaIqnFXt_Lccl3s6A93Ge3K2_Id-GUPigCfltHOWz7sGnMTYE-yMzgFlECMl4Gp5zcCPpIP7TW3ooOICLjnWp9H9YMYngz1Qr0iA')"></div>
+<!-- Overlay Gradient for Content Contrast -->
+<div class="absolute inset-0 bg-gradient-to-r from-background via-background/40 to-transparent"></div>
+<!-- Ambient Light Effects -->
+<div class="absolute top-1/4 left-1/4 w-96 h-96 brand-gradient-bg rounded-full blur-[160px] opacity-10 animate-pulse-slow"></div>
+<div class="absolute bottom-1/4 left-1/3 w-64 h-64 bg-tertiary rounded-full blur-[120px] opacity-10 animate-pulse-slow" style="animation-delay: 2s"></div>
+<!-- Narrative Text (Desktop) -->
+<div class="absolute bottom-margin-desktop left-margin-desktop z-10 max-w-lg">
+<h1 class="font-display-lg text-display-lg text-on-surface leading-tight tracking-tighter">
+          SECURE<br/><span class="brand-gradient-text">THE CORE</span>
+</h1>
+<p class="mt-4 font-body-md text-on-surface-variant max-w-sm">
+          Access the Majestic Warhorse Academy ecosystem. Professional-grade infrastructure for modern digital security.
+        </p>
+</div>
+</section>
+<!-- RIGHT PANE: Minimalist Login Pane (40%) -->
+<section class="w-full lg:w-[40%] h-full relative z-20 flex items-center justify-center bg-surface-container-lowest/80 lg:bg-transparent px-margin-mobile lg:px-12">
+<!-- Mobile Background (Only visible on mobile) -->
+<div class="absolute inset-0 lg:hidden -z-10">
+<div class="absolute inset-0 bg-background"></div>
+<div class="absolute inset-0 opacity-20" data-alt="A macro close-up of intricate fiber optic cables glowing with orange and pink light, representing the nervous system of a digital network. The image has a heavy dark vignette and soft bokeh, perfectly matching the MAJESTIC WARHORSE cyber-minimalism aesthetic with vibrant light sources in a digital void." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6dB1s4N1S6jRuCkorVgydIjDPefUwP2kilWhGZ8SMhsgzT1WvGH_kybpCOLRoVD9a2jlvHPQkMca5Ay5btBCtxGevToFAcRUdJwyBQTv4iQRzszrSLNytaFa5IHWfV5IfQyKCbnDdfLw0a5YEaVUJXjN7lSUF_J_TkziuFC9y5ovph6E0TKmmcfd-ZA2nbXo3aaD1lwdPew2RjC-T0bqrmh0ujxwO_pFMdrzpg5v8DkOBJ7M888J2mg')"></div>
+</div>
+<!-- Login Glassmorphic Card -->
+<div class="w-full max-w-md glass-panel rounded-xl p-8 lg:p-10 relative overflow-hidden">
+<!-- Accent Glow -->
+<div class="absolute top-0 left-0 w-1 h-full brand-gradient-bg"></div>
+<!-- Brand Identity -->
+<div class="flex flex-col items-center mb-10">
+<div class="mb-4 relative">
+<div class="w-16 h-16 brand-gradient-bg rounded-lg flex items-center justify-center transform rotate-12 group-hover:rotate-0 transition-transform duration-500">
+<span class="material-symbols-outlined text-white text-4xl" data-weight="fill">house_siding</span>
+</div>
+<div class="absolute -inset-2 brand-gradient-bg blur-xl opacity-20"></div>
+</div>
+<h2 class="font-label-sm text-label-sm text-primary uppercase tracking-[0.3em]">MAJESTIC WARHORSE</h2>
+<p class="font-headline-lg text-headline-lg mt-2 text-on-surface">Welcome back</p>
+</div>
+<!-- Login Form -->
+<form class="space-y-6">
+<!-- Role Selection (Simplified from image) -->
+<div class="grid grid-cols-2 gap-4 mb-8">
+<button class="group flex flex-col items-center justify-center p-4 rounded-lg border border-outline-variant bg-surface-container-low hover:border-primary transition-all duration-300" type="button">
+<span class="material-symbols-outlined text-outline group-hover:text-primary mb-2 transition-colors">person</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant group-hover:text-on-surface">INDIVIDUAL</span>
+</button>
+<button class="group flex flex-col items-center justify-center p-4 rounded-lg border border-outline-variant bg-surface-container-low hover:border-primary transition-all duration-300" type="button">
+<span class="material-symbols-outlined text-outline group-hover:text-primary mb-2 transition-colors">corporate_fare</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant group-hover:text-on-surface">ENTITY</span>
+</button>
+</div>
+<!-- Inputs -->
+<div class="space-y-4">
+<div class="group relative">
+<label class="absolute -top-2 left-3 px-1 bg-surface-container-low text-[10px] font-label-sm text-outline-variant group-focus-within:text-primary transition-colors" for="email">Neural Email</label>
+<input class="w-full bg-surface-container-low border-b-2 border-outline-variant border-t-0 border-x-0 focus:ring-0 focus:border-primary text-on-surface placeholder:text-outline-variant/50 py-4 px-4 transition-all duration-300 rounded-t-lg" id="email" placeholder="name@domain.tech" type="email"/>
+</div>
+<div class="group relative">
+<label class="absolute -top-2 left-3 px-1 bg-surface-container-low text-[10px] font-label-sm text-outline-variant group-focus-within:text-primary transition-colors" for="password">Security Key</label>
+<input class="w-full bg-surface-container-low border-b-2 border-outline-variant border-t-0 border-x-0 focus:ring-0 focus:border-primary text-on-surface placeholder:text-outline-variant/50 py-4 px-4 transition-all duration-300 rounded-t-lg" id="password" placeholder="••••••••••••" type="password"/>
+</div>
+</div>
+<div class="flex items-center justify-between mt-2">
+<label class="flex items-center space-x-2 cursor-pointer">
+<input class="w-4 h-4 rounded border-outline-variant bg-surface-container text-primary focus:ring-offset-background focus:ring-primary" type="checkbox"/>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Remember</span>
+</label>
+<a class="font-label-sm text-label-sm text-primary hover:underline transition-all" href="#">Recover Key?</a>
+</div>
+<!-- Actions -->
+<div class="pt-4 space-y-4">
+<button class="w-full py-4 brand-gradient-bg text-white font-label-sm text-body-md rounded-lg shadow-lg hover:shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 uppercase tracking-widest font-bold" type="submit">
+              Log In
+            </button>
+<div class="relative py-2 flex items-center">
+<div class="flex-grow border-t border-outline-variant"></div>
+<span class="flex-shrink mx-4 font-label-sm text-label-sm text-outline-variant uppercase">Matrix Sync</span>
+<div class="flex-grow border-t border-outline-variant"></div>
+</div>
+<button class="w-full py-3 flex items-center justify-center space-x-3 rounded-lg border border-outline-variant hover:bg-white/5 transition-all duration-300 group" type="button">
+<svg class="w-5 h-5" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+<span class="font-label-sm text-label-sm group-hover:text-on-surface">CONTINUE WITH NEURAL ID</span>
+</button>
+</div>
+</form>
+<!-- Footer link -->
+<div class="mt-8 text-center">
+<p class="font-label-sm text-label-sm text-on-surface-variant">
+            Awaiting entry? <a class="text-primary hover:underline font-bold" href="#">Initiate Account</a>
+</p>
+</div>
+</div>
+</section>
+</main>
+<!-- HELP FAB -->
+<div class="fixed bottom-8 right-8 z-50">
+<button class="w-14 h-14 glass-panel rounded-full flex items-center justify-center group hover:scale-110 active:scale-95 transition-all duration-300 border-primary/20 relative">
+<div class="absolute -inset-1 brand-gradient-bg blur-lg opacity-20 group-hover:opacity-40 transition-opacity"></div>
+<span class="material-symbols-outlined text-primary group-hover:rotate-12 transition-transform">support_agent</span>
+<span class="absolute right-16 top-1/2 -translate-y-1/2 px-4 py-2 bg-surface-container-high rounded-lg text-label-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-outline-variant">Neural Support</span>
+</button>
+</div>
+<script>
+    // Micro-interactions and atmospheric logic
+    document.addEventListener('mousemove', (e) => {
+      const { clientX, clientY } = e;
+      const xPos = (clientX / window.innerWidth - 0.5) * 10;
+      const yPos = (clientY / window.innerHeight - 0.5) * 10;
+      
+      // Gentle parallax effect for the left image
+      const bgImage = document.querySelector('section:first-child div');
+      if (bgImage) {
+        bgImage.style.transform = `scale(1.05) translate(${xPos}px, ${yPos}px)`;
+      }
+    });
+
+    // Form submission feedback
+    const loginForm = document.querySelector('form');
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="flex items-center justify-center"><svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> AUTHENTICATING...</span>';
+      btn.disabled = true;
+      
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        alert('Authentication Sequence Initiated. (Demo Mode)');
+      }, 2000);
+    });
+  </script>
+</body></html>

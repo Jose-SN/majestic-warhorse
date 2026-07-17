@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   FormBuilder,
@@ -24,6 +24,7 @@ import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 export class LoginPageComponent implements OnInit, OnDestroy {
   public loginForm!: FormGroup;
   public isGoogleLoading = false;
+  public heroTransform = 'scale(1.05)';
   private destroy$ = new Subject<void>();
   constructor(
     private formBuilder: FormBuilder,
@@ -73,6 +74,14 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   gotoPage(pageName: string) {
     this.router.navigate([`/${pageName}`]);
+  }
+
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent): void {
+    if (window.innerWidth < 1024) return;
+    const xPos = (event.clientX / window.innerWidth - 0.5) * 10;
+    const yPos = (event.clientY / window.innerHeight - 0.5) * 10;
+    this.heroTransform = `scale(1.05) translate(${xPos}px, ${yPos}px)`;
   }
   ngOnDestroy(): void {
     this.destroy$.next();

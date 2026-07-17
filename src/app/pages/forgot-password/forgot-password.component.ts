@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -29,6 +29,7 @@ export class ForgotPasswordComponent implements OnDestroy {
   private formValidator = new FormValidators();
   private destroy$ = new Subject<void>();
   public showOtpSection: boolean = false;
+  public heroTransform = 'scale(1.05)';
   private selectedAccountType: string = 'user';
 
   constructor(
@@ -143,6 +144,15 @@ export class ForgotPasswordComponent implements OnDestroy {
   gotToLoginPage() {
     this.router.navigate(['/login']);
   }
+
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent): void {
+    if (window.innerWidth < 1024) return;
+    const xPos = (event.clientX / window.innerWidth - 0.5) * 10;
+    const yPos = (event.clientY / window.innerHeight - 0.5) * 10;
+    this.heroTransform = `scale(1.05) translate(${xPos}px, ${yPos}px)`;
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
