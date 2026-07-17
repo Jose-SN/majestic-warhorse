@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { UserRoleOverview } from 'src/app/models/roster.model';
+import { isActiveStatus, isPendingStatus, normalizeUserStatus } from 'src/app/models/user-status.model';
 import { UserOrganizationEntry } from 'src/app/models/organization-picker.model';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { AuthService } from 'src/app/services/api-service/auth.service';
@@ -316,26 +317,40 @@ export class PostLoginWorkflowService {
     const roles = overview?.roles ?? [];
     sessionStorage.setItem('userRoles', JSON.stringify(roles));
 
-    const approved = roles.filter((r) => r.status === 'approved');
-    const pending = roles.filter((r) => r.status === 'pending');
-    const suspended = roles.filter((r) => r.status === 'suspended');
+    const active = roles.filter((r) => isActiveStatus(r.status));
+    const pending = roles.filter((r) => isPendingStatus(r.status));
+    const suspended = roles.filter((r) => normalizeUserStatus(r.status) === 'suspended');
+    const rejected = roles.filter((r) => normalizeUserStatus(r.status) === 'rejected');
+    const deleted = roles.filter((r) => normalizeUserStatus(r.status) === 'deleted');
 
-    if (suspended.length && !approved.length) {
+    if (deleted.length && !active.length) {
+      user.status = 'deleted';
+      user.role = deleted[0].role_code;
+      return;
+    }
+
+    if (rejected.length && !active.length && !pending.length) {
+      user.status = 'rejected';
+      user.role = rejected[0].role_code;
+      return;
+    }
+
+    if (suspended.length && !active.length) {
       user.status = 'suspended';
       user.role = suspended[0].role_code;
       return;
     }
 
     const primary =
-      approved.find((r) => r.role_code === 'teacher') ||
-      approved.find((r) => r.role_code === 'student') ||
+      active.find((r) => r.role_code === 'teacher') ||
+      active.find((r) => r.role_code === 'student') ||
       pending.find((r) => r.role_code === 'teacher') ||
       pending.find((r) => r.role_code === 'student') ||
       roles[0];
 
     if (primary) {
       user.role = primary.role_code;
-      user.status = primary.status === 'approved' ? 'active' : primary.status;
+      user.status = normalizeUserStatus(primary.status) ?? 'pending';
     }
   }
 
@@ -351,6 +366,24 @@ export class PostLoginWorkflowService {
       return;
     }
 
+    if (user.status === 'deleted') {
+      this.router.navigate(['/dashboard/approval-pending'], {
+        state: {
+          infoMessage: 'Your account has been deleted. Please contact your organization.',
+        },
+      });
+      return;
+    }
+
+    if (user.status === 'rejected') {
+      this.router.navigate(['/dashboard/approval-pending'], {
+        state: {
+          infoMessage: 'Your access request was rejected. Please contact your organization.',
+        },
+      });
+      return;
+    }
+
     if (user.status === 'suspended') {
       this.router.navigate(['/dashboard/approval-pending'], {
         state: {
@@ -360,8 +393,8 @@ export class PostLoginWorkflowService {
       return;
     }
 
-    const hasPendingOnly = roles.every((r) => r.status === 'pending');
-    if (hasPendingOnly || user.status === 'pending') {
+    const hasPendingOnly = roles.every((r) => isPendingStatus(r.status));
+    if (hasPendingOnly || isPendingStatus(user.status)) {
       this.router.navigate(['/dashboard/approval-pending'], {
         state: {
           infoMessage:

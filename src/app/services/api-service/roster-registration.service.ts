@@ -14,7 +14,7 @@ export interface RegisterOnRosterInput {
   lastName?: string;
   phone?: string;
   userId?: string;
-  status?: 'pending' | 'approved';
+  status?: 'pending' | 'active';
 }
 
 @Injectable({ providedIn: 'root' })

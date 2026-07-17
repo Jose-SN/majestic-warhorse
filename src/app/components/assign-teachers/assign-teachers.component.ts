@@ -49,7 +49,7 @@ export class AssignTeachersComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const orgId = sessionStorage.getItem('organization_id') || '';
     if (orgId) {
-      this.rosterDisplay.loadTeachers(orgId, 'approved').then((teachers) => {
+      this.rosterDisplay.loadTeachers(orgId, 'active').then((teachers) => {
         this.teachersList = teachers;
       });
     }

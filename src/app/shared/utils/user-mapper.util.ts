@@ -1,3 +1,4 @@
+import { normalizeUserStatus } from 'src/app/models/user-status.model';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 
 /**
@@ -26,7 +27,10 @@ export function mapUserToLegacy(user: UserModel): UserModel {
   
   // If already mapped, return as is
   if (user.firstName && user.email) {
-    return user;
+    return {
+      ...user,
+      status: normalizeUserStatus(user.status) || user.status,
+    };
   }
 
   // Map new structure to legacy fields
@@ -38,6 +42,7 @@ export function mapUserToLegacy(user: UserModel): UserModel {
     phone: user.contact?.phone || user.phone,
     profileImage: user.profile_image || user.profileImage,
     role: user.role || '',
+    status: normalizeUserStatus(user.status) || user.status,
   };
 
   return mappedUser;
@@ -66,6 +71,6 @@ export function mapLegacyToNew(user: any): any {
       ...(user.contact || {})
     },
     role: user.role || '',
-    status: user.status || 'pending',
+    status: normalizeUserStatus(user.status) || 'pending',
   };
 }

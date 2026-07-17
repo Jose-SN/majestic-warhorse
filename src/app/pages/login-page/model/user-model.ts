@@ -1,4 +1,5 @@
 import type { Organization } from 'src/app/models/organization.model';
+import type { UserStatus } from 'src/app/models/user-status.model';
 
 export interface UserModel {
   id: string;
@@ -13,7 +14,7 @@ export interface UserModel {
     phone?: string;
     [key: string]: any;
   };
-  status?: 'pending' | 'active' | 'inactive' | 'suspended';
+  status?: UserStatus;
   app_id?: string;
   organization_id?: string;
   teams?: string[];

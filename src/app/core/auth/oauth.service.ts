@@ -155,7 +155,7 @@ export class OAuthService {
         contact: { email: ctx.email },
         profile_image: ctx.avatarUrl,
         role: 'member',
-        status: 'active',
+        status: 'pending',
         additional_information: {
           auth_provider: 'google',
           mode: 'signin',

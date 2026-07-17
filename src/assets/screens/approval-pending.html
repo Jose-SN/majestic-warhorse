@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Access Restricted | Majestic Cyber</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Geist:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#ff6b2c",
+                    "on-secondary-fixed-variant": "#8d0051",
+                    "outline-variant": "#594139",
+                    "on-primary-fixed-variant": "#802900",
+                    "surface": "#131316",
+                    "surface-dim": "#131316",
+                    "on-background": "#e4e1e6",
+                    "primary": "#ffb59a",
+                    "on-surface-variant": "#e2bfb3",
+                    "tertiary": "#dcb8ff",
+                    "on-error-container": "#ffdad6",
+                    "inverse-surface": "#e4e1e6",
+                    "tertiary-fixed-dim": "#dcb8ff",
+                    "on-secondary": "#640038",
+                    "tertiary-fixed": "#efdbff",
+                    "surface-container-lowest": "#0e0e11",
+                    "surface-container-highest": "#353438",
+                    "outline": "#a98a7f",
+                    "inverse-primary": "#a83900",
+                    "primary-fixed-dim": "#ffb59a",
+                    "on-tertiary-container": "#4a0084",
+                    "surface-tint": "#ffb59a",
+                    "surface-container": "#1f1f22",
+                    "secondary": "#ffb0cc",
+                    "surface-container-low": "#1b1b1e",
+                    "surface-bright": "#39393c",
+                    "secondary-fixed": "#ffd9e4",
+                    "surface-container-high": "#2a2a2d",
+                    "on-tertiary-fixed": "#2c0051",
+                    "error": "#ffb4ab",
+                    "on-tertiary": "#480081",
+                    "tertiary-container": "#bb7bff",
+                    "secondary-container": "#ab0063",
+                    "on-surface": "#e4e1e6",
+                    "on-secondary-fixed": "#3e0020",
+                    "on-error": "#690005",
+                    "secondary-fixed-dim": "#ffb0cc",
+                    "on-tertiary-fixed-variant": "#6700b5",
+                    "on-secondary-container": "#ffbad2",
+                    "inverse-on-surface": "#303033",
+                    "error-container": "#93000a",
+                    "on-primary-container": "#5c1c00",
+                    "surface-variant": "#353438",
+                    "on-primary-fixed": "#380d00",
+                    "background": "#131316",
+                    "primary-fixed": "#ffdbcf",
+                    "on-primary": "#5b1b00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "unit": "4px",
+                    "margin-mobile": "20px",
+                    "gutter": "24px",
+                    "container-max": "1440px"
+            },
+            "fontFamily": {
+                    "body-md": ["Geist"],
+                    "headline-lg-mobile": ["Space Grotesk"],
+                    "label-sm": ["JetBrains Mono"],
+                    "display-lg": ["Space Grotesk"],
+                    "headline-lg": ["Space Grotesk"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0F0F12;
+            color: #e4e1e6;
+            overflow-x: hidden;
+        }
+
+        .cyber-grid {
+            background-image: linear-gradient(to right, rgba(255, 107, 44, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 107, 44, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .gradient-brand {
+            background: linear-gradient(135deg, #ff6b2c 0%, #ab0063 100%);
+        }
+
+        .glass-panel {
+            background: rgba(31, 31, 34, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .status-pulse {
+            animation: pulse-ring 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .scanning-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff6b2c, transparent);
+            width: 100%;
+            position: absolute;
+            top: 0;
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        .holo-leak {
+            filter: blur(100px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 10px rgba(255, 107, 44, 0.3);
+        }
+
+        .terminal-cursor::after {
+            content: '_';
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md flex flex-col min-h-screen">
+<!-- Atmospheric Background Elements -->
+<div class="fixed inset-0 cyber-grid pointer-events-none z-0"></div>
+<div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary-container holo-leak z-0"></div>
+<div class="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-secondary-container holo-leak z-0"></div>
+<!-- TopNavBar Implementation from JSON -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-primary/5 flex justify-between items-center px-margin-desktop h-16 w-full">
+<div class="flex items-center gap-4">
+<span class="font-display-lg text-headline-lg text-primary-container tracking-tighter">Majestic Cyber</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<nav class="flex gap-6">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Terminal</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Network</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Vault</a>
+</nav>
+<div class="flex items-center gap-4 border-l border-white/10 pl-6">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors active:scale-95">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors active:scale-95">settings</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A stylized portrait of a high-tech digital user avatar with glowing orange geometric patterns overlaid on a dark charcoal minimalist background, representing an elite cyber security professional in the Majestic Cyber ecosystem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5H_InUqqUPIADdTNPEYYmD-OADoeRy6ddNtYClzaSpwpAR0gNx8mE0e5TlTGSTGRfQDbIa9ZtcxlRcOQOs1-rxBTgpEXjGvLjyP5vEmq3_d22i56zynA7cI3oHcYG4qgwEOq9CqkEzsYIDWnPaLQgwXpeTTgb8a8Upa-ECxzmfPukg6YRXZ7ZZE5jcpN6YdaPhanMO8HoSfHEFrb5UlofM8Qk3Wm8FHPpfUmvxExlNgU-xdHepg9Dzw"/>
+</div>
+</div>
+</div>
+<!-- Mobile Menu Trigger -->
+<button class="md:hidden material-symbols-outlined text-primary">menu</button>
+</header>
+<main class="flex-grow flex items-center justify-center px-margin-mobile pt-16 relative z-10">
+<div class="max-w-4xl w-full flex flex-col items-center text-center">
+<!-- Central Status Indicator -->
+<div class="relative w-64 h-64 mb-12 group">
+<!-- Outer Pulse Rings -->
+<div class="absolute inset-0 rounded-full border border-primary-container/20 status-pulse"></div>
+<div class="absolute inset-0 rounded-full border border-secondary-container/20 status-pulse" style="animation-delay: 1s;"></div>
+<!-- Main Glass Hexagon / Container -->
+<div class="absolute inset-4 rounded-full glass-panel flex items-center justify-center overflow-hidden border-primary/20">
+<div class="scanning-line"></div>
+<div class="relative z-20 flex flex-col items-center">
+<span class="material-symbols-outlined text-6xl text-primary animate-pulse" style="font-variation-settings: 'FILL' 1;">shield_person</span>
+<div class="mt-4 font-label-sm text-label-sm text-primary tracking-widest uppercase">Verifying_Node</div>
+</div>
+<!-- Tech Detail Overlay -->
+<div class="absolute inset-0 pointer-events-none opacity-40">
+<div class="absolute top-4 left-4 font-label-sm text-[10px] text-primary-container">SYS_LOG: 0x8F2</div>
+<div class="absolute bottom-4 right-4 font-label-sm text-[10px] text-secondary">LATENCY: 12ms</div>
+</div>
+</div>
+<!-- Hover Backglow -->
+<div class="absolute inset-0 bg-primary-container/10 blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<!-- Content -->
+<div class="space-y-6 max-w-2xl">
+<h1 class="font-headline-lg text-headline-lg md:text-5xl text-primary-fixed uppercase tracking-tight text-glow">
+                    ACCESS_RESTRICTED: <span class="text-primary-container">PENDING_APPROVAL</span>
+</h1>
+<div class="h-1 w-24 bg-gradient-to-r from-transparent via-primary-container to-transparent mx-auto"></div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    Please wait for an Administrator to grant access to the Majestic Cyber Academy. You will receive a secure notification once your credentials have been verified and access is authorized.
+                </p>
+<!-- Technical Status Board -->
+<div class="glass-panel p-6 rounded-xl mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-left border-l-4 border-l-primary-container">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase opacity-60">Ticket ID</div>
+<div class="font-label-sm text-label-sm text-primary font-bold">MC-8829-01X</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase opacity-60">Status</div>
+<div class="font-label-sm text-label-sm text-secondary font-bold flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                            QUEUE_POSITION: 4
+                        </div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase opacity-60">Node</div>
+<div class="font-label-sm text-label-sm text-on-surface font-bold">SYD_SECURE_GATEWAY</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
+<button class="group relative px-8 py-3 bg-surface-container-high border border-outline-variant hover:border-primary/50 transition-all active:scale-95 flex items-center gap-2" onclick="handleRefresh()">
+<span class="material-symbols-outlined text-primary text-xl" id="refresh-icon">sync</span>
+<span class="font-label-sm text-label-sm text-on-surface tracking-widest uppercase">Refresh Status</span>
+<!-- Inner glow on hover -->
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+</button>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 border-b border-transparent hover:border-primary pb-1" href="#">
+<span class="material-symbols-outlined text-lg">support_agent</span>
+                        CONTACT_SUPPORT
+                    </a>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Security Banner -->
+<footer class="mt-auto py-8 px-margin-desktop border-t border-white/5 bg-surface-container-lowest/50">
+<div class="flex flex-col md:flex-row justify-between items-center gap-4 opacity-50">
+<div class="flex items-center gap-6 font-label-sm text-[11px] tracking-widest uppercase">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">lock</span> Encrypted_Session</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">verified_user</span> Auth_v2.4.0</span>
+</div>
+<div class="font-label-sm text-[11px]">
+                © 2024 MAJESTIC_CYBER_PLATFORM // ALL_RIGHTS_RESERVED
+            </div>
+</div>
+</footer>
+<!-- Bottom Nav for Mobile (Filtered check: Since this is Access Restricted/Pending, we might hide global nav, but per prompt instruction we keep Majestic Cyber design integrity. Usually task-focused screens suppress nav. Here we'll omit the BottomNavBar to prioritize focus on the pending state as per UX Goal rules.) -->
+<script>
+        function handleRefresh() {
+            const icon = document.getElementById('refresh-icon');
+            icon.classList.add('animate-spin');
+            
+            // Artificial delay to simulate a real check
+            setTimeout(() => {
+                icon.classList.remove('animate-spin');
+                // Could trigger a toast here if desired
+                console.log('Status re-verified. Access still pending.');
+            }, 1200);
+        }
+
+        // Add some technical noise/glitch effect to the header title randomly
+        const brand = document.querySelector('.font-display-lg');
+        setInterval(() => {
+            if(Math.random() > 0.95) {
+                brand.style.opacity = '0.7';
+                brand.style.transform = `translateX(${Math.random() * 2 - 1}px)`;
+                setTimeout(() => {
+                    brand.style.opacity = '1';
+                    brand.style.transform = 'translateX(0)';
+                }, 100);
+            }
+        }, 2000);
+    </script>
+</body></html>

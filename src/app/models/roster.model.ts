@@ -1,4 +1,6 @@
-export type RosterStatus = 'pending' | 'approved' | 'suspended';
+import type { UserStatus } from './user-status.model';
+
+export type RosterStatus = UserStatus;
 
 export interface RosterRow {
   id: string;

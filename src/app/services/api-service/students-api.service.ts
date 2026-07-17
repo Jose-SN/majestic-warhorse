@@ -49,13 +49,13 @@ export class StudentsApiService {
       .pipe(catchError(this.commonService.handleError));
   }
 
-  approveStudent(rosterRowId: string, status = 'approved'): Observable<CourseApiResponse<RosterRow>> {
+  approveStudent(rosterRowId: string, status = 'active'): Observable<CourseApiResponse<RosterRow>> {
     return this.http
       .put<CourseApiResponse<RosterRow>>(`${this._apiUrl}students/approve/${rosterRowId}`, { status })
       .pipe(catchError(this.commonService.handleError));
   }
 
-  approveStudentsBulk(ids: string[], status = 'approved'): Observable<CourseApiResponse<unknown>> {
+  approveStudentsBulk(ids: string[], status = 'active'): Observable<CourseApiResponse<unknown>> {
     return this.http
       .put<CourseApiResponse<unknown>>(`${this._apiUrl}students/approve`, { ids, status })
       .pipe(catchError(this.commonService.handleError));

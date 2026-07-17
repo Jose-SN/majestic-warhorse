@@ -46,7 +46,7 @@ export class StudentsListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const orgId = sessionStorage.getItem('organization_id') || '';
     if (orgId) {
-      this.rosterDisplay.loadStudents(orgId, 'approved').then((students) => {
+      this.rosterDisplay.loadStudents(orgId, 'active').then((students) => {
         this.studentList = students;
       });
     }

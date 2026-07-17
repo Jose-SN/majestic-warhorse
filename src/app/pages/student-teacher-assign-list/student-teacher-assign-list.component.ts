@@ -80,7 +80,7 @@ export class StudentTeacherAssignListComponent implements OnInit, OnDestroy {
   loadApprovedStudents() {
     const orgId = sessionStorage.getItem('organization_id') || '';
     if (!orgId) return;
-    this.rosterDisplay.loadStudents(orgId, 'approved').then((students) => {
+    this.rosterDisplay.loadStudents(orgId, 'active').then((students) => {
       this.studentList = students;
     });
   }

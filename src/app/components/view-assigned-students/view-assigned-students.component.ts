@@ -40,7 +40,7 @@ export class ViewAssignedStudentsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const orgId = sessionStorage.getItem('organization_id') || '';
     if (orgId) {
-      this.rosterDisplay.loadStudents(orgId, 'approved').then((students) => {
+      this.rosterDisplay.loadStudents(orgId, 'active').then((students) => {
         this.studentsList = students;
         this.updateAssignedStudentsFromIds();
         this.cdr.detectChanges();

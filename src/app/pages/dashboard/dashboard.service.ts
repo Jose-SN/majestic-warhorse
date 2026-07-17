@@ -61,8 +61,8 @@ export class DashboardService {
       }
 
       const [teachers, students, relationshipsResponse] = await Promise.all([
-        this.rosterDisplay.loadTeachers(orgId, 'approved'),
-        this.rosterDisplay.loadStudents(orgId, 'approved'),
+        this.rosterDisplay.loadTeachers(orgId, 'active'),
+        this.rosterDisplay.loadStudents(orgId, 'active'),
         lastValueFrom(this.assignTeacherService.getAllTeacherStudentRelationships()).catch(() => ({ data: [] })),
       ]);
 
