@@ -79,6 +79,7 @@ export class CourseDetailsComponent {
   public submittingComment = false;
   private organizationsList: Organization[] = [];
   private authorDirectoryLoaded = false;
+  private expandedChapterIds = new Set<string>();
   readonly demo = COURSE_DETAILS_DEMO;
   readonly ringCircumference = 2 * Math.PI * 15;
   @Input() selectedCourseInfo: ICourseList = {} as ICourseList;
@@ -488,10 +489,13 @@ export class CourseDetailsComponent {
   }
 
   setDefaultVideo() {
-    this.activeChapter = this.selectedCourseInfo?.chapterDetails[0];
-    this.activeVideoInfo = this.selectedCourseInfo?.chapterDetails?.[0]?.fileDetails?.[0];
-    this.activeVideoDescription =
-      this.selectedCourseInfo?.chapterDetails?.[0]?.fileDetails?.[0]?.description;
+    const firstChapter = this.selectedCourseInfo?.chapterDetails?.[0];
+    this.activeChapter = firstChapter ?? ({} as ChapterDetail);
+    this.activeVideoInfo = firstChapter?.fileDetails?.[0] ?? ({} as FileDetail);
+    this.activeVideoDescription = firstChapter?.fileDetails?.[0]?.description ?? '';
+    if (firstChapter) {
+      this.expandedChapterIds.add(this.chapterKey(firstChapter, 0));
+    }
   }
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
@@ -501,16 +505,26 @@ export class CourseDetailsComponent {
     this.mobMenu = !this.mobMenu;
   }
 
-  openCourseAccordian(event: Event, chapterDetails: ChapterDetail) {
+  openCourseAccordian(chapterDetails: ChapterDetail, index: number) {
     this.activeChapter = chapterDetails;
-    const element = event.currentTarget as HTMLElement;
-    const panel = element.nextElementSibling as HTMLElement | null;
-    if (!panel) return;
-    if (panel.style.maxHeight) {
-      panel.style.maxHeight = '';
+    this.toggleChapterExpanded(chapterDetails, index);
+  }
+
+  isChapterExpanded(chapterDetails: ChapterDetail, index: number): boolean {
+    return this.expandedChapterIds.has(this.chapterKey(chapterDetails, index));
+  }
+
+  private toggleChapterExpanded(chapterDetails: ChapterDetail, index: number): void {
+    const key = this.chapterKey(chapterDetails, index);
+    if (this.expandedChapterIds.has(key)) {
+      this.expandedChapterIds.delete(key);
     } else {
-      panel.style.maxHeight = panel.scrollHeight + 'px';
+      this.expandedChapterIds.add(key);
     }
+  }
+
+  private chapterKey(chapterDetails: ChapterDetail, index: number): string {
+    return chapterDetails.id || `chapter-${index}`;
   }
   changeVideoUrl(fileDetails: FileDetail) {
     if (this.activeVideoInfo?.id !== fileDetails.id) {
@@ -518,6 +532,14 @@ export class CourseDetailsComponent {
     }
     this.activeVideoInfo = fileDetails;
     this.activeVideoDescription = fileDetails.description;
+    const chapterIndex = this.selectedCourseInfo.chapterDetails?.findIndex(
+      (chapter) => chapter.id === fileDetails.parentId
+    );
+    if (chapterIndex != null && chapterIndex >= 0) {
+      const chapter = this.selectedCourseInfo.chapterDetails[chapterIndex];
+      this.activeChapter = chapter;
+      this.expandedChapterIds.add(this.chapterKey(chapter, chapterIndex));
+    }
     this.checkActiveVideoStatus();
   }
   handleStartAssessment() {
@@ -839,6 +861,10 @@ export class CourseDetailsComponent {
       return about;
     }
     return this.demoModeService.isDemoMode ? this.demo.instructorBio : '';
+  }
+
+  get courseStatusLevel(): string {
+    return this.courseDetailsService.resolveCourseStatusLevel(this.selectedCourseInfo);
   }
 
   get courseCompletionPercent(): number {

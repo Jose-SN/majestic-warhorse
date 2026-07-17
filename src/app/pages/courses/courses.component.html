@@ -68,11 +68,21 @@
                       }
                     </div>
 
-                    <p class="course-glass-card__author">
-                      A course by
-                      {{ course.createdBy.firstName || course.createdBy.first_name }}
-                      {{ course.createdBy.lastName || course.createdBy.last_name }}
-                    </p>
+                    <div class="course-glass-card__author-row">
+                      <p class="course-glass-card__author">
+                        A course by
+                        {{ course.createdBy.firstName || course.createdBy.first_name }}
+                        {{ course.createdBy.lastName || course.createdBy.last_name }}
+                      </p>
+                      @if (course.courseStatusLevel) {
+                        <span
+                          class="course-glass-card__status"
+                          [ngClass]="'course-glass-card__status--' + course.courseStatusLevel.toLowerCase()"
+                        >
+                          {{ course.courseStatusLevel }}
+                        </span>
+                      }
+                    </div>
 
                     @if (course.courseDescription) {
                       <p class="course-glass-card__description">{{ course.courseDescription }}</p>

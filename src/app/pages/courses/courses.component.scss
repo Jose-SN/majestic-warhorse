@@ -269,13 +269,50 @@
     }
   }
 
+  &__author-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
   &__author {
     margin: 0;
+    flex: 1;
+    min-width: 0;
     font-family: var(--mc-font-label);
     font-size: 0.6875rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: #94a3b8;
+  }
+
+  &__status {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    @include border-radius(2px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(3, 3, 4, 0.55);
+    font-family: var(--mc-font-label);
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mc-on-surface);
+
+    &--new {
+      border-color: rgba(79, 137, 252, 0.35);
+      color: rgba(181, 205, 255, 0.95);
+    }
+
+    &--progress {
+      border-color: rgba(255, 107, 44, 0.45);
+      color: rgba(255, 181, 154, 0.98);
+    }
+
+    &--completed {
+      border-color: rgba(72, 199, 142, 0.45);
+      color: rgba(168, 255, 214, 0.98);
+    }
   }
 
   &__description {

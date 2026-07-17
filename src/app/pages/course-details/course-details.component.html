@@ -4,6 +4,12 @@
     <section class="cd-main">
       @if (activeTab === 'course') {
         <div class="cd-video-block">
+          <span
+            class="cd-video-block__status"
+            [ngClass]="'cd-video-block__status--' + courseStatusLevel.toLowerCase()"
+          >
+            {{ courseStatusLevel }}
+          </span>
           <img class="cd-video-block__logo" src="../../../assets/images/logo-majestic-hourse.svg" alt="" />
           <app-video-player
             [videoUrl]="{ url: activeVideoInfo.fileURL }"
@@ -82,8 +88,11 @@
       <h3 class="cd-section-title">Lesson List</h3>
       <div class="cd-lesson-list">
         @for (chapterDetails of selectedCourseInfo.chapterDetails; track chapterDetails.id; let i = $index) {
-          <div class="cd-lesson-item" [class.active]="chapterDetails.id === activeChapter.id">
-            <button type="button" class="cd-lesson-item__head" (click)="openCourseAccordian($event, chapterDetails)">
+          <div
+            class="cd-lesson-item"
+            [class.active]="chapterDetails.id === activeChapter.id"
+            [class.is-open]="isChapterExpanded(chapterDetails, i)">
+            <button type="button" class="cd-lesson-item__head" (click)="openCourseAccordian(chapterDetails, i)">
               <span class="cd-lesson-ring">
                 <svg viewBox="0 0 36 36" aria-hidden="true">
                   <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
@@ -99,7 +108,7 @@
                 <path d="M6 9l6 6 6-6"/>
               </svg>
             </button>
-            <div class="cd-lesson-panel panel">
+            <div class="cd-lesson-panel panel" [class.is-open]="isChapterExpanded(chapterDetails, i)">
               <div class="panel-content">
                 @for (item of chapterDetails.fileDetails; track item.id) {
                   <button type="button" class="cd-lesson-video" [class.active]="item.id === activeVideoInfo.id" (click)="changeVideoUrl(item)">

@@ -28,7 +28,7 @@ export class CoursesComponent {
   public searchText: string = '';
   public loginedUserPrivilege: string = '';
   private destroy$ = new Subject<void>();
-  filterList: string[] = ['All', 'New', 'Pending', 'Completed'];
+  filterList: string[] = ['All', 'New', 'Progress', 'Completed'];
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   constructor(
     private coursesService: CoursesService,

@@ -74,28 +74,32 @@ export class CoursesService {
     if (!courseLists.length) {
       return [];
     }
+    const userId = this.commonService.loginedUserInfo?.id;
     courseLists.forEach((course) => {
       let completedLessonCount = 0;
-      course.chapterDetails?.forEach((chapterDetails, index) => {
+      const chapters = course.chapterDetails ?? [];
+      chapters.forEach((chapterDetails, index) => {
         const chapterCompleted = chapterDetails.fileDetails?.every((fileDetails) => {
           return this.courseDetailsService.courseStatusList.find(
             (courseStatus) =>
-              courseStatus.parentId === fileDetails.id && +courseStatus.percentage === 100
+              courseStatus.parentId === fileDetails.id &&
+              +courseStatus.percentage === 100 &&
+              (!userId || courseStatus.createdBy === userId)
           );
         });
         if (chapterCompleted) {
           completedLessonCount = (completedLessonCount || 0) + 1;
         }
-        if (index + 1 === (course.chapterDetails?.length || 0)) {
+        if (index + 1 === chapters.length) {
           course.chapterCompletedCount = completedLessonCount || 0;
-          if (!completedLessonCount) {
-            course.courseStatusLevel = 'New';
-          } else if (completedLessonCount === course.chapterDetails.length) {
-            course.courseStatusLevel = 'Completed';
-          } else {
-            course.courseStatusLevel = 'Pending';
-          }
-          course.completionPercent = `${(completedLessonCount / course.chapterDetails.length) * 100}%`;
+          course.courseStatusLevel = this.courseDetailsService.resolveCourseStatusLevel(
+            course,
+            this.courseDetailsService.courseStatusList,
+            userId
+          );
+          course.completionPercent = chapters.length
+            ? `${Math.round((completedLessonCount / chapters.length) * 100)}%`
+            : '0%';
         }
       });
     });

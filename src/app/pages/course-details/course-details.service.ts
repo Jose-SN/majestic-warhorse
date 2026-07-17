@@ -8,6 +8,14 @@ import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { ICourseStatus } from './model/course-status';
 
+export type CourseStatusLabel = 'New' | 'Progress' | 'Completed';
+
+interface CourseStatusSource {
+  chapterDetails?: Array<{
+    fileDetails?: Array<{ id: string }>;
+  }>;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -153,6 +161,49 @@ export class CourseDetailsService {
       '';
     return organizationId ? { organization_id: organizationId } : {};
   }
+
+  resolveCourseStatusLevel(
+    course: CourseStatusSource,
+    statusList: ICourseStatus[] = this.courseStatusList,
+    userId?: string
+  ): CourseStatusLabel {
+    const chapters = course.chapterDetails ?? [];
+    if (!chapters.length) {
+      return 'New';
+    }
+
+    const resolvedUserId = userId || this.commonService.loginedUserInfo?.id;
+    let completedChapterCount = 0;
+
+    chapters.forEach((chapter) => {
+      const files = chapter.fileDetails ?? [];
+      if (!files.length) {
+        return;
+      }
+
+      const chapterCompleted = files.every((file) =>
+        statusList.some(
+          (status) =>
+            status.parentId === file.id &&
+            +status.percentage === 100 &&
+            (!resolvedUserId || status.createdBy === resolvedUserId)
+        )
+      );
+
+      if (chapterCompleted) {
+        completedChapterCount++;
+      }
+    });
+
+    if (!completedChapterCount) {
+      return 'New';
+    }
+    if (completedChapterCount === chapters.length) {
+      return 'Completed';
+    }
+    return 'Progress';
+  }
+
   getReconfigurationHandler() {
     return this.reconfigureStatus$.asObservable();
   }
