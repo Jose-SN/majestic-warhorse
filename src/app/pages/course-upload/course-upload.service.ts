@@ -26,6 +26,7 @@ export class CourseUploadService {
   public CHAPTER_INFO: IChapterInfo = {
     attachments: [],
     chapterTitle: '',
+    chapterDescription: '',
     fileDetails: [],
   };
   private MESSAGES: { [key: string]: string } = {
@@ -55,6 +56,13 @@ export class CourseUploadService {
     'video/mkv', // MKV
     'video/x-matroska', // Alternative MKV MIME type
   ];
+  private readonly UPLOAD_BUCKET_BY_TYPE: Record<string, string> = {
+    COURSE: 'course',
+    CHAPTER: 'chapter',
+    ATTACHMENT: 'attachment',
+    VIDEO_FILE: 'video-file',
+    COVER_IMAGE: 'cover-image',
+  };
   constructor(
     private commonService: CommonService,
     private courseApi: CoursesApiService,
@@ -122,6 +130,7 @@ export class CourseUploadService {
     return new Promise(async (resolve) => {
       if (await this.onFileUploadValidation(selectedFile, uploadType)) {
         const formData: FormData = new FormData();
+        formData.append('bucket_name', this.resolveBucketName(uploadType));
         formData.append('file', selectedFile);
         this.commonApiService
           .uploadImage(formData)
@@ -147,6 +156,11 @@ export class CourseUploadService {
       }
     });
   }
+
+  private resolveBucketName(uploadType: string): string {
+    return this.UPLOAD_BUCKET_BY_TYPE[uploadType] || 'course';
+  }
+
   onFileUploadValidation(selectedFile: File, uploadType: string): Promise<boolean> {
     return new Promise((resolve) => {
       switch (uploadType) {
@@ -192,6 +206,40 @@ export class CourseUploadService {
       resolve(true);
     });
   }
+
+  validateChapterVideosBeforeAdd(chapter: IChapterInfo): boolean {
+    if (!chapter.chapterTitle?.trim()) {
+      this.commonService.openToaster({
+        message: 'Please enter the chapter title before adding another video.',
+        messageType: TOASTER_MESSAGE_TYPE.ERROR,
+      });
+      return false;
+    }
+
+    for (let index = 0; index < chapter.fileDetails.length; index++) {
+      const video = chapter.fileDetails[index];
+      const videoLabel = (index + 1).toString().padStart(2, '0');
+
+      if (!video.fileURL?.trim()) {
+        this.commonService.openToaster({
+          message: `Please add a video URL or upload for video ${videoLabel} before adding another.`,
+          messageType: TOASTER_MESSAGE_TYPE.ERROR,
+        });
+        return false;
+      }
+
+      if (!video.description?.trim()) {
+        this.commonService.openToaster({
+          message: `Please enter a description for video ${videoLabel} before adding another.`,
+          messageType: TOASTER_MESSAGE_TYPE.ERROR,
+        });
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   courseSaveValidation(courseDetails: ISaveCourse) {
     return new Promise((resolve) => {
       for (let objectKey in courseDetails.mainCourseInfo) {

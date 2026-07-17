@@ -1,63 +1,139 @@
-import { Component, ViewChild, ElementRef, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Output,
+  EventEmitter,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AttachmentAccordionComponent } from 'src/app/components/attachment-accordion/attachment-accordion.component';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IChapterInfo } from './model/chapter-info';
 import { CourseUploadService } from './course-upload.service';
 import { IMainCourseInfo } from './model/course-info';
 import { Subject } from 'rxjs';
 import { ICourseList } from '../courses/modal/course-list';
-import { IFileObjectInfo } from './model/file-object-info';
+import { IAttachmentObjectInfo, IFileObjectInfo } from './model/file-object-info';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
 import { ProgressBarComponent } from 'src/app/shared/progress-bar/progress-bar.component';
+import { DASHBOARD_NAV_ROUTES } from '../dashboard/dashboard-routes.config';
+import { NgxSpinnerService } from 'ngx-spinner';
+
+type RightPaneTab = 'preview' | 'recent';
+
 @Component({
   selector: 'app-course-upload',
   standalone: true,
-  imports: [FormsModule, CommonModule, AttachmentAccordionComponent, ProgressBarComponent],
+  imports: [FormsModule, CommonModule, ProgressBarComponent],
   templateUrl: './course-upload.component.html',
   styleUrl: './course-upload.component.scss',
 })
-export class CourseUploadComponent implements OnChanges {
+export class CourseUploadComponent implements OnChanges, OnInit, OnDestroy {
   public mobMenu: boolean = false;
   private destroy$ = new Subject<void>();
   public mainCourseInfo: IMainCourseInfo;
   public courseChapterList: IChapterInfo[] = [];
   public lastUpdatedCourse: ICourseList[] = [];
+  public rightPaneTab: RightPaneTab = 'preview';
+  public coverImageUpload = { completedPercentage: '' };
+  public isPublishing = false;
   @Input() courseData: ICourseList | null = null;
   @Output() courseSaved = new EventEmitter<void>();
+
   constructor(
     private courseUploadService: CourseUploadService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private spinner: NgxSpinnerService
   ) {
     this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
     this.addNewChapter();
-    this.fetchLastUpdatedCourses();
   }
+
+  async ngOnInit(): Promise<void> {
+    await this.fetchLastUpdatedCourses();
+    await this.loadCourseFromRoute();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['courseData'] && this.courseData) {
       this.handleCourseEdit(this.courseData);
     }
   }
+
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
+
+  get instructorName(): string {
+    const info = this.commonService.loginedUserInfo;
+    const first = (info?.firstName || info?.first_name || '').trim();
+    const last = (info?.lastName || info?.last_name || '').trim();
+    return [first, last].filter(Boolean).join(' ') || info?.name || 'Instructor';
+  }
+
+  get instructorAvatar(): string {
+    const raw = this.commonService.loginedUserInfo?.profileImage || this.commonService.loginedUserInfo?.profile_image;
+    return this.commonService.decodeUrl(raw ?? '') || 'assets/images/logo-majestic-hourse.svg';
+  }
+
+  get previewProgressPercent(): number {
+    if (!this.courseChapterList.length) {
+      return 0;
+    }
+    const withVideo = this.courseChapterList.filter((chapter) =>
+      chapter.fileDetails?.some((file) => file.fileURL?.trim())
+    ).length;
+    return Math.round((withVideo / this.courseChapterList.length) * 100);
+  }
+
+  get previewCompletedChapters(): number {
+    return this.courseChapterList.filter((chapter) =>
+      chapter.fileDetails?.every((file) => file.fileURL?.trim())
+    ).length;
+  }
+
+  setRightPaneTab(tab: RightPaneTab): void {
+    this.rightPaneTab = tab;
+  }
+
+  navigateBack(): void {
+    void this.router.navigate([DASHBOARD_NAV_ROUTES.courses]);
+  }
+
+  openRecentCourse(course: ICourseList): void {
+    this.handleCourseEdit(course);
+    this.rightPaneTab = 'preview';
+    void this.router.navigate([DASHBOARD_NAV_ROUTES.courseUpload], {
+      queryParams: { courseId: course.id },
+      replaceUrl: true,
+    });
+  }
+
   triggerMenu() {
     this.btnTrigger.nativeElement.click();
     this.mobMenu = false;
   }
+
   mobileMenu() {
     this.mobMenu = !this.mobMenu;
   }
-  async addNewVideoList(chapter: IChapterInfo) {
-    const isValid = await this.courseUploadService.courseSaveValidation({
-      mainCourseInfo: this.mainCourseInfo,
-      chapterInfo: this.courseChapterList,
-    });
-    if (isValid) {
-      chapter.fileDetails = chapter.fileDetails.concat({
-        ...this.courseUploadService.FILE_OBJECT_INFO,
-      });
+
+  addNewVideoList(chapter: IChapterInfo): void {
+    if (!this.courseUploadService.validateChapterVideosBeforeAdd(chapter)) {
+      return;
     }
+
+    chapter.fileDetails = chapter.fileDetails.concat({
+      ...this.courseUploadService.FILE_OBJECT_INFO,
+    });
   }
+
   async addNewChapter(isCheckValidaation?: boolean) {
     let isValid: any = true;
     if (isCheckValidaation) {
@@ -74,9 +150,44 @@ export class CourseUploadComponent implements OnChanges {
       this.courseChapterList = this.courseChapterList.concat(newChapter);
     }
   }
+
   openFileUploadWindow(nativeElement: HTMLElement): void {
     nativeElement?.click();
   }
+
+  removeVideo(chapter: IChapterInfo, index: number): void {
+    if (chapter.fileDetails.length <= 1) {
+      chapter.fileDetails[0] = { ...this.courseUploadService.FILE_OBJECT_INFO };
+      return;
+    }
+    chapter.fileDetails.splice(index, 1);
+  }
+
+  getVideoDisplayName(item: IFileObjectInfo, index: number): string {
+    if (item.name?.trim()) {
+      return item.name;
+    }
+    if (item.fileURL?.trim()) {
+      const parts = item.fileURL.split('/');
+      return parts[parts.length - 1] || `Video ${(index + 1).toString().padStart(2, '0')}`;
+    }
+    return `Video ${(index + 1).toString().padStart(2, '0')}`;
+  }
+
+  getVideoTypeLabel(item: IFileObjectInfo): string {
+    if (item.name?.trim()) {
+      return this.getFileTypeLabel(item.name);
+    }
+    const url = item.fileURL?.toLowerCase() || '';
+    if (url.includes('vimeo.com')) {
+      return 'Vimeo Video';
+    }
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      return 'YouTube Video';
+    }
+    return item.fileURL?.trim() ? 'Video File' : 'Pending Upload';
+  }
+
   async onFileSelected(
     event: Event,
     uploadType: string,
@@ -86,7 +197,10 @@ export class CourseUploadComponent implements OnChanges {
     const target = event.target as HTMLInputElement;
     const files = target.files as FileList;
     let uploadObjectItem: any = {};
-    if (uploadType === 'VIDEO_FILE') {
+    if (uploadType === 'COVER_IMAGE') {
+      uploadObjectItem = this.coverImageUpload;
+      uploadObjectItem.completedPercentage = '0';
+    } else if (uploadType === 'VIDEO_FILE') {
       if ((mainIndex || mainIndex == 0) && this.courseChapterList[mainIndex]) {
         if (
           (videoDetailsIndex || videoDetailsIndex == 0) &&
@@ -105,7 +219,10 @@ export class CourseUploadComponent implements OnChanges {
     );
     switch (uploadType) {
       case 'COVER_IMAGE':
-        this.mainCourseInfo.courseCoverImage = fileUrl;
+        if (fileUrl) {
+          this.mainCourseInfo.courseCoverImage = fileUrl;
+        }
+        this.coverImageUpload.completedPercentage = '';
         break;
       case 'ATTACHMENT':
         if ((mainIndex || mainIndex == 0) && this.courseChapterList[mainIndex]) {
@@ -127,26 +244,56 @@ export class CourseUploadComponent implements OnChanges {
         break;
     }
   }
+
   async saveButtonClick() {
-    const isCourseUploaded = await this.courseUploadService.saveCourseDetails(
-      {
-        mainCourseInfo: this.mainCourseInfo,
-        chapterInfo: this.courseChapterList,
-      },
-      this.destroy$
-    );
-    if (isCourseUploaded) {
-      this.clearPage();
-      this.courseSaved.emit(); // Emit event to close popup
+    if (this.isPublishing) {
+      return;
+    }
+
+    this.isPublishing = true;
+    void this.spinner.show();
+
+    try {
+      const isCourseUploaded = await this.courseUploadService.saveCourseDetails(
+        {
+          mainCourseInfo: this.mainCourseInfo,
+          chapterInfo: this.courseChapterList,
+        },
+        this.destroy$
+      );
+
+      if (isCourseUploaded) {
+        this.clearPage();
+        this.courseSaved.emit();
+        void this.router.navigate([DASHBOARD_NAV_ROUTES.courses]);
+      }
+    } finally {
+      this.isPublishing = false;
+      void this.spinner.hide();
     }
   }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
   private async fetchLastUpdatedCourses() {
     this.lastUpdatedCourse = await this.courseUploadService.fetchUploadedCourses();
   }
+
+  private async loadCourseFromRoute(): Promise<void> {
+    const courseId = this.route.snapshot.queryParamMap.get('courseId');
+    if (!courseId || this.courseData) {
+      return;
+    }
+
+    const course = this.lastUpdatedCourse.find((item) => item.id === courseId);
+    if (course) {
+      this.handleCourseEdit(course);
+    }
+  }
+
   handleCourseEdit(courseInfo: ICourseList) {
     this.mainCourseInfo = {
       id: courseInfo.id,
@@ -154,8 +301,9 @@ export class CourseUploadComponent implements OnChanges {
       courseTitle: courseInfo.courseTitle,
       courseDescription: courseInfo.courseDescription,
     };
-    this.courseChapterList = courseInfo.chapterDetails as any;
+    this.courseChapterList = structuredClone(courseInfo.chapterDetails as IChapterInfo[]);
   }
+
   previewVideo(fileDetails: IFileObjectInfo) {
     this.commonService.openPopupModel({
       url: fileDetails.fileURL,
@@ -165,14 +313,78 @@ export class CourseUploadComponent implements OnChanges {
       componentName: COMPONENT_NAME.FILE_VIEWER,
     });
   }
+
+  previewAttachment(attachment: IAttachmentObjectInfo): void {
+    this.commonService.openPopupModel({
+      data: attachment,
+      title: attachment.name,
+      fileType: 'ATTACHMENT',
+      url: attachment.fileURL,
+      componentName: COMPONENT_NAME.FILE_VIEWER,
+    });
+  }
+
+  removeAttachment(chapter: IChapterInfo, index: number): void {
+    chapter.attachments.splice(index, 1);
+  }
+
+  getFileTypeLabel(fileName: string): string {
+    const ext = (fileName.split('.').pop() || '').toLowerCase();
+    const labels: Record<string, string> = {
+      pdf: 'PDF Document',
+      doc: 'Word Document',
+      docx: 'Word Document',
+      png: 'Image File',
+      jpg: 'Image File',
+      jpeg: 'Image File',
+      gif: 'Image File',
+      webp: 'Image File',
+      mp4: 'Video File',
+      mov: 'Video File',
+      sh: 'Script',
+      zip: 'Archive',
+      txt: 'Text File',
+    };
+    return labels[ext] || `${ext.toUpperCase()} File`;
+  }
+
+  getFileIcon(fileName: string): string {
+    const ext = (fileName.split('.').pop() || '').toLowerCase();
+    if (['pdf', 'doc', 'docx', 'txt'].includes(ext)) {
+      return 'description';
+    }
+    if (['sh', 'bash', 'js', 'ts', 'py'].includes(ext)) {
+      return 'terminal';
+    }
+    if (['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext)) {
+      return 'image';
+    }
+    if (['mp4', 'mov', 'avi'].includes(ext)) {
+      return 'movie';
+    }
+    return 'draft';
+  }
+
+  getFileIconKind(fileName: string): string {
+    const ext = (fileName.split('.').pop() || '').toLowerCase();
+    if (['pdf', 'doc', 'docx', 'txt'].includes(ext)) {
+      return 'doc';
+    }
+    if (['sh', 'bash', 'js', 'ts', 'py'].includes(ext)) {
+      return 'script';
+    }
+    return 'default';
+  }
+
   clearPage() {
     this.courseChapterList = [];
     this.addNewChapter();
     this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
+    this.coverImageUpload.completedPercentage = '';
     this.fetchLastUpdatedCourses();
   }
+
   isFormValid(): boolean {
-    // Check main course info required fields
     if (!this.mainCourseInfo.courseTitle || !this.mainCourseInfo.courseTitle.trim()) {
       return false;
     }
@@ -182,13 +394,11 @@ export class CourseUploadComponent implements OnChanges {
     if (!this.mainCourseInfo.courseCoverImage || !this.mainCourseInfo.courseCoverImage.trim()) {
       return false;
     }
-    
-    // Check chapters
+
     if (!this.courseChapterList || this.courseChapterList.length === 0) {
       return false;
     }
-    
-    // Check each chapter has required fields
+
     for (const chapter of this.courseChapterList) {
       if (!chapter.chapterTitle || !chapter.chapterTitle.trim()) {
         return false;
@@ -196,14 +406,13 @@ export class CourseUploadComponent implements OnChanges {
       if (!chapter.fileDetails || chapter.fileDetails.length === 0) {
         return false;
       }
-      // Check each video has fileURL
       for (const video of chapter.fileDetails) {
         if (!video.fileURL || !video.fileURL.trim()) {
           return false;
         }
       }
     }
-    
+
     return true;
   }
 }

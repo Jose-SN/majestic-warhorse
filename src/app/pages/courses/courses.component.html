@@ -1,10 +1,4 @@
 <div class="dashboard-inner">
-  <app-common-slider
-    [ngClass]="{ active: showSliderView }"
-    [courseData]="selectedCourseForEdit"
-    (removeClass)="sliderActiveRemove()"
-  ></app-common-slider>
-
   <header class="courses-page-header">
     <div class="courses-page-header__intro">
       <h1 class="courses-page-header__title">Academy Courseware</h1>
@@ -15,8 +9,8 @@
 
     <div class="courses-page-header__controls">
       @if (["organization", "teacher"].includes(loginedUserPrivilege)) {
-        <button type="button" class="courses-upload-btn" (click)="showSliderView = !showSliderView">
-          <span class="material-symbols-outlined" aria-hidden="true">upload</span>
+        <button type="button" class="courses-upload-btn" (click)="navigateToCourseUpload()">
+          <img src="assets/images/icon-file-upload.svg" alt="" class="courses-upload-btn__icon" aria-hidden="true" />
           Upload Course
         </button>
       }
@@ -36,7 +30,7 @@
     </div>
   </header>
 
-  <div class="courses-page-body" [class.common-slider]="showSliderView">
+  <div class="courses-page-body">
     @if (courseList$ | async; as courseList) {
       @if (courseList.length === 0) {
         <div class="courses-empty-state">

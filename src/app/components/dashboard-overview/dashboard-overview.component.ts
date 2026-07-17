@@ -106,7 +106,9 @@ export class DashboardOverviewComponent implements OnDestroy {
       .subscribe(() => this.refreshDashboardView());
 
     await this.fetchDashboardOverview();
-    await this.courseDetailsService.getCourseStatusList();
+    await this.courseDetailsService.getCourseStatusList(
+      this.courseDetailsService.getOrganizationStatusQuery()
+    );
     await this.fetchCourseList();
     this.fetchFavoriteCourses();
     this.fetchReadingFiles();

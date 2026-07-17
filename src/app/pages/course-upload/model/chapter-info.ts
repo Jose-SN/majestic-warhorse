@@ -4,6 +4,7 @@ import { IAttachmentObjectInfo, IFileObjectInfo } from './file-object-info';
 export interface IChapterInfo {
   createdBy?: string;
   chapterTitle: string;
+  chapterDescription?: string;
   attachments: IAttachmentObjectInfo[];
   fileDetails: IFileObjectInfo[];
 }

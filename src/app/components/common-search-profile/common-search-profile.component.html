@@ -25,12 +25,21 @@
     </button>
   </div>
 
-  <h1 class="page-title">
-    <figure>
-      <img src="../../../assets/images/icon-home.svg" alt="Home" />
-    </figure>
-    <span>Home</span>
-  </h1>
+  @if (isCourseDetailsRoute) {
+    <h1 class="page-title">
+      <button type="button" class="page-title-back" (click)="navigateBackToCourses()">
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+        <span>Back to Courses Listing</span>
+      </button>
+    </h1>
+  } @else {
+    <h1 class="page-title">
+      <figure>
+        <img src="../../../assets/images/icon-home.svg" alt="Home" />
+      </figure>
+      <span>Home</span>
+    </h1>
+  }
   <div class="search-left">
     <div class="search-holder">
       <div class="input-holder">

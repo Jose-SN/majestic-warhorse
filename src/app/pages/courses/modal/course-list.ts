@@ -21,6 +21,7 @@ export interface ChapterDetail {
   id: string;
   attachments: IAttachmentObjectInfo[];
   chapterTitle: string;
+  chapterDescription?: string;
   files: string[];
   createdBy?: CreatedBy;
   creation_date: Date;

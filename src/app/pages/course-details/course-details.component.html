@@ -13,10 +13,25 @@
         </div>
 
         <div class="cd-course-header">
-          <h1>{{ heroTitle }}</h1>
-          @if (heroSubtitle) {
-            <p class="cd-course-header__subtitle">{{ heroSubtitle }}</p>
-          }
+          <div class="cd-course-header__main">
+            <h1>{{ heroTitle }}</h1>
+            @if (heroSubtitle) {
+              <p class="cd-course-header__subtitle">{{ heroSubtitle }}</p>
+            }
+          </div>
+          <div class="cd-course-header__rating">
+            <span class="cd-course-header__rating-label">Rate course</span>
+            <star-rating
+              class="cd-course-header__stars"
+              [rating]="courseRating"
+              [hoverEnabled]="canRateCourse"
+              [readOnly]="!canRateCourse || ratingSaving"
+              (starClickChange)="onCourseRatingChange($event)"
+            ></star-rating>
+            @if (courseRating > 0) {
+              <span class="cd-course-header__rating-value">{{ courseRating | number: '1.0-1' }}</span>
+            }
+          </div>
         </div>
 
         @if (descriptionHtml) {
@@ -129,27 +144,36 @@
           Course Materials
         </h3>
         <div class="cd-materials-list">
-          @for (material of materialsDisplay; track material.id) {
-            <article class="cd-material-card">
-              <span class="cd-material-card__icon" [class]="'cd-material-card__icon--' + material.type">
-                {{ materialTypeLabel(material.type) }}
-              </span>
-              <span class="cd-material-card__name">{{ material.name }}</span>
-              <div class="cd-material-card__actions">
-                <button type="button" class="cd-material-card__preview" (click)="previewMaterialItem(material)" [attr.aria-label]="'Preview ' + material.name">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path d="M2 12C2 12 5.5 5 12 5C18.5 5 22 12 22 12C22 12 18.5 19 12 19C5.5 19 2 12 2 12Z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                  </svg>
-                </button>
-                <button type="button" class="cd-material-card__download" (click)="downloadMaterialItem(material)" [attr.aria-label]="'Download ' + material.name">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path d="M12 16L7 11L8.4 9.6L11 12.2V4H13V12.2L15.6 9.6L17 11L12 16Z"/>
-                    <path d="M20 18H4V20H20V18Z"/>
-                  </svg>
-                </button>
+          @for (group of chapterMaterialsDisplay; track group.chapterId) {
+            <section class="cd-materials-chapter">
+              <h4 class="cd-materials-chapter__title">{{ group.chapterLabel }}</h4>
+              <div class="cd-materials-chapter__items">
+                @for (material of group.materials; track material.id) {
+                  <article class="cd-material-card">
+                    <span class="cd-material-card__icon" [class]="'cd-material-card__icon--' + material.type">
+                      {{ materialTypeLabel(material.type) }}
+                    </span>
+                    <span class="cd-material-card__name">{{ material.name }}</span>
+                    <div class="cd-material-card__actions">
+                      <button type="button" class="cd-material-card__preview" (click)="previewMaterialItem(material)" [attr.aria-label]="'Preview ' + material.name">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                          <path d="M2 12C2 12 5.5 5 12 5C18.5 5 22 12 22 12C22 12 18.5 19 12 19C5.5 19 2 12 2 12Z"/>
+                          <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                      </button>
+                      <button type="button" class="cd-material-card__download" (click)="downloadMaterialItem(material)" [attr.aria-label]="'Download ' + material.name">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                          <path d="M12 16L7 11L8.4 9.6L11 12.2V4H13V12.2L15.6 9.6L17 11L12 16Z"/>
+                          <path d="M20 18H4V20H20V18Z"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </article>
+                }
               </div>
-            </article>
+            </section>
+          } @empty {
+            <p class="cd-materials-empty">No course materials available yet.</p>
           }
         </div>
       </div>

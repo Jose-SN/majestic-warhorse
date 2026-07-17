@@ -21,14 +21,17 @@ import { QuestionnaireComponent } from '../questionnaire/questionnaire.component
 import { AssessmentAnswersComponent } from 'src/app/components/assessment-answers/assessment-answers.component';
 import { StudentAssessmentComponent } from 'src/app/components/student-assessment/student-assessment.component';
 import { FavoritesApiService } from 'src/app/services/api-service/favorites-api.service';
-import { COURSE_DETAILS_DEMO, CourseMaterialItem } from './data/course-details-demo.data';
+import { COURSE_DETAILS_DEMO, ChapterMaterialsGroup, CourseMaterialItem } from './data/course-details-demo.data';
 import { DemoModeService } from 'src/app/shared/services/demo-mode.service';
 import { UserModel } from '../login-page/model/user-model';
+import { Organization } from 'src/app/models/organization.model';
+import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
 import { CourseDiscussionsApiService } from 'src/app/services/api-service/course-discussions-api.service';
 import {
   CourseDiscussionItem,
   CourseDiscussionRecord,
 } from './model/course-discussion.model';
+import { mapOrganizationToUserShape } from 'src/app/shared/utils/user-mapper.util';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -51,6 +54,8 @@ export class CourseDetailsComponent {
   public mobMenu: boolean = false;
   public profileUrl: string = '';
   public videoRating: number = 0;
+  public courseRating: number = 0;
+  public ratingSaving = false;
   public videoDuration: string = '';
   public loginedUserRole: string = '';
   private destroy$ = new Subject<void>();
@@ -58,6 +63,7 @@ export class CourseDetailsComponent {
   public activeVideoInfo: FileDetail = {} as FileDetail;
   public activeChapter: ChapterDetail = {} as ChapterDetail;
   private courseStatusInfo: ICourseStatus = {} as ICourseStatus;
+  private courseRatingStatusInfo: ICourseStatus = {} as ICourseStatus;
   private videoStatusInfo: ICourseStatus = {} as ICourseStatus;
   public selectedAttachmentList: any = [];
   public showQuestionAnswer: boolean = false;
@@ -71,6 +77,8 @@ export class CourseDetailsComponent {
   public discussionsLoading = false;
   public newCommentText = '';
   public submittingComment = false;
+  private organizationsList: Organization[] = [];
+  private authorDirectoryLoaded = false;
   readonly demo = COURSE_DETAILS_DEMO;
   readonly ringCircumference = 2 * Math.PI * 15;
   @Input() selectedCourseInfo: ICourseList = {} as ICourseList;
@@ -86,6 +94,7 @@ export class CourseDetailsComponent {
     private router: Router,
     private favoritesApiService: FavoritesApiService,
     private courseDiscussionsApi: CourseDiscussionsApiService,
+    private organizationApiService: OrganizationApiService,
     public demoModeService: DemoModeService,
     private cdr: ChangeDetectorRef
   ) {
@@ -120,13 +129,22 @@ export class CourseDetailsComponent {
     this.loginedUserRole = this.commonService?.loginedUserInfo?.role ?? '';
     this.isOrganization = sessionStorage.getItem('loginType') === 'organization';
     this.canAccessAnswers = this.commonService.adminRoleType.includes(this.loginedUserRole);
-    await this.courseDetailsService.getCourseStatusList();
+    await this.courseDetailsService.getCourseStatusList({
+      course_id: this.selectedCourseInfo.id,
+      organization_id:
+        sessionStorage.getItem('organization_id') ||
+        this.commonService.loginedUserInfo?.organization_id ||
+        undefined,
+    });
     this.checkActiveVideoStatus();
+    this.checkCourseRatingStatus();
     this.courseDetailsService
       .getReconfigurationHandler()
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.checkActiveVideoStatus();
+        this.checkCourseRatingStatus();
+        this.cdr.markForCheck();
       });
     this.selectedAttachmentList = this.selectedCourseInfo.chapterDetails
       ?.map((chapter) => chapter.attachments)
@@ -139,8 +157,44 @@ export class CourseDetailsComponent {
     });
     // this.checkAssesmentView();
     this.checkFavoriteStatus();
+    await this.ensureAuthorDirectory();
     await this.loadInstructorDetails();
     await this.loadDiscussions();
+  }
+
+  private async ensureAuthorDirectory(): Promise<void> {
+    if (this.authorDirectoryLoaded) {
+      return;
+    }
+
+    const tasks: Promise<void>[] = [];
+
+    if (!this.commonService.allUsersList?.length) {
+      tasks.push(
+        this.authService
+          .getAllUsers()
+          .then((users) => {
+            this.commonService.allUsersList = users ?? [];
+          })
+          .catch(() => {
+            this.commonService.allUsersList = this.commonService.allUsersList ?? [];
+          })
+      );
+    }
+
+    tasks.push(
+      firstValueFrom(this.organizationApiService.getOrganizations())
+        .then((response) => {
+          const data = Array.isArray(response) ? response : (response as { data?: Organization[] })?.data;
+          this.organizationsList = data ?? [];
+        })
+        .catch(() => {
+          this.organizationsList = [];
+        })
+    );
+
+    await Promise.all(tasks);
+    this.authorDirectoryLoaded = true;
   }
 
   private async loadDiscussions(): Promise<void> {
@@ -233,14 +287,12 @@ export class CourseDetailsComponent {
 
   private mapDiscussionRecord(record: CourseDiscussionRecord): CourseDiscussionItem {
     const chapterMeta = this.resolveChapterMeta(record.chapter_id ?? undefined);
-    const authorUser = this.commonService.allUsersList?.find(
-      (user) => user.id === record.created_by
-    );
+    const author = this.resolveAuthorFromId(record.created_by);
 
     return {
       id: record.id,
-      author: this.resolveAuthorName(record.created_by, authorUser),
-      avatarUrl: authorUser?.profile_image || authorUser?.profileImage,
+      author: author.name,
+      avatarUrl: author.avatarUrl,
       chapterLabel: chapterMeta.label,
       chapterTitle: chapterMeta.title,
       comment: record.comment,
@@ -248,14 +300,35 @@ export class CourseDetailsComponent {
     };
   }
 
-  private resolveAuthorName(userId: string, user?: UserModel): string {
-    if (user) {
-      const first = (user.first_name ?? user.firstName ?? '').trim();
-      const last = (user.last_name ?? user.lastName ?? '').trim();
-      const fullName = `${first} ${last}`.trim();
-      return fullName || user.contact?.email || 'Member';
+  private resolveAuthorFromId(userId: string): { name: string; avatarUrl?: string } {
+    if (!userId) {
+      return { name: 'Anonymous' };
     }
-    return userId ? 'Member' : 'Anonymous';
+
+    const user = this.commonService.allUsersList?.find((item) => item.id === userId);
+    if (user) {
+      return {
+        name: this.resolveAuthorName(user),
+        avatarUrl: user.profile_image || user.profileImage,
+      };
+    }
+
+    const organization = this.organizationsList.find((item) => item.id === userId);
+    if (organization) {
+      return {
+        name: organization.name?.trim() || organization.contact?.email || 'Organization',
+        avatarUrl: organization.profile_image,
+      };
+    }
+
+    return { name: 'Member' };
+  }
+
+  private resolveAuthorName(user: UserModel): string {
+    const first = (user.first_name ?? user.firstName ?? '').trim();
+    const last = (user.last_name ?? user.lastName ?? '').trim();
+    const fullName = `${first} ${last}`.trim();
+    return fullName || user.name?.trim() || user.contact?.email || user.email || 'Member';
   }
 
   private resolveChapterMeta(chapterId?: string): { label: string; title: string } {
@@ -348,6 +421,12 @@ export class CourseDetailsComponent {
       return;
     }
 
+    const cachedOrganization = this.organizationsList.find((org) => org.id === creatorId);
+    if (cachedOrganization) {
+      this.instructorDetails = this.mapUserToInstructor(mapOrganizationToUserShape(cachedOrganization));
+      return;
+    }
+
     const fetchedUser = await this.authService.getUserById(creatorId);
     if (fetchedUser) {
       this.instructorDetails = this.mapUserToInstructor(fetchedUser);
@@ -434,8 +513,12 @@ export class CourseDetailsComponent {
     }
   }
   changeVideoUrl(fileDetails: FileDetail) {
+    if (this.activeVideoInfo?.id !== fileDetails.id) {
+      this.videoStatusInfo = {} as ICourseStatus;
+    }
     this.activeVideoInfo = fileDetails;
     this.activeVideoDescription = fileDetails.description;
+    this.checkActiveVideoStatus();
   }
   handleStartAssessment() {
     this.setActiveTab('assessment');
@@ -468,6 +551,49 @@ export class CourseDetailsComponent {
       this.updateVideoStatus(undefined, true);
     }
   }
+  async onCourseRatingChange(event?: ClickEvent): Promise<void> {
+    if (!event?.rating || this.ratingSaving || !this.canRateCourse) {
+      return;
+    }
+
+    this.courseRating = event.rating;
+    this.ratingSaving = true;
+    try {
+      await this.courseDetailsService.saveCourseLevelRating(
+        {
+          rating: event.rating,
+          courseId: this.selectedCourseInfo.id,
+          courseRatingStatusInfo: this.courseRatingStatusInfo,
+        },
+        this.destroy$
+      );
+    } finally {
+      this.ratingSaving = false;
+    }
+  }
+
+  checkCourseRatingStatus(): void {
+    const userId = this.commonService.loginedUserInfo?.id;
+    const courseId = this.selectedCourseInfo?.id;
+    if (!userId || !courseId) {
+      return;
+    }
+
+    const courseRatingStatus = this.courseDetailsService.courseStatusList.find(
+      (status) =>
+        status.createdBy === userId &&
+        status.parentId === courseId &&
+        status.parentType === 'Course'
+    );
+
+    this.courseRatingStatusInfo = courseRatingStatus ?? ({} as ICourseStatus);
+    this.courseRating = courseRatingStatus?.rating ?? 0;
+  }
+
+  get canRateCourse(): boolean {
+    return this.loginedUserRole === 'student';
+  }
+
   async updateVideoStatus(event?: ClickEvent, isVideo?: boolean) {
     if (event?.rating) {
       this.videoRating = event?.rating;
@@ -491,22 +617,21 @@ export class CourseDetailsComponent {
     }, 1000);
   }
   checkActiveVideoStatus() {
+    const userId = this.commonService.loginedUserInfo?.id;
     const courseStatusInfo = this.courseDetailsService.courseStatusList.find(
       (courseStatus) =>
-        courseStatus.createdBy === this.commonService.loginedUserInfo.id &&
+        courseStatus.createdBy === userId &&
         courseStatus.parentId === this.activeVideoInfo.parentId
     );
     const videoStatusInfo = this.courseDetailsService.courseStatusList.find(
       (courseStatus) =>
-        courseStatus.createdBy === this.commonService.loginedUserInfo.id &&
-        courseStatus.parentId === this.activeVideoInfo.id
+        courseStatus.createdBy === userId && courseStatus.parentId === this.activeVideoInfo.id
     );
-    if (courseStatusInfo) {
-      this.courseStatusInfo = courseStatusInfo;
-      this.videoRating = this.courseStatusInfo.rating;
-    }
-    if (videoStatusInfo) {
-      this.videoStatusInfo = videoStatusInfo;
+
+    this.courseStatusInfo = courseStatusInfo ?? ({} as ICourseStatus);
+    this.videoStatusInfo = videoStatusInfo ?? ({} as ICourseStatus);
+    if (courseStatusInfo?.rating != null) {
+      this.videoRating = courseStatusInfo.rating;
     }
   }
   previewDocument(attachment: IAttachmentObjectInfo) {
@@ -602,17 +727,33 @@ export class CourseDetailsComponent {
     return html;
   }
 
-  get materialsDisplay(): CourseMaterialItem[] {
-    const attachments = this.selectedAttachmentList || [];
-    if (attachments.length) {
-      return attachments.slice(0, 3).map((item: IAttachmentObjectInfo, index: number) => ({
-        id: `material-${index}`,
-        name: item.name || `Attachment ${index + 1}`,
-        type: this.guessMaterialType(item.name || ''),
-        attachment: item,
-      })) as (CourseMaterialItem & { attachment?: IAttachmentObjectInfo })[];
+  get chapterMaterialsDisplay(): ChapterMaterialsGroup[] {
+    const chapters = this.selectedCourseInfo?.chapterDetails ?? [];
+    const liveGroups: ChapterMaterialsGroup[] = [];
+
+    chapters.forEach((chapter, index) => {
+      const attachments = chapter.attachments ?? [];
+      if (!attachments.length) {
+        return;
+      }
+
+      liveGroups.push({
+        chapterId: chapter.id || `chapter-${index}`,
+        chapterLabel: this.chapterLabel(chapter, index),
+        materials: attachments.map((item, attIndex) => ({
+          id: `${chapter.id || index}-material-${attIndex}`,
+          name: item.name || `Attachment ${attIndex + 1}`,
+          type: this.guessMaterialType(item.name || ''),
+          attachment: item,
+        })),
+      });
+    });
+
+    if (liveGroups.length) {
+      return liveGroups;
     }
-    return this.demoModeService.isDemoMode ? this.demo.materials : [];
+
+    return this.demoModeService.isDemoMode ? this.demo.materialsByChapter : [];
   }
 
   chapterLabel(chapter: ChapterDetail, index: number): string {
@@ -703,22 +844,36 @@ export class CourseDetailsComponent {
   get courseCompletionPercent(): number {
     const chapters = this.selectedCourseInfo?.chapterDetails;
     if (!chapters?.length) return 0;
-    let completed = 0;
-    chapters.forEach((ch) => {
-      if (this.chapterProgress(ch) >= 100) completed++;
+
+    let total = 0;
+    let count = 0;
+    chapters.forEach((chapter) => {
+      (chapter.fileDetails || []).forEach((file) => {
+        total += this.getFileWatchPercentage(file.id);
+        count++;
+      });
     });
-    return Math.round((completed / chapters.length) * 100);
+
+    return count ? Math.round(total / count) : 0;
   }
 
   chapterProgress(chapter: ChapterDetail): number {
     const files = chapter.fileDetails || [];
     if (!files.length) return 0;
-    const done = files.filter((f) =>
-      this.courseDetailsService.courseStatusList.some(
-        (s) => s.parentId === f.id && +s.percentage === 100
-      )
-    ).length;
-    return Math.round((done / files.length) * 100);
+
+    const total = files.reduce((sum, file) => sum + this.getFileWatchPercentage(file.id), 0);
+    return Math.round(total / files.length);
+  }
+
+  private getFileWatchPercentage(fileId: string): number {
+    const userId = this.commonService.loginedUserInfo?.id;
+    if (!userId || !fileId) return 0;
+
+    const status = this.courseDetailsService.courseStatusList.find(
+      (item) => item.createdBy === userId && item.parentId === fileId
+    );
+    const percentage = status?.percentage != null ? +status.percentage : 0;
+    return Math.min(100, Math.max(0, percentage));
   }
 
   ringOffset(percent: number): number {

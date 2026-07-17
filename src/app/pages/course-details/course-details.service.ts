@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { CoursesApiService } from 'src/app/services/api-service/courses-api.service';
+import {
+  CourseStatusListParams,
+  CoursesApiService,
+} from 'src/app/services/api-service/courses-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { ICourseStatus } from './model/course-status';
@@ -11,6 +14,7 @@ import { ICourseStatus } from './model/course-status';
 export class CourseDetailsService {
   public courseStatusList: ICourseStatus[] = [];
   public reconfigureStatus$: Subject<any> = new Subject<true>();
+  private lastStatusQuery: CourseStatusListParams = {};
   constructor(
     private commonService: CommonService,
     private courseApiService: CoursesApiService
@@ -25,20 +29,73 @@ export class CourseDetailsService {
       remainingSeconds > 0 ? `${remainingSeconds} second${remainingSeconds !== 1 ? 's' : ''}` : '';
     return [hoursPart, minutesPart, secondsPart].filter(Boolean).join(' ').trim();
   }
+  saveCourseLevelRating(
+    saveInfo: {
+      rating: number;
+      courseId: string;
+      courseRatingStatusInfo: ICourseStatus;
+    },
+    destroy$: Subject<void>
+  ) {
+    const createdId = this.commonService.loginedUserInfo.id;
+    const rating = Math.round(saveInfo.rating * 100) / 100;
+    const statusPayload = {
+      percentage: null,
+      createdBy: createdId,
+      parentType: 'Course',
+      rating,
+      parentId: saveInfo.courseId,
+      ...(saveInfo.courseRatingStatusInfo.id && { id: saveInfo.courseRatingStatusInfo.id }),
+    };
+
+    const service = statusPayload.id
+      ? this.courseApiService.updateCourseStatus.bind(this.courseApiService)
+      : this.courseApiService.saveCourseStatus.bind(this.courseApiService);
+
+    return new Promise((resolve) => {
+      service(statusPayload)
+        .pipe(takeUntil(destroy$))
+        .subscribe({
+          next: (success) => {
+            resolve(success);
+            this.commonService.openToaster({
+              message: 'Course rating saved',
+              messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+            });
+            void this.getCourseStatusList();
+          },
+          error: (error) => {
+            resolve(error);
+            this.commonService.openToaster({
+              message: 'Error while saving course rating',
+              messageType: TOASTER_MESSAGE_TYPE.ERROR,
+            });
+          },
+        });
+    });
+  }
+
   saveCourseRating(saveInfo: any, destroy$: Subject<void>) {
     const createdId = this.commonService.loginedUserInfo.id;
     let service;
     let statusPayload;
     if (saveInfo.isVideo) {
-      const rawPercentage =
-        saveInfo.courseStatusInfo.percentage !== 100 ? saveInfo.videoPercentage || 0 : 100;
+      const incoming = Math.min(100, Math.max(0, saveInfo.videoPercentage || 0));
+      const existingStatus =
+        saveInfo.videoStatusInfo?.parentId === saveInfo.activeFile?.id
+          ? saveInfo.videoStatusInfo
+          : null;
+      const existingPercentage = existingStatus?.percentage ?? 0;
+      const rawPercentage = Math.round(Math.max(existingPercentage, incoming) * 100) / 100;
+      const useExistingId = Boolean(existingStatus?.id);
+
       statusPayload = {
         rating: null,
         createdBy: createdId,
         parentId: saveInfo.activeFile.id,
         parentType: 'File',
-        percentage: Math.round(rawPercentage * 100) / 100,
-        ...(saveInfo.videoStatusInfo.id && { id: saveInfo.videoStatusInfo.id }),
+        percentage: rawPercentage,
+        ...(useExistingId && { id: existingStatus!.id }),
       };
     } else {
       const rating =
@@ -69,7 +126,7 @@ export class CourseDetailsService {
               messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
             });
           }
-          this.getCourseStatusList();
+          void this.getCourseStatusList();
         },
         error: (error) => {
           resolve(error)
@@ -81,9 +138,20 @@ export class CourseDetailsService {
       });
     })
   }
-  async getCourseStatusList() {
-    this.courseStatusList = await this.courseApiService.getCourseStatusList();
+  async getCourseStatusList(params?: CourseStatusListParams) {
+    if (params) {
+      this.lastStatusQuery = params;
+    }
+    this.courseStatusList = await this.courseApiService.getCourseStatusList(this.lastStatusQuery);
     this.reconfigureStatus$.next(true);
+  }
+
+  getOrganizationStatusQuery(): CourseStatusListParams {
+    const organizationId =
+      sessionStorage.getItem('organization_id') ||
+      this.commonService.loginedUserInfo?.organization_id ||
+      '';
+    return organizationId ? { organization_id: organizationId } : {};
   }
   getReconfigurationHandler() {
     return this.reconfigureStatus$.asObservable();

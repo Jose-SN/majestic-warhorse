@@ -1,135 +1,403 @@
-<div class="search-and-profile">
-  <h1>Upload New Course</h1>
-</div>
-<div class="content-area">
-  <div class="content-left">
-    <div class="course-outer-area">
-      <div class="course-form-upload-wrapper">
-        <div class="course-upload-form">
-          <h5>Enter New Course Details</h5>
-          <div class="upload-form-holder">
-            <div class="course-upload-left">
-              <div class="input-holder">
-                <label>Title</label>
-                <input type="text" placeholder="Type here" [(ngModel)]="mainCourseInfo.courseTitle" />
-              </div>
-              <div calss="input-holder">
-                <label>Description</label>
-                <textarea rows="5" cols="45" [(ngModel)]="mainCourseInfo.courseDescription" placeholder="Type here"></textarea>
-              </div>
-            </div>
-            <div class="course-upload-right">
-              @if(mainCourseInfo.courseCoverImage && mainCourseInfo.courseCoverImage.trim() !== ''){
-                <img [src]="mainCourseInfo.courseCoverImage" alt="Course Cover Image" class="course-cover-image" />
-              }
-              <label for="images" class="drop-container" id="dropcontainer">
-                <div class="img-holder"></div>
-                <span class="drop-title">Upload Cover Image</span>
-                <span>Drop your file here or browse</span>
-                <input type="file" id="images" accept="image/*" (change)="onFileSelected($event,'COVER_IMAGE')" />
-              </label>
-            </div>
+<div class="course-forge-page">
+  <main class="course-forge-main">
+    <!-- Left: Editor -->
+    <section class="course-forge-editor">
+      <header class="course-forge-editor__header">
+        <button type="button" class="course-forge-back" (click)="navigateBack()">
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+          Back to Courses
+        </button>
+        <div class="course-forge-editor__eyebrow">
+          <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
+          Creator Mode
+        </div>
+        <h1 class="course-forge-editor__title">Course Architecture</h1>
+        <p class="course-forge-editor__subtitle">
+          Define the narrative and technical depth of your next masterclass. Preview your changes in real-time on the right.
+        </p>
+      </header>
+
+      <div class="course-forge-form">
+        <!-- Main course info -->
+        <div class="forge-section">
+          <div class="forge-field forge-field--underline">
+            <label for="course-title">Course Title</label>
+            <input
+              id="course-title"
+              type="text"
+              placeholder="Enter course name..."
+              [(ngModel)]="mainCourseInfo.courseTitle"
+            />
+          </div>
+
+          <div class="forge-field forge-field--underline">
+            <label for="course-description">Description</label>
+            <textarea
+              id="course-description"
+              rows="4"
+              placeholder="Describe the course objectives and outcomes..."
+              [(ngModel)]="mainCourseInfo.courseDescription"
+            ></textarea>
           </div>
         </div>
-        @for (chapter of courseChapterList; track $index; let parentIndex = $index;) {
-        <div class="course-upload-form">
-          <div class="action-holder">
-            <h5>Chapter Details</h5>
-            <div class="add-button">
-              <button (click)="addNewChapter(true)">
-                <img src="../../../assets/images/icon-add.svg" alt="Add Chapter" />
-                <span>Add Chapter</span>
-              </button>
-              <input type="file" #attachmentInput title="Add Attachment" placeholder="Add Attachment" (change)="onFileSelected($event,'ATTACHMENT', $index)"
-                class="hidden-file-input" />
-              <button (click)="openFileUploadWindow(attachmentInput)">
-                <img src="../../../assets/images/icon-add.svg" alt="Add Attachment" />
-                <span>Add Attachment</span>
-              </button>
-              <button (click)="courseChapterList.splice($index,1)" [disabled]="courseChapterList.length <= 1">
-                <img src="../../../assets/images/icon-add.svg" class="icon-delete" alt="Delete Attachment" />
-                <span>Delete</span>
-              </button>
+
+        <!-- Cover image -->
+        <div class="forge-section">
+          <h2 class="forge-section__title">Primary Brand Asset</h2>
+          <label for="cover-image" class="forge-dropzone">
+            @if (mainCourseInfo.courseCoverImage?.trim()) {
+              <img [src]="mainCourseInfo.courseCoverImage" alt="Course cover preview" class="forge-dropzone__preview" />
+            } @else {
+              <span class="material-symbols-outlined forge-dropzone__icon" aria-hidden="true">movie</span>
+              <p class="forge-dropzone__title">Drop your cover image here</p>
+              <p class="forge-dropzone__hint">Recommended: 1920x1080, JPG or PNG</p>
+            }
+            <span class="forge-dropzone__browse">Browse Local Files</span>
+            <input
+              id="cover-image"
+              type="file"
+              accept="image/*"
+              (change)="onFileSelected($event, 'COVER_IMAGE')"
+            />
+          </label>
+          @if (coverImageUpload.completedPercentage && +coverImageUpload.completedPercentage !== 100) {
+            <progress-bar
+              class="forge-dropzone__progress"
+              [progress]="coverImageUpload.completedPercentage || '0'"
+              [color]="'#488aff'"
+            ></progress-bar>
+          }
+        </div>
+
+        <!-- Chapter Details -->
+        <div class="curriculum-panel">
+          <div class="curriculum-panel__header">
+            <div class="curriculum-panel__title-group">
+              <span class="material-symbols-outlined curriculum-panel__icon curriculum-panel__icon--play" aria-hidden="true">play_circle</span>
+              <h2 class="curriculum-panel__title">Chapter Details</h2>
             </div>
+            <button type="button" class="forge-gradient-btn" (click)="addNewChapter(true)">
+              <span class="material-symbols-outlined" aria-hidden="true">add</span>
+              Add Chapter
+            </button>
           </div>
-          <div class="upload-form-holder">
-            <div class="course-upload-left">
-              <div class="input-holder">
-                <label>Title</label>
-                <input type="text" placeholder="Type here" [(ngModel)]="chapter.chapterTitle" />
-              </div>
-              @for (item of chapter.fileDetails; track $index; let videIndex = $index) {
-              <div class="input-holder">
-                <label>Video</label>
-                <input type="text" placeholder="chapter1.mp4" readonly [(ngModel)]="item.fileURL" />
-                @if(item.completedPercentage && +item.completedPercentage !== 100){
-                  <progress-bar [progress]="item.completedPercentage || '0'" [color]="'#488aff'"></progress-bar>
-                  }
-              </div>
-              <div calss="input-holder">
-                <label>Video Description</label>
-                <textarea rows="3" cols="45" [(ngModel)]="item.description" placeholder="Type here"></textarea>
-                <div class="add-button">
-                  <button [disabled]="!item.fileURL || item.fileURL.trim() === ''" (click)="previewVideo(item)">
-                    <img src="../../../assets/images/icon-video.svg" alt="Preview Video" />
-                    <span>Preview</span>
-                  </button>
-                  <input type="file" #videoInput title="Add Video" placeholder="Add Video"
-                    (change)="onFileSelected($event,'VIDEO_FILE',parentIndex, videIndex)"
-                    class="hidden-file-input" />
-                  <button (click)="openFileUploadWindow(videoInput)">
-                    <img src="../../../assets/images/icon-video.svg" alt="Upload Video" />
-                    <span>Upload Video</span>
-                  </button>
-                  <button (click)="addNewVideoList(chapter)">
-                    <img src="../../../assets/images/icon-add.svg" alt="Add Video" />
-                    <span>Add Video</span>
-                  </button>
-                  <button (click)="chapter.fileDetails.splice($index,1)"
-                    [disabled]="chapter.fileDetails.length <= 1">
-                    <img src="../../../assets/images/icon-add.svg" class="icon-delete" alt="Delete Video" />
-                    <span>Delete</span>
-                  </button>
+
+          <div class="curriculum-chapters">
+            @for (chapter of courseChapterList; track $index; let parentIndex = $index) {
+              <article class="curriculum-chapter">
+                <span class="curriculum-chapter__badge">{{ (parentIndex + 1).toString().padStart(2, '0') }}</span>
+                <button
+                  type="button"
+                  class="curriculum-chapter__delete"
+                  (click)="courseChapterList.splice(parentIndex, 1)"
+                  [disabled]="courseChapterList.length <= 1"
+                  aria-label="Delete chapter"
+                >
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+
+                <div class="curriculum-field curriculum-field--full">
+                  <label [for]="'chapter-title-' + parentIndex">Chapter Title</label>
+                  <input
+                    [id]="'chapter-title-' + parentIndex"
+                    type="text"
+                    placeholder="Introduction to Signal Analysis"
+                    [(ngModel)]="chapter.chapterTitle"
+                  />
                 </div>
-              </div>
-              }
-            </div>
-            <div class="accordion-holder">
-              <app-attachment-accordion [attachmentList]="chapter.attachments"></app-attachment-accordion>
-            </div>
-          </div>
-        </div>
-        }
-        <div class="add-button save-course">
-          <button (click)="saveButtonClick()" [disabled]="!isFormValid()">
-            <img src="../../../assets/images/icon-add.svg" alt="Save Course" />
-            <span>Save Course</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="content-right">
-    <div class="content-box">
-      <h3>Last Submitted</h3>
-      <div class="reading-list-wrapper">
-        <div class="reading-list-content">
-          <div class="scroll-content">
-            @for (course of lastUpdatedCourse; track $index) {
-            <div class="reading-list" (click)="handleCourseEdit(course)">
-              <figure>
-                <img [src]="course.courseCoverImage" alt="Course Cover Image" />
-              </figure>
-              <div class="reading-list-right">
-                <h4>{{course.courseTitle}}</h4>
-                <span>{{course?.chapterDetails?.length}} Chapters</span>
-                <button>Published</button>
-              </div>
-            </div>
+
+                <div class="curriculum-field curriculum-field--full">
+                  <label [for]="'chapter-desc-' + parentIndex">Chapter Description</label>
+                  <textarea
+                    [id]="'chapter-desc-' + parentIndex"
+                    rows="2"
+                    placeholder="Explain what will be covered in this video module..."
+                    [(ngModel)]="chapter.chapterDescription"
+                  ></textarea>
+                </div>
+
+                <div class="curriculum-videos">
+                  <div class="curriculum-videos__header">
+                    <div class="curriculum-panel__title-group">
+                      <span class="material-symbols-outlined curriculum-panel__icon curriculum-panel__icon--video" aria-hidden="true">videocam</span>
+                      <h3 class="curriculum-videos__title">Videos</h3>
+                    </div>
+                    <button type="button" class="forge-gradient-btn forge-gradient-btn--compact" (click)="addNewVideoList(chapter)">
+                      <span class="material-symbols-outlined" aria-hidden="true">add</span>
+                      Add Video
+                    </button>
+                  </div>
+
+                  @if (chapter.fileDetails?.length) {
+                    <div class="curriculum-videos__list">
+                      @for (item of chapter.fileDetails; track $index; let videoIndex = $index) {
+                        <article class="curriculum-attachment-item curriculum-attachment-item--stacked">
+                          <div class="curriculum-attachment-item__row">
+                            <div class="curriculum-attachment-item__info">
+                              <span class="curriculum-attachment-item__icon curriculum-attachment-item__icon--video">
+                                <span class="material-symbols-outlined">movie</span>
+                              </span>
+                              <div class="curriculum-attachment-item__text">
+                                <p>{{ getVideoDisplayName(item, videoIndex) }}</p>
+                                <span>{{ getVideoTypeLabel(item) }}</span>
+                              </div>
+                            </div>
+                            <div class="curriculum-attachment-item__actions">
+                              <button
+                                type="button"
+                                class="curriculum-attachment-item__action"
+                                [disabled]="!item.fileURL?.trim()"
+                                (click)="previewVideo(item)"
+                                aria-label="Preview video"
+                              >
+                                <span class="material-symbols-outlined">play_circle</span>
+                              </button>
+                              <button
+                                type="button"
+                                class="curriculum-attachment-item__action curriculum-attachment-item__action--danger"
+                                (click)="removeVideo(chapter, videoIndex)"
+                                [disabled]="chapter.fileDetails.length <= 1"
+                                aria-label="Delete video"
+                              >
+                                <span class="material-symbols-outlined">delete</span>
+                              </button>
+                            </div>
+                          </div>
+
+                          <div class="curriculum-attachment-item__fields">
+                            <div class="curriculum-field">
+                              <label [for]="'video-url-' + parentIndex + '-' + videoIndex">Video URL / Upload</label>
+                              <div class="curriculum-field__video-row">
+                                <input
+                                  [id]="'video-url-' + parentIndex + '-' + videoIndex"
+                                  type="text"
+                                  placeholder="https://vimeo.com/..."
+                                  [(ngModel)]="item.fileURL"
+                                />
+                                <input
+                                  type="file"
+                                  #videoItemInput
+                                  title="Upload Video"
+                                  accept="video/*"
+                                  (change)="onFileSelected($event, 'VIDEO_FILE', parentIndex, videoIndex)"
+                                  class="hidden-file-input"
+                                />
+                                <button type="button" class="curriculum-field__icon-btn" (click)="openFileUploadWindow(videoItemInput)" aria-label="Upload video">
+                                  <img src="assets/images/icon-file-upload.svg" alt="" class="forge-upload-icon" aria-hidden="true" />
+                                </button>
+                              </div>
+                              @if (item.completedPercentage && +item.completedPercentage !== 100) {
+                                <progress-bar [progress]="item.completedPercentage || '0'" [color]="'#488aff'"></progress-bar>
+                              }
+                            </div>
+                            <div class="curriculum-field curriculum-field--full">
+                              <label [for]="'video-desc-' + parentIndex + '-' + videoIndex">Video Description</label>
+                              <textarea
+                                [id]="'video-desc-' + parentIndex + '-' + videoIndex"
+                                rows="2"
+                                placeholder="Describe this lesson"
+                                [(ngModel)]="item.description"
+                              ></textarea>
+                            </div>
+                          </div>
+                        </article>
+                      }
+                    </div>
+                  } @else {
+                    <p class="curriculum-videos__empty">No videos added yet.</p>
+                  }
+                </div>
+
+                <div class="curriculum-attachments">
+                  <div class="curriculum-attachments__header">
+                    <div class="curriculum-panel__title-group">
+                      <span class="material-symbols-outlined curriculum-panel__icon curriculum-panel__icon--attachment" aria-hidden="true">attachment</span>
+                      <h3 class="curriculum-attachments__title">Attachments</h3>
+                    </div>
+                    <input
+                      type="file"
+                      #attachmentInput
+                      title="Add Attachment"
+                      (change)="onFileSelected($event, 'ATTACHMENT', parentIndex)"
+                      class="hidden-file-input"
+                    />
+                    <button type="button" class="forge-gradient-btn forge-gradient-btn--compact" (click)="openFileUploadWindow(attachmentInput)">
+                      <img src="assets/images/icon-file-upload.svg" alt="" class="forge-upload-icon" aria-hidden="true" />
+                      Add Attachment
+                    </button>
+                  </div>
+
+                  @if (chapter.attachments?.length) {
+                    <div class="curriculum-attachments__list">
+                      @for (attachment of chapter.attachments; track $index; let attachmentIndex = $index) {
+                        <article class="curriculum-attachment-item">
+                          <div class="curriculum-attachment-item__info">
+                            <span class="curriculum-attachment-item__icon" [class]="'curriculum-attachment-item__icon--' + getFileIconKind(attachment.name)">
+                              <span class="material-symbols-outlined">{{ getFileIcon(attachment.name) }}</span>
+                            </span>
+                            <div class="curriculum-attachment-item__text">
+                              <p>{{ attachment.name }}</p>
+                              <span>{{ getFileTypeLabel(attachment.name) }}</span>
+                            </div>
+                          </div>
+                          <div class="curriculum-attachment-item__actions">
+                            <button type="button" class="curriculum-attachment-item__action" (click)="previewAttachment(attachment)" aria-label="Preview attachment">
+                              <span class="material-symbols-outlined">visibility</span>
+                            </button>
+                            <button
+                              type="button"
+                              class="curriculum-attachment-item__action curriculum-attachment-item__action--danger"
+                              (click)="removeAttachment(chapter, attachmentIndex)"
+                              aria-label="Delete attachment"
+                            >
+                              <span class="material-symbols-outlined">delete</span>
+                            </button>
+                          </div>
+                        </article>
+                      }
+                    </div>
+                  } @else {
+                    <p class="curriculum-attachments__empty">No attachments added yet.</p>
+                  }
+                </div>
+              </article>
             }
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
+
+    <!-- Right: Preview / Recent -->
+    <aside class="course-forge-preview-pane">
+      <div class="preview-tabs" role="tablist" aria-label="Course panel">
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="rightPaneTab === 'preview'"
+          [class.active]="rightPaneTab === 'preview'"
+          (click)="setRightPaneTab('preview')"
+        >
+          Preview
+        </button>
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="rightPaneTab === 'recent'"
+          [class.active]="rightPaneTab === 'recent'"
+          (click)="setRightPaneTab('recent')"
+        >
+          Recent
+        </button>
+      </div>
+
+      @if (rightPaneTab === 'preview') {
+        <div class="preview-pane" role="tabpanel">
+          <div class="preview-pane__head">
+            <h3>Live Preview: Student View</h3>
+            <div class="preview-pane__dots" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+
+          <article class="holographic-preview">
+            <div class="holographic-preview__media">
+              @if (mainCourseInfo.courseCoverImage?.trim()) {
+                <img [src]="mainCourseInfo.courseCoverImage" [alt]="mainCourseInfo.courseTitle || 'Course cover'" />
+              } @else {
+                <div class="holographic-preview__placeholder">
+                  <span class="material-symbols-outlined">image</span>
+                </div>
+              }
+              <div class="holographic-preview__overlay">
+                @if (mainCourseInfo.courseTitle?.trim()) {
+                  <span class="holographic-preview__badge">Course</span>
+                }
+                <h4>{{ mainCourseInfo.courseTitle || 'Untitled Course' }}</h4>
+              </div>
+              <div class="holographic-preview__play" aria-hidden="true">
+                <span class="material-symbols-outlined">play_arrow</span>
+              </div>
+            </div>
+            <div class="holographic-preview__body">
+              <div class="holographic-preview__instructor">
+                <img [src]="instructorAvatar" [alt]="instructorName" />
+                <span>{{ instructorName }}</span>
+              </div>
+              @if (mainCourseInfo.courseDescription?.trim()) {
+                <p class="holographic-preview__description">{{ mainCourseInfo.courseDescription }}</p>
+              }
+              <div class="holographic-preview__progress-track">
+                <span [style.width.%]="previewProgressPercent"></span>
+              </div>
+              <div class="holographic-preview__progress-meta">
+                <span>{{ previewProgressPercent }}% Complete</span>
+                <span>{{ previewCompletedChapters }}/{{ courseChapterList.length || 0 }} Chapters</span>
+              </div>
+            </div>
+          </article>
+
+          <div class="preview-chapters">
+            <p class="preview-chapters__label">Chapter Preview</p>
+            @for (chapter of courseChapterList; track $index; let i = $index) {
+              <div class="preview-chapter-item" [class.is-active]="i === 0">
+                <div class="preview-chapter-item__icon">
+                  <span class="material-symbols-outlined">{{ i === 0 ? 'play_circle' : 'description' }}</span>
+                </div>
+                <div class="preview-chapter-item__text">
+                  <p>{{ (i + 1).toString().padStart(2, '0') }}. {{ chapter.chapterTitle || 'Untitled chapter' }}</p>
+                  <span>{{ chapter.fileDetails?.[0]?.name || (chapter.fileDetails?.[0]?.fileURL ? 'Video lesson' : 'Draft • No video uploaded') }}</span>
+                </div>
+                <span class="material-symbols-outlined preview-chapter-item__lock">{{ i === 0 ? 'lock_open' : 'lock' }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="recent-pane" role="tabpanel">
+          <h3 class="recent-pane__title">Last Submitted</h3>
+          <p class="recent-pane__hint">Select a course to load it into the editor.</p>
+          <div class="recent-pane__list">
+            @for (course of lastUpdatedCourse; track course.id || $index) {
+              <button type="button" class="recent-course-card" (click)="openRecentCourse(course)">
+                <figure>
+                  <img [src]="course.courseCoverImage" [alt]="course.courseTitle || 'Course cover'" />
+                </figure>
+                <div class="recent-course-card__body">
+                  <h4>{{ course.courseTitle }}</h4>
+                  <span>{{ course.chapterDetails?.length || 0 }} Chapters</span>
+                  <span class="recent-course-card__status">Published</span>
+                </div>
+              </button>
+            } @empty {
+              <div class="recent-pane__empty">
+                <span class="material-symbols-outlined">history</span>
+                <p>No submitted courses yet.</p>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="preview-pane__footer">
+        <div class="preview-sync">
+          <span class="preview-sync__dot" aria-hidden="true"></span>
+          <span>Live Sync Active</span>
+        </div>
+        <button
+          type="button"
+          class="publish-btn"
+          [disabled]="!isFormValid() || isPublishing"
+          [attr.aria-busy]="isPublishing"
+          (click)="saveButtonClick()">
+          @if (isPublishing) {
+            <span class="publish-btn__spinner" aria-hidden="true"></span>
+            Publishing...
+          } @else {
+            Publish to Academy
+            <span class="material-symbols-outlined" aria-hidden="true">rocket_launch</span>
+          }
+        </button>
+      </div>
+    </aside>
+  </main>
 </div>

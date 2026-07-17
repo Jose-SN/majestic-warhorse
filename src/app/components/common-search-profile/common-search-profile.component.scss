@@ -42,6 +42,29 @@
     @include flex(flex, null, null, center);
   }
 
+  .page-title-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+    @include transition(color 0.2s ease);
+
+    .material-symbols-outlined {
+      font-size: 22px;
+      color: var(--mc-primary);
+    }
+
+    &:hover {
+      color: var(--mc-primary);
+    }
+  }
+
   .search-left {
     @include flex(flex, null, space-between, center);
     flex: 1;

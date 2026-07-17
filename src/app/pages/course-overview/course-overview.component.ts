@@ -103,7 +103,9 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
   }
   async fetchCourseList() {
     this.courseLists = await this.courseUploadService.fetchUploadedCourses();
-    await this.courseDetailsService.getCourseStatusList();
+    await this.courseDetailsService.getCourseStatusList(
+      this.courseDetailsService.getOrganizationStatusQuery()
+    );
     this.courseLists.forEach((course) => {
       let averageRating = 0;
       let completedLessonCount = 0;

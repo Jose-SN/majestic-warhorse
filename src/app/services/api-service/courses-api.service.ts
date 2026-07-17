@@ -13,6 +13,11 @@ export interface CourseListParams {
   organization_id?: string;
 }
 
+export interface CourseStatusListParams {
+  organization_id?: string;
+  course_id?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -96,11 +101,22 @@ export class CoursesApiService {
       .pipe(catchError(this.commonService.handleError));
   }
 
-  getCourseStatusList() {
+  getCourseStatusList(params: CourseStatusListParams = {}) {
+    let httpParams = new HttpParams();
+    if (params.organization_id) {
+      httpParams = httpParams.set('organization_id', params.organization_id);
+    }
+    if (params.course_id) {
+      httpParams = httpParams.set('course_id', params.course_id);
+    }
+
     return lastValueFrom(
       this.http
-        .get<ICourseStatus[]>(`${this._apiUrl}status/get`)
-        .pipe(catchError(this.commonService.handleError))
+        .get<ICourseStatus[]>(`${this._apiUrl}status/get`, { params: httpParams })
+        .pipe(
+          map((res) => (Array.isArray(res) ? res : (res as any)?.data ?? [])),
+          catchError(this.commonService.handleError)
+        )
     );
   }
 }

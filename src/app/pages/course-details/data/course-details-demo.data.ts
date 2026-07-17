@@ -6,6 +6,12 @@ export interface CourseMaterialItem {
   type: 'psd' | 'zip' | 'pdf';
 }
 
+export interface ChapterMaterialsGroup {
+  chapterId: string;
+  chapterLabel: string;
+  materials: (CourseMaterialItem & { attachment?: { fileURL: string; name: string } })[];
+}
+
 export const COURSE_DETAILS_DEMO = {
   heroSubtitle: 'Course Details & Concept Art',
   instructorBio:
@@ -17,4 +23,19 @@ export const COURSE_DETAILS_DEMO = {
     { id: 'm2', name: '3D Model Files.obj/.blend', type: 'zip' },
     { id: 'm3', name: 'Reference Board.pdf', type: 'pdf' },
   ] as CourseMaterialItem[],
+  materialsByChapter: [
+    {
+      chapterId: 'demo-chapter-1',
+      chapterLabel: 'Chapter 1: Signal Analysis',
+      materials: [
+        { id: 'm1', name: 'Chapter 1 Sketch.psd', type: 'psd' },
+        { id: 'm2', name: 'Reference Board.pdf', type: 'pdf' },
+      ],
+    },
+    {
+      chapterId: 'demo-chapter-2',
+      chapterLabel: 'Chapter 2: Sculpting Pipeline',
+      materials: [{ id: 'm3', name: '3D Model Files.obj/.blend', type: 'zip' }],
+    },
+  ] as ChapterMaterialsGroup[],
 };

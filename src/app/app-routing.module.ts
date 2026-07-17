@@ -23,6 +23,7 @@ import { InviteTeacherComponent } from './pages/invite-teacher/invite-teacher.co
 import { InviteStudentComponent } from './pages/invite-student/invite-student.component';
 import { StudentApprovalListComponent } from './pages/student-approval-list/student-approval-list.component';
 import { AiModeComponent } from './pages/ai-mode/ai-mode.component';
+import { CourseUploadComponent } from './pages/course-upload/course-upload.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -41,6 +42,7 @@ const routes: Routes = [
       { path: 'ai-mode', component: AiModeComponent },
       { path: 'course-overview', component: CourseOverviewComponent },
       { path: 'courses', component: CoursesComponent },
+      { path: 'course-upload', component: CourseUploadComponent },
       { path: 'course-details', component: CourseDetailsComponent },
       { path: 'account', component: EditAccountComponent },
       { path: 'teachers', component: TeachersListComponent },

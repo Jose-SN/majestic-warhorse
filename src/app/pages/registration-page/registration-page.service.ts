@@ -32,6 +32,7 @@ export class RegistrationPageService {
     selectedFile: File
   ): Promise<{ [key: string]: string | boolean }> {
     const formData: FormData = new FormData();
+    formData.append('bucket_name', 'profile');
     formData.append('file', selectedFile);
     return new Promise((resolve) => {
       if (!this.ALLOWED_FILE_TYPES.includes(selectedFile.type)) {
