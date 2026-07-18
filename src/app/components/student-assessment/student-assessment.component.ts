@@ -41,8 +41,8 @@ export class StudentAssessmentComponent implements OnInit, OnDestroy {
     this.loading = true;
     const apiCall = this.questionnaireApiService.getQuestionsByCourse(id);
     apiCall.pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response: any) => {
-        const rawList = Array.isArray(response) ? response : (response?.data ?? []);
+      next: (response) => {
+        const rawList = response ?? [];
         this.questionsList = [...rawList].sort((a: any, b: any) => {
           const dateA = a.creation_date || a.creationDate || a.created_at || a.createdAt || '';
           const dateB = b.creation_date || b.creationDate || b.created_at || b.createdAt || '';
@@ -79,8 +79,8 @@ export class StudentAssessmentComponent implements OnInit, OnDestroy {
       .getStudentAnswersByCourse(courseId, submittedBy)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: any) => {
-          const raw = Array.isArray(response) ? response : (response?.data ?? []);
+        next: (response) => {
+          const raw = response ?? [];
           if (raw.length === 0) return;
           this.hasSubmitted = true;
           const answerMap: Record<string, string | string[]> = {};

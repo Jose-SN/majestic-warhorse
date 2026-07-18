@@ -49,11 +49,18 @@ app-assign-teachers,
 app-approval-pending,
 app-student-teacher-assign-list,
 app-course-overview, app-questionnaire, app-edit-account, app-teachers-list, app-students-list, app-approval-list, app-course-detils, app-dashboard-sidepanel, 
-app-course-overview, app-registration-page, app-video-player, app-course-upload {
+app-course-overview, app-video-player, app-course-upload {
   display: flex;
   flex-direction: column;
   height: 100%;
   flex-grow: 1;
+}
+
+app-registration-page {
+  display: block;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
 }
 app-under-construction {
   width: 100%;

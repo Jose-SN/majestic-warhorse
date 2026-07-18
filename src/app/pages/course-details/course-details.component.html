@@ -1,8 +1,49 @@
 <div class="course-details-page">
-  <div class="cd-layout">
-    <!-- Left: video + title + description -->
-    <section class="cd-main">
-      @if (activeTab === 'course') {
+  <ul class="cd-tabs" role="tablist" aria-label="Course sections">
+    <li
+      role="tab"
+      [attr.aria-selected]="activeTab === 'course'"
+      [class.is-active]="activeTab === 'course'"
+      (click)="setActiveTab('course')"
+    >
+      Course
+    </li>
+    @if (isOrganization || loginedUserRole === 'teacher') {
+      <li
+        role="tab"
+        [attr.aria-selected]="activeTab === 'questionnaire'"
+        [class.is-active]="activeTab === 'questionnaire'"
+        (click)="setActiveTab('questionnaire')"
+      >
+        Questionnaire
+      </li>
+    }
+    @if (loginedUserRole === 'student') {
+      <li
+        role="tab"
+        [attr.aria-selected]="activeTab === 'assessment'"
+        [class.is-active]="activeTab === 'assessment'"
+        (click)="setActiveTab('assessment')"
+      >
+        Assessment
+      </li>
+    }
+    @if (canAccessAnswers) {
+      <li
+        role="tab"
+        [attr.aria-selected]="activeTab === 'answers'"
+        [class.is-active]="activeTab === 'answers'"
+        (click)="setActiveTab('answers')"
+      >
+        Answers
+      </li>
+    }
+  </ul>
+
+  @if (activeTab === 'course') {
+    <div class="cd-layout">
+      <!-- Left: video + title + description -->
+      <section class="cd-main">
         <div class="cd-video-block">
           <span
             class="cd-video-block__status"
@@ -41,9 +82,9 @@
         </div>
 
         @if (descriptionHtml) {
-        <div class="cd-description">
-          <p [innerHTML]="descriptionHtml"></p>
-        </div>
+          <div class="cd-description">
+            <p [innerHTML]="descriptionHtml"></p>
+          </div>
         }
 
         @if (loginedUserRole === 'student' && showQuestionAnswer) {
@@ -51,199 +92,187 @@
             <button type="button" (click)="setActiveTab('assessment')">Start Assessment Test</button>
           </div>
         }
-      }
+      </section>
 
-      @if (activeTab === 'questionnaire') {
-        <div class="cd-tab-panel">
-          <app-questionnaire [courseId]="selectedCourseInfo.id"></app-questionnaire>
-        </div>
-      }
-      @if (activeTab === 'assessment' && loginedUserRole === 'student') {
-        <div class="cd-tab-panel">
-          <app-student-assessment [courseId]="selectedCourseInfo.id"></app-student-assessment>
-        </div>
-      }
-      @if (activeTab === 'answers' && canAccessAnswers) {
-        <div class="cd-tab-panel">
-          <app-assessment-answers [courseId]="selectedCourseInfo.id"></app-assessment-answers>
-        </div>
-      }
-    </section>
-
-    <!-- Middle: tabs + lessons + instructor -->
-    <aside class="cd-lessons">
-      <ul class="cd-tabs">
-        <li [class.active]="activeTab === 'course'" (click)="setActiveTab('course')">Course</li>
-        @if (isOrganization || loginedUserRole === 'teacher') {
-          <li [class.active]="activeTab === 'questionnaire'" (click)="setActiveTab('questionnaire')">Questionnaire</li>
-        }
-        @if (loginedUserRole === 'student') {
-          <li [class.active]="activeTab === 'assessment'" (click)="setActiveTab('assessment')">Assessment</li>
-        }
-        @if (canAccessAnswers) {
-          <li [class.active]="activeTab === 'answers'" (click)="setActiveTab('answers')">Answers</li>
-        }
-      </ul>
-
-      <h3 class="cd-section-title">Lesson List</h3>
-      <div class="cd-lesson-list">
-        @for (chapterDetails of selectedCourseInfo.chapterDetails; track chapterDetails.id; let i = $index) {
-          <div
-            class="cd-lesson-item"
-            [class.active]="chapterDetails.id === activeChapter.id"
-            [class.is-open]="isChapterExpanded(chapterDetails, i)">
-            <button type="button" class="cd-lesson-item__head" (click)="openCourseAccordian(chapterDetails, i)">
-              <span class="cd-lesson-ring">
-                <svg viewBox="0 0 36 36" aria-hidden="true">
-                  <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
-                  <circle cx="18" cy="18" r="15" fill="none" stroke="url(#lessonRingGrad)" stroke-width="3" stroke-linecap="round"
-                    [attr.stroke-dasharray]="ringCircumference"
-                    [attr.stroke-dashoffset]="ringOffset(chapterProgress(chapterDetails))"
-                    transform="rotate(-90 18 18)"/>
+      <!-- Middle: lessons + instructor -->
+      <aside class="cd-lessons">
+        <h3 class="cd-section-title">Lesson List</h3>
+        <div class="cd-lesson-list">
+          @for (chapterDetails of selectedCourseInfo.chapterDetails; track chapterDetails.id; let i = $index) {
+            <div
+              class="cd-lesson-item"
+              [class.active]="chapterDetails.id === activeChapter.id"
+              [class.is-open]="isChapterExpanded(chapterDetails, i)">
+              <button type="button" class="cd-lesson-item__head" (click)="openCourseAccordian(chapterDetails, i)">
+                <span class="cd-lesson-ring">
+                  <svg viewBox="0 0 36 36" aria-hidden="true">
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="url(#lessonRingGrad)" stroke-width="3" stroke-linecap="round"
+                      [attr.stroke-dasharray]="ringCircumference"
+                      [attr.stroke-dashoffset]="ringOffset(chapterProgress(chapterDetails))"
+                      transform="rotate(-90 18 18)"/>
+                  </svg>
+                  <span class="cd-lesson-ring__value">{{ chapterProgress(chapterDetails) }}%</span>
+                </span>
+                <span class="cd-lesson-item__title">{{ chapterLabel(chapterDetails, i) }}</span>
+                <svg class="cd-lesson-item__chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6"/>
                 </svg>
-                <span class="cd-lesson-ring__value">{{ chapterProgress(chapterDetails) }}%</span>
-              </span>
-              <span class="cd-lesson-item__title">{{ chapterLabel(chapterDetails, i) }}</span>
-              <svg class="cd-lesson-item__chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </button>
-            <div class="cd-lesson-panel panel" [class.is-open]="isChapterExpanded(chapterDetails, i)">
-              <div class="panel-content">
-                @for (item of chapterDetails.fileDetails; track item.id) {
-                  <button type="button" class="cd-lesson-video" [class.active]="item.id === activeVideoInfo.id" (click)="changeVideoUrl(item)">
-                    <svg width="25" height="25" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <path d="M10.28 8.04C9.19 8.43 9 10.52 9 12.04C9 13.56 9.19 15.6 10.28 16.04C11.37 16.48 16 13.75 16 12.04C16 10.33 11.44 7.62 10.28 8.04Z" stroke="currentColor" stroke-width="1.5"/>
-                      <rect x="2" y="3" width="20" height="18" rx="3" stroke="currentColor" stroke-width="1.5"/>
-                    </svg>
-                    <span>{{ item.description }}</span>
-                    <small>{{ item.videoDuration }}</small>
-                  </button>
-                }
+              </button>
+              <div class="cd-lesson-panel panel" [class.is-open]="isChapterExpanded(chapterDetails, i)">
+                <div class="panel-content">
+                  @for (item of chapterDetails.fileDetails; track item.id) {
+                    <button type="button" class="cd-lesson-video" [class.active]="item.id === activeVideoInfo.id" (click)="changeVideoUrl(item)">
+                      <svg width="25" height="25" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M10.28 8.04C9.19 8.43 9 10.52 9 12.04C9 13.56 9.19 15.6 10.28 16.04C11.37 16.48 16 13.75 16 12.04C16 10.33 11.44 7.62 10.28 8.04Z" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="2" y="3" width="20" height="18" rx="3" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                      <span>{{ item.description }}</span>
+                      <small>{{ item.videoDuration }}</small>
+                    </button>
+                  }
+                </div>
               </div>
             </div>
-          </div>
-        }
-      </div>
-
-
-      <div class="cd-instructor">
-        <h3 class="cd-instructor__title">Instructor Profile</h3>
-        <div class="cd-instructor__body">
-          <figure class="cd-instructor__avatar">
-            <img [src]="instructorImage" [alt]="instructorName" />
-            <figcaption class="cd-instructor__name">{{ instructorName }}</figcaption>
-          </figure>
-          <div class="cd-instructor__bio">
-            <strong>Bio</strong>
-            <p>{{ instructorBio }}</p>
-          </div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- Right: materials + discussions -->
-    <aside class="cd-sidebar">
-      <div class="cd-materials">
-        <h3 class="cd-section-title cd-section-title--icon">
-          <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-          </svg>
-          Course Materials
-        </h3>
-        <div class="cd-materials-list">
-          @for (group of chapterMaterialsDisplay; track group.chapterId) {
-            <section class="cd-materials-chapter">
-              <h4 class="cd-materials-chapter__title">{{ group.chapterLabel }}</h4>
-              <div class="cd-materials-chapter__items">
-                @for (material of group.materials; track material.id) {
-                  <article class="cd-material-card">
-                    <span class="cd-material-card__icon" [class]="'cd-material-card__icon--' + material.type">
-                      {{ materialTypeLabel(material.type) }}
-                    </span>
-                    <span class="cd-material-card__name">{{ material.name }}</span>
-                    <div class="cd-material-card__actions">
-                      <button type="button" class="cd-material-card__preview" (click)="previewMaterialItem(material)" [attr.aria-label]="'Preview ' + material.name">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                          <path d="M2 12C2 12 5.5 5 12 5C18.5 5 22 12 22 12C22 12 18.5 19 12 19C5.5 19 2 12 2 12Z"/>
-                          <circle cx="12" cy="12" r="3"/>
-                        </svg>
-                      </button>
-                      <button type="button" class="cd-material-card__download" (click)="downloadMaterialItem(material)" [attr.aria-label]="'Download ' + material.name">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                          <path d="M12 16L7 11L8.4 9.6L11 12.2V4H13V12.2L15.6 9.6L17 11L12 16Z"/>
-                          <path d="M20 18H4V20H20V18Z"/>
-                        </svg>
-                      </button>
-                    </div>
-                  </article>
-                }
-              </div>
-            </section>
-          } @empty {
-            <p class="cd-materials-empty">No course materials available yet.</p>
           }
         </div>
-      </div>
 
-      <div class="cd-discussions">
-        <h3 class="cd-section-title">Community Discussions</h3>
-        <div class="cd-discussion-list">
-          @if (discussionsLoading) {
-            <p class="cd-discussions-empty">Loading discussions...</p>
-          } @else if (!discussions.length) {
-            <p class="cd-discussions-empty">No discussions yet. Be the first to comment.</p>
-          } @else {
-            @for (item of discussions; track item.id) {
-              <article class="cd-discussion-card">
-                <div class="cd-discussion-card__top">
-                  <figure class="cd-discussion-card__avatar">
-                    @if (item.avatarUrl) {
-                      <img [src]="item.avatarUrl" [alt]="item.author" />
-                    } @else {
-                      <span>{{ discussionInitials(item.author) }}</span>
-                    }
-                  </figure>
-                  <div class="cd-discussion-card__meta">
-                    <strong>{{ item.author }}</strong>
-                    <small>{{ item.chapterLabel }}: {{ item.chapterTitle }}</small>
-                  </div>
-                  <img class="cd-discussion-card__logo" src="../../../assets/images/logo-majestic-hourse.svg" alt="" />
-                </div>
-                <p>{{ item.comment }}</p>
-                <div class="cd-discussion-card__footer">
-                  <span>{{ item.timeAgo }}</span>
-                  <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>
-                  </svg>
-                </div>
-              </article>
-            }
-          }
+        <div class="cd-instructor">
+          <h3 class="cd-instructor__title">Instructor Profile</h3>
+          <div class="cd-instructor__body">
+            <figure class="cd-instructor__avatar">
+              <img [src]="instructorImage" [alt]="instructorName" />
+              <figcaption class="cd-instructor__name">{{ instructorName }}</figcaption>
+            </figure>
+            <div class="cd-instructor__bio">
+              <strong>Bio</strong>
+              <p>{{ instructorBio }}</p>
+            </div>
+          </div>
         </div>
-        <div class="cd-comment-box">
-          <input
-            type="text"
-            class="cd-comment-input"
-            placeholder="Write a comment..."
-            [(ngModel)]="newCommentText"
-            (keydown)="onCommentKeydown($event)"
-            [disabled]="submittingComment"
-          />
-          <button
-            type="button"
-            class="cd-comment-send"
-            aria-label="Send comment"
-            (click)="submitComment()"
-            [disabled]="submittingComment || !newCommentText.trim()"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>
+      </aside>
+
+      <!-- Right: materials + discussions -->
+      <aside class="cd-sidebar">
+        <div class="cd-materials">
+          <h3 class="cd-section-title cd-section-title--icon">
+            <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
             </svg>
-          </button>
+            Course Materials
+          </h3>
+          <div class="cd-materials-list">
+            @for (group of chapterMaterialsDisplay; track group.chapterId) {
+              <section class="cd-materials-chapter">
+                <h4 class="cd-materials-chapter__title">{{ group.chapterLabel }}</h4>
+                <div class="cd-materials-chapter__items">
+                  @for (material of group.materials; track material.id) {
+                    <article class="cd-material-card">
+                      <span class="cd-material-card__icon" [class]="'cd-material-card__icon--' + material.type">
+                        {{ materialTypeLabel(material.type) }}
+                      </span>
+                      <span class="cd-material-card__name">{{ material.name }}</span>
+                      <div class="cd-material-card__actions">
+                        <button type="button" class="cd-material-card__preview" (click)="previewMaterialItem(material)" [attr.aria-label]="'Preview ' + material.name">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M2 12C2 12 5.5 5 12 5C18.5 5 22 12 22 12C22 12 18.5 19 12 19C5.5 19 2 12 2 12Z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                          </svg>
+                        </button>
+                        <button type="button" class="cd-material-card__download" (click)="downloadMaterialItem(material)" [attr.aria-label]="'Download ' + material.name">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M12 16L7 11L8.4 9.6L11 12.2V4H13V12.2L15.6 9.6L17 11L12 16Z"/>
+                            <path d="M20 18H4V20H20V18Z"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </article>
+                  }
+                </div>
+              </section>
+            } @empty {
+              <p class="cd-materials-empty">No course materials available yet.</p>
+            }
+          </div>
         </div>
-      </div>
-    </aside>
-  </div>
+
+        <div class="cd-discussions">
+          <h3 class="cd-section-title">Community Discussions</h3>
+          <div class="cd-discussion-list">
+            @if (discussionsLoading) {
+              <p class="cd-discussions-empty">Loading discussions...</p>
+            } @else if (!discussions.length) {
+              <p class="cd-discussions-empty">No discussions yet. Be the first to comment.</p>
+            } @else {
+              @for (item of discussions; track item.id) {
+                <article class="cd-discussion-card">
+                  <div class="cd-discussion-card__top">
+                    <figure class="cd-discussion-card__avatar">
+                      @if (item.avatarUrl) {
+                        <img [src]="item.avatarUrl" [alt]="item.author" />
+                      } @else {
+                        <span>{{ discussionInitials(item.author) }}</span>
+                      }
+                    </figure>
+                    <div class="cd-discussion-card__meta">
+                      <strong>{{ item.author }}</strong>
+                      <small>{{ item.chapterLabel }}: {{ item.chapterTitle }}</small>
+                    </div>
+                    <img class="cd-discussion-card__logo" src="../../../assets/images/logo-majestic-hourse.svg" alt="" />
+                  </div>
+                  <p>{{ item.comment }}</p>
+                  <div class="cd-discussion-card__footer">
+                    <span>{{ item.timeAgo }}</span>
+                    <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>
+                    </svg>
+                  </div>
+                </article>
+              }
+            }
+          </div>
+          <div class="cd-comment-box">
+            <input
+              type="text"
+              class="cd-comment-input"
+              placeholder="Write a comment..."
+              [(ngModel)]="newCommentText"
+              (keydown)="onCommentKeydown($event)"
+              [disabled]="submittingComment"
+            />
+            <button
+              type="button"
+              class="cd-comment-send"
+              aria-label="Send comment"
+              (click)="submitComment()"
+              [disabled]="submittingComment || !newCommentText.trim()"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  }
+
+  @if (activeTab === 'questionnaire') {
+    <div class="cd-tab-panel" role="tabpanel">
+      <app-questionnaire [courseId]="selectedCourseInfo.id"></app-questionnaire>
+    </div>
+  }
+
+  @if (activeTab === 'assessment' && loginedUserRole === 'student') {
+    <div class="cd-tab-panel" role="tabpanel">
+      <app-student-assessment [courseId]="selectedCourseInfo.id"></app-student-assessment>
+    </div>
+  }
+
+  @if (activeTab === 'answers' && canAccessAnswers) {
+    <div class="cd-tab-panel" role="tabpanel">
+      <app-assessment-answers [courseId]="selectedCourseInfo.id"></app-assessment-answers>
+    </div>
+  }
 </div>

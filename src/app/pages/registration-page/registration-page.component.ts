@@ -251,7 +251,8 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     if (this.isGoogleLoading) return;
     this.isGoogleLoading = true;
     try {
-      await this.oauthService.signInWithGoogle();
+      const accountType = this.isAdminLogin ? 'organization' : 'user';
+      await this.oauthService.signInWithGoogle(accountType);
     } catch (error: any) {
       this.isGoogleLoading = false;
       this.commonService.openToaster({

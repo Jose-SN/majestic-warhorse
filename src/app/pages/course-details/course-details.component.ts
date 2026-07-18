@@ -704,9 +704,6 @@ export class CourseDetailsComponent {
   }
   setActiveTab(tab: string) {
     this.activeTab = tab;
-    if (tab === 'assessment') {
-      
-    }
   }
 
   get heroTitle(): string {

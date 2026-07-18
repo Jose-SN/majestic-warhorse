@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { environment } from 'src/environments/environment';
 import { IQuestion, IQuestionCreate } from 'src/app/pages/questionnaire/model/question.model';
@@ -16,17 +16,28 @@ export class QuestionnaireApiService {
     private commonService: CommonService
   ) {}
 
+  private asList<T>(response: unknown): T[] {
+    if (Array.isArray(response)) {
+      return response as T[];
+    }
+    const data = (response as { data?: unknown } | null)?.data;
+    return Array.isArray(data) ? (data as T[]) : [];
+  }
+
   /** Get all questions (optionally filtered by course) */
-  geAllQuestions(courseId?: string) {
+  geAllQuestions(courseId?: string): Observable<IQuestion[]> {
     const params: Record<string, string> = {};
     if (courseId) params['course_id'] = courseId;
     return this.http
-      .get<IQuestion[]>(`${this._apiUrl}question/get`, { params })
-      .pipe(catchError(this.commonService.handleError));
+      .get<unknown>(`${this._apiUrl}question/get`, { params })
+      .pipe(
+        map((response) => this.asList<IQuestion>(response)),
+        catchError(this.commonService.handleError)
+      );
   }
 
   /** Get questions by course ID */
-  getQuestionsByCourse(courseId: string) {
+  getQuestionsByCourse(courseId: string): Observable<IQuestion[]> {
     return this.geAllQuestions(courseId);
   }
 
@@ -60,16 +71,22 @@ export class QuestionnaireApiService {
   /** Get all submitted answers (for teachers/admins) */
   getSubmittedAnswers() {
     return this.http
-      .get<any[]>(`${this._apiUrl}answer/get`)
-      .pipe(catchError(this.commonService.handleError));
+      .get<unknown>(`${this._apiUrl}answer/get`)
+      .pipe(
+        map((response) => this.asList<any>(response)),
+        catchError(this.commonService.handleError)
+      );
   }
 
   /** Get student's submitted answers for a course (pass submittedBy for single user) */
   getStudentAnswersByCourse(courseId: string, submittedBy: string) {
     const params = { course_id: courseId, submitted_by: submittedBy };
     return this.http
-      .get<any[]>(`${this._apiUrl}answer/get`, { params })
-      .pipe(catchError(this.commonService.handleError));
+      .get<unknown>(`${this._apiUrl}answer/get`, { params })
+      .pipe(
+        map((response) => this.asList<any>(response)),
+        catchError(this.commonService.handleError)
+      );
   }
 
   /** Get all submitted answers for a course (teachers - all students when submittedBy omitted) */
@@ -77,8 +94,11 @@ export class QuestionnaireApiService {
     const params: Record<string, string> = { course_id: courseId };
     if (submittedBy?.trim()) params['submitted_by'] = submittedBy.trim();
     return this.http
-      .get<any[]>(`${this._apiUrl}answer/get`, { params })
-      .pipe(catchError(this.commonService.handleError));
+      .get<unknown>(`${this._apiUrl}answer/get`, { params })
+      .pipe(
+        map((response) => this.asList<any>(response)),
+        catchError(this.commonService.handleError)
+      );
   }
 
   /** Update feedback or corrected answer for a submission (teachers/admins) */

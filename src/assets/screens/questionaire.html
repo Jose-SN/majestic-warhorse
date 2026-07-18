@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Question Forge | Majestic Cyber</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Geist:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #0F0F12;
+            color: #e4e1e6;
+            overflow: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(31, 31, 34, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .cyber-grid {
+            background-image: 
+                linear-gradient(rgba(255, 181, 154, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 181, 154, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .gradient-brand {
+            background: linear-gradient(135deg, #ff6b2c 0%, #ab0063 100%);
+        }
+
+        .inner-glow {
+            box-shadow: inset 0 0 12px rgba(255, 181, 154, 0.1);
+        }
+
+        .backglow-hover:hover {
+            box-shadow: 0 0 30px rgba(255, 107, 44, 0.15);
+            border-color: rgba(255, 181, 154, 0.3);
+        }
+
+        .left-accent {
+            border-left: 2px solid #ff6b2c;
+            transition: all 0.3s ease;
+        }
+
+        .left-accent:hover {
+            border-left-width: 4px;
+            background: rgba(255, 107, 44, 0.05);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 181, 154, 0.2);
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#2c0051",
+                        "inverse-on-surface": "#303033",
+                        "on-surface-variant": "#e2bfb3",
+                        "error-container": "#93000a",
+                        "surface-bright": "#39393c",
+                        "on-tertiary-fixed-variant": "#6700b5",
+                        "surface-container-highest": "#353438",
+                        "primary-container": "#ff6b2c",
+                        "primary-fixed-dim": "#ffb59a",
+                        "on-error": "#690005",
+                        "surface-dim": "#131316",
+                        "error": "#ffb4ab",
+                        "on-tertiary-container": "#4a0084",
+                        "secondary-container": "#ab0063",
+                        "outline-variant": "#594139",
+                        "on-error-container": "#ffdad6",
+                        "background": "#131316",
+                        "tertiary-fixed": "#efdbff",
+                        "on-secondary-fixed": "#3e0020",
+                        "on-primary-fixed": "#380d00",
+                        "secondary-fixed": "#ffd9e4",
+                        "on-background": "#e4e1e6",
+                        "surface-variant": "#353438",
+                        "on-secondary-fixed-variant": "#8d0051",
+                        "on-secondary": "#640038",
+                        "on-tertiary": "#480081",
+                        "surface-container-low": "#1b1b1e",
+                        "on-surface": "#e4e1e6",
+                        "on-secondary-container": "#ffbad2",
+                        "surface-container": "#1f1f22",
+                        "tertiary-container": "#bb7bff",
+                        "surface-tint": "#ffb59a",
+                        "surface-container-high": "#2a2a2d",
+                        "tertiary": "#dcb8ff",
+                        "secondary": "#ffb0cc",
+                        "surface": "#131316",
+                        "secondary-fixed-dim": "#ffb0cc",
+                        "primary-fixed": "#ffdbcf",
+                        "on-primary-fixed-variant": "#802900",
+                        "inverse-surface": "#e4e1e6",
+                        "surface-container-lowest": "#0e0e11",
+                        "tertiary-fixed-dim": "#dcb8ff",
+                        "on-primary-container": "#5c1c00",
+                        "inverse-primary": "#a83900",
+                        "outline": "#a98a7f",
+                        "on-primary": "#5b1b00",
+                        "primary": "#ffb59a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "container-max": "1440px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["JetBrains Mono"],
+                        "display-lg": ["Space Grotesk"],
+                        "headline-lg": ["Space Grotesk"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="flex min-h-screen bg-background font-body-md text-on-background selection:bg-primary/30">
+<!-- Sidebar (As defined in JSON) -->
+<aside class="hidden md:flex flex-col h-screen py-6 bg-surface-container-lowest border-r border-outline-variant/30 w-64 shrink-0">
+<div class="px-6 mb-10">
+<h1 class="font-display-lg text-primary text-[24px] leading-none mb-1">Majestic Cyber</h1>
+<div class="flex items-center gap-2 mt-4">
+<div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm">security</span>
+</div>
+<div>
+<p class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest">Command Center</p>
+<p class="font-label-sm text-[10px] text-primary uppercase">Level 4 Access</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center px-6 py-3 gap-3 text-on-surface-variant font-label-sm uppercase tracking-widest hover:bg-surface-container-high hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-lg">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center px-6 py-3 gap-3 text-on-surface-variant font-label-sm uppercase tracking-widest hover:bg-surface-container-high hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-lg">school</span>
+                Training Modules
+            </a>
+<a class="flex items-center px-6 py-3 gap-3 text-on-surface-variant font-label-sm uppercase tracking-widest hover:bg-surface-container-high hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-lg">analytics</span>
+                Tactical Analysis
+            </a>
+<a class="flex items-center px-6 py-3 gap-3 text-primary border-l-2 border-primary bg-primary/5 font-label-sm uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined text-lg">terminal</span>
+                Forge
+            </a>
+<a class="flex items-center px-6 py-3 gap-3 text-on-surface-variant font-label-sm uppercase tracking-widest hover:bg-surface-container-high hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-lg">memory</span>
+                System Logs
+            </a>
+</nav>
+<div class="px-6 mt-auto space-y-4">
+<button class="w-full py-3 bg-surface-container-high text-on-surface font-label-sm uppercase tracking-widest border border-outline-variant/30 hover:border-primary/50 transition-all">
+                Deploy Challenge
+            </button>
+<div class="pt-4 border-t border-outline-variant/30">
+<a class="flex items-center py-2 gap-3 text-on-surface-variant font-label-sm uppercase hover:text-primary" href="#">
+<span class="material-symbols-outlined text-lg">help</span>
+                    Support
+                </a>
+<a class="flex items-center py-2 gap-3 text-on-surface-variant font-label-sm uppercase hover:text-error" href="#">
+<span class="material-symbols-outlined text-lg">logout</span>
+                    Sign Out
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col h-screen relative cyber-grid">
+<!-- Top Nav Bar (As defined in JSON) -->
+<header class="flex justify-between items-center w-full px-12 h-16 bg-surface/80 backdrop-blur-xl border-b border-white/10 z-10">
+<div class="flex items-center gap-8">
+<div class="font-display-lg text-headline-lg bg-clip-text text-transparent bg-gradient-to-r from-primary to-tertiary-container">
+                    Majestic Cyber
+                </div>
+<div class="relative w-64 group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full bg-surface-container-high border-none text-body-md text-sm py-1.5 pl-10 pr-4 focus:ring-1 focus:ring-primary/50 placeholder:text-on-surface-variant/50" placeholder="Search command..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">terminal</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant/30"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-[12px] font-bold leading-none text-primary">K. CASE</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">Instructor</p>
+</div>
+<img alt="Instructor Avatar" class="w-10 h-10 rounded-full border border-primary/20" data-alt="A professional studio portrait of a cybersecurity expert in their 40s. The lighting is dramatic with cool blue and warm orange rim lighting against a dark background. The subject is wearing a tactical-style dark jacket, conveying a sense of authority and high-octane technical expertise within the Majestic Cyber aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnSvNyzl846QsTl-GMWaoGXdMwEAZob4l6CYWAebFEC8-lID2tUy6DGL2LcLuFvDLQpdUlcKMg-HN7lL4GwpJhjUpOqEl1WvfAZ3GnE4Os0iy1Pm3sPIPqlu2kGOKR1n_ItUZN37ZcX1dXQW3I3QQI6G5ChDcduvGOLzoFxtqEkF0XURuFaqmLSfjYMWsUkd_-EBsBBXGQP-CNXoEtjv7CY_vgwR3DJLM0PTuldOL4mPX9fPXyP7R9ag"/>
+</div>
+</div>
+</header>
+<!-- Question Forge Content Area -->
+<div class="flex-1 flex overflow-hidden">
+<!-- LEFT SIDE: Question Payload Editor -->
+<section class="w-[55%] flex flex-col p-8 overflow-y-auto custom-scrollbar">
+<div class="flex items-center gap-2 mb-8">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">precision_manufacturing</span>
+<h2 class="font-display-lg text-[24px] uppercase tracking-wider text-on-surface">Question Payload</h2>
+</div>
+<div class="space-y-8">
+<!-- Editor Canvas -->
+<div class="space-y-3">
+<label class="font-label-sm text-primary uppercase text-[10px] tracking-[0.2em] ml-1">Prompt Configuration</label>
+<div class="glass-panel p-6 rounded-lg relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-2 opacity-30 group-focus-within:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-sm">code</span>
+</div>
+<textarea class="w-full h-48 bg-transparent border-none focus:ring-0 text-body-md font-label-sm text-on-surface placeholder:text-on-surface-variant/30 resize-none" placeholder="Initialize challenge parameters..."></textarea>
+<div class="absolute bottom-0 left-0 h-[2px] w-0 bg-primary group-focus-within:w-full transition-all duration-500"></div>
+</div>
+</div>
+<!-- Engagement Vectors -->
+<div class="space-y-3">
+<label class="font-label-sm text-primary uppercase text-[10px] tracking-[0.2em] ml-1">Engagement Vector</label>
+<div class="grid grid-cols-2 gap-4">
+<!-- Multi Choice -->
+<label class="relative group cursor-pointer">
+<input checked="" class="peer sr-only" name="vector" type="radio"/>
+<div class="glass-panel p-4 flex items-center gap-4 peer-checked:border-primary peer-checked:bg-primary/5 transition-all backglow-hover">
+<span class="material-symbols-outlined text-on-surface-variant peer-checked:text-primary">checklist</span>
+<span class="font-label-sm text-[11px] uppercase">Multiple Choice</span>
+</div>
+</label>
+<!-- Code Injection -->
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="vector" type="radio"/>
+<div class="glass-panel p-4 flex items-center gap-4 peer-checked:border-primary peer-checked:bg-primary/5 transition-all backglow-hover">
+<span class="material-symbols-outlined text-on-surface-variant">javascript</span>
+<span class="font-label-sm text-[11px] uppercase">Code Injection</span>
+</div>
+</label>
+<!-- Logic Stream -->
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="vector" type="radio"/>
+<div class="glass-panel p-4 flex items-center gap-4 peer-checked:border-primary peer-checked:bg-primary/5 transition-all backglow-hover">
+<span class="material-symbols-outlined text-on-surface-variant">account_tree</span>
+<span class="font-label-sm text-[11px] uppercase">Logic Stream</span>
+</div>
+</label>
+<!-- Firewall Breach -->
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="vector" type="radio"/>
+<div class="glass-panel p-4 flex items-center gap-4 peer-checked:border-primary peer-checked:bg-primary/5 transition-all backglow-hover">
+<span class="material-symbols-outlined text-on-surface-variant">shield_lock</span>
+<span class="font-label-sm text-[11px] uppercase">Firewall Breach</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Classification Tags -->
+<div class="space-y-3">
+<label class="font-label-sm text-primary uppercase text-[10px] tracking-[0.2em] ml-1">Classification Tags</label>
+<div class="glass-panel p-4 rounded-lg flex flex-wrap gap-2">
+<span class="px-3 py-1 border border-primary text-primary font-label-sm text-[10px] rounded-full flex items-center gap-2 bg-primary/5">
+                                #PEN_TESTING <span class="material-symbols-outlined text-[12px] cursor-pointer">close</span>
+</span>
+<span class="px-3 py-1 border border-secondary text-secondary font-label-sm text-[10px] rounded-full flex items-center gap-2 bg-secondary/5">
+                                #MALWARE <span class="material-symbols-outlined text-[12px] cursor-pointer">close</span>
+</span>
+<span class="px-3 py-1 border border-tertiary-container text-tertiary-container font-label-sm text-[10px] rounded-full flex items-center gap-2 bg-tertiary/5">
+                                #URGENT <span class="material-symbols-outlined text-[12px] cursor-pointer">close</span>
+</span>
+<button class="px-3 py-1 border border-dashed border-on-surface-variant/30 text-on-surface-variant font-label-sm text-[10px] rounded-full hover:border-primary transition-colors">
+                                + ADD TAG
+                            </button>
+</div>
+</div>
+<!-- Add Button -->
+<button class="w-full py-4 gradient-brand text-white font-label-sm uppercase tracking-[0.2em] text-[14px] font-bold rounded-lg inner-glow shadow-2xl hover:scale-[1.01] transition-transform active:scale-[0.98]">
+                        Add to Assessment
+                    </button>
+</div>
+</section>
+<!-- RIGHT SIDE: Assessment Roster -->
+<section class="w-[45%] flex flex-col bg-surface-container-low/50 backdrop-blur-md border-l border-outline-variant/30 overflow-hidden relative">
+<div class="p-8 border-b border-outline-variant/30 flex justify-between items-end">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">list_alt</span>
+<h2 class="font-display-lg text-[24px] uppercase tracking-wider text-on-surface">Assessment Roster</h2>
+</div>
+<p class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest">Active Stack: 08 Challenges</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant/30 hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+</button>
+<button class="p-2 border border-outline-variant/30 hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-sm">sort</span>
+</button>
+</div>
+</div>
+<!-- List Content -->
+<div class="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar">
+<!-- Question Card 1 -->
+<div class="glass-panel rounded-lg overflow-hidden flex flex-col backglow-hover group left-accent">
+<div class="p-5 flex justify-between items-start">
+<div class="space-y-1 max-w-[80%]">
+<span class="font-label-sm text-[10px] text-primary uppercase">Code Injection // ID_9982</span>
+<p class="text-on-surface font-medium leading-tight line-clamp-2">Determine the exploit vector for a kernel-level stack overflow in a virtualized ARM environment.</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors cursor-pointer">drag_indicator</span>
+</div>
+</div>
+<div class="bg-surface-container px-5 py-3 border-t border-outline-variant/20 flex justify-between items-center">
+<div class="flex gap-4">
+<div class="flex flex-col">
+<span class="text-[9px] uppercase font-label-sm text-on-surface-variant">Difficulty</span>
+<span class="text-error text-[11px] font-bold">LEGENDARY</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[9px] uppercase font-label-sm text-on-surface-variant">Score</span>
+<span class="text-on-surface text-[11px] font-bold">500 PTS</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[9px] uppercase font-label-sm text-on-surface-variant">Limit</span>
+<span class="text-on-surface text-[11px] font-bold">04:00M</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Question Card 2 -->
+<div class="glass-panel rounded-lg overflow-hidden flex flex-col backglow-hover group left-accent">
+<div class="p-5 flex justify-between items-start">
+<div class="space-y-1 max-w-[80%]">
+<span class="font-label-sm text-[10px] text-secondary uppercase">Firewall Breach // ID_7441</span>
+<p class="text-on-surface font-medium leading-tight line-clamp-2">Identify the misconfiguration in the following IPTABLES rule set that allows unauthorized bypass.</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors cursor-pointer">drag_indicator</span>
+</div>
+</div>
+<div class="bg-surface-container px-5 py-3 border-t border-outline-variant/20 flex justify-between items-center">
+<div class="flex gap-4">
+<div class="flex flex-col">
+<span class="text-[9px] uppercase font-label-sm text-on-surface-variant">Difficulty</span>
+<span class="text-primary text-[11px] font-bold">ADVANCED</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[9px] uppercase font-label-sm text-on-surface-variant">Score</span>
+<span class="text-on-surface text-[11px] font-bold">250 PTS</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[9px] uppercase font-label-sm text-on-surface-variant">Limit</span>
+<span class="text-on-surface text-[11px] font-bold">10:00M</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Question Card 3 -->
+<div class="glass-panel rounded-lg overflow-hidden flex flex-col backglow-hover group left-accent">
+<div class="p-5 flex justify-between items-start">
+<div class="space-y-1 max-w-[80%]">
+<span class="font-label-sm text-[10px] text-tertiary-container uppercase">Logic Stream // ID_1029</span>
+<p class="text-on-surface font-medium leading-tight line-clamp-2">Calculate the logical entropy of the given encryption key sequence after a 3-round XOR cipher.</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors cursor-pointer">drag_indicator</span>
+</div>
+</div>
+<div class="bg-surface-container px-5 py-3 border-t border-outline-variant/20 flex justify-between items-center">
+<div class="flex gap-4">
+<div class="flex flex-col">
+<span class="text-[9px] uppercase font-label-sm text-on-surface-variant">Difficulty</span>
+<span class="text-on-tertiary-fixed-variant text-[11px] font-bold">MEDIUM</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[9px] uppercase font-label-sm text-on-surface-variant">Score</span>
+<span class="text-on-surface text-[11px] font-bold">100 PTS</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[9px] uppercase font-label-sm text-on-surface-variant">Limit</span>
+<span class="text-on-surface text-[11px] font-bold">05:00M</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer Summary -->
+<div class="p-8 bg-surface-container-highest border-t border-outline-variant/30 flex justify-between items-center">
+<div>
+<p class="text-[10px] font-label-sm text-on-surface-variant uppercase tracking-widest">Total Assessment Value</p>
+<p class="text-headline-lg text-primary font-bold">1,850 <span class="text-sm font-normal text-on-surface-variant">PTS</span></p>
+</div>
+<button class="px-8 py-3 border-2 border-primary text-primary font-label-sm uppercase font-bold hover:bg-primary/10 transition-all">
+                        Finalize Assessment
+                    </button>
+</div>
+<!-- Decorative technical element -->
+<div class="absolute bottom-4 right-4 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[120px]">database</span>
+</div>
+</section>
+</div>
+</main>
+<script>
+        // Micro-interactions for engagement vectors
+        const vectorLabels = document.querySelectorAll('input[name="vector"]');
+        vectorLabels.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                // Add a subtle flash effect to the selected panel
+                const panel = radio.nextElementSibling;
+                panel.style.backgroundColor = 'rgba(255, 107, 44, 0.2)';
+                setTimeout(() => {
+                    panel.style.backgroundColor = '';
+                }, 150);
+            });
+        });
+
+        // Simulating tag removal
+        document.querySelectorAll('.classification-tag span.close').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.target.parentElement.remove();
+            });
+        });
+    </script>
+</body></html>

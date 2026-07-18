@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
@@ -16,7 +16,7 @@ import { IQuestion, IQuestionCreate, IQuestionOption } from './model/question.mo
   templateUrl: './questionnaire.component.html',
   styleUrl: './questionnaire.component.scss',
 })
-export class QuestionnaireComponent implements OnInit {
+export class QuestionnaireComponent implements OnInit, OnChanges, OnDestroy {
   @Input() courseId: string = '';
   private destroy$ = new Subject<void>();
   public questionsList: IQuestion[] = [];
@@ -35,6 +35,20 @@ export class QuestionnaireComponent implements OnInit {
   public editingQuestionId: string | null = null;
   public expandedQuestionId: string | null = null;
   public isOrganization: boolean = false;
+  public questionsLoading = false;
+  public questionsLoadError = false;
+
+  readonly questionVectors = [
+    { value: 'radio', label: 'Multiple Choice', icon: 'checklist' },
+    { value: 'checkbox', label: 'Multi Select', icon: 'fact_check' },
+    { value: 'text', label: 'Text Response', icon: 'short_text' },
+    { value: 'textarea', label: 'Long Form', icon: 'notes' },
+    { value: 'dropdown', label: 'Dropdown', icon: 'arrow_drop_down_circle' },
+  ];
+
+  get needsOptions(): boolean {
+    return ['radio', 'checkbox', 'dropdown'].includes((this.newQuestion.type ?? '').toLowerCase());
+  }
 
   constructor(
     private questionnaireApiService: QuestionnaireApiService,
@@ -46,25 +60,47 @@ export class QuestionnaireComponent implements OnInit {
     this.userRole = this.commonService?.loginedUserInfo?.role ?? '';
     this.isTeacher = ['organization', 'teacher'].includes(this.userRole);
     this.isOrganization = sessionStorage.getItem('loginType') === 'organization';
-    
-    // Load questions for both teacher and student
     this.loadQuestions();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['courseId'] && !changes['courseId'].firstChange) {
+      this.loadQuestions();
+    }
+  }
+
   loadQuestions() {
-    const apiCall = this.courseId
-      ? this.questionnaireApiService.getQuestionsByCourse(this.courseId)
-      : this.questionnaireApiService.geAllQuestions();
-    apiCall.pipe(takeUntil(this.destroy$)).subscribe((questionsList) => {
-      const rawList = questionsList ?? [];
-      this.questionsList = [...rawList].sort((a: any, b: any) => {
-        const dateA = a.creation_date || a.creationDate || a.created_at || a.createdAt || '';
-        const dateB = b.creation_date || b.creationDate || b.created_at || b.createdAt || '';
-        if (!dateA) return 1;
-        if (!dateB) return -1;
-        return new Date(dateA).getTime() - new Date(dateB).getTime();
+    const courseId = this.courseId?.trim();
+    if (!courseId) {
+      this.questionsList = [];
+      this.questionsLoading = false;
+      this.questionsLoadError = false;
+      return;
+    }
+
+    this.questionsLoading = true;
+    this.questionsLoadError = false;
+    this.questionnaireApiService
+      .getQuestionsByCourse(courseId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (questionsList) => {
+          const rawList = questionsList ?? [];
+          this.questionsList = [...rawList].sort((a: any, b: any) => {
+            const dateA = a.creation_date || a.creationDate || a.created_at || a.createdAt || '';
+            const dateB = b.creation_date || b.creationDate || b.created_at || b.createdAt || '';
+            if (!dateA) return 1;
+            if (!dateB) return -1;
+            return new Date(dateA).getTime() - new Date(dateB).getTime();
+          });
+          this.questionsLoading = false;
+        },
+        error: () => {
+          this.questionsList = [];
+          this.questionsLoading = false;
+          this.questionsLoadError = true;
+        },
       });
-    });
   }
 
   // Teacher methods
@@ -125,8 +161,12 @@ export class QuestionnaireComponent implements OnInit {
     };
     this.newOption = '';
     this.cancelEditOption();
-    // Scroll to form
-    document.querySelector('.questionnire-form')?.scrollIntoView({ behavior: 'smooth' });
+    document.querySelector('.qf-editor')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  shortQuestionId(question: IQuestion, index: number): string {
+    const raw = question.id || String(index + 1);
+    return `ID_${raw.slice(-4).toUpperCase()}`;
   }
 
   cancelEditQuestion() {

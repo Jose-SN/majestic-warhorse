@@ -1,57 +1,248 @@
-<div class="assessment-answers">
-  @if (!canAccess) {
-  <div class="access-denied">
+@if (!canAccess) {
+  <div class="aa-denied">
+    <span class="material-symbols-outlined" aria-hidden="true">lock</span>
     <p>You do not have permission to view this section.</p>
   </div>
-  } @else {
-  <div class="answers-header">
-    <h3>Submitted Answers</h3>
-    <button type="button" class="btn-refresh" (click)="loadSubmissions()">Refresh</button>
-  </div>
+} @else {
+  <div class="aa-portal">
+    <div class="aa-portal__glow aa-portal__glow--primary" aria-hidden="true"></div>
+    <div class="aa-portal__glow aa-portal__glow--accent" aria-hidden="true"></div>
 
-  @if (loading) {
-  <div class="loading-state">Loading submissions...</div>
-  } @else if (submissions.length === 0) {
-  <div class="empty-state">No answers submitted yet.</div>
-  } @else {
-  <div class="submissions-list">
-    @for (submission of submissions; track (submission.id || submission.userId || $index)) {
-    <div class="submission-card">
-      <div class="submission-header">
-        <div class="user-info">
-          <strong>{{ submission.userName || 'Unknown User' }}</strong>
-          <span class="email">{{ submission.userEmail || '' }}</span>
-          <span class="date">{{ submission.submittedAt | date: 'medium' }}</span>
-        </div>
-      </div>
-
-      <div class="submission-content">
-        <div class="answers-view">
-          @for (question of questionsList; track $index) {
-          @let qId = question.id || $index;
-          @let answer = submission.answers[qId];
-          <div class="answer-row">
-            <label>{{ question.question }}</label>
-            <div class="answer-value">
-              <span>{{ formatAnswer(answer) }}</span>
+    <div class="aa-portal__grid">
+      <!-- Left: Cadet roster / selected cadet -->
+      <aside class="aa-cadets">
+        <div class="aa-panel glass-panel">
+          @if (selectedSubmission; as cadet) {
+            <div class="aa-cadet-id">
+              <div class="aa-cadet-id__avatar">
+                <span>{{ cadetInitials(cadet) }}</span>
+              </div>
+              <div class="aa-cadet-id__meta">
+                <p class="aa-label">Cadet Identification</p>
+                <h2>{{ cadet.userName || 'Unknown Cadet' }}</h2>
+                <p class="aa-mono">{{ cadet.userEmail || shortCadetId(cadet) }}</p>
+              </div>
+              <div class="aa-cadet-id__stats">
+                <div class="aa-metric">
+                  <span class="aa-label">Answers</span>
+                  <strong>{{ answeredCount(cadet) }}</strong>
+                </div>
+                <div class="aa-metric">
+                  <span class="aa-label">Questions</span>
+                  <strong>{{ questionsList.length }}</strong>
+                </div>
+              </div>
             </div>
-          </div>
+          } @else {
+            <div class="aa-cadet-id aa-cadet-id--empty">
+              <span class="material-symbols-outlined" aria-hidden="true">person_search</span>
+              @if (!courseId) {
+                <p>Open answers from a course to load submissions.</p>
+              } @else if (submissionsLoadError) {
+                <p>Could not load submitted answers for this course.</p>
+              } @else if (!loading && !submissions.length) {
+                <p>No answers submitted for this course yet.</p>
+              } @else {
+                <p>Select a cadet submission to begin review.</p>
+              }
+            </div>
           }
         </div>
-        <div class="feedback-edit">
-          <label>Feedback</label>
-          <textarea
-            [(ngModel)]="feedbackMap[submission.id || submission.userId || '']"
-            rows="4"
-            placeholder="Add feedback or comments for the student..."></textarea>
-          <div class="action-buttons">
-            <button type="button" class="btn-save" (click)="saveFeedback(submission)">Submit</button>
+
+        <div class="aa-panel glass-panel aa-cadets__list-panel">
+          <h3 class="aa-panel__title">Submission Queue</h3>
+          <div class="aa-cadets__list">
+            @if (!courseId) {
+              <p class="aa-state">No course selected.</p>
+            } @else if (loading) {
+              <p class="aa-state">Loading submitted answers…</p>
+            } @else if (submissionsLoadError) {
+              <p class="aa-state">Failed to load answers. Use Refresh to retry.</p>
+            } @else if (!submissions.length) {
+              <p class="aa-state">No answers found for this course.</p>
+            } @else {
+              @for (submission of submissions; track submissionKey(submission)) {
+                <button
+                  type="button"
+                  class="aa-cadet-row"
+                  [class.active]="isSelected(submission)"
+                  (click)="selectSubmission(submission)"
+                >
+                  <span class="aa-cadet-row__avatar">{{ cadetInitials(submission) }}</span>
+                  <span class="aa-cadet-row__text">
+                    <strong>{{ submission.userName || 'Unknown Cadet' }}</strong>
+                    <small>{{ submission.userEmail || shortCadetId(submission) }}</small>
+                  </span>
+                  <span class="aa-cadet-row__count">{{ answeredCount(submission) }}</span>
+                </button>
+              }
+            }
           </div>
         </div>
-      </div>
+      </aside>
+
+      <!-- Center: Answer review feed -->
+      <section class="aa-feed">
+        <header class="aa-feed__header">
+          <div>
+            <h1>Submitted Answers</h1>
+            <p>
+              @if (selectedSubmission; as cadet) {
+                Reviewing assessment block for {{ cadet.userName || 'selected cadet' }}
+              } @else {
+                Select a submission from the queue to review answers
+              }
+            </p>
+          </div>
+          <button
+            type="button"
+            class="aa-btn aa-btn--danger"
+            (click)="loadQuestions(); loadSubmissions()"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
+            Refresh
+          </button>
+        </header>
+
+        <div class="aa-feed__list">
+          @if (!courseId) {
+            <div class="aa-state aa-state--panel">
+              <span class="material-symbols-outlined" aria-hidden="true">link_off</span>
+              <p>Open the Answers tab from a course to fetch questions and submitted answers.</p>
+            </div>
+          } @else if (isContentLoading) {
+            <div class="aa-state aa-state--panel">Loading course questions and answers…</div>
+          } @else if (questionsLoadError) {
+            <div class="aa-state aa-state--panel">
+              <span class="material-symbols-outlined" aria-hidden="true">error</span>
+              <p>Could not load questions for this course. Please refresh and try again.</p>
+            </div>
+          } @else if (!questionsList.length) {
+            <div class="aa-state aa-state--panel">
+              <span class="material-symbols-outlined" aria-hidden="true">quiz</span>
+              <p>No questions found for this course. Add questions in the Questionnaire tab first.</p>
+            </div>
+          } @else if (submissionsLoadError) {
+            <div class="aa-state aa-state--panel">
+              <span class="material-symbols-outlined" aria-hidden="true">error</span>
+              <p>Could not load submitted answers for this course.</p>
+            </div>
+          } @else if (!submissions.length) {
+            <div class="aa-state aa-state--panel">
+              <span class="material-symbols-outlined" aria-hidden="true">inbox</span>
+              <p>No answers have been submitted for this course yet.</p>
+            </div>
+          } @else if (!selectedSubmission) {
+            <div class="aa-state aa-state--panel">
+              <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+              <p>Select a submission from the queue to inspect responses.</p>
+            </div>
+          } @else {
+            @for (question of questionsList; track question.id || $index) {
+              @let qId = question.id || $index;
+              @let answer = selectedSubmission.answers[qId];
+              <article class="aa-answer glass-panel" [class.aa-answer--text]="isTextAnswer(question)">
+                <div class="aa-answer__top">
+                  <span class="aa-mono aa-answer__index"># Question {{ $index + 1 | number: '2.0-0' }}</span>
+                  <span class="aa-answer__type">{{ getQuestionTypeLabel(question.type) }}</span>
+                </div>
+                <h4>{{ question.question }}</h4>
+                <div class="aa-answer__value" [class.aa-answer__value--muted]="!hasAnswer(answer)">
+                  <p>{{ formatAnswer(answer) || 'No response submitted' }}</p>
+                  @if (hasAnswer(answer)) {
+                    <span class="material-symbols-outlined" aria-hidden="true">verified</span>
+                  }
+                </div>
+              </article>
+            }
+          }
+        </div>
+      </section>
+
+      <!-- Right: Feedback & commit -->
+      <aside class="aa-review">
+        <div class="aa-panel glass-panel aa-review__panel">
+          <h3 class="aa-panel__title">
+            <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
+            Instructor Feedback
+          </h3>
+
+          <div class="aa-review__body">
+            <label class="aa-label" for="aa-feedback">Technical Analysis</label>
+            <div class="aa-feedback">
+              <textarea
+                id="aa-feedback"
+                [(ngModel)]="activeFeedback"
+                [disabled]="!selectedSubmission"
+                placeholder="Add feedback or comments for the student..."
+              ></textarea>
+              <div class="aa-feedback__meta" aria-hidden="true">
+                <span>UTF-8</span>
+              </div>
+            </div>
+
+            <div class="aa-grade">
+              <p class="aa-label">Evaluation Grade</p>
+              <div class="aa-grade__options" role="group" aria-label="Evaluation grade">
+                @for (grade of gradeOptions; track grade) {
+                  <button
+                    type="button"
+                    class="aa-grade__btn"
+                    [class.active]="selectedGrade === grade"
+                    [disabled]="!selectedSubmission"
+                    (click)="selectedGrade = grade"
+                  >
+                    {{ grade }}
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="aa-review__footer">
+            <button
+              type="button"
+              class="aa-btn aa-btn--primary"
+              [disabled]="!selectedSubmission"
+              (click)="selectedSubmission && saveFeedback(selectedSubmission)"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">send_and_archive</span>
+              Submit Review
+            </button>
+            <p class="aa-review__hint">
+              @if (selectedSubmission) {
+                Review target: {{ shortCadetId(selectedSubmission) }}
+              } @else {
+                Awaiting cadet selection
+              }
+            </p>
+          </div>
+        </div>
+
+        <div class="aa-panel glass-panel aa-logs">
+          <div class="aa-logs__head">
+            <span class="aa-logs__dot" aria-hidden="true"></span>
+            <span class="aa-label">Live System Logs</span>
+          </div>
+            <div class="aa-logs__body">
+            <p>&gt;&gt; Course: {{ courseId ? 'bound' : 'missing' }}</p>
+            <p class="aa-logs__ok">&gt;&gt; Questions: {{ questionsLoading ? 'loading…' : questionsList.length }}</p>
+            <p>&gt;&gt; Answers: {{ loading ? 'loading…' : submissions.length }}</p>
+            @if (questionsLoadError || submissionsLoadError) {
+              <p class="aa-logs__accent">&gt;&gt; Fetch error — refresh to retry.</p>
+            } @else if (selectedSubmission) {
+              <p>&gt;&gt; Reviewing: {{ shortCadetId(selectedSubmission) }}</p>
+              <p class="aa-logs__accent">&gt;&gt; Buffer ready for manual override.</p>
+            } @else if (!questionsList.length) {
+              <p>&gt;&gt; No course questions available.</p>
+            } @else if (!submissions.length) {
+              <p>&gt;&gt; No submitted answers yet.</p>
+            } @else {
+              <p>&gt;&gt; Waiting for review target…</p>
+            }
+          </div>
+        </div>
+      </aside>
     </div>
-    }
   </div>
-  }
-  }
-</div>
+}

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Majestic Academy | Answers Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=JetBrains+Mono:wght@100..800&amp;family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --surface-container: #201f1f;
+            --primary: #ffb68b;
+            --secondary: #dcb8ff;
+            --tertiary: #00dbe9;
+        }
+
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            font-family: 'Geist', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 182, 139, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 182, 139, 0.3), transparent);
+        }
+
+        .tactical-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        }
+
+        .glow-primary:hover {
+            box-shadow: 0 0 15px rgba(255, 122, 0, 0.4);
+        }
+
+        .cyber-gradient {
+            background: linear-gradient(135deg, #ff7a00 0%, #7701d0 100%);
+        }
+
+        .vitals-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .scan-line {
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 219, 233, 0.2);
+            position: absolute;
+            animation: scan 4s linear infinite;
+            z-index: 10;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container": "#201f1f",
+                        "surface-dim": "#131313",
+                        "primary-container": "#ff7a00",
+                        "on-primary": "#522300",
+                        "surface-container-low": "#1c1b1b",
+                        "on-surface": "#e5e2e1",
+                        "outline-variant": "#584235",
+                        "primary": "#ffb68b",
+                        "secondary": "#dcb8ff",
+                        "secondary-container": "#7701d0",
+                        "tertiary": "#00dbe9",
+                        "surface-container-highest": "#353534",
+                    },
+                    fontFamily: {
+                        "headline-lg": ["Space Grotesk"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Geist"],
+                        "label-caps": ["JetBrains Mono"],
+                    },
+                    fontSize: {
+                        "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "600" }],
+                        "data-mono": ["14px", { lineHeight: "20px", letterSpacing: "0.05em", fontWeight: "500" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "label-caps": ["12px", { lineHeight: "16px", fontWeight: "700" }],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface-dim tactical-grid min-h-screen">
+<!-- Sidebar Navigation Shell -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low backdrop-blur-xl border-r border-white/5 z-50 flex flex-col shadow-lg shadow-primary-container/5">
+<div class="p-6">
+<h1 class="font-headline-md text-headline-md font-bold text-primary tracking-tighter">MAJESTIC ACADEMY</h1>
+<p class="font-data-mono text-[10px] text-on-surface-variant/60 tracking-widest mt-1 uppercase">Command Node 01</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface transition-colors hover:bg-surface-container-highest/50 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface transition-colors hover:bg-surface-container-highest/50 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-xl">group</span>
+<span class="font-body-md text-body-md">Cadets</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container/20 text-secondary border-r-2 border-secondary font-bold rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">fact_check</span>
+<span class="font-body-md text-body-md">Assessments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface transition-colors hover:bg-surface-container-highest/50 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-xl">terminal</span>
+<span class="font-body-md text-body-md">Terminal</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface transition-colors hover:bg-surface-container-highest/50 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-xl">security</span>
+<span class="font-body-md text-body-md">Intel</span>
+</a>
+</nav>
+<div class="p-6 border-t border-white/5 space-y-4">
+<button class="w-full cyber-gradient text-white py-3 rounded-lg font-label-caps text-label-caps glow-primary transition-all active:scale-95">
+                LAUNCH SIM
+            </button>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">settings_input_component</span>
+<span class="font-label-caps text-[10px] uppercase">System</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">settings</span>
+<span class="font-label-caps text-[10px] uppercase">Settings</span>
+</a>
+</div>
+<div class="flex items-center gap-3 pt-2">
+<div class="w-10 h-10 rounded-full border border-primary/30 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A futuristic portrait of a high-ranking military instructor in a sleek, dark techwear uniform. The face is partially obscured by a neon orange holographic visor. The background is a dark, sophisticated command center with glowing digital displays in orange and purple tones. Sharp, cinematic lighting emphasizes the tactical precision and high-performance atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDenjzxJ7v1AUOehjypwSKoejemQOM8t2CRLKRFNoJtuTPIZp84JHlUwvvB59wTlcxcs498g0HJApTOopNSpyLXQXdZgDIXtIS6eSZIhzhkHUoV0FZQvjQK36BE5itbhpGac0wCskJG0nCFXa5fiTE9sCJD7Wam_7vl77Tm8ZuyNKMwqnz2SepzHESfJkHAux9UO0aUSa0cct672vtL_FJMYtu_-fX5NtLIsW1baF9d2pcHvaIb2J-X2w"/>
+</div>
+<div>
+<p class="font-data-mono text-[11px] text-white">INSTR_RM_99</p>
+<p class="font-data-mono text-[9px] text-primary/60">ONLINE</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top App Bar Shell -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-surface-container/80 backdrop-blur-md border-b border-outline-variant/10 z-40 flex justify-between items-center px-8">
+<div class="flex items-center gap-6">
+<div class="font-data-mono text-body-lg font-bold text-primary tracking-tighter">ANSWERS_PORTAL_V1.0</div>
+<nav class="hidden md:flex gap-6">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors" href="#">Nodes</a>
+<a class="font-label-caps text-label-caps text-primary border-b-2 border-primary-container pb-1" href="#">Review</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors" href="#">History</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<input class="bg-surface-container-highest/30 border border-outline-variant/30 rounded px-4 py-1.5 font-data-mono text-[12px] w-64 focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Search for..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1.5 text-on-surface-variant/50 text-lg">search</span>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 border border-outline-variant/50 font-data-mono text-[12px] hover:bg-surface-container-highest/50 transition-colors">DEMO</button>
+<button class="px-3 py-1.5 bg-primary-container text-on-primary font-label-caps text-[12px] hover:brightness-110 transition-all font-bold">COMMIT REVIEW</button>
+</div>
+<div class="flex gap-3 text-on-surface-variant border-l border-outline-variant/30 pl-4">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">terminal</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 mt-16 p-8 min-h-[calc(100vh-64px)] relative">
+<div class="max-w-[1200px] mx-auto grid grid-cols-12 gap-6">
+<!-- Left: Cadet Intel & Vitals -->
+<section class="col-span-12 lg:col-span-3 space-y-6">
+<div class="glass-panel p-6 rounded-xl">
+<div class="relative w-full aspect-square rounded-lg overflow-hidden border border-primary/20 mb-4">
+<div class="scan-line"></div>
+<img class="w-full h-full object-cover" data-alt="A close-up biometric ID photo of a young cadet with short hair and a focused expression. The image has a blue-tinted digital overlay with scrolling data streams and target reticles. The lighting is cold and clinical, highlighting the tactical and advanced computing aesthetic. The background consists of dark charcoal architectural elements with faint neon purple accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3qvCL-7Rwp5GVb8T0ixO0j-4iZpQlKDM8bI2Lh6TSlQT13pVqfsU23FAwzTnZhYKOeZ71AJnTEeITXaponfL71ZvpKJSfg1PvBYX3zGZynf1cAMVgdq1OhAdQzPYKuPlB0IXxohdggLJnY93gO9RyUAQig_WFELaJF32tIL5l9s4tdP-VCNE9uWUWltCwUvvGJrIgwqu8f0oKVzxB71boLbtSz-Oe5Q_qq_l6wH6axSoPQ09w3fGJjQ"/>
+</div>
+<div class="space-y-4">
+<div>
+<p class="font-label-caps text-[10px] text-primary/60 uppercase">Cadet Identification</p>
+<h2 class="font-headline-md text-white">UNKNOWN_USER_0x1</h2>
+<p class="font-data-mono text-[12px] text-on-surface-variant">Rank: Initiate | Squad: 09-K</p>
+</div>
+<div class="pt-4 border-t border-outline-variant/10 space-y-3">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-[10px] text-tertiary">HR (BPM)</span>
+<span class="font-data-mono text-white vitals-pulse">78</span>
+</div>
+<div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-2/3 shadow-[0_0_8px_rgba(0,219,233,0.5)]"></div>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-[10px] text-secondary">Neural Load</span>
+<span class="font-data-mono text-white">42%</span>
+</div>
+<div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[42%] shadow-[0_0_8px_rgba(220,184,255,0.5)]"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-xl space-y-4">
+<h3 class="font-label-caps text-[11px] text-on-surface-variant border-b border-outline-variant/10 pb-2">SESSION METRICS</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-3 bg-surface-container/50 rounded border border-white/5">
+<p class="font-label-caps text-[9px] text-on-surface-variant/60">ELAPSED</p>
+<p class="font-data-mono text-[16px] text-white">12:45:02</p>
+</div>
+<div class="p-3 bg-surface-container/50 rounded border border-white/5">
+<p class="font-label-caps text-[9px] text-on-surface-variant/60">CONFIDENCE</p>
+<p class="font-data-mono text-[16px] text-tertiary">89%</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Center: Answer Review Feed -->
+<section class="col-span-12 lg:col-span-6 space-y-4">
+<div class="flex justify-between items-end mb-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-white">Submitted Answers</h1>
+<p class="font-body-md text-on-surface-variant">Reviewing assessment block: PHANTOM_RECON</p>
+</div>
+<button class="px-4 py-2 bg-error/10 border border-error text-error font-label-caps text-[12px] rounded-lg hover:bg-error hover:text-on-error transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">refresh</span>
+                        REFRESH
+                    </button>
+</div>
+<!-- Answer Cards -->
+<div class="space-y-4 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
+<!-- Q1 -->
+<div class="glass-panel p-6 rounded-xl border-l-2 border-l-secondary/50">
+<div class="flex justify-between mb-4">
+<span class="font-data-mono text-[11px] text-secondary/60"># QUESTION 05</span>
+<span class="font-data-mono text-[10px] bg-secondary/10 px-2 py-0.5 rounded text-secondary border border-secondary/20">LOGIC_GATE</span>
+</div>
+<h4 class="font-body-lg text-white mb-4">Define the primary protocol for emergency node decryption in a hostile sector.</h4>
+<div class="p-4 bg-secondary-container/10 border border-secondary/20 rounded-lg relative">
+<p class="font-data-mono text-secondary text-[14px] font-bold">Option 1: Initiate recursive ghost-ping sequence prior to local cache dump.</p>
+<span class="absolute top-2 right-3 material-symbols-outlined text-secondary text-sm">verified</span>
+</div>
+</div>
+<!-- Q2 -->
+<div class="glass-panel p-6 rounded-xl border-l-2 border-l-secondary/50">
+<div class="flex justify-between mb-4">
+<span class="font-data-mono text-[11px] text-secondary/60"># QUESTION 04</span>
+<span class="font-data-mono text-[10px] bg-secondary/10 px-2 py-0.5 rounded text-secondary border border-secondary/20">PROCEDURAL</span>
+</div>
+<h4 class="font-body-lg text-white mb-4">What is the standard baud rate for covert uplink 019?</h4>
+<div class="p-4 bg-secondary-container/10 border border-secondary/20 rounded-lg">
+<p class="font-data-mono text-secondary text-[14px] font-bold">Option 1: 512.4 GB/S Encrypted</p>
+</div>
+</div>
+<!-- Q3 -->
+<div class="glass-panel p-6 rounded-xl border-l-2 border-l-tertiary/50">
+<div class="flex justify-between mb-4">
+<span class="font-data-mono text-[11px] text-tertiary/60"># QUESTION 03</span>
+<span class="font-data-mono text-[10px] bg-tertiary/10 px-2 py-0.5 rounded text-tertiary border border-tertiary/20">DESCRIPTIVE</span>
+</div>
+<h4 class="font-body-lg text-white mb-4">Briefly describe the 'Shadow Veil' masking technique.</h4>
+<div class="p-4 bg-surface-container-highest/30 border border-white/5 rounded-lg">
+<p class="font-body-md text-on-surface-variant leading-relaxed">The Shadow Veil relies on injecting high-frequency jitter into the packet headers, effectively mimicking background thermal noise while maintaining data integrity via parity-bit shuffles.</p>
+</div>
+</div>
+<!-- Q4 -->
+<div class="glass-panel p-6 rounded-xl border-l-2 border-l-secondary/50">
+<div class="flex justify-between mb-4">
+<span class="font-data-mono text-[11px] text-secondary/60"># QUESTION 02</span>
+<span class="font-data-mono text-[10px] bg-secondary/10 px-2 py-0.5 rounded text-secondary border border-secondary/20">IDENTIFICATION</span>
+</div>
+<h4 class="font-body-lg text-white mb-4">Identify the signal source of ID: ALPHA-9-NINER.</h4>
+<div class="p-4 bg-secondary-container/10 border border-secondary/20 rounded-lg">
+<p class="font-data-mono text-secondary text-[14px] font-bold">Answer 2: Lunar Relay Node 04</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Right: Feedback & Commit -->
+<section class="col-span-12 lg:col-span-3 space-y-6">
+<div class="glass-panel p-6 rounded-xl flex flex-col h-full min-h-[500px]">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-6 border-b border-outline-variant/10 pb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">edit_note</span>
+                        INSTRUCTOR FEEDBACK
+                    </h3>
+<div class="flex-1 space-y-4">
+<div class="relative group h-full">
+<label class="block font-label-caps text-[10px] text-on-surface-variant/60 uppercase mb-2">Technical Analysis</label>
+<textarea class="w-full h-[300px] bg-surface-container-lowest/50 border-b border-outline-variant/30 text-white font-data-mono text-[13px] p-4 focus:outline-none focus:border-primary transition-all resize-none" placeholder="Add feedback or comments for the student..."></textarea>
+<div class="absolute bottom-4 right-4 flex items-center gap-2 opacity-50">
+<span class="font-data-mono text-[10px] text-on-surface-variant">LNS: 014</span>
+<span class="font-data-mono text-[10px] text-on-surface-variant">UTF-8</span>
+</div>
+</div>
+<div class="space-y-3 pt-4">
+<p class="font-label-caps text-[10px] text-on-surface-variant/60 uppercase">Evaluation Grade</p>
+<div class="flex gap-2">
+<button class="flex-1 py-2 border border-outline-variant/30 font-data-mono text-[14px] hover:bg-primary/10 hover:border-primary transition-all rounded">FAIL</button>
+<button class="flex-1 py-2 bg-primary-container/20 border border-primary text-primary font-data-mono text-[14px] hover:bg-primary/30 transition-all rounded">PASS</button>
+<button class="flex-1 py-2 border border-outline-variant/30 font-data-mono text-[14px] hover:bg-tertiary/10 hover:border-tertiary transition-all rounded">DIST</button>
+</div>
+</div>
+</div>
+<div class="pt-8">
+<button class="w-full cyber-gradient text-white py-4 rounded-xl font-headline-md text-[18px] glow-primary transition-all active:scale-95 flex items-center justify-center gap-3">
+<span class="material-symbols-outlined">send_and_archive</span>
+                            SUBMIT REVIEW
+                        </button>
+<p class="text-center font-data-mono text-[10px] text-on-surface-variant/40 mt-4 italic">Action logs recorded as 0x7F2A...99</p>
+</div>
+</div>
+<!-- Live Log Feed -->
+<div class="glass-panel p-4 rounded-xl">
+<div class="flex items-center gap-2 mb-3">
+<div class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></div>
+<span class="font-label-caps text-[10px] text-on-surface-variant">LIVE SYSTEM LOGS</span>
+</div>
+<div class="font-data-mono text-[10px] space-y-1.5 overflow-hidden">
+<p class="text-on-surface-variant/60">&gt;&gt; Validating ID: UNKNOWN_USER_0x1...</p>
+<p class="text-tertiary/60">&gt;&gt; Checksum: [SUCCESS]</p>
+<p class="text-on-surface-variant/60">&gt;&gt; Retrieving response buffer...</p>
+<p class="text-secondary/60">&gt;&gt; Local buffer clear (0.001ms)</p>
+<p class="text-on-surface-variant/60">&gt;&gt; Ready for manual override.</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Visual Accents -->
+<div class="fixed bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+<div class="fixed top-0 left-0 w-64 h-64 bg-secondary/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+<script>
+        // Micro-interaction: Update cursor location in the "Terminal"
+        document.addEventListener('mousemove', (e) => {
+            // Placeholder for future tactical HUD elements
+        });
+
+        // Add some "scrambling" text effect to labels occasionally
+        const scrambleElements = document.querySelectorAll('.font-data-mono');
+        scrambleElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                const originalText = el.innerText;
+                const chars = '!@#$%^&*()_+{}[]|';
+                let iterations = 0;
+                
+                const interval = setInterval(() => {
+                    el.innerText = originalText
+                        .split('')
+                        .map((char, index) => {
+                            if (index < iterations) return originalText[index];
+                            return chars[Math.floor(Math.random() * chars.length)];
+                        })
+                        .join('');
+                    
+                    if (iterations >= originalText.length) clearInterval(interval);
+                    iterations += 1/3;
+                }, 30);
+            });
+        });
+    </script>
+</body></html>

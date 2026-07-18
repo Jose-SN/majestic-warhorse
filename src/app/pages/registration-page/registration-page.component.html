@@ -1,255 +1,273 @@
-<section class="registration-wrapper">
-  <div id="particles-js"></div>
-  <div class="registration-holder">
-    <figure>
-      <img src="../../../../assets/images/logo-mejestic-hourse-landing.svg" alt="Mejestic Hourse" />
-    </figure>
-    <h1>Create An Account</h1>
-    <p>LET'S GET YOU STARTED</p>
-
-    <div class="social-login-top">
-      <button type="button" class="btn-google" (click)="signInWithGoogle()" [disabled]="isGoogleLoading">
-        <span class="recommended-badge">Recommended</span>
-        <figure><img src="../../../../assets/images/icon-google.svg" alt="Google" /></figure>
-        {{ isGoogleLoading ? 'Redirecting…' : 'Continue with Google' }}
-      </button>
-      <div class="divider" data-attr="or"></div>
-    </div>
-
-    <div class="form-wrapper">
-      <div
-        class="image-holder"
-        (click)="triggerFileInput()"
-        tabindex="0"
-        (keydown.enter)="triggerFileInput()"
-        (keydown.space)="triggerFileInput()"
-      >
-        <figure>
-          <img [src]="profileUrl" alt="Profile Picture" />
-          <div class="camera-icon-overlay">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-              <circle cx="12" cy="13" r="4"></circle>
-            </svg>
-          </div>
-        </figure>
+<main class="signup-page">
+  <!-- Left: brand narrative -->
+  <section class="signup-hero" aria-hidden="true">
+    <div class="signup-hero__bg"></div>
+    <div class="signup-hero__overlay"></div>
+    <div class="signup-hero__content">
+      <div class="signup-hero__brand">
+        <img
+          class="signup-hero__logo"
+          src="../../../assets/images/logo-mejestic-hourse-landing.svg"
+          alt="Majestic Warhorse"
+        />
       </div>
-      <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
-        <input type="file" #profileImageInput formControlName="profileImage" (change)="onFileSelected($event)" accept="image/*" class="hidden-file-input" aria-label="Upload profile picture" />
-        <div class="mode-toggle mode-toggle-top">
-          <span class="mode-label">Registering as:</span>
-          <div class="mode-buttons">
-            <button type="button" class="mode-btn" [class.active]="!isAdminLogin" (click)="setRegistrationMode('user'); loadOrganizations()">
-              User
-            </button>
-            <button type="button" class="mode-btn" [class.active]="isAdminLogin" (click)="setRegistrationMode('organization')">
-              Organization
-            </button>
-          </div>
+      <h1 class="signup-hero__title">
+        Start your <span class="signup-hero__title-accent">learning</span> journey
+      </h1>
+      <p class="signup-hero__subtitle">
+        Join Majestic Warhorse — the platform for sculpting, courses, and creative mastery, built for students, teachers, and organizations.
+      </p>
+      <div class="signup-hero__stats">
+        <div class="signup-hero__stat">
+          <span class="signup-hero__stat-label">For Learners</span>
+          <span class="signup-hero__stat-value">Courses &amp; assessments</span>
+        </div>
+        <div class="signup-hero__stat">
+          <span class="signup-hero__stat-label">For Educators</span>
+          <span class="signup-hero__stat-value">Teach &amp; manage classes</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Right: signup card (login structure) -->
+  <section class="signup-pane">
+    <div class="signup-pane__scan" aria-hidden="true"></div>
+    <div class="signup-pane__grid" aria-hidden="true"></div>
+
+    <div class="signup-card">
+      <div class="signup-card__accent" aria-hidden="true"></div>
+
+      <!-- <div class="signup-card__brand">
+        <h2 class="signup-card__heading">Create Account</h2>
+      </div> -->
+
+      <form class="signup-form" [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
+        <div class="signup-form__roles" role="group" aria-label="Account type">
+          <button
+            type="button"
+            class="signup-role signup-role--compact"
+            [class.is-active]="!isAdminLogin"
+            (click)="setRegistrationMode('user'); loadOrganizations()"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">person</span>
+            <span class="signup-role__label">Individual</span>
+          </button>
+          <button
+            type="button"
+            class="signup-role signup-role--compact"
+            [class.is-active]="isAdminLogin"
+            (click)="setRegistrationMode('organization')"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">corporate_fare</span>
+            <span class="signup-role__label">Organization</span>
+          </button>
         </div>
 
-        <div class="form-section">
-          <div class="section-label">
-            <span class="section-badge">1</span>
-            I am a
-          </div>
-          <div class="input-row">
-            <div class="input-holder role-holder">
-              <div class="checkbox-holder">
-                @if (isAdminLogin) {
-                <label class="role-option">
-                  <input type="radio" name="role" formControlName="role" value="organization" />
-                  <span class="checkmark"></span>
-                  <strong>Organization</strong>
-                  <span class="role-hint">Manage teachers and students</span>
-                </label>
-                } @else {
-                <label class="role-option">
-                  <input type="radio" name="role" formControlName="role" value="student" />
-                  <span class="checkmark"></span>
-                  <strong>Student</strong>
-                  <span class="role-hint">Access courses and content</span>
-                </label>
-                <label class="role-option">
-                  <input type="radio" name="role" formControlName="role" value="teacher" />
-                  <span class="checkmark"></span>
-                  <strong>Teacher</strong>
-                  <span class="role-hint">Manage students and courses</span>
-                </label>
-                }
-              </div>
+        @if (!isAdminLogin) {
+          <div class="signup-form__chips" role="group" aria-label="Role">
+            <span class="signup-form__chips-label">I am a</span>
+            <div class="signup-chips">
+              <label class="signup-chip" [class.is-active]="createAccountForm.get('role')?.value === 'student'">
+                <input type="radio" name="role" formControlName="role" value="student" />
+                <span class="material-symbols-outlined" aria-hidden="true">school</span>
+                <span>Student</span>
+              </label>
+              <label class="signup-chip" [class.is-active]="createAccountForm.get('role')?.value === 'teacher'">
+                <input type="radio" name="role" formControlName="role" value="teacher" />
+                <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
+                <span>Teacher</span>
+              </label>
             </div>
           </div>
+        }
+
+        <button
+          type="button"
+          class="btn-google btn-google--recommended"
+          (click)="signInWithGoogle()"
+          [disabled]="isGoogleLoading"
+        >
+          <span class="btn-google__badge">Recommended</span>
+          <svg class="btn-google__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+          </svg>
+          <span>{{ isGoogleLoading ? 'Redirecting…' : 'Continue with Google' }}</span>
+        </button>
+
+        <div class="signup-form__divider">
+          <span>Manual Signup</span>
         </div>
 
-        <div class="form-section">
-          <div class="section-label">
-            <span class="section-badge">2</span>
-            {{ isAdminLogin && createAccountForm.get('role')?.value === 'organization' ? 'Organization Details' : 'Account Details' }}
-          </div>
-          <div class="input-row">
-            @if (isAdminLogin && createAccountForm.get('role')?.value === 'organization') {
-            <div class="input-holder">
+        <div class="signup-form__fields">
+          @if (isAdminLogin && createAccountForm.get('role')?.value === 'organization') {
+            <div class="signup-field signup-field--full">
               <label for="organizationName">Organization Name</label>
-              <input type="text" name="organizationName" placeholder="Enter Organization Name" formControlName="name" />
+              <input
+                id="organizationName"
+                type="text"
+                placeholder="Enter organization name"
+                formControlName="name"
+                autocomplete="organization"
+              />
               @if (isFieldInvalid(createAccountForm, 'name')) {
-              <span>Organization name is required.</span>
+                <span class="signup-field__error">Organization name is required.</span>
               }
             </div>
-            } @else {
-            <div class="input-holder">
-              <label for="organization">Select Organization</label>
-              <select name="organization" formControlName="organization_id" id="organization">
+          } @else {
+            <div class="signup-field">
+              <label for="firstname">First Name</label>
+              <input
+                id="firstname"
+                type="text"
+                placeholder="Enter first name"
+                formControlName="firstName"
+                autocomplete="given-name"
+              />
+              @if (isFieldInvalid(createAccountForm, 'firstName')) {
+                <span class="signup-field__error">First name is required.</span>
+              }
+            </div>
+            <div class="signup-field">
+              <label for="lastname">Last Name</label>
+              <input
+                id="lastname"
+                type="text"
+                placeholder="Enter last name"
+                formControlName="lastName"
+                autocomplete="family-name"
+              />
+              @if (isFieldInvalid(createAccountForm, 'lastName')) {
+                <span class="signup-field__error">Last name is required.</span>
+              }
+            </div>
+            <div class="signup-field signup-field--full">
+              <label for="organization">Organization</label>
+              <select id="organization" formControlName="organization_id">
                 <option value="">Select an organization</option>
                 @for (org of organizationsList; track org.id) {
-                <option [value]="org.id">{{ unescapeHtml(org.name || '') || org.id }}</option>
+                  <option [value]="org.id">{{ unescapeHtml(org.name || '') || org.id }}</option>
                 }
               </select>
               @if (isFieldInvalid(createAccountForm, 'organization_id')) {
-              <span>Organization is required.</span>
+                <span class="signup-field__error">Organization is required.</span>
               }
             </div>
+          }
+
+          <div class="signup-field">
+            <label for="signup-email">Email</label>
+            <input
+              id="signup-email"
+              type="email"
+              placeholder="you@example.com"
+              formControlName="email"
+              autocomplete="email"
+            />
+            @if (isFieldInvalid(createAccountForm, 'email')) {
+              <span class="signup-field__error">
+                @if (createAccountForm.get('email')?.errors?.['required']) {
+                  Email is required.
+                } @else if (createAccountForm.get('email')?.errors?.['email']) {
+                  Enter a valid email address.
+                }
+              </span>
             }
           </div>
-          @if (createAccountForm.get('role')?.value !== 'organization') {
-          <div class="input-row">
-            <div class="input-holder">
-              <label for="firstname">Your First Name</label>
-              <input type="text" name="firstname" placeholder="Enter First Name" formControlName="firstName" />
-              @if (isFieldInvalid(createAccountForm, 'firstName')) {
-              <span> First Name is required.</span>
-              }
-            </div>
-            <div class="input-holder">
-              <label for="lastname">Your Last Name</label>
-              <input type="text" name="lastname" placeholder="Enter Last Name" formControlName="lastName" />
-              @if (isFieldInvalid(createAccountForm, 'lastName')) {
-              <span> LastName is required.</span>
-              }
-            </div>
-          </div>
-          }
-        </div>
-
-        <div class="form-section">
-          <div class="section-label">
-            <span class="section-badge">3</span>
-            Contact &amp; Security
-          </div>
-          <div class="input-row">
-            <div class="input-holder">
-              <label>Mobile</label>
-              <input type="text" placeholder="Enter Mobile Number" formControlName="phone" />
-              @if (isFieldInvalid(createAccountForm, 'phone')) {
-              <div class="error-message">
+          <div class="signup-field">
+            <label for="signup-phone">Mobile</label>
+            <input
+              id="signup-phone"
+              type="tel"
+              placeholder="Enter mobile number"
+              formControlName="phone"
+              autocomplete="tel"
+            />
+            @if (isFieldInvalid(createAccountForm, 'phone')) {
+              <span class="signup-field__error">
                 @if (createAccountForm.get('phone')?.errors?.['required']) {
-                <span>Mobile number is required.</span>
+                  Mobile number is required.
+                } @else if (createAccountForm.get('phone')?.errors?.['pattern']) {
+                  Enter a valid mobile number.
                 }
-                @if (createAccountForm.get('phone')?.errors?.['pattern']) {
-                <span>Please enter a valid mobile number.</span>
-                }
-              </div>
-              }
-            </div>
-            <div class="input-holder">
-              <label for="email">Email</label>
-              <input type="email" name="email" placeholder="Enter Email Address" formControlName="email" />
-              @if (isFieldInvalid(createAccountForm, 'email')) {
-              <div class="error-message">
-                @if (createAccountForm.get('email')?.errors?.['required']) {
-                <span>Email is required.</span>
-                }
-                @if (createAccountForm.get('email')?.errors?.['email']) {
-                <span>Please enter a valid email address.</span>
-                }
-              </div>
-              }
-            </div>
+              </span>
+            }
           </div>
-          <div class="input-row">
-            <div class="input-holder password-field">
-              <label for="password">Password</label>
-              <div class="password-input-wrapper">
-                <input [type]="showPassword ? 'text' : 'password'" name="password" placeholder="Enter Your Password (6 characters)" formControlName="password" />
-                <span class="eye-icon" (click)="togglePasswordVisibility()">
-                  @if (showPassword) {
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                  </svg>
-                  } @else {
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-                  }
-                </span>
-              </div>
-              @if (isFieldInvalid(createAccountForm, 'password')) {
-              <div class="error-message">
-                @if (getPasswordError(createAccountForm, 'required')) {
-                <span>Password is required.</span>
-                }
-              </div>
-              @if (!getPasswordError(createAccountForm, 'required')) {
-              <div class="suggestion-holder">
-                @if (getPasswordError(createAccountForm, 'minlength')) {
-                <span>Password must be at least 6 characters long.</span>
-                }
-                @if (getPasswordError(createAccountForm, 'uppercase')) {
-                <span>Password must contain at least one uppercase letter.</span>
-                }
-                @if (getPasswordError(createAccountForm, 'lowercase')) {
-                <span>Password must contain at least one lowercase letter.</span>
-                }
-                @if (getPasswordError(createAccountForm, 'number')) {
-                <span>Password must contain at least one number.</span>
-                }
-                @if (getPasswordError(createAccountForm, 'special')) {
-                <span>Password must contain at least one special character.</span>
-                }
-              </div>
-              }
-              }
+          <div class="signup-field">
+            <label for="signup-password">Password</label>
+            <div class="signup-field__password">
+              <input
+                id="signup-password"
+                [type]="showPassword ? 'text' : 'password'"
+                placeholder="Create a password"
+                formControlName="password"
+                autocomplete="new-password"
+              />
+              <button type="button" class="signup-field__eye" (click)="togglePasswordVisibility()" aria-label="Toggle password visibility">
+                <span class="material-symbols-outlined" aria-hidden="true">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+              </button>
             </div>
-
-            <div class="input-holder password-field">
-              <label for="confirmPassword">Confirm Password</label>
-              <div class="password-input-wrapper">
-                <input [type]="showConfirmPassword ? 'text' : 'password'" name="confirmPassword" placeholder="Enter Your Password (6 characters)" formControlName="confirmPassword" />
-                <span class="eye-icon" (click)="toggleConfirmPasswordVisibility()">
-                  @if (showConfirmPassword) {
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                  </svg>
-                  } @else {
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
+            @if (isFieldInvalid(createAccountForm, 'password')) {
+              @if (getPasswordError(createAccountForm, 'required')) {
+                <span class="signup-field__error">Password is required.</span>
+              } @else {
+                <div class="signup-field__hints">
+                  @if (getPasswordError(createAccountForm, 'minlength')) {
+                    <span>At least 6 characters.</span>
                   }
-                </span>
-              </div>
-              @if (isFieldInvalid(createAccountForm, 'confirmPassword')) {
-              <span>Confirm Password is required.</span>
+                  @if (getPasswordError(createAccountForm, 'uppercase')) {
+                    <span>One uppercase letter.</span>
+                  }
+                  @if (getPasswordError(createAccountForm, 'lowercase')) {
+                    <span>One lowercase letter.</span>
+                  }
+                  @if (getPasswordError(createAccountForm, 'number')) {
+                    <span>One number.</span>
+                  }
+                  @if (getPasswordError(createAccountForm, 'special')) {
+                    <span>One special character.</span>
+                  }
+                </div>
               }
-              @if (isPasswordMismatch(createAccountForm, 'password', 'confirmPassword')) {
-              <span>Passwords do not match.</span>
-              }
-              @if (createAccountForm.errors?.['mismatch'] && (createAccountForm.get('password')?.touched || createAccountForm.get('confirmPassword')?.touched)) {
-              <span>Passwords do not match.</span>
-              }
+            }
+          </div>
+          <div class="signup-field">
+            <label for="signup-confirm">Confirm Password</label>
+            <div class="signup-field__password">
+              <input
+                id="signup-confirm"
+                [type]="showConfirmPassword ? 'text' : 'password'"
+                placeholder="Re-enter your password"
+                formControlName="confirmPassword"
+                autocomplete="new-password"
+              />
+              <button type="button" class="signup-field__eye" (click)="toggleConfirmPasswordVisibility()" aria-label="Toggle confirm password visibility">
+                <span class="material-symbols-outlined" aria-hidden="true">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</span>
+              </button>
             </div>
+            @if (isFieldInvalid(createAccountForm, 'confirmPassword')) {
+              <span class="signup-field__error">Confirm password is required.</span>
+            }
+            @if (isPasswordMismatch(createAccountForm, 'password', 'confirmPassword') || (createAccountForm.errors?.['mismatch'] && (createAccountForm.get('password')?.touched || createAccountForm.get('confirmPassword')?.touched))) {
+              <span class="signup-field__error">Passwords do not match.</span>
+            }
           </div>
         </div>
 
-        <button class="btn-login" type="submit">Get Started</button>
+        <div class="signup-form__actions">
+          <button class="btn-deploy" type="submit">Get Started</button>
+        </div>
       </form>
-    </div>
 
-    <div class="login-bottom">
-      <p class="login-link">Already have an account? <a (click)="navigateLogin()">Log In</a></p>
+      <div class="signup-card__footer">
+        <p>
+          Already have an account?
+          <a (click)="navigateLogin()">Log In</a>
+        </p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+</main>
