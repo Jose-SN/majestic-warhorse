@@ -1188,7 +1188,8 @@
   padding: 16px;
   border: 0;
   @include border-radius(8px);
-  background: var(--white);
+  background: var(--mc-brand-gradient);
+  box-shadow: 0 4px 20px rgba(255, 107, 44, 0.35);
   color: var(--black);
   font-family: var(--mc-font-label);
   font-size: 0.8125rem;

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Majestic Cyber | Enrollment Roster</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --gradient-brand: linear-gradient(135deg, #ff6b2c 0%, #bb7bff 100%);
+            --glass-bg: rgba(31, 31, 34, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: #0e0e11;
+            background-image: 
+                linear-gradient(rgba(255, 107, 44, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 107, 44, 0.02) 1px, transparent 1px);
+            background-size: 32px 32px;
+            color: #e4e1e6;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #ff6b2c;
+            border-radius: 10px;
+        }
+
+        .glow-hover:hover {
+            box-shadow: 0 0 20px rgba(255, 107, 44, 0.2);
+            border-color: rgba(255, 107, 44, 0.4);
+        }
+
+        .gradient-text {
+            background: var(--gradient-brand);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .active-edge {
+            position: relative;
+        }
+        .active-edge::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 25%;
+            height: 50%;
+            width: 2px;
+            background: #ff6b2c;
+            box-shadow: 0 0 8px #ff6b2c;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-background": "#e4e1e6",
+                        "background": "#131316",
+                        "inverse-primary": "#a83900",
+                        "secondary": "#ffb0cc",
+                        "primary-container": "#ff6b2c",
+                        "on-secondary": "#640038",
+                        "on-error": "#690005",
+                        "surface-container": "#1f1f22",
+                        "error-container": "#93000a",
+                        "error": "#ffb4ab",
+                        "surface-container-lowest": "#0e0e11",
+                        "on-tertiary-container": "#4a0084",
+                        "surface": "#131316",
+                        "on-secondary-fixed-variant": "#8d0051",
+                        "primary-fixed-dim": "#ffb59a",
+                        "surface-container-low": "#1b1b1e",
+                        "surface-container-high": "#2a2a2d",
+                        "on-error-container": "#ffdad6",
+                        "secondary-fixed": "#ffd9e4",
+                        "on-tertiary": "#480081",
+                        "outline-variant": "#594139",
+                        "surface-tint": "#ffb59a",
+                        "on-primary": "#5b1b00",
+                        "primary": "#ffb59a",
+                        "on-tertiary-fixed-variant": "#6700b5",
+                        "tertiary-fixed-dim": "#dcb8ff",
+                        "tertiary": "#dcb8ff",
+                        "surface-variant": "#353438",
+                        "secondary-fixed-dim": "#ffb0cc",
+                        "on-tertiary-fixed": "#2c0051",
+                        "inverse-on-surface": "#303033",
+                        "outline": "#a98a7f",
+                        "inverse-surface": "#e4e1e6",
+                        "tertiary-container": "#bb7bff",
+                        "surface-container-highest": "#353438",
+                        "on-surface-variant": "#e2bfb3",
+                        "on-secondary-fixed": "#3e0020",
+                        "primary-fixed": "#ffdbcf",
+                        "tertiary-fixed": "#efdbff",
+                        "on-secondary-container": "#ffbad2",
+                        "on-primary-container": "#5c1c00",
+                        "surface-dim": "#131316",
+                        "on-primary-fixed-variant": "#802900",
+                        "on-primary-fixed": "#380d00",
+                        "secondary-container": "#ab0063",
+                        "surface-bright": "#39393c",
+                        "on-surface": "#e4e1e6"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "gutter": "24px",
+                        "margin-desktop": "64px",
+                        "unit": "4px",
+                        "margin-mobile": "20px",
+                        "container-max": "1440px"
+                    },
+                    fontFamily: {
+                        "body-md": ["Geist"],
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-lg": ["Space Grotesk"],
+                        "display-lg": ["Space Grotesk"]
+                    },
+                    fontSize: {
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- TopNavBar Component -->
+<nav class="w-full sticky top-0 z-40 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm flex justify-between items-center px-margin-desktop h-20">
+<div class="flex items-center gap-8">
+<span class="font-display-lg text-headline-lg bg-clip-text text-transparent bg-gradient-to-r from-primary-container to-tertiary-container">Majestic Cyber</span>
+<div class="hidden md:flex gap-6">
+<a class="text-on-surface-variant font-medium hover:bg-primary/10 hover:text-primary transition-colors py-1 px-3" href="#">Dashboard</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 transition-all duration-300 ease-in-out" href="#">Students</a>
+<a class="text-on-surface-variant font-medium hover:bg-primary/10 hover:text-primary transition-colors py-1 px-3" href="#">Analytics</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="bg-surface-container border-none text-label-sm font-label-sm pl-10 pr-4 py-2 w-64 focus:ring-1 focus:ring-primary-container outline-none transition-all" placeholder="QUERY DATABASE..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">settings</span>
+<div class="h-10 w-10 rounded-full border border-primary-container p-0.5 overflow-hidden">
+<img class="w-full h-full object-cover rounded-full" data-alt="A portrait of a futuristic cyber security instructor with a focused expression, wearing tactical tech-wear and a subtle neural link interface on the temple. The background is a dimly lit high-tech command center with glowing orange and purple server racks reflecting in the low-key lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZ4Xr9teACguxbQeHcn8Lxzusjpw5_Q_lhx7ezkkQGaimy4g2WHtStpkkqbnUHieCPvDBjKc7qHaLwFeMyEFcrAu3nQgfgGQUaBv4Pjfaf74dmZpkO6N2B4WoTL3EeifW6q_4gCV3pBJo7-3p1TYWiUGrm0dtXc35kcn3D5Hc4qbCoypK3UnamhCHEK-YM3QzHxLa-jeWu5XFKRdRrUClIy4lUmav8l1VOL-1UMwJSjE4999EB5bWt0w"/>
+</div>
+</div>
+</div>
+</nav>
+<!-- SideNavBar Component (Hidden on Mobile) -->
+<aside class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 z-50 bg-surface-container-lowest/90 backdrop-blur-2xl border-r border-white/5 shadow-2xl py-8">
+<div class="px-6 mb-10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div>
+<h2 class="font-headline-lg text-[20px] text-primary tracking-tighter leading-none">Majestic Cyber</h2>
+<p class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest mt-1">Elite Management</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col font-label-sm text-label-sm">
+<a class="flex items-center gap-3 text-on-surface-variant py-3 px-6 hover:bg-surface-variant/50 hover:text-on-surface transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:translate-x-1 duration-200">dashboard</span> Dashboard
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant py-3 px-6 hover:bg-surface-variant/50 hover:text-on-surface transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:translate-x-1 duration-200">school</span> Courses
+            </a>
+<a class="flex items-center gap-3 text-primary bg-primary/10 border-l-2 border-primary-container py-3 px-6 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:translate-x-1 duration-200" style="font-variation-settings: 'FILL' 1;">group</span> Students
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant py-3 px-6 hover:bg-surface-variant/50 hover:text-on-surface transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:translate-x-1 duration-200">monitoring</span> Analytics
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant py-3 px-6 hover:bg-surface-variant/50 hover:text-on-surface transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:translate-x-1 duration-200">security</span> Security
+            </a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full bg-gradient-to-r from-primary-container to-tertiary-container text-white py-3 font-label-sm rounded uppercase tracking-tighter glow-hover transition-all">
+                Deploy New Course
+            </button>
+<div class="mt-6 flex flex-col gap-2 font-label-sm text-label-sm">
+<a class="flex items-center gap-3 text-on-surface-variant py-2 hover:text-on-surface" href="#"><span class="material-symbols-outlined text-[18px]">support_agent</span> Support</a>
+<a class="flex items-center gap-3 text-on-surface-variant py-2 hover:text-on-surface" href="#"><span class="material-symbols-outlined text-[18px]">logout</span> Logout</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 p-6 lg:p-12 min-h-[calc(100vh-80px)]">
+<header class="mb-8">
+<div class="flex items-end justify-between">
+<div>
+<p class="font-label-sm text-primary uppercase tracking-[0.2em] mb-2">Operation: Recruitment</p>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Dual-Pane Enrollment Terminal</h1>
+</div>
+<div class="flex items-center gap-4 text-label-sm font-label-sm bg-surface-container p-4 rounded border border-white/5">
+<div class="flex flex-col items-end">
+<span class="text-on-surface-variant">NODE CAPACITY</span>
+<span class="text-primary font-bold">42 / 128</span>
+</div>
+<div class="w-24 h-1 bg-white/10 relative overflow-hidden rounded">
+<div class="absolute inset-y-0 left-0 bg-primary-container w-[33%]"></div>
+</div>
+</div>
+</div>
+</header>
+<!-- Dual Pane Enrollment Interface -->
+<div class="grid grid-cols-1 lg:grid-cols-[1fr_48px_1fr] gap-0 h-[680px]">
+<!-- Left Pane: All Cadets -->
+<section class="glass-panel rounded-l-xl flex flex-col overflow-hidden border-r-0">
+<div class="p-6 border-b border-white/5 bg-surface-container-high/40">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-lg text-[20px] flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">person_search</span>
+                            ALL CADETS DIRECTORY
+                        </h3>
+<span class="font-label-sm text-on-surface-variant bg-white/5 px-3 py-1 rounded-full">854 ENTRIES</span>
+</div>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">filter_list</span>
+<input class="w-full bg-background/50 border border-white/10 rounded-lg py-3 pl-10 pr-4 text-label-sm font-label-sm focus:ring-1 focus:ring-primary-container focus:border-primary-container outline-none transition-all placeholder:text-on-surface-variant/40" placeholder="FILTER BY ID, NAME, OR SECTOR..." type="text"/>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar p-2">
+<table class="w-full text-left border-separate border-spacing-y-2">
+<tbody class="px-4">
+<!-- Student Row 1 -->
+<tr class="group hover:bg-white/5 transition-colors cursor-pointer rounded-lg overflow-hidden">
+<td class="py-4 pl-4 rounded-l-lg w-12">
+<input class="w-4 h-4 bg-transparent border-white/20 rounded focus:ring-primary-container text-primary-container" type="checkbox"/>
+</td>
+<td class="py-4">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img class="w-10 h-10 rounded-full border border-white/10" data-alt="A futuristic avatar of a young cadet with short neon-blue hair, wearing high-tech visors and a dark cybernetic uniform. The aesthetic is clean, sharp, and illuminated by a soft orange backlight, consistent with a high-end tech platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwSmAUMZ7KYucmyMmhblx5riEl4YOWO59mWgBeVCkiybylc19-qT2SfBCo6DaPQNN5Cbt0yyzBz39PRWc7q06T7Jhe2ym_opiwW2DMnkPXwHJevsYuVwSnhXP735dTH0fpeUiBoKF2EE0_5o87kQJg_J7PzkR9lTlNlmeW15ONqTQWwVvpDxZESnrBfFB1nVmn6Zy4vJSwuQ1NksjMT4dIgqb0Opq05nWjm-BgKwhPELhwtBiglgajiQ"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-[#1f1f22]"></span>
+</div>
+<div>
+<div class="font-medium text-on-surface">Kaelen Vance</div>
+<div class="font-label-sm text-[10px] text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]">shield</span> SEC-LEVEL 4
+                                            </div>
+</div>
+</div>
+</td>
+<td class="py-4">
+<div class="font-label-sm text-[11px] text-primary/80 uppercase tracking-tighter">MC-7729-XV</div>
+</td>
+<td class="py-4 pr-4 rounded-r-lg text-right">
+<span class="text-[10px] font-label-sm px-2 py-0.5 border border-white/10 rounded text-on-surface-variant uppercase bg-white/5">Standby</span>
+</td>
+</tr>
+<!-- Student Row 2 -->
+<tr class="group hover:bg-white/5 transition-colors cursor-pointer rounded-lg overflow-hidden">
+<td class="py-4 pl-4 rounded-l-lg">
+<input class="w-4 h-4 bg-transparent border-white/20 rounded focus:ring-primary-container text-primary-container" type="checkbox"/>
+</td>
+<td class="py-4">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img class="w-10 h-10 rounded-full border border-white/10" data-alt="A portrait of a female cyber-intelligence student with sleek black hair and amber digital eyes. She is wearing a structured jacket with glowing magenta accents. The background is a minimalist data-grid with soft bokeh lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfqDHt-LHn0RWSl2SVisNvqA-v3gKKDV0odW57c9527PKTMM9sfPInOkvXcIcoU_DgLLVjl9bNpjXuBay5YkH6A0dPXNgOU13GPnUHGBmchoX4H7wCLQ_TATxsY1dn6lq5DNYzqte_sZiIMFXNDwsUVlvLqN2ke1wMHGBOpgMkjDGSmx8BJzSgj21SRtpfy59nz-9PYRhiYaHNebibnTrDvu8VBPAEiLqNoUmeD59C038dB5MDvQh07Q"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-yellow-500 rounded-full border-2 border-[#1f1f22]"></span>
+</div>
+<div>
+<div class="font-medium text-on-surface">Lyra Chen</div>
+<div class="font-label-sm text-[10px] text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]">bolt</span> ANALYST
+                                            </div>
+</div>
+</div>
+</td>
+<td class="py-4">
+<div class="font-label-sm text-[11px] text-primary/80 uppercase tracking-tighter">MC-4012-LC</div>
+</td>
+<td class="py-4 pr-4 rounded-r-lg text-right">
+<span class="text-[10px] font-label-sm px-2 py-0.5 border border-white/10 rounded text-orange-400/80 uppercase bg-orange-400/5">In Reserve</span>
+</td>
+</tr>
+<!-- Student Row 3 -->
+<tr class="group hover:bg-white/5 transition-colors cursor-pointer rounded-lg overflow-hidden">
+<td class="py-4 pl-4 rounded-l-lg">
+<input class="w-4 h-4 bg-transparent border-white/20 rounded focus:ring-primary-container text-primary-container" type="checkbox"/>
+</td>
+<td class="py-4">
+<div class="flex items-center gap-4">
+<img class="w-10 h-10 rounded-full border border-white/10" data-alt="A close-up shot of a cybernetic augmented cadet with a prosthetic ocular lens and a silver tactical collar. The lighting is dramatic, high-contrast, featuring deep shadows and sharp highlights of violet light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmWEu0nDuimvM998LJ3mC5BMpKgjT_imjhM3lN3GaWekRpA2M0QNkzRZCR2dKYSw7p5DTXhqI02EmMIF77pgPsy25rdAnOOTruX1CKmJ5stD5Wl0EBLuJQkoN3VYPJQ6p9kCTOfGbAJkho16NxpOI2hsgfH0BqhzOglR-fBoakK5OImcRLze3xtd6IGEop66HhVyi5vbUaQVRM4BXJs2PEX5GnEpP121It1MjE4HOXc0McE274pUfHBw"/>
+<div>
+<div class="font-medium text-on-surface">Jaxen Thorne</div>
+<div class="font-label-sm text-[10px] text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]">radar</span> FIELD OPS
+                                            </div>
+</div>
+</div>
+</td>
+<td class="py-4">
+<div class="font-label-sm text-[11px] text-primary/80 uppercase tracking-tighter">MC-9910-JT</div>
+</td>
+<td class="py-4 pr-4 rounded-r-lg text-right">
+<span class="text-[10px] font-label-sm px-2 py-0.5 border border-white/10 rounded text-on-surface-variant uppercase bg-white/5">Standby</span>
+</td>
+</tr>
+<!-- Student Row 4 -->
+<tr class="group hover:bg-white/5 transition-colors cursor-pointer rounded-lg overflow-hidden">
+<td class="py-4 pl-4 rounded-l-lg">
+<input class="w-4 h-4 bg-transparent border-white/20 rounded focus:ring-primary-container text-primary-container" type="checkbox"/>
+</td>
+<td class="py-4">
+<div class="flex items-center gap-4">
+<img class="w-10 h-10 rounded-full border border-white/10" data-alt="A portrait of a calm, intellectual cyber-cadet wearing rounded glasses with digital reflections. He is wearing a dark, high-collar tech hoodie. The background is a soft, dark purple gradient with faint technical schematics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABlSzea0fJ3d5MBXr7qHMW9HLMyEKU5pk10H2O7GtAI8etmixuOLq8E2ibiLEsXM5pxaWnsXaV6mj1kBoWZc04N9uIVVXlJOnpPnnPoc87VqxpKTWkTml5ACurSln_mkJu_gMlrY_CQsGlPI4vqrmlt-967hh0O7mXNIoo_rh47E1AEPr7KynGbTHD7VhOBSbCBm9ApHIkC2KaNbgYw9J7I86wYhDE2z7JqZ-SoABuCsow0HE0XSTtpg"/>
+<div>
+<div class="font-medium text-on-surface">Aris Vane</div>
+<div class="font-label-sm text-[10px] text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]">terminal</span> DEV-OPS
+                                            </div>
+</div>
+</div>
+</td>
+<td class="py-4">
+<div class="font-label-sm text-[11px] text-primary/80 uppercase tracking-tighter">MC-2218-AV</div>
+</td>
+<td class="py-4 pr-4 rounded-r-lg text-right">
+<span class="text-[10px] font-label-sm px-2 py-0.5 border border-white/10 rounded text-on-surface-variant uppercase bg-white/5">Standby</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Central Divider with Action Buttons -->
+<div class="flex flex-col items-center justify-center gap-6 bg-background relative">
+<div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-white/10"></div>
+<button class="z-10 w-12 h-12 rounded-full glass-panel flex items-center justify-center text-primary-container hover:bg-primary-container hover:text-white transition-all shadow-xl group">
+<span class="material-symbols-outlined group-hover:translate-x-0.5 transition-transform">chevron_right</span>
+</button>
+<button class="z-10 w-12 h-12 rounded-full glass-panel flex items-center justify-center text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all shadow-xl group">
+<span class="material-symbols-outlined group-hover:-translate-x-0.5 transition-transform">chevron_left</span>
+</button>
+</div>
+<!-- Right Pane: Active Roster -->
+<section class="glass-panel rounded-r-xl flex flex-col overflow-hidden border-l-0 relative">
+<div class="p-6 border-b border-white/5 bg-surface-container-high/40">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-lg text-[20px] flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+                            ACTIVE ROSTER
+                        </h3>
+<div class="flex items-center gap-2 font-label-sm">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="text-secondary uppercase">Node Sync Active</span>
+</div>
+</div>
+<div class="flex items-center justify-between bg-background/30 rounded p-3 border border-white/5">
+<div class="text-label-sm">
+<span class="text-on-surface-variant uppercase mr-2">INSTRUCTOR:</span>
+<span class="text-primary font-bold">REDACTED_NODE_01</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-secondary">more_horiz</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar p-2">
+<div class="flex flex-col gap-2 px-4">
+<!-- Active Student 1 -->
+<div class="active-edge flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/5 hover:bg-white/10 transition-all group">
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded border border-secondary/30" data-alt="A striking portrait of a male cyber-agent with facial tattoos in the shape of circuitry and glowing orange eyes. He is wearing sleek, matte-black armor. The lighting is moody and technical, with neon orange highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOWnKFpnCzsT5Ot2w0hwBCogKV-nj8ifaWAjFf0iUSOnIy3Gzdy-JhBQNU3U0hRd3yvQXwDsYYP02wCXuHuAQ70U7ck6eDTyOk--_WfPurfB0GQvstEN_FqCe8LWkRt3TlYFGK5gqlAUn5Ju1-UdXX2elnAMTnudn15E88y0AsyoOiI5pxgAcT2Ls-Z62k-j_D7ynJz0OomxV2_td3ZBmZErO4S9DuWQK9TMWYo8jDJJ-mKePf0Z5uQw"/>
+<div>
+<div class="font-medium text-on-surface">Silas Thorne</div>
+<div class="font-label-sm text-[11px] text-primary uppercase tracking-tighter">MC-8822-ST</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden xl:flex flex-col items-end">
+<span class="text-[10px] text-on-surface-variant font-label-sm">UPLINK TIME</span>
+<span class="text-[12px] font-label-sm">04:22:15</span>
+</div>
+<button class="flex items-center justify-center w-8 h-8 rounded bg-error/10 text-error hover:bg-error hover:text-white transition-all opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-[18px]">person_remove</span>
+</button>
+</div>
+</div>
+<!-- Active Student 2 -->
+<div class="active-edge flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/5 hover:bg-white/10 transition-all group">
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded border border-secondary/30" data-alt="A portrait of a highly skilled cyber-operative with short platinum hair and a bionic arm resting on a tech-desk. The background is filled with blurred holograms and glowing data screens in shades of purple and pink." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8Xo1kTstD4KeyyQ0CUapOw43iVbP1enw8-KcCTli5qL-tvX4pE98WXXZ55ChZ1XjTwdrkdV5RE4X489n-E3dk-EvS4Q8EYfBPXgBag8DRME5QVHGc3lWNIDCzDioQZqNw1Oxj89m9bhqh5924XsEopidtcfMHKVLyLoIlnKLIe5qqofxvnyeEjEdXrnasSzLWpPmbmw4HY5-nWBfzD3ZR0aPDriWPBnq0mQfwWEMGSFDGuYgcLvfHSw"/>
+<div>
+<div class="font-medium text-on-surface">Nova Solaris</div>
+<div class="font-label-sm text-[11px] text-primary uppercase tracking-tighter">MC-1104-NS</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden xl:flex flex-col items-end">
+<span class="text-[10px] text-on-surface-variant font-label-sm">UPLINK TIME</span>
+<span class="text-[12px] font-label-sm">12:05:44</span>
+</div>
+<button class="flex items-center justify-center w-8 h-8 rounded bg-error/10 text-error hover:bg-error hover:text-white transition-all opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-[18px]">person_remove</span>
+</button>
+</div>
+</div>
+<!-- Empty Slot Illustration if few students -->
+<div class="mt-4 border-2 border-dashed border-white/5 rounded-xl h-24 flex items-center justify-center">
+<div class="text-center">
+<span class="material-symbols-outlined text-on-surface-variant/30 text-[32px]">group_add</span>
+<p class="text-label-sm text-on-surface-variant/30 uppercase tracking-[0.2em] mt-1">Ready for intake</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="p-6 bg-surface-container-lowest border-t border-white/10">
+<div class="flex items-center justify-between">
+<div class="flex -space-x-3">
+<div class="w-8 h-8 rounded-full border-2 border-background bg-surface-container-high flex items-center justify-center text-[10px] font-bold">12+</div>
+</div>
+<button class="bg-gradient-to-r from-[#ff6b2c] to-[#bb7bff] text-white px-8 py-3 rounded font-label-sm uppercase tracking-widest glow-hover transition-all flex items-center gap-3">
+                            COMMIT ROSTER UPDATES
+                            <span class="material-symbols-outlined text-[18px]">sync_alt</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- System Status Footer Overlay -->
+<footer class="mt-12 flex flex-col md:flex-row justify-between items-center gap-6 border-t border-white/5 pt-8">
+<div class="flex items-center gap-8 font-label-sm text-[11px] text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                    SECURE_PROTOCOL: AES-256
+                </div>
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+                    LATENCY: 14MS
+                </div>
+<div class="hidden lg:block">
+                    UPTIME: 99.998%
+                </div>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-label-sm uppercase text-on-surface-variant/50">Tactical HUD v4.2.0</span>
+<div class="flex gap-1">
+<div class="w-8 h-1 bg-primary-container"></div>
+<div class="w-8 h-1 bg-white/10"></div>
+<div class="w-8 h-1 bg-white/10"></div>
+</div>
+</div>
+</footer>
+</main>
+<script>
+        // Micro-interaction for row selection
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('click', (e) => {
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                if (e.target !== checkbox) {
+                    checkbox.checked = !checkbox.checked;
+                }
+                
+                if (checkbox.checked) {
+                    row.classList.add('bg-primary/5', 'active-edge');
+                } else {
+                    row.classList.remove('bg-primary/5', 'active-edge');
+                }
+            });
+        });
+
+        // Hover effect for pane visual distinction
+        const panes = document.querySelectorAll('section.glass-panel');
+        panes.forEach(pane => {
+            pane.addEventListener('mouseenter', () => {
+                pane.style.boxShadow = "0 0 40px rgba(0,0,0,0.5)";
+            });
+            pane.addEventListener('mouseleave', () => {
+                pane.style.boxShadow = "none";
+            });
+        });
+    </script>
+</body></html>

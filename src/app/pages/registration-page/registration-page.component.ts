@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -27,12 +27,9 @@ import { OAuthService } from 'src/app/core/auth/oauth.service';
   styleUrl: './registration-page.component.scss',
 })
 export class RegistrationPageComponent implements OnDestroy, OnInit {
-  @Input() isEditMode: boolean = false;
-
   @HostBinding('class.signup-standalone')
-  get isSignupStandalone(): boolean {
-    return !this.isEditMode;
-  }
+  readonly isSignupStandalone = true;
+
   public getPasswordError: (arg1: FormGroup, arg2: string) => boolean;
   public isFieldInvalid: (arg1: FormGroup, arg2: string) => boolean | undefined;
   public isPasswordMismatch: (arg1: FormGroup, arg2: string, arg3: string) => boolean | null;
@@ -83,7 +80,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
         role: ['student', [Validators.required]],
         status: ['pending'],
         organization_id: [''],
-        name: [''], // Organization name - required when role is organization
+        name: [''],
       },
       {
         validator: this.formValidator.passwordMatchValidator.bind(this.createAccountForm),
@@ -93,53 +90,40 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     this.getPasswordError = this.formValidator.getPasswordError;
     this.isPasswordMismatch = this.formValidator.isPasswordMismatch;
   }
+
   ngOnInit(): void {
     this.loadOrganizations();
     this.setupRoleValidators();
 
-    // Make password fields optional in edit mode
-    if (this.isEditMode) {
-      // Clear required validator for organization (read-only in edit, may be empty for legacy users)
-      this.createAccountForm.get('organization_id')?.clearValidators();
-      this.createAccountForm.get('organization_id')?.updateValueAndValidity();
-      // Clear required validators for password fields
-      this.createAccountForm.get('password')?.clearValidators();
-      // Set optional validators (only validate format if password is provided)
-      this.createAccountForm.get('password')?.setValidators([
-        Validators.minLength(6),
-        this.formValidator.customPasswordValidator.bind(this.formValidator),
-      ]);
-      this.createAccountForm.get('confirmPassword')?.clearValidators();
-      // Update form-level validator to handle optional passwords
-      this.createAccountForm.setValidators(
-        this.formValidator.passwordMatchValidatorOptional.bind(this.formValidator)
-      );
-    }
-
     if (this.commonService?.loginedUserInfo) {
       const loginedId = this.commonService.loginedUserInfo?.id;
-      const loginedUser: UserModel | Organization = this.commonService.allUsersList.find(
-        (user: UserModel) => user.id === loginedId
-      ) as UserModel || this.commonService.loginedUserInfo;
-      
-      const firstName = !isOrganization(loginedUser) ? (loginedUser?.first_name || loginedUser?.firstName || '') : '';
-      const lastName = !isOrganization(loginedUser) ? (loginedUser?.last_name || loginedUser?.lastName || '') : '';
+      const loginedUser: UserModel | Organization =
+        (this.commonService.allUsersList.find((user: UserModel) => user.id === loginedId) as UserModel) ||
+        this.commonService.loginedUserInfo;
+
+      const firstName = !isOrganization(loginedUser)
+        ? loginedUser?.first_name || loginedUser?.firstName || ''
+        : '';
+      const lastName = !isOrganization(loginedUser)
+        ? loginedUser?.last_name || loginedUser?.lastName || ''
+        : '';
       const email = loginedUser?.contact?.email || (loginedUser as UserModel)?.email || '';
       const phone = loginedUser?.contact?.phone || (loginedUser as UserModel)?.phone || '';
       const profileImage = loginedUser?.profile_image || (loginedUser as UserModel)?.profileImage || '';
-      const role = (loginedUser as UserModel)?.role || (isOrganization(loginedUser) ? 'organization' : 'student');
+      const role =
+        (loginedUser as UserModel)?.role || (isOrganization(loginedUser) ? 'organization' : 'student');
       const orgName = isOrganization(loginedUser) ? loginedUser.name : (loginedUser as UserModel)?.name || '';
-      
+
       const userFormInfo = {
         password: '',
         profileImage: '',
         status: (loginedUser as UserModel)?.status || 'active',
         confirmPassword: '',
-        role: role,
-        email: email,
-        phone: phone,
-        lastName: lastName,
-        firstName: firstName,
+        role,
+        email,
+        phone,
+        lastName,
+        firstName,
         organization_id: (loginedUser as UserModel)?.organization_id || '',
         name: orgName,
       };
@@ -147,12 +131,6 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
       this.registrationService.imageUrl = this.profileUrl;
       this.isAdminLogin = role === 'organization';
       this.createAccountForm.setValue(userFormInfo);
-      if (this.isEditMode) {
-        this.createAccountForm?.get('email')?.disable();
-        // Update validators after setting values
-        this.createAccountForm.get('password')?.updateValueAndValidity();
-        this.createAccountForm.get('confirmPassword')?.updateValueAndValidity();
-      }
       this.createAccountForm?.get('role')?.disable();
       this.createAccountForm?.get('organization_id')?.disable();
       this.createAccountForm.markAllAsTouched();
@@ -160,8 +138,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
       if (this.profileUrl) {
         this.createAccountForm.get('profileImage')?.clearValidators();
       }
-    } else if (!this.isEditMode) {
-      // Check URL for ?type=organization to allow public org signup
+    } else {
       const params = new URLSearchParams(window.location.search);
       if (params.get('type') === 'organization') {
         this.registrationMode = 'organization';
@@ -170,6 +147,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
       }
     }
   }
+
   unescapeHtml(text: string): string {
     return decodeText(text);
   }
@@ -195,11 +173,13 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     }
     target.value = '';
   }
+
   onSubmit() {
     this.createAccountForm.markAllAsTouched();
     if (this.createAccountForm.valid) {
       const userFormInfo = this.createAccountForm.getRawValue();
-      userFormInfo.email = this.createAccountForm.get('email')?.value || this.commonService.loginedUserInfo?.contact?.email || '';
+      userFormInfo.email =
+        this.createAccountForm.get('email')?.value || this.commonService.loginedUserInfo?.contact?.email || '';
       userFormInfo.phone = this.createAccountForm.get('phone')?.value || this.commonService.loginedUserInfo?.contact?.phone || '';
       userFormInfo.firstName = this.createAccountForm.get('firstName')?.value;
       userFormInfo.lastName = this.createAccountForm.get('lastName')?.value;
@@ -210,37 +190,19 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
       userFormInfo.confirmPassword = this.createAccountForm.get('confirmPassword')?.value;
       userFormInfo.organization_id = this.createAccountForm.get('organization_id')?.value;
       userFormInfo.name = this.createAccountForm.get('name')?.value;
-      this.registrationService
-        .registerUserInfo(this.destroy$, userFormInfo, this.isEditMode)
-        .then((clearForms) => {
-          if (clearForms) {
-            if (this.isEditMode) {
-              // For update, refresh user info and stay on the page or navigate to dashboard
-              this.commonService.loginedUserInfo = {
-                ...this.commonService.loginedUserInfo,
-                first_name: this.createAccountForm.get('firstName')?.value,
-                last_name: this.createAccountForm.get('lastName')?.value,
-                contact: {
-                  email: this.createAccountForm.get('email')?.value,
-                  phone: this.createAccountForm.get('phone')?.value,
-                },
-                profile_image: this.registrationService.imageUrl,
-              };
-              // Optionally navigate to dashboard or refresh the page
-              // this.router.navigate(['/dashboard/account']);
-            } else {
-              // For new registration, post-login workflow navigates for users; org goes to login
-              if (this.isAdminLogin || this.createAccountForm.get('role')?.value === 'organization') {
-                this.createAccountForm.reset();
-                this.router.navigate(['/login']);
-              }
-            }
+      this.registrationService.registerUserInfo(this.destroy$, userFormInfo, false).then((clearForms) => {
+        if (clearForms) {
+          if (this.isAdminLogin || this.createAccountForm.get('role')?.value === 'organization') {
+            this.createAccountForm.reset();
+            this.router.navigate(['/login']);
           }
-        });
+        }
+      });
     } else {
       console.error('Form is invalid');
     }
   }
+
   private setupRoleValidators(): void {
     const roleControl = this.createAccountForm.get('role');
     const nameControl = this.createAccountForm.get('name');
@@ -264,7 +226,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     };
 
     roleControl?.valueChanges.subscribe(() => updateValidators());
-    updateValidators(); // Set initial validators based on current role
+    updateValidators();
   }
 
   loadOrganizations(): void {
@@ -302,14 +264,10 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   navigateLogin() {
     this.router.navigate(['/login']);
   }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  isDialogOpen = false;
-  openDialog(): void {
-    this.isDialogOpen = true;
   }
 
   togglePasswordVisibility(): void {

@@ -11,6 +11,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { RosterRegistrationService } from 'src/app/services/api-service/roster-registration.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
+import { DASHBOARD_NAV_ROUTES } from '../dashboard/dashboard-routes.config';
 
 @Component({
   selector: 'app-invite-student',
@@ -20,6 +21,7 @@ import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
   styleUrl: './invite-student.component.scss',
 })
 export class InviteStudentComponent implements OnDestroy {
+  readonly navRoutes = DASHBOARD_NAV_ROUTES;
   inviteForm: FormGroup;
   submitting = false;
   private destroy$ = new Subject<void>();
@@ -79,7 +81,7 @@ export class InviteStudentComponent implements OnDestroy {
         messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
       });
       this.inviteForm.reset();
-      this.router.navigate(['/dashboard/student-approval']);
+      this.router.navigate([this.navRoutes.studentApproval]);
     } catch {
       this.commonService.openToaster({
         message: 'Failed to add student to roster. Please try again.',

@@ -1,0 +1,59 @@
+<div class="approval-grid-page directory-page">
+  <div class="approval-grid-page__backdrop" aria-hidden="true">
+    <div class="approval-grid-page__technical-grid"></div>
+    <div class="approval-grid-page__glow approval-grid-page__glow--purple"></div>
+    <div class="approval-grid-page__glow approval-grid-page__glow--orange"></div>
+    <div class="approval-grid-page__scanline"></div>
+  </div>
+
+  <div class="approval-grid-page__content">
+    <header class="approval-grid-page__header">
+      <div class="approval-grid-page__header-text">
+        <h2>Directory</h2>
+        <div class="approval-grid-page__header-meta">
+          <span class="material-symbols-outlined" aria-hidden="true">folder_shared</span>
+          <span>Authorized Node Directory</span>
+          <span>|</span>
+          <span class="is-muted">
+            @if (activeTab === 'teachers') {
+              Active Instructors
+            } @else {
+              Active Students
+            }
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <div class="approval-grid-page__header-actions">
+      <ul class="directory-page__tabs" role="tablist" aria-label="Directory sections">
+        @if (showTeachersTab) {
+          <li
+            role="tab"
+            [attr.aria-selected]="activeTab === 'teachers'"
+            [class.is-active]="activeTab === 'teachers'"
+            (click)="setTab('teachers')"
+          >
+            Teachers
+          </li>
+        }
+        <li
+          role="tab"
+          [attr.aria-selected]="activeTab === 'students'"
+          [class.is-active]="activeTab === 'students'"
+          (click)="setTab('students')"
+        >
+          Students
+        </li>
+      </ul>
+    </div>
+
+    <div class="directory-page__panel" role="tabpanel">
+      @if (activeTab === 'teachers' && showTeachersTab) {
+        <app-teachers-list [embedded]="true" />
+      } @else if (activeTab === 'students') {
+        <app-students-list [embedded]="true" />
+      }
+    </div>
+  </div>
+</div>

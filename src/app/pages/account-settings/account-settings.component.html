@@ -1,0 +1,288 @@
+<div class="account-profile account-profile--split">
+  <div class="account-profile__ambient" aria-hidden="true">
+    <div class="account-profile__ambient-glow account-profile__ambient-glow--primary"></div>
+    <div class="account-profile__ambient-glow account-profile__ambient-glow--tertiary"></div>
+  </div>
+
+  <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" class="account-profile__split-form">
+    <div class="account-profile__split">
+      <aside class="account-profile__identity">
+        <label class="account-profile__avatar-large" for="profileImageInput">
+          <div class="account-profile__avatar-gradient">
+            <div class="account-profile__avatar-frame">
+              <img [src]="profileUrl" alt="Profile picture" />
+              <div class="account-profile__avatar-overlay">
+                <span class="material-symbols-outlined" aria-hidden="true">photo_camera</span>
+              </div>
+            </div>
+          </div>
+          <span class="account-profile__avatar-status" aria-hidden="true"></span>
+          <input
+            type="file"
+            #profileImageInput
+            id="profileImageInput"
+            formControlName="profileImage"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            class="hidden-file-input"
+            aria-label="Upload profile picture"
+          />
+        </label>
+
+        <div class="account-profile__identity-name">
+          <h3>{{ displayName }}</h3>
+          <p>{{ roleSubtitle }}</p>
+        </div>
+
+        <div class="account-profile__identity-fields">
+          <div class="account-profile__stat-card account-profile__stat-card--tertiary">
+            <p class="account-profile__stat-label">Account Role</p>
+            <p class="account-profile__stat-value account-profile__stat-value--lg">{{ roleLabel }}</p>
+          </div>
+          <div class="account-profile__stat-card account-profile__stat-card--tertiary">
+            <p class="account-profile__stat-label">Organization</p>
+            <p class="account-profile__stat-value account-profile__stat-value--lg">{{ organizationDisplayName }}</p>
+          </div>
+          <div class="account-profile__stat-card account-profile__stat-card--tertiary">
+            <p class="account-profile__stat-label">Email</p>
+            <p class="account-profile__stat-value account-profile__stat-value--lg">{{ emailDisplay }}</p>
+          </div>
+          <!-- <div class="account-profile__identity-field">
+            <label>Operational Role</label>
+            <input type="text" [value]="roleLabel" readonly disabled tabindex="-1" />
+          </div>
+          <div class="account-profile__identity-field">
+            <label>Organization Node</label>
+            <input type="text" [value]="organizationDisplayName" readonly disabled tabindex="-1" />
+          </div>
+          <div class="account-profile__identity-field">
+            <label>Primary Data Link</label>
+            <input type="email" [value]="emailDisplay" readonly disabled tabindex="-1" />
+            <span class="account-profile__identity-hint">Master link cannot be altered</span>
+          </div> -->
+        </div>
+
+        <div class="account-profile__stat-cards">
+          <!-- <div class="account-profile__stat-card account-profile__stat-card--primary">
+            <div class="account-profile__stat-card-head">
+              <p>System Status</p>
+              <div class="account-profile__stat-dots" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+            <p class="account-profile__stat-value">Operational // {{ systemId }}</p>
+          </div> -->
+          <div class="account-profile__stat-card account-profile__stat-card--tertiary">
+            <p class="account-profile__stat-label">Account Status</p>
+            <p class="account-profile__stat-value account-profile__stat-value--lg">{{ accountStatus }}</p>
+          </div>
+          <div class="account-profile__stat-card account-profile__stat-card--secondary">
+            <p class="account-profile__stat-label">Last Updated</p>
+            <p class="account-profile__stat-value account-profile__stat-value--lg">{{ lastAccessLabel }}</p>
+          </div>
+        </div>
+      </aside>
+
+      <section class="account-profile__workspace">
+        <div class="account-profile__form-hidden" aria-hidden="true">
+          <input type="text" formControlName="role" tabindex="-1" />
+          <select formControlName="organization_id" tabindex="-1">
+            @for (org of organizationsList; track org.id) {
+            <option [value]="org.id">{{ org.id }}</option>
+            }
+          </select>
+          <input type="email" formControlName="email" tabindex="-1" />
+        </div>
+
+        <div class="account-profile__workspace-inner">
+          <div class="account-profile__workspace-header">
+            <div class="account-profile__workspace-title">
+              <span class="material-symbols-outlined" aria-hidden="true">manage_accounts</span>
+              <h2>Update Account Details</h2>
+            </div>
+            <p>Synchronize your biometrics and security protocols across the Majestic Warhorse infrastructure.</p>
+          </div>
+
+          <div class="account-profile__form-block">
+            <div class="account-profile__form-block-head">
+              <span class="account-profile__form-block-badge account-profile__form-block-badge--primary">01</span>
+              <h3>Basic Information</h3>
+              <div class="account-profile__form-block-line"></div>
+            </div>
+            <div class="account-profile__form-grid">
+              @if (isAdminLogin && accountForm.get('role')?.value === 'organization') {
+              <div class="account-profile__field account-profile__field--span-2">
+                <label for="organizationName">
+                  <span class="material-symbols-outlined" aria-hidden="true">business</span>
+                  Organization Name
+                </label>
+                <input
+                  type="text"
+                  id="organizationName"
+                  placeholder="Enter Organization Name"
+                  formControlName="name"
+                  class="terminal-input"
+                />
+                @if (isFieldInvalid(accountForm, 'name')) {
+                <span class="account-profile__field-error">Organization name is required.</span>
+                }
+              </div>
+              } @else if (accountForm.get('role')?.value !== 'organization') {
+              <div class="account-profile__field">
+                <label for="firstname">
+                  <span class="material-symbols-outlined" aria-hidden="true">person</span>
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  id="firstname"
+                  placeholder="Enter First Name"
+                  formControlName="firstName"
+                  class="terminal-input"
+                />
+                @if (isFieldInvalid(accountForm, 'firstName')) {
+                <span class="account-profile__field-error">First name is required.</span>
+                }
+              </div>
+              <div class="account-profile__field">
+                <label for="lastname">
+                  <span class="material-symbols-outlined" aria-hidden="true">person</span>
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  id="lastname"
+                  placeholder="Enter Last Name"
+                  formControlName="lastName"
+                  class="terminal-input"
+                />
+                @if (isFieldInvalid(accountForm, 'lastName')) {
+                <span class="account-profile__field-error">Last name is required.</span>
+                }
+              </div>
+              }
+            </div>
+          </div>
+
+          <div class="account-profile__form-block">
+            <div class="account-profile__form-block-head">
+              <span class="account-profile__form-block-badge account-profile__form-block-badge--tertiary">02</span>
+              <h3>Contact Information</h3>
+              <div class="account-profile__form-block-line"></div>
+            </div>
+            <div class="account-profile__form-grid">
+              <div class="account-profile__field">
+                <label for="phone">
+                  <span class="material-symbols-outlined" aria-hidden="true">call</span>
+                  Mobile
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  placeholder="Enter Mobile Number"
+                  formControlName="phone"
+                  class="terminal-input"
+                  [class.has-error]="isFieldInvalid(accountForm, 'phone')"
+                />
+                @if (isFieldInvalid(accountForm, 'phone')) {
+                <span class="account-profile__field-error">
+                  @if (accountForm.get('phone')?.errors?.['pattern']) {
+                  Please enter a valid mobile number.
+                  } @else {
+                  Mobile number is required.
+                  }
+                </span>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="account-profile__form-block">
+            <div class="account-profile__form-block-head">
+              <span class="account-profile__form-block-badge account-profile__form-block-badge--secondary">03</span>
+              <h3>Security Information</h3>
+              <div class="account-profile__form-block-line"></div>
+            </div>
+            <div class="account-profile__form-grid">
+              <div class="account-profile__field">
+                <label for="password">
+                  <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+                  Password
+                </label>
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  id="password"
+                  placeholder="Enter password (optional)"
+                  formControlName="password"
+                  class="terminal-input"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  (click)="togglePasswordVisibility()"
+                  [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+                  [attr.title]="showPassword ? 'Hide password' : 'Show password'"
+                >
+                  <span class="material-symbols-outlined" aria-hidden="true">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+                </button>
+                @if (isFieldInvalid(accountForm, 'password')) {
+                <div class="suggestion-holder">
+                  @if (getPasswordError(accountForm, 'minlength')) {
+                  <span>Password must be at least 6 characters long.</span>
+                  }
+                  @if (getPasswordError(accountForm, 'uppercase')) {
+                  <span>Password must contain at least one uppercase letter.</span>
+                  }
+                  @if (getPasswordError(accountForm, 'lowercase')) {
+                  <span>Password must contain at least one lowercase letter.</span>
+                  }
+                  @if (getPasswordError(accountForm, 'number')) {
+                  <span>Password must contain at least one number.</span>
+                  }
+                  @if (getPasswordError(accountForm, 'special')) {
+                  <span>Password must contain at least one special character.</span>
+                  }
+                </div>
+                }
+              </div>
+              <div class="account-profile__field">
+                <label for="confirmPassword">
+                  <span class="material-symbols-outlined" aria-hidden="true">lock_reset</span>
+                    Confirm Password
+                </label>
+                <input
+                  [type]="showConfirmPassword ? 'text' : 'password'"
+                  id="confirmPassword"
+                  placeholder="Confirm password"
+                  formControlName="confirmPassword"
+                  class="terminal-input"
+                  [class.has-error]="isPasswordMismatch(accountForm, 'password', 'confirmPassword') || (accountForm.errors?.['mismatch'] && (accountForm.get('password')?.touched || accountForm.get('confirmPassword')?.touched))"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  (click)="toggleConfirmPasswordVisibility()"
+                  [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'"
+                  [attr.title]="showConfirmPassword ? 'Hide password' : 'Show password'"
+                >
+                  <span class="material-symbols-outlined" aria-hidden="true">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</span>
+                </button>
+                @if (isPasswordMismatch(accountForm, 'password', 'confirmPassword') || (accountForm.errors?.['mismatch'] && (accountForm.get('password')?.touched || accountForm.get('confirmPassword')?.touched))) {
+                <span class="account-profile__field-error">Passwords do not match.</span>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="account-profile__actions">
+            <button class="account-profile__submit" type="submit">
+              <span class="material-symbols-outlined" aria-hidden="true">save</span>
+              Commit Changes
+            </button>
+            <button type="button" class="account-profile__reset" (click)="resetForm()">Reset</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </form>
+</div>

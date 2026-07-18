@@ -37,6 +37,41 @@ export class AuthService {
     );
   }
 
+  getUsersByOrganization(organizationId: string): Promise<UserModel[]> {
+    const params = organizationId ? { organization_id: organizationId } : undefined;
+    return lastValueFrom(
+      this.http.get<{ data: UserModel[] }>(`${this._apiUrl}user/get`, { params }).pipe(
+        map((res) => {
+          const data = (res as { data?: UserModel[] })?.data ?? res;
+          return Array.isArray(data) ? data : [];
+        }),
+        catchError(() => of([]))
+      )
+    );
+  }
+
+  async resolveUsersForOrganization(
+    organizationId: string,
+    cached: UserModel[] = []
+  ): Promise<UserModel[]> {
+    if (organizationId) {
+      const orgUsers = await this.getUsersByOrganization(organizationId);
+      if (orgUsers.length) {
+        return orgUsers;
+      }
+    }
+
+    if (cached.length) {
+      return cached;
+    }
+
+    try {
+      return await this.getAllUsers();
+    } catch {
+      return cached;
+    }
+  }
+
   getUserById(userId: string): Promise<UserModel | null> {
     if (!userId) {
       return Promise.resolve(null);

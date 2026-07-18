@@ -13,8 +13,10 @@ export interface DashboardStatWidget {
   headerRight?: string;
   headerRightAccent?: boolean;
   bars?: number[];
-  rings?: Array<{ value: number; color?: string; style?: StatRingStyle }>;
+  rings?: Array<{ value: number; displayValue?: number | string; color?: string; style?: StatRingStyle }>;
   ringValue?: number;
+  /** Numeric/label shown in the ring center when different from fill `value`. */
+  ringDisplayValue?: number | string;
   ringColor?: string;
   miniBars?: number[];
 }
@@ -31,19 +33,26 @@ export interface RecommendedCourseItem {
 export interface SubscribedCourseItem {
   id: string;
   title: string;
+  /** Instructor display name for the glass-card author row. */
+  authorName?: string;
+  /** Course status label: New | Progress | Completed */
+  statusLevel?: string;
   categoryLabel?: string;
   categoryTitle?: string;
   coverStyle: string;
   imageUrl?: string;
   featured?: boolean;
   usePlaceholderIcon?: boolean;
-  filledStars: number;
+  averageRating?: number;
+  chapterCompletedCount?: number;
+  chapterCount?: number;
+  filledStars?: number;
   /** Filled stars in the 5-star rating row (reference: first star gold). */
-  ratingStars: number;
-  progressFraction: string;
+  ratingStars?: number;
+  progressFraction?: string;
   completePercent: number;
-  ringColor: string;
-  nextSessionValue: string;
+  ringColor?: string;
+  nextSessionValue?: string;
 }
 
 export interface ActivityFeedItem {
@@ -85,7 +94,7 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
       id: 'real-time',
       title: 'Real-Time Activity',
       variant: 'bar-chart',
-      headerRight: 'LIVE HUD',
+      headerRight: '3 today',
       headerRightAccent: true,
       bars: [30, 50, 80, 65, 40, 90, 55, 100, 45],
     },
@@ -93,18 +102,19 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
       id: 'students-rings',
       title: 'Total Students',
       variant: 'dual-rings',
-      headerRight: '0',
+      headerRight: '24',
       rings: [
-        { value: 69, color: '#ff6b2c', style: 'progress' },
-        { value: 0, style: 'concentric' },
+        { value: 69, displayValue: 24, color: '#ff6b2c', style: 'progress' },
+        { value: 40, displayValue: 24, style: 'concentric' },
       ],
     },
     {
       id: 'students-mixed',
-      title: 'Enrollment',
+      title: 'New Subscriptions',
       variant: 'ring-bars',
-      headerRight: '0',
-      ringValue: 90,
+      headerRight: '12',
+      ringValue: 48,
+      ringDisplayValue: 12,
       ringColor: '#ff6b2c',
       miniBars: [38, 52, 44, 68, 48, 62, 42, 58],
     },
@@ -112,10 +122,10 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
       id: 'real-goals',
       title: 'Real Goals',
       variant: 'goal-rings',
-      headerRight: '0',
+      headerRight: '3/10',
       rings: [
-        { value: 60, color: '#ffb59a', style: 'progress' },
-        { value: 40, style: 'concentric' },
+        { value: 30, displayValue: 3, color: '#ffb59a', style: 'progress' },
+        { value: 100, displayValue: 10, style: 'concentric' },
       ],
     },
   ],
@@ -123,7 +133,7 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
     {
       id: 'rec-1',
       title: 'Military Strategy Course',
-      subtitle: 'Advanced tactical planning',
+      subtitle: 'Advanced planning',
       ctaLabel: 'Join Mission',
       coverStyle: 'linear-gradient(160deg, #1e4a6e 0%, #0a1628 45%, #2a1848 100%)',
     },
@@ -195,7 +205,7 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
   subscribedCourses: [
     {
       id: 'sub-1',
-      title: 'Tactical Systems v1.0',
+      title: 'Systems v1.0',
       featured: true,
       coverStyle: 'linear-gradient(135deg, #1a3a5c 0%, #0d1f33 50%, #2d1b4e 100%)',
       filledStars: 4,
@@ -433,7 +443,7 @@ export function createEmptyStatWidgets(): DashboardStatWidget[] {
       id: 'real-time',
       title: 'Real-Time Activity',
       variant: 'bar-chart',
-      headerRight: 'LIVE HUD',
+      headerRight: '0 today',
       headerRightAccent: true,
       bars: [0, 0, 0, 0, 0, 0, 0, 0, 0],
     },
@@ -443,16 +453,17 @@ export function createEmptyStatWidgets(): DashboardStatWidget[] {
       variant: 'dual-rings',
       headerRight: '0',
       rings: [
-        { value: 0, color: '#ff6b2c', style: 'progress' },
-        { value: 0, style: 'concentric' },
+        { value: 0, displayValue: 0, color: '#ff6b2c', style: 'progress' },
+        { value: 0, displayValue: 0, style: 'concentric' },
       ],
     },
     {
       id: 'students-mixed',
-      title: 'Enrollment',
+      title: 'New Subscriptions',
       variant: 'ring-bars',
       headerRight: '0',
       ringValue: 0,
+      ringDisplayValue: 0,
       ringColor: '#ff6b2c',
       miniBars: [0, 0, 0, 0, 0, 0, 0, 0],
     },
@@ -460,10 +471,10 @@ export function createEmptyStatWidgets(): DashboardStatWidget[] {
       id: 'real-goals',
       title: 'Real Goals',
       variant: 'goal-rings',
-      headerRight: '0',
+      headerRight: '0/0',
       rings: [
-        { value: 0, color: '#ffb59a', style: 'progress' },
-        { value: 0, style: 'concentric' },
+        { value: 0, displayValue: 0, color: '#ffb59a', style: 'progress' },
+        { value: 0, displayValue: 0, style: 'concentric' },
       ],
     },
   ];

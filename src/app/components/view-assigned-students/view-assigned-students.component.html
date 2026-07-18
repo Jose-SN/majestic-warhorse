@@ -1,96 +1,248 @@
-<div class="common-container">
-    <div class="common-wrapper">
-        <div class="scoll-wrapper">
-            <div class="scroll-container">
-                <div class="common-list-wrapper">
-                    @if (isLoading) {
-                        <div class="loading-state">
-                            <p>Loading assigned students...</p>
-                        </div>
-                    } @else if (assignedStudents.length > 0) {
-                        <div class="assigned-students-section">
-                            <h4 class="section-heading">Subscribed Students</h4>
-                            @for (student of assignedStudents; track getStudentId(student) || $index) {
-                                <div class="assigned-student-item">
-                                    <figure>
-                                        <img [src]="commonService.decodeUrl((student.profileImage || student.profile_image) ?? '')" alt="">
-                                    </figure>
-                                    <div class="assigned-student-info">
-                                        <div class="assigned-student-name">{{ student.firstName || student.first_name }} {{ student.lastName || student.last_name }}</div>
-                                        @if (student.contact?.email || student.email) {
-                                            <span class="assigned-student-email">{{ student.contact?.email || student.email }}</span>
-                                        }
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                        <h4 class="section-heading-spaced">All Students</h4>
-                    }
-                    @if (!isLoading && studentsList.length === 0 && assignedStudents.length === 0) {
-                        <div class="no-students-found">
-                            <figure>
-                                <svg width="140" height="140" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" fill="currentColor" opacity="0.3"/>
-                                    <path d="M12 14C16.4183 14 20 15.7909 20 18V20H4V18C4 15.7909 7.58172 14 12 14Z" fill="currentColor" opacity="0.3"/>
-                                    <path d="M12 2C13.6569 2 15 3.34315 15 5C15 6.65685 13.6569 8 12 8C10.3431 8 9 6.65685 9 5C9 3.34315 10.3431 2 12 2Z" fill="currentColor"/>
-                                    <path d="M12 10C15.866 10 19 11.3431 19 13V15H5V13C5 11.3431 8.13401 10 12 10Z" fill="currentColor"/>
-                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" fill="none" opacity="0.2"/>
-                                </svg>
-                            </figure>
-                            <h3>No Students Available</h3>
-                            <p>We couldn't find any students to assign. This could happen if:</p>
-                            <ul>
-                                <li>No students have been added to the system yet</li>
-                                <li>There was an issue fetching data from the server</li>
-                            </ul>
-                            <p class="help-text">Please try refreshing the page or contact your administrator if the problem persists.</p>
-                        </div>
-                    } @else {
-                        @for (student of studentsList; track getStudentId(student) || $index) {
-                            <label 
-                                class="common-list" 
-                                [class.selected]="isAssigned(student)">
-                                <input 
-                                    type="checkbox" 
-                                    [checked]="isAssigned(student)"
-                                    (change)="onStudentSelect(student, $event)"
-                                    [value]="getStudentId(student)">
-                                <span class="checkbox-indicator"></span>
-                                <div class="list-left">
-                                    <figure class="student-avatar">
-                                        <img [src]="commonService.decodeUrl((student.profileImage || student.profile_image) ?? '')" alt="Student Avatar">
-                                    </figure>
-                                    <div class="common-list-right">
-                                        <h4>{{student.firstName || student.first_name}} {{student.lastName || student.last_name}}</h4>
-                                        @if (student.contact?.email || student.email) {
-                                            <span class="student-email">{{student.contact?.email || student.email}}</span>
-                                        }
-                                        @if (wasInitiallyAssigned(student)) {
-                                            <span class="assigned-badge">Already subscribed</span>
-                                        }
-                                        @if (isUnassigning(student)) {
-                                            <span class="unassign-badge">Unsubscribe student</span>
-                                        }
-                                    </div>
-                                </div>
-                            </label>
-                        }
-                    }
-                </div>
-                <footer class="assign-footer">
-                    <button 
-                        class="btn-assign" 
-                        [disabled]="!hasPendingChanges()" 
-                        (click)="handleStudentUpdate()"
-                        type="button"
-                        aria-label="Update subscribed students">
-                        <span>Update Students</span>
-                        @if (hasPendingChanges()) {
-                            <span class="selected-count">({{ selectedStudents.length }} subscribed)</span>
-                        }
-                    </button>
-                </footer>
-            </div>
+<div class="enrollment-page approval-grid-page">
+  <div class="approval-grid-page__backdrop" aria-hidden="true">
+    <div class="approval-grid-page__technical-grid"></div>
+    <div class="approval-grid-page__glow approval-grid-page__glow--purple"></div>
+    <div class="approval-grid-page__glow approval-grid-page__glow--orange"></div>
+    <div class="approval-grid-page__scanline"></div>
+  </div>
+
+  <div class="approval-grid-page__content enrollment-page__content">
+    <button type="button" class="enrollment-page__back" (click)="navigateBack()">
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+      Back to Directory
+    </button>
+
+    @if (isLoading) {
+      <div class="approval-grid-page__empty approval-grid-page__empty--loading" role="status" aria-live="polite">
+        <div class="approval-grid-page__spinner" aria-hidden="true"></div>
+        <h3>Loading Subscription Roster</h3>
+        <p>Fetching student nodes for this instructor…</p>
+      </div>
+    } @else {
+      <div class="enrollment-context-bar">
+        <img
+          class="enrollment-context-bar__avatar"
+          [src]="getTeacherAvatarUrl()"
+          [alt]="getTeacherName()"
+        />
+        <div class="enrollment-context-bar__details">
+          <span class="enrollment-context-bar__label">Instructor</span>
+          <span class="enrollment-context-bar__name">{{ getTeacherName() }}</span>
+          <span class="enrollment-context-bar__email">{{ getTeacherEmail() || '—' }}</span>
         </div>
-    </div>
+      </div>
+
+      <header class="approval-grid-page__header enrollment-page__header">
+        <div class="approval-grid-page__header-text">
+          <h2>Students Listing</h2>
+          <div class="approval-grid-page__header-meta">
+            <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+            <span>Subscription Management Queue</span>
+            <span>|</span>
+            <span class="is-muted">
+              Showing {{ displayedCount }}
+              {{ getSubscriptionFilterMetaLabel() }} Records
+            </span>
+          </div>
+        </div>
+
+        <div class="enrollment-page__filter-wrap">
+          <button
+            type="button"
+            class="enrollment-page__filter-trigger"
+            (click)="toggleSubscriptionFilterPopup()"
+            [attr.aria-expanded]="showSubscriptionFilterPopup"
+            aria-haspopup="listbox"
+            aria-label="Filter by subscription status"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">filter_list</span>
+            {{ getSubscriptionFilterLabel() }}
+            <span class="material-symbols-outlined enrollment-page__filter-caret" aria-hidden="true">
+              {{ showSubscriptionFilterPopup ? 'expand_less' : 'expand_more' }}
+            </span>
+          </button>
+
+          @if (showSubscriptionFilterPopup) {
+            <div class="enrollment-page__filter-popup" role="listbox" aria-label="Subscription status filter">
+              <p class="enrollment-page__filter-popup-label">Subscription Status</p>
+              <button
+                type="button"
+                class="enrollment-page__filter-option"
+                [class.is-active]="subscriptionTab === null"
+                (click)="setSubscriptionTab(null)"
+                role="option"
+                [attr.aria-selected]="subscriptionTab === null"
+              >
+                All Records
+                <span class="enrollment-page__filter-option-count">{{ studentsList.length }}</span>
+              </button>
+              <button
+                type="button"
+                class="enrollment-page__filter-option"
+                [class.is-active]="subscriptionTab === 'subscribed'"
+                (click)="setSubscriptionTab('subscribed')"
+                role="option"
+                [attr.aria-selected]="subscriptionTab === 'subscribed'"
+              >
+                Subscribed
+                <span class="enrollment-page__filter-option-count">{{ subscribedCount }}</span>
+              </button>
+              <button
+                type="button"
+                class="enrollment-page__filter-option"
+                [class.is-active]="subscriptionTab === 'unsubscribed'"
+                (click)="setSubscriptionTab('unsubscribed')"
+                role="option"
+                [attr.aria-selected]="subscriptionTab === 'unsubscribed'"
+              >
+                Unsubscribed
+                <span class="enrollment-page__filter-option-count">{{ unsubscribedCount }}</span>
+              </button>
+            </div>
+          }
+        </div>
+      </header>
+
+      <div class="approval-grid-page__header-actions">
+        <div class="approval-grid-page__stats">
+          <div class="approval-grid-page__stat">
+            <p>Subscribed</p>
+            <p>{{ subscribedCount }}</p>
+          </div>
+          <div class="approval-grid-page__stat">
+            <p>Unsubscribed</p>
+            <p>{{ unsubscribedCount }}</p>
+          </div>
+          <div class="approval-grid-page__stat">
+            <p>Visible Records</p>
+            <p class="is-accent">{{ displayedCount }}</p>
+          </div>
+        </div>
+        <div class="approval-grid-page__actions">
+          <input
+            class="enrollment-page__search"
+            type="text"
+            [(ngModel)]="rosterFilter"
+            placeholder="Filter by name or email…"
+            aria-label="Filter students"
+          />
+          <button type="button" class="approval-grid-page__action-btn" (click)="selectAllVisible()">
+            <span class="material-symbols-outlined" aria-hidden="true">done_all</span>
+            Select All
+          </button>
+          <button type="button" class="approval-grid-page__action-btn" (click)="clearVisibleSelection()">
+            <span class="material-symbols-outlined" aria-hidden="true">deselect</span>
+            Clear Selection
+          </button>
+          <button
+            type="button"
+            class="approval-grid-page__approve-btn"
+            [disabled]="!hasPendingChanges()"
+            (click)="handleStudentUpdate()"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">sync_alt</span>
+            Update Subscription
+          </button>
+        </div>
+      </div>
+
+      @if (studentsList.length === 0) {
+        <div class="approval-grid-page__empty">
+          <span class="material-symbols-outlined" aria-hidden="true">groups</span>
+          <h3>No Students Found</h3>
+          <p>No active students are registered in this organization yet.</p>
+        </div>
+      } @else if (filteredStudentsList.length === 0) {
+        <div class="approval-grid-page__empty">
+          <span class="material-symbols-outlined" aria-hidden="true">search_off</span>
+          <h3>No Matching Students</h3>
+          <p>
+            @if (subscriptionTab === null) {
+              No students match your search. Try adjusting your search terms.
+            } @else {
+              No {{ subscriptionTab === 'subscribed' ? 'subscribed' : 'unsubscribed' }} students match your filter.
+              Try adjusting your search terms or change the subscription filter.
+            }
+          </p>
+        </div>
+      } @else {
+        <div class="approval-grid-page__list">
+          <div class="approval-grid-page__list-head" aria-hidden="true">
+            <span></span>
+            <span>Name</span>
+            <span>Email</span>
+            <span>Node ID</span>
+            <span>Status</span>
+            <span>Action</span>
+          </div>
+
+          @for (student of filteredStudentsList; track getStudentId(student) || $index) {
+            <label
+              class="approval-grid-page__list-row"
+              [class.is-selected]="isAssigned(student)"
+            >
+              <input
+                type="checkbox"
+                [checked]="isAssigned(student)"
+                (change)="onStudentSelect(student, $event)"
+                [value]="getStudentId(student)"
+              />
+
+              <span class="approval-grid-page__list-check" aria-hidden="true">
+                <span class="material-symbols-outlined">
+                  {{ isAssigned(student) ? 'check_box' : 'check_box_outline_blank' }}
+                </span>
+              </span>
+
+              <div class="approval-grid-page__list-user">
+                <div class="approval-grid-page__avatar-wrap">
+                  <div class="approval-grid-page__avatar approval-grid-page__avatar--sm">
+                    <img
+                      [src]="getStudentAvatarUrl(student)"
+                      [alt]="getStudentName(student)"
+                      (error)="onStudentAvatarError($event, student)"
+                    />
+                  </div>
+                  @if (isAssigned(student)) {
+                    <div class="approval-grid-page__avatar-badge" aria-hidden="true">
+                      <span class="material-symbols-outlined">check</span>
+                    </div>
+                  } @else if (isUnassigning(student)) {
+                    <div class="approval-grid-page__avatar-badge is-pending" aria-hidden="true">
+                      <span class="material-symbols-outlined">hourglass_top</span>
+                    </div>
+                  }
+                </div>
+                <div class="approval-grid-page__list-user-text">
+                  <h3>{{ getStudentName(student) }}</h3>
+                  <p class="approval-grid-page__role">
+                    <span class="material-symbols-outlined" aria-hidden="true">memory</span>
+                    Neural Student
+                  </p>
+                </div>
+              </div>
+
+              <p class="approval-grid-page__list-email">
+                {{ getStudentEmail(student) || '—' }}
+              </p>
+
+              <p class="approval-grid-page__list-node">{{ getStudentNodeId(student) }}</p>
+
+              @if (isAssigned(student)) {
+                <p class="approval-grid-page__list-status approval-grid-page__list-status--active">Subscribed</p>
+              } @else if (isUnassigning(student)) {
+                <p class="approval-grid-page__list-status approval-grid-page__list-status--pending">Unsubscribing</p>
+              } @else {
+                <p class="approval-grid-page__list-status">Unsubscribed</p>
+              }
+
+              <span class="approval-grid-page__list-action">
+                {{ isAssigned(student) ? 'Selected' : 'Select' }}
+              </span>
+            </label>
+          }
+        </div>
+      }
+    }
+  </div>
 </div>

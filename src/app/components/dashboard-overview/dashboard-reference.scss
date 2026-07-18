@@ -529,193 +529,250 @@
   .subscribed-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-auto-rows: 250px;
     align-content: start;
-    gap: 10px;
+    gap: 16px;
   }
 
-  .subscribed-card {
+  .course-glass-card {
     @include dashboard-glass-card;
     @include mc-luminous-stroke;
-    @include border-radius(8px);
-    padding: 12px;
+    @include border-radius(12px);
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: 250px;
-    min-height: 250px;
-    cursor: pointer;
-    overflow: hidden;
-    @include transition(all 0.2s ease);
+    height: 400px;
+    @include transition(box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease);
 
     &:hover {
-      background: rgba(31, 31, 34, 0.82);
-      border-color: rgba(255, 107, 44, 0.28);
+      box-shadow: 0 0 40px -10px rgba(255, 107, 44, 0.15);
+      border-color: rgba(255, 181, 154, 0.4);
+      transform: translateY(-2px);
     }
 
-    &__header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-
-    &__identity {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 0;
-      flex: 1;
-    }
-
-    &__icon {
-      width: 84px;
-      height: 84px;
-      margin: 0;
-      flex-shrink: 0;
-      @include border-radius(8px);
+    &__media {
+      position: relative;
+      height: 180px;
       overflow: hidden;
-      @include flex(flex, null, center, center);
+      cursor: pointer;
       background: var(--mc-surface-container-high);
-      border: 1px solid rgba(89, 65, 57, 0.35);
-
-      &.featured {
-        width: 225px;
-        height: 150px;
-      }
 
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        filter: saturate(1.2) contrast(1.1);
+        @include transition(transform 0.7s ease);
       }
 
-      .subscribed-card__logo {
-        width: 56%;
-        height: 56%;
+      .course-glass-card:hover & img {
+        transform: scale(1.05);
+      }
+    }
+
+    &__media-fallback {
+      width: 100%;
+      height: 100%;
+      @include flex(flex, null, center, center);
+
+      img {
+        width: 40%;
+        height: 40%;
         object-fit: contain;
         filter: drop-shadow(0 0 10px rgba(255, 107, 44, 0.4));
       }
     }
 
-    &__invite {
-      font-family: $archivo-regular;
-      font-size: 1.35rem;
-      color: var(--white);
-      line-height: 1.25;
-      @include text-ellipsis($lines: 2);
+    &__media-fade {
+      position: absolute;
+      inset: auto 0 0;
+      height: 50%;
+      background: linear-gradient(to top, #030304, transparent);
+      pointer-events: none;
     }
 
-    &__ring {
-      position: relative;
-      width: 100px;
-      height: 100px;
-      flex-shrink: 0;
-
-      .progress-ring {
-        width: 100%;
-        height: 100%;
-        filter: drop-shadow(0 0 6px rgba(255, 107, 44, 0.28));
-      }
-
-      span {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        font-family: $archivo-medium;
-        font-size: 1.25rem;
-        color: var(--white);
-        text-align: center;
-        line-height: 1;
-      }
-
-      small {
-        position: absolute;
-        top: 29px;
-        left: 0;
-        right: 0;
-        font-family: $archivo-regular;
-        font-size: 0.75rem;
-        color: rgba(255, 255, 255, 0.85);
-        text-align: center;
-        line-height: 1;
-      }
+    &__badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      padding: 4px 12px;
+      @include border-radius(2px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(3, 3, 4, 0.6);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      font-family: var(--mc-font-label);
+      font-size: 0.625rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--mc-on-surface);
     }
 
     &__body {
-      flex: 1;
-      min-height: 0;
-      margin-top: 8px;
-      margin-bottom: 6px;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      gap: 2px;
+      flex: 1;
+      padding: 20px;
+      gap: 10px;
+      min-height: 0;
     }
 
-    &__byline {
-      font-family: $archivo-regular;
-      font-size: 0.5625rem;
-      color: rgba(168, 180, 199, 0.9);
-      line-height: 1.2;
+    &__head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+
+      h3 {
+        margin: 0;
+        flex: 1;
+        min-width: 0;
+        font-family: var(--mc-font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        line-height: 1.25;
+        color: var(--mc-on-surface);
+        cursor: pointer;
+        @include transition(color 0.2s ease);
+        @include text-ellipsis($lines: 2);
+
+        .course-glass-card:hover & {
+          color: var(--mc-primary);
+        }
+      }
     }
 
-    &__title {
+    &__rating {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+      color: var(--mc-primary);
+      font-family: var(--mc-font-label);
+      font-size: 0.875rem;
+
+      .material-symbols-outlined {
+        font-size: 18px;
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    }
+
+    &__author-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    &__author {
       margin: 0;
-      font-family: var(--mc-font-display);
-      font-size: 1rem;
-      color: var(--mc-on-surface);
-      font-weight: 600;
-      line-height: 1.25;
+      flex: 1;
+      min-width: 0;
+      font-family: var(--mc-font-label);
+      font-size: 0.6875rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #94a3b8;
       @include text-ellipsis($lines: 1);
     }
 
-    &__footer {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 6px;
+    &__status {
       flex-shrink: 0;
+      padding: 4px 10px;
+      @include border-radius(2px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(3, 3, 4, 0.55);
+      font-family: var(--mc-font-label);
+      font-size: 0.625rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mc-on-surface);
+
+      &--new {
+        border-color: rgba(79, 137, 252, 0.35);
+        color: rgba(181, 205, 255, 0.95);
+      }
+
+      &--progress {
+        border-color: rgba(255, 107, 44, 0.45);
+        color: rgba(255, 181, 154, 0.98);
+      }
+
+      &--completed {
+        border-color: rgba(72, 199, 142, 0.45);
+        color: rgba(168, 255, 214, 0.98);
+      }
+    }
+
+    &__progress {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
       margin-top: auto;
     }
 
-    &__ratings {
+    &__progress-labels {
       display: flex;
-      flex-direction: column;
-      gap: 2px;
-      min-width: 0;
+      justify-content: space-between;
+      gap: 8px;
+      font-family: var(--mc-font-label);
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mc-on-surface-variant);
 
-      .stars-row {
-        display: flex;
-        align-items: center;
-        gap: 2px;
-        line-height: 1;
-
-        &--rating {
-          flex-wrap: nowrap;
-        }
-      }
-
-      .progress-fraction {
-        margin-left: 4px;
-        font-family: $archivo-regular;
-        font-size: 1.25rem;
-        color: rgba(255, 255, 255, 0.88);
-        white-space: nowrap;
+      span:last-child {
+        color: var(--mc-on-surface);
       }
     }
 
-    &__session {
+    &__progress-track {
+      height: 6px;
+      @include border-radius(999px);
+      background: var(--mc-surface-container-high);
+      overflow: hidden;
+
+      span {
+        display: block;
+        height: 100%;
+        background: var(--mc-brand-gradient);
+        @include border-radius(999px);
+        box-shadow: 0 0 10px rgba(255, 107, 44, 0.35);
+      }
+    }
+
+    &__lessons {
       margin: 0;
-      flex-shrink: 0;
-      font-family: $archivo-regular;
-      font-size: 0.5625rem;
-      color: rgba(255, 255, 255, 0.88);
-      text-align: right;
-      line-height: 1.3;
-      white-space: nowrap;
-      padding-bottom: 1px;
+      font-family: var(--mc-font-body);
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    &__actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 4px;
+    }
+
+    &__cta {
+      flex: 1;
+      padding: 12px 16px;
+      border: 0;
+      @include border-radius(2px);
+      background: var(--mc-brand-gradient);
+      color: var(--mc-on-surface);
+      font-family: var(--mc-font-label);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      @include transition(opacity 0.2s ease, box-shadow 0.2s ease);
+
+      &:hover {
+        opacity: 0.92;
+        box-shadow: 0 0 20px rgba(255, 107, 44, 0.35);
+      }
     }
   }
 }
@@ -724,7 +781,6 @@
   .content-area.dashboard-futuristic {
     .subscribed-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      grid-auto-rows: 250px;
     }
   }
 }

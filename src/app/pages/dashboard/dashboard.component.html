@@ -3,7 +3,13 @@
     <app-dashboard-sidepanel [navDisabled]="isApprovalPendingRoute"></app-dashboard-sidepanel>
   </div>
 
-  <div class="dashboard-right">
+  <div class="dashboard-right" [class.has-technical-backdrop]="showTechnicalBackdrop">
+    @if (showTechnicalBackdrop) {
+      <div class="dashboard-right__backdrop" aria-hidden="true">
+        <div class="dashboard-right__backdrop-grid"></div>
+        <div class="dashboard-right__backdrop-scanline"></div>
+      </div>
+    }
     <app-demo-mode-banner></app-demo-mode-banner>
     <app-search-profile (mobNavchild)="btnMobileMenu()"></app-search-profile>
     <div class="common-container">

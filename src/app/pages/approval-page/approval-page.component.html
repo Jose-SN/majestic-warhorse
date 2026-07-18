@@ -1,0 +1,57 @@
+<div class="approval-grid-page approval-page">
+  <div class="approval-grid-page__backdrop" aria-hidden="true">
+    <div class="approval-grid-page__technical-grid"></div>
+    <div class="approval-grid-page__glow approval-grid-page__glow--purple"></div>
+    <div class="approval-grid-page__glow approval-grid-page__glow--orange"></div>
+    <div class="approval-grid-page__scanline"></div>
+  </div>
+
+  <div class="approval-grid-page__content">
+    <header class="approval-grid-page__header">
+      <div class="approval-grid-page__header-text">
+        <h2>Approvals</h2>
+        <div class="approval-grid-page__header-meta">
+          <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+          <span>Pending Authorization Queue</span>
+          <span>|</span>
+          <span class="is-muted">
+            @if (activeTab === 'teachers') {
+              Pending Instructors
+            } @else {
+              Pending Students
+            }
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <div class="approval-grid-page__header-actions">
+      <ul class="approval-page__tabs" role="tablist" aria-label="Approval sections">
+        <li
+          role="tab"
+          [attr.aria-selected]="activeTab === 'teachers'"
+          [class.is-active]="activeTab === 'teachers'"
+          (click)="setTab('teachers')"
+        >
+          Teachers
+        </li>
+        <li
+          role="tab"
+          [attr.aria-selected]="activeTab === 'students'"
+          [class.is-active]="activeTab === 'students'"
+          (click)="setTab('students')"
+        >
+          Students
+        </li>
+      </ul>
+    </div>
+
+    <div class="approval-page__panel" role="tabpanel">
+      @if (activeTab === 'teachers') {
+        <app-approval-list [embedded]="true" />
+      } @else if (activeTab === 'students') {
+        <app-student-approval-list [embedded]="true" />
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Account Settings | Majestic Warhorse</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=JetBrains+Mono:wght@400..700&amp;family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-surface": "#e4e1e6",
+            "on-primary-fixed": "#380d00",
+            "surface-tint": "#ffb59a",
+            "primary": "#ffb59a",
+            "outline": "#a98a7f",
+            "on-error-container": "#ffdad6",
+            "primary-container": "#ff6b2c",
+            "surface-bright": "#39393c",
+            "on-tertiary-fixed": "#2c0051",
+            "secondary-fixed": "#ffd9e4",
+            "on-secondary": "#640038",
+            "surface-dim": "#131316",
+            "primary-fixed-dim": "#ffb59a",
+            "on-surface-variant": "#e2bfb3",
+            "tertiary-fixed-dim": "#dcb8ff",
+            "secondary-fixed-dim": "#ffb0cc",
+            "inverse-primary": "#a83900",
+            "surface-container-highest": "#353438",
+            "on-background": "#e4e1e6",
+            "tertiary-container": "#bb7bff",
+            "on-tertiary-container": "#4a0084",
+            "on-primary": "#5b1b00",
+            "surface-container": "#1f1f22",
+            "surface-container-lowest": "#0e0e11",
+            "on-error": "#690005",
+            "inverse-on-surface": "#303033",
+            "surface-container-high": "#2a2a2d",
+            "on-primary-fixed-variant": "#802900",
+            "primary-fixed": "#ffdbcf",
+            "on-secondary-fixed-variant": "#8d0051",
+            "on-primary-container": "#5c1c00",
+            "outline-variant": "#594139",
+            "on-tertiary": "#480081",
+            "error-container": "#93000a",
+            "secondary": "#ffb0cc",
+            "surface-container-low": "#1b1b1e",
+            "surface-variant": "#353438",
+            "background": "#131316",
+            "on-secondary-container": "#ffbad2",
+            "inverse-surface": "#e4e1e6",
+            "on-secondary-fixed": "#3e0020",
+            "on-tertiary-fixed-variant": "#6700b5",
+            "tertiary": "#dcb8ff",
+            "error": "#ffb4ab",
+            "surface": "#131316",
+            "tertiary-fixed": "#efdbff",
+            "secondary-container": "#ab0063"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "margin-mobile": "20px",
+            "unit": "4px",
+            "gutter": "24px",
+            "container-max": "1440px",
+            "margin-desktop": "64px"
+          },
+          "fontFamily": {
+            "headline-lg": ["Space Grotesk"],
+            "display-lg": ["Space Grotesk"],
+            "label-sm": ["JetBrains Mono"],
+            "headline-lg-mobile": ["Space Grotesk"],
+            "body-md": ["Geist"]
+          },
+          "fontSize": {
+            "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+            "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "label-sm": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+            "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+            "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #0F0F12;
+      color: #e4e1e6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .glass-panel {
+      background: rgba(31, 31, 34, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .gradient-border {
+      position: relative;
+      background: #1b1b1e;
+      border: 1px solid transparent;
+      background-clip: padding-box;
+    }
+    
+    .gradient-border::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      z-index: -1;
+      background: linear-gradient(90deg, #ffb59a, #dcb8ff);
+      border-radius: inherit;
+    }
+
+    .left-accent {
+      border-left: 2px solid #ffb59a;
+      box-shadow: -10px 0 20px -10px rgba(255, 181, 154, 0.4);
+    }
+
+    .terminal-input {
+      background: rgba(31, 31, 34, 0.6);
+      border: none;
+      border-bottom: 1px solid #594139;
+      transition: all 0.3s ease;
+    }
+
+    .terminal-input:focus {
+      border-bottom: 1px solid #ffb59a;
+      box-shadow: 0 4px 12px -4px rgba(255, 181, 154, 0.2);
+      outline: none;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #131316;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #353438;
+      border-radius: 10px;
+    }
+
+    .backglow:hover {
+      background: radial-gradient(circle at center, rgba(255, 181, 154, 0.1) 0%, transparent 70%);
+    }
+
+    .nav-active {
+      background: linear-gradient(to right, #ffb59a, #bb7bff);
+      color: #5b1b00;
+      font-weight: 700;
+      border-radius: 0 9999px 9999px 0;
+      margin-right: 1rem;
+      padding: 0.75rem 1rem;
+    }
+
+    .nav-inactive {
+      color: #e2bfb3;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all 0.3s;
+    }
+
+    .nav-inactive:hover {
+      background: rgba(53, 52, 56, 0.5);
+      color: #e4e1e6;
+    }
+  </style>
+</head>
+<body class="font-body-md text-body-md overflow-hidden">
+<!-- Side Navigation Rail -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-outline-variant bg-surface-dim flex flex-col py-6 z-[60]">
+<div class="px-6 mb-10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary">psychology</span>
+</div>
+<div>
+<h1 class="font-headline-lg text-[18px] font-bold text-on-surface leading-none tracking-tight">MAKING OF</h1>
+<p class="text-[10px] font-label-sm text-outline tracking-[0.2em]">MAJESTIC WARHORSE</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="nav-inactive" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="nav-inactive" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-body-md">AI Mode</span>
+</a>
+<a class="nav-active" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-body-md">Account</span>
+</a>
+<a class="nav-inactive" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-body-md">Courses</span>
+</a>
+<a class="nav-inactive" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md">Students</span>
+</a>
+<a class="nav-inactive" href="#">
+<span class="material-symbols-outlined">business</span>
+<span class="font-body-md">Switch Organization</span>
+</a>
+</nav>
+<div class="mt-auto px-6 space-y-6">
+<div class="glass-panel p-4 rounded-lg border border-primary-container/20">
+<p class="text-[10px] font-label-sm text-primary mb-1">PRO ACCOUNT</p>
+<p class="text-[12px] leading-tight mb-3">Upgrade to unlock advanced neural labs.</p>
+<button class="w-full bg-gradient-to-r from-primary to-tertiary-container text-on-primary font-bold py-2 rounded text-[12px] tracking-wider transition-transform active:scale-95">
+          UPGRADE TO PRO
+        </button>
+</div>
+<div class="flex flex-col gap-3 pb-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline">
+<img class="w-full h-full object-cover" data-alt="A portrait of a professional male designer with dark hair and a beard, wearing a tech-inspired dark jacket, set against a dark, minimalist industrial studio background with soft purple ambient lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhNiBkDwbEpBNcKfMW5fE8CyTaFn8_lM2UCmKI81kyyErR5b7tXJEt3kuWa4pIhTOMcqrTTw-J8kGBarCCL049PtvarVvWcNj9wiWSIkrNXz_ulaB9DsEaJH_EaeBzn1NP2g2A9mxQ-1b6voJ3OGXspxgtOftiXw09cDyS2a5Hn-NZxDFCFx0SgqMhq-__pYKhOGAfNHo0Ih6FAE5KZbG_0yvl5f1KsDB11KoMkAcja1NQFp9XYrfuiw"/>
+</div>
+<div>
+<p class="text-xs font-bold">Jose SN</p>
+<p class="text-[10px] text-outline">Teacher</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-outline text-[16px]">info</span>
+</div>
+<p class="text-[10px] font-label-sm text-outline opacity-50">App Version 1.0.0</p>
+</div>
+</div>
+</aside>
+<!-- Main View -->
+<main class="ml-64 h-screen flex flex-col relative">
+<!-- Header -->
+<header class="h-16 flex justify-between items-center px-margin-desktop bg-surface-dim/80 backdrop-blur-xl border-b border-outline-variant/30 sticky top-0 z-50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">home</span>
+<h2 class="font-headline-lg text-headline-lg font-semibold text-on-surface">Home</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block">
+<input class="bg-surface-container-low border-outline-variant rounded-full py-1.5 px-4 pr-10 text-xs w-64 focus:ring-1 focus:ring-primary" placeholder="Search for..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1.5 text-outline text-[18px]">search</span>
+</div>
+<button class="bg-surface-container-highest px-4 py-1.5 rounded-full text-xs font-bold hover:bg-primary hover:text-on-primary transition-colors">DEMO</button>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">notifications</span>
+</div>
+</header>
+<!-- Split Pane Layout Content -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Left Pane: Identity Card -->
+<section class="w-80 border-r border-outline-variant/20 bg-surface-container-low/50 p-8 flex flex-col items-center gap-8 custom-scrollbar overflow-y-auto">
+<div class="relative group">
+<div class="w-40 h-40 rounded-full p-1 bg-gradient-to-tr from-primary via-tertiary to-secondary-container">
+<div class="w-full h-full rounded-full border-4 border-surface-dim overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Close up high-quality headshot of a creative technologist with sleek modern glasses and minimalist black apparel, looking directly at the camera with a neutral expression, high-contrast dark studio lighting with soft cyan and magenta rim light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQl70hTAyCqYuhhZ7nKvH2y_iG2mb84FCIHpk66utOMdbErM4J6ysTfVsQFzly2Dt5twEETrobaH1IHT2sMQfkh04KDP_q9DefSlOt8Lf-GNjmBNOZX12-cIiWyLajRB6lMIp3StL5-ovWgwGVNxa5yvIZK_o_sn5gsU-Z6DicEWLkcN3aYLWWr4-AL8sgAssh2b6ZNGYIlD2pYrTUtSO34nWc-NG3cMFduEqiaBreR_H0xoABJqw0Tg"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-white text-3xl">photo_camera</span>
+</div>
+</div>
+</div>
+<div class="absolute bottom-2 right-2 w-5 h-5 bg-primary rounded-full border-2 border-surface-dim"></div>
+</div>
+<div class="text-center space-y-1">
+<h3 class="font-headline-lg text-[24px] text-on-surface">Jose SN</h3>
+<p class="font-label-sm text-primary tracking-widest uppercase">Senior Neural Instructor</p>
+</div>
+<div class="w-full space-y-4">
+<div class="glass-panel p-4 rounded-xl border-l-2 border-primary">
+<div class="flex justify-between items-center mb-1">
+<p class="text-[10px] font-label-sm text-outline">SYSTEM STATUS</p>
+<div class="flex gap-1">
+<div class="w-1 h-1 rounded-full bg-primary animate-pulse"></div>
+<div class="w-1 h-1 rounded-full bg-primary animate-pulse"></div>
+<div class="w-1 h-1 rounded-full bg-primary animate-pulse"></div>
+</div>
+</div>
+<p class="font-label-sm text-[12px] text-on-surface">Operational // Node 04</p>
+</div>
+<div class="glass-panel p-4 rounded-xl border-l-2 border-tertiary">
+<p class="text-[10px] font-label-sm text-outline mb-1">TOTAL IMPACT</p>
+<p class="font-headline-lg text-[20px] text-on-surface">1,284 <span class="text-xs font-normal text-tertiary">Graduates</span></p>
+</div>
+<div class="glass-panel p-4 rounded-xl border-l-2 border-secondary">
+<p class="text-[10px] font-label-sm text-outline mb-1">LAST ACCESS</p>
+<p class="font-label-sm text-[12px] text-on-surface">Today, 08:42 AM</p>
+</div>
+</div>
+<div class="mt-auto w-full pt-8 border-t border-outline-variant/20">
+<button class="w-full py-3 rounded border border-outline-variant text-outline font-label-sm hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+            DE-AUTHORIZE NODE
+          </button>
+</div>
+</section>
+<!-- Right Pane: Forms -->
+<section class="flex-1 bg-surface-dim p-12 custom-scrollbar overflow-y-auto">
+<div class="max-w-4xl mx-auto space-y-16">
+<!-- Header -->
+<div class="space-y-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-4xl">manage_accounts</span>
+<h2 class="font-headline-lg text-[40px] text-on-surface tracking-tight">Update Account Details</h2>
+</div>
+<p class="text-on-surface-variant max-w-xl">Synchronize your biometrics and security protocols across the Majestic Warhorse infrastructure.</p>
+</div>
+<!-- Form Section 1: Bio-Metrics -->
+<div class="space-y-8">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary font-bold text-xs">01</div>
+<h3 class="font-headline-lg text-[20px] tracking-wider uppercase text-outline">Bio-Metrics</h3>
+<div class="flex-1 h-[1px] bg-outline-variant/30"></div>
+</div>
+<div class="grid grid-cols-2 gap-x-8 gap-y-10">
+<div class="space-y-2">
+<label class="font-label-sm text-[10px] text-primary uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">person</span> First Identity Name
+                </label>
+<input class="w-full terminal-input py-3 text-on-surface font-body-md focus:ring-0" type="text" value="Jose"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm text-[10px] text-primary uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">person</span> Last Identity Name
+                </label>
+<input class="w-full terminal-input py-3 text-on-surface font-body-md focus:ring-0" type="text" value="SN"/>
+</div>
+<div class="col-span-2 space-y-2">
+<label class="font-label-sm text-[10px] text-primary uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">business</span> Organization Node
+                </label>
+<div class="relative">
+<select class="w-full terminal-input py-3 text-on-surface font-body-md focus:ring-0 appearance-none">
+<option>Majestic Warhorse Central</option>
+<option>Pacific Neural Hub</option>
+<option>Atlantic Digital Forge</option>
+</select>
+<span class="material-symbols-outlined absolute right-0 top-3 text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Form Section 2: Node Connection -->
+<div class="space-y-8">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary font-bold text-xs">02</div>
+<h3 class="font-headline-lg text-[20px] tracking-wider uppercase text-outline">Node Connection</h3>
+<div class="flex-1 h-[1px] bg-outline-variant/30"></div>
+</div>
+<div class="grid grid-cols-2 gap-x-8 gap-y-10">
+<div class="space-y-2">
+<label class="font-label-sm text-[10px] text-tertiary uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">alternate_email</span> Primary Data Link (Email)
+                </label>
+<input class="w-full terminal-input py-3 text-on-surface font-body-md focus:ring-0 opacity-70 cursor-not-allowed" disabled="" type="email" value="josesnjo38@gmail.com"/>
+<p class="text-[10px] text-outline italic">Master link cannot be altered</p>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm text-[10px] text-tertiary uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">call</span> Mobile Signal Path
+                </label>
+<input class="w-full terminal-input py-3 text-on-surface font-body-md focus:ring-0" placeholder="+1 (555) 000-0000" type="text"/>
+</div>
+</div>
+</div>
+<!-- Form Section 3: Access Keys -->
+<div class="space-y-8">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary font-bold text-xs">03</div>
+<h3 class="font-headline-lg text-[20px] tracking-wider uppercase text-outline">Access Keys</h3>
+<div class="flex-1 h-[1px] bg-outline-variant/30"></div>
+</div>
+<div class="grid grid-cols-2 gap-x-8 gap-y-10">
+<div class="space-y-2">
+<label class="font-label-sm text-[10px] text-secondary uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">lock</span> New Encryption Key
+                </label>
+<div class="relative">
+<input class="w-full terminal-input py-3 text-on-surface font-body-md focus:ring-0 pr-10" placeholder="••••••••" type="password"/>
+<span class="material-symbols-outlined absolute right-0 top-3 text-outline cursor-pointer hover:text-secondary transition-colors">visibility</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm text-[10px] text-secondary uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">lock_reset</span> Verify Key
+                </label>
+<div class="relative">
+<input class="w-full terminal-input py-3 text-on-surface font-body-md focus:ring-0 pr-10" placeholder="••••••••" type="password"/>
+<span class="material-symbols-outlined absolute right-0 top-3 text-outline cursor-pointer hover:text-secondary transition-colors">visibility</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="pt-10 flex gap-6">
+<button class="flex-1 bg-gradient-to-r from-primary to-primary-container text-on-primary py-5 rounded font-bold tracking-[0.2em] uppercase transition-all hover:brightness-110 active:scale-[0.99] flex items-center justify-center gap-3 shadow-[0_0_30px_-5px_rgba(255,107,44,0.4)]">
+<span class="material-symbols-outlined">save</span>
+              COMMIT CHANGES TO SYSTEM
+            </button>
+<button class="px-8 border border-outline-variant text-outline hover:bg-surface-container-highest transition-colors rounded uppercase font-label-sm tracking-widest">
+              RESET
+            </button>
+</div>
+<div class="h-20"></div> <!-- Bottom spacing for scroll -->
+</div>
+</section>
+</div>
+</main>
+<!-- Ambient Backdrop -->
+<div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden opacity-30">
+<div class="absolute top-1/4 right-0 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[160px] animate-pulse"></div>
+<div class="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-tertiary/10 rounded-full blur-[140px]" style="animation-delay: 2s"></div>
+</div>
+<script>
+    // Micro-interaction for inputs
+    const inputs = document.querySelectorAll('.terminal-input');
+    inputs.forEach(input => {
+      input.addEventListener('focus', () => {
+        // Could add sound effect here if needed
+      });
+    });
+
+    // Dynamic label color shift on focus
+    inputs.forEach(input => {
+      const label = input.parentElement.querySelector('label');
+      if(label) {
+        input.addEventListener('focus', () => {
+          label.style.textShadow = "0 0 8px rgba(255, 181, 154, 0.4)";
+        });
+        input.addEventListener('blur', () => {
+          label.style.textShadow = "none";
+        });
+      }
+    });
+  </script>
+</body></html>

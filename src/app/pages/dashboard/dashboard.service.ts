@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-teacher.service';
 import { RosterDisplayService } from 'src/app/services/api-service/roster-display.service';
+import { isActiveStatus } from 'src/app/models/user-status.model';
 
 @Injectable({
   providedIn: 'root',
@@ -53,18 +54,29 @@ export class DashboardService {
   async fetchUploadedCourseCount() {
     let role: string = this.commonService.loginedUserInfo?.role || '';
     
-    // For organization, calculate stats from allUsersList and teacher-student relationships
+    // For organization, calculate stats from roster joins and teacher-student relationships
     if (role === 'organization') {
       const orgId = sessionStorage.getItem('organization_id') || '';
       if (!orgId) {
-        return { totalTeachers: 0, totalStudents: 0, unassignedStudents: 0, unassignedTeachers: 0 };
+        return {
+          totalTeachers: 0,
+          totalStudents: 0,
+          unassignedStudents: 0,
+          unassignedTeachers: 0,
+          joinsByDate: Array(9).fill(0),
+          newStudentSubscriptions: 0,
+          todayJoins: 0,
+        };
       }
 
-      const [teachers, students, relationshipsResponse] = await Promise.all([
+      const [teachers, allStudents, relationshipsResponse] = await Promise.all([
         this.rosterDisplay.loadTeachers(orgId, 'active'),
-        this.rosterDisplay.loadStudents(orgId, 'active'),
+        // Empty status loads full org roster so join dates include pending + active
+        this.rosterDisplay.loadStudents(orgId, ''),
         lastValueFrom(this.assignTeacherService.getAllTeacherStudentRelationships()).catch(() => ({ data: [] })),
       ]);
+
+      const students = allStudents.filter((student) => isActiveStatus(student.status));
 
       const relationships = (relationshipsResponse as any)?.data ?? relationshipsResponse ?? [];
       const relList = Array.isArray(relationships) ? relationships : [];
@@ -81,12 +93,18 @@ export class DashboardService {
 
       const unassignedStudents = students.filter((s) => !assignedStudentIds.has(s.id || ''));
       const unassignedTeachers = teachers.filter((t) => !assignedTeacherIds.has(t.id || ''));
+      const joinsByDate = this.buildJoinsByDate(allStudents, 9);
+      const newStudentSubscriptions = this.countJoinedWithinDays(allStudents, 7);
+      const todayJoins = joinsByDate[joinsByDate.length - 1] ?? 0;
 
       return {
         totalTeachers: teachers.length,
         totalStudents: students.length,
         unassignedStudents: unassignedStudents.length,
         unassignedTeachers: unassignedTeachers.length,
+        joinsByDate,
+        newStudentSubscriptions,
+        todayJoins,
       };
     }
     
@@ -101,5 +119,50 @@ export class DashboardService {
         .get<any>(`${this._apiUrl}dashboard/get?${roleInfo[role]}`)
         .pipe(catchError(this.commonService.handleError))
     );
+  }
+
+  /** Join counts for the last `dayCount` calendar days (oldest → newest). */
+  private buildJoinsByDate(
+    users: Array<{ created_at?: string }>,
+    dayCount = 9
+  ): number[] {
+    const counts = Array.from({ length: dayCount }, () => 0);
+    const today = this.startOfLocalDay(new Date());
+
+    users.forEach((user) => {
+      if (!user.created_at) {
+        return;
+      }
+      const joined = this.startOfLocalDay(new Date(user.created_at));
+      if (Number.isNaN(joined.getTime())) {
+        return;
+      }
+      const diffDays = Math.round((today.getTime() - joined.getTime()) / 86_400_000);
+      if (diffDays >= 0 && diffDays < dayCount) {
+        counts[dayCount - 1 - diffDays] += 1;
+      }
+    });
+
+    return counts;
+  }
+
+  private countJoinedWithinDays(
+    users: Array<{ created_at?: string }>,
+    days: number
+  ): number {
+    const cutoff = this.startOfLocalDay(new Date());
+    cutoff.setDate(cutoff.getDate() - (days - 1));
+
+    return users.filter((user) => {
+      if (!user.created_at) {
+        return false;
+      }
+      const joined = new Date(user.created_at);
+      return !Number.isNaN(joined.getTime()) && joined >= cutoff;
+    }).length;
+  }
+
+  private startOfLocalDay(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
 }

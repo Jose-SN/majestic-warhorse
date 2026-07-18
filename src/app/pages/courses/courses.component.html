@@ -3,7 +3,7 @@
     <div class="courses-page-header__intro">
       <h1 class="courses-page-header__title">Academy Courseware</h1>
       <p class="courses-page-header__subtitle">
-        Advanced tactical training modules for cyberwarfare specialists and neural system architects.
+        Advanced training modules for cyberwarfare specialists and neural system architects.
       </p>
     </div>
 
@@ -31,117 +31,111 @@
   </header>
 
   <div class="courses-page-body">
-    @if (courseList$ | async; as courseList) {
-      @if (courseList.length === 0) {
-        <div class="courses-empty-state">
-          <span class="courses-empty-state__icon material-symbols-outlined" aria-hidden="true">menu_book</span>
-          <h3>No Courses Available</h3>
-          <p>We couldn't find any courses in the system yet.</p>
-          <ul>
-            <li>No courses have been uploaded yet</li>
-            <li>There was an issue fetching data from the server</li>
-            <li>Your search filters are too restrictive</li>
-          </ul>
-        </div>
-      } @else {
-        @if (courseList | searchFilter: searchText : 'COURSE' : activeFilterTab; as filteredList) {
-          @if (filteredList.length > 0) {
-            <div class="courses-grid">
-              @for (course of filteredList; track course.id || $index) {
-                <article class="course-glass-card">
-                  <div class="course-glass-card__media" (click)="openCourseDetailsPage(course)">
-                    <img [src]="course.courseCoverImage" [alt]="course.courseTitle || 'Course cover'" />
-                    <div class="course-glass-card__media-fade" aria-hidden="true"></div>
-                    @if (course.courseStatusLevel) {
-                      <span class="course-glass-card__badge">{{ course.courseStatusLevel }}</span>
-                    }
-                  </div>
-
-                  <div class="course-glass-card__body">
-                    <div class="course-glass-card__head">
-                      <h3 (click)="openCourseDetailsPage(course)">{{ course.courseTitle }}</h3>
-                      @if (course.averageRating) {
-                        <div class="course-glass-card__rating">
-                          <span class="material-symbols-outlined" aria-hidden="true">star</span>
-                          <span>{{ course.averageRating }}</span>
-                        </div>
-                      }
-                    </div>
-
-                    <div class="course-glass-card__author-row">
-                      <p class="course-glass-card__author">
-                        A course by
-                        {{ course.createdBy.firstName || course.createdBy.first_name }}
-                        {{ course.createdBy.lastName || course.createdBy.last_name }}
-                      </p>
-                      @if (course.courseStatusLevel) {
-                        <span
-                          class="course-glass-card__status"
-                          [ngClass]="'course-glass-card__status--' + course.courseStatusLevel.toLowerCase()"
-                        >
-                          {{ course.courseStatusLevel }}
-                        </span>
-                      }
-                    </div>
-
-                    @if (course.courseDescription) {
-                      <p class="course-glass-card__description">{{ course.courseDescription }}</p>
-                    }
-
-                    <div class="course-glass-card__progress">
-                      <div class="course-glass-card__progress-labels">
-                        <span>Progress</span>
-                        <span>{{ course.completionPercent || '0%' }}</span>
-                      </div>
-                      <div class="course-glass-card__progress-track">
-                        <span [style.width]="course.completionPercent || '0%'"></span>
-                      </div>
-                      @if (course.chapterDetails?.length) {
-                        <p class="course-glass-card__lessons">
-                          Lessons {{ course.chapterCompletedCount || 0 }}/{{ course.chapterDetails.length }}
-                        </p>
-                      }
-                    </div>
-
-                    <div class="course-glass-card__actions">
-                      <button type="button" class="course-glass-card__cta" (click)="openCourseDetailsPage(course)">
-                        Open Course
-                      </button>
-                      @if (["organization", "teacher"].includes(loginedUserPrivilege)) {
-                        <button
-                          type="button"
-                          class="course-glass-card__menu"
-                          (click)="openEditCourse(course, $event)"
-                          aria-label="Edit course"
-                        >
-                          <span class="material-symbols-outlined" aria-hidden="true">edit</span>
-                        </button>
-                      }
-                    </div>
-                  </div>
-                </article>
-              }
-            </div>
-          } @else {
-            <div class="courses-empty-state">
-              <span class="courses-empty-state__icon material-symbols-outlined" aria-hidden="true">search_off</span>
-              <h3>No Matching Courses</h3>
-              <p>We couldn't find any courses matching your search criteria.</p>
-              <ul>
-                <li>Adjusting your search terms</li>
-                <li>Clearing the search filter</li>
-                <li>Selecting a different category</li>
-              </ul>
-            </div>
-          }
-        }
-      }
-    } @else {
+    @if (coursesLoading) {
       <div class="courses-empty-state courses-empty-state--loading">
         <div class="courses-empty-state__spinner" aria-hidden="true"></div>
         <h3>Loading Courses</h3>
         <p>Fetching course data from the network…</p>
       </div>
+    } @else if (courseList.length === 0) {
+      <div class="courses-empty-state">
+        <span class="courses-empty-state__icon material-symbols-outlined" aria-hidden="true">menu_book</span>
+        <h3>No Courses Available</h3>
+        <p>We couldn't find any courses in the system yet.</p>
+        <ul>
+          <li>No courses have been uploaded yet</li>
+          <li>There was an issue fetching data from the server</li>
+          <li>Your search filters are too restrictive</li>
+        </ul>
+      </div>
+    } @else {
+      @if (courseList | searchFilter: searchText : 'COURSE' : activeFilterTab; as filteredList) {
+        @if (filteredList.length > 0) {
+          <div class="courses-grid">
+            @for (course of filteredList; track course.id || $index) {
+              <article class="course-glass-card">
+                <div class="course-glass-card__media" (click)="openCourseDetailsPage(course)">
+                  <img [src]="course.courseCoverImage" [alt]="course.courseTitle || 'Course cover'" />
+                  <div class="course-glass-card__media-fade" aria-hidden="true"></div>
+                  @if (course.courseStatusLevel) {
+                    <span class="course-glass-card__badge">{{ course.courseStatusLevel }}</span>
+                  }
+                </div>
+
+                <div class="course-glass-card__body">
+                  <div class="course-glass-card__head">
+                    <h3 (click)="openCourseDetailsPage(course)">{{ course.courseTitle }}</h3>
+                    @if (course.averageRating) {
+                      <div class="course-glass-card__rating">
+                        <span class="material-symbols-outlined" aria-hidden="true">star</span>
+                        <span>{{ course.averageRating }}</span>
+                      </div>
+                    }
+                  </div>
+
+                  <div class="course-glass-card__author-row">
+                    <p class="course-glass-card__author">
+                      A course by
+                      {{ course.createdBy.firstName || course.createdBy.first_name }}
+                      {{ course.createdBy.lastName || course.createdBy.last_name }}
+                    </p>
+                    @if (course.courseStatusLevel) {
+                      <span
+                        class="course-glass-card__status"
+                        [ngClass]="'course-glass-card__status--' + course.courseStatusLevel.toLowerCase()"
+                      >
+                        {{ course.courseStatusLevel }}
+                      </span>
+                    }
+                  </div>
+
+                  <div class="course-glass-card__progress">
+                    <div class="course-glass-card__progress-labels">
+                      <span>Progress</span>
+                      <span>{{ course.completionPercent || '0%' }}</span>
+                    </div>
+                    <div class="course-glass-card__progress-track">
+                      <span [style.width]="course.completionPercent || '0%'"></span>
+                    </div>
+                    @if (course.chapterDetails?.length) {
+                      <p class="course-glass-card__lessons">
+                        Lessons {{ course.chapterCompletedCount || 0 }}/{{ course.chapterDetails.length }}
+                      </p>
+                    }
+                  </div>
+
+                  <div class="course-glass-card__actions">
+                    <button type="button" class="course-glass-card__cta" (click)="openCourseDetailsPage(course)">
+                      Open Course
+                    </button>
+                    @if (["organization", "teacher"].includes(loginedUserPrivilege)) {
+                      <button
+                        type="button"
+                        class="course-glass-card__menu"
+                        (click)="openEditCourse(course, $event)"
+                        aria-label="Edit course"
+                      >
+                        <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+                      </button>
+                    }
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="courses-empty-state">
+            <span class="courses-empty-state__icon material-symbols-outlined" aria-hidden="true">search_off</span>
+            <h3>No Matching Courses</h3>
+            <p>We couldn't find any courses matching your search criteria.</p>
+            <ul>
+              <li>Adjusting your search terms</li>
+              <li>Clearing the search filter</li>
+              <li>Selecting a different category</li>
+            </ul>
+          </div>
+        }
+      }
     }
   </div>
 </div>

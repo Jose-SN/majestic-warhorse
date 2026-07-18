@@ -40,7 +40,7 @@
       <button type="submit" class="btn-submit" [disabled]="submitting">
         {{ submitting ? 'Inviting…' : 'Invite Teacher' }}
       </button>
-      <a class="btn-secondary" routerLink="/dashboard/teachers">View Teachers</a>
+      <a class="btn-secondary" [routerLink]="navRoutes.teachers">View Teachers</a>
     </div>
   </form>
 </div>

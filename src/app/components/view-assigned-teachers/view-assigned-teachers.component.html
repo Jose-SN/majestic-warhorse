@@ -1,96 +1,248 @@
-<div class="common-container">
-    <div class="common-wrapper">
-        <div class="scoll-wrapper">
-            <div class="scroll-container">
-                <div class="common-list-wrapper">
-                    @if (isLoading) {
-                        <div class="loading-state">
-                            <p>Loading assigned teachers...</p>
-                        </div>
-                    } @else if (assignedTeachers.length > 0) {
-                        <div class="assigned-teachers-section">
-                            <h4 class="section-heading">Assigned Teachers</h4>
-                            @for (teacher of assignedTeachers; track teacher.id || $index) {
-                                <div class="assigned-teacher-item">
-                                    <figure>
-                                        <img [src]="commonService.decodeUrl((teacher.profileImage || teacher.profile_image) ?? '')" alt="">
-                                    </figure>
-                                    <div class="assigned-teacher-info">
-                                        <div class="assigned-teacher-name">{{ teacher.firstName || teacher.first_name }} {{ teacher.lastName || teacher.last_name }}</div>
-                                        @if (teacher.contact?.email || teacher.email) {
-                                            <span class="assigned-teacher-email">{{ teacher.contact?.email || teacher.email }}</span>
-                                        }
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                        <h4 class="section-heading-spaced">All Teachers</h4>
-                    }
-                    @if (!isLoading && teachersList.length === 0 && assignedTeachers.length === 0) {
-                        <div class="no-teachers-found">
-                            <figure>
-                                <svg width="140" height="140" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" fill="currentColor" opacity="0.3"/>
-                                    <path d="M12 14C16.4183 14 20 15.7909 20 18V20H4V18C4 15.7909 7.58172 14 12 14Z" fill="currentColor" opacity="0.3"/>
-                                    <path d="M12 2C13.6569 2 15 3.34315 15 5C15 6.65685 13.6569 8 12 8C10.3431 8 9 6.65685 9 5C9 3.34315 10.3431 2 12 2Z" fill="currentColor"/>
-                                    <path d="M12 10C15.866 10 19 11.3431 19 13V15H5V13C5 11.3431 8.13401 10 12 10Z" fill="currentColor"/>
-                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" fill="none" opacity="0.2"/>
-                                </svg>
-                            </figure>
-                            <h3>No Teachers Available</h3>
-                            <p>We couldn't find any teachers to assign. This could happen if:</p>
-                            <ul>
-                                <li>No teachers have been added to the system yet</li>
-                                <li>There was an issue fetching data from the server</li>
-                            </ul>
-                            <p class="help-text">Please try refreshing the page or contact your administrator if the problem persists.</p>
-                        </div>
-                    } @else {
-                        @for (teacher of teachersList; track getTeacherId(teacher) || $index) {
-                            <label 
-                                class="common-list" 
-                                [class.selected]="isAssigned(teacher)">
-                                <input 
-                                    type="checkbox" 
-                                    [checked]="isAssigned(teacher)"
-                                    (change)="onTeacherSelect(teacher, $event)"
-                                    [value]="getTeacherId(teacher)">
-                                <span class="checkbox-indicator"></span>
-                                <div class="list-left">
-                                    <figure class="teacher-avatar">
-                                        <img [src]="commonService.decodeUrl((teacher.profileImage || teacher.profile_image) ?? '')" alt="Teacher Avatar">
-                                    </figure>
-                                    <div class="common-list-right">
-                                        <h4>{{teacher.firstName || teacher.first_name}} {{teacher.lastName || teacher.last_name}}</h4>
-                                        @if (teacher.contact?.email || teacher.email) {
-                                            <span class="teacher-email">{{teacher.contact?.email || teacher.email}}</span>
-                                        }
-                                        @if (wasInitiallyAssigned(teacher)) {
-                                            <span class="assigned-badge">Already assigned</span>
-                                        }
-                                        @if (isUnassigning(teacher)) {
-                                            <span class="unassign-badge">Unassign teacher</span>
-                                        }
-                                    </div>
-                                </div>
-                            </label>
-                        }
-                    }
-                </div>
-                <footer class="assign-footer">
-                    <button 
-                        class="btn-assign" 
-                        [disabled]="!hasPendingChanges()" 
-                        (click)="handleTeacherUpdate()"
-                        type="button"
-                        aria-label="Update assigned teachers">
-                        <span>Update Teachers</span>
-                        @if (hasPendingChanges()) {
-                            <span class="selected-count">({{ selectedTeachers.length }} assigned)</span>
-                        }
-                    </button>
-                </footer>
-            </div>
+<div class="enrollment-page approval-grid-page">
+  <div class="approval-grid-page__backdrop" aria-hidden="true">
+    <div class="approval-grid-page__technical-grid"></div>
+    <div class="approval-grid-page__glow approval-grid-page__glow--purple"></div>
+    <div class="approval-grid-page__glow approval-grid-page__glow--orange"></div>
+    <div class="approval-grid-page__scanline"></div>
+  </div>
+
+  <div class="approval-grid-page__content enrollment-page__content">
+    <button type="button" class="enrollment-page__back" (click)="navigateBack()">
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+      Back to Directory
+    </button>
+
+    @if (isLoading) {
+      <div class="approval-grid-page__empty approval-grid-page__empty--loading" role="status" aria-live="polite">
+        <div class="approval-grid-page__spinner" aria-hidden="true"></div>
+        <h3>Loading Assignment Roster</h3>
+        <p>Fetching instructor nodes for this student…</p>
+      </div>
+    } @else {
+      <div class="enrollment-context-bar">
+        <img
+          class="enrollment-context-bar__avatar"
+          [src]="getStudentAvatarUrl()"
+          [alt]="getStudentName()"
+        />
+        <div class="enrollment-context-bar__details">
+          <span class="enrollment-context-bar__label">Student</span>
+          <span class="enrollment-context-bar__name">{{ getStudentName() }}</span>
+          <span class="enrollment-context-bar__email">{{ getStudentEmail() || '—' }}</span>
         </div>
-    </div>
+      </div>
+
+      <header class="approval-grid-page__header enrollment-page__header">
+        <div class="approval-grid-page__header-text">
+          <h2>Teachers Listing</h2>
+          <div class="approval-grid-page__header-meta">
+            <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+            <span>Assignment Management Queue</span>
+            <span>|</span>
+            <span class="is-muted">
+              Showing {{ displayedCount }}
+              {{ getAssignmentFilterMetaLabel() }} Records
+            </span>
+          </div>
+        </div>
+
+        <div class="enrollment-page__filter-wrap">
+          <button
+            type="button"
+            class="enrollment-page__filter-trigger"
+            (click)="toggleAssignmentFilterPopup()"
+            [attr.aria-expanded]="showAssignmentFilterPopup"
+            aria-haspopup="listbox"
+            aria-label="Filter by assignment status"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">filter_list</span>
+            {{ getAssignmentFilterLabel() }}
+            <span class="material-symbols-outlined enrollment-page__filter-caret" aria-hidden="true">
+              {{ showAssignmentFilterPopup ? 'expand_less' : 'expand_more' }}
+            </span>
+          </button>
+
+          @if (showAssignmentFilterPopup) {
+            <div class="enrollment-page__filter-popup" role="listbox" aria-label="Assignment status filter">
+              <p class="enrollment-page__filter-popup-label">Assignment Status</p>
+              <button
+                type="button"
+                class="enrollment-page__filter-option"
+                [class.is-active]="assignmentTab === null"
+                (click)="setAssignmentTab(null)"
+                role="option"
+                [attr.aria-selected]="assignmentTab === null"
+              >
+                All Records
+                <span class="enrollment-page__filter-option-count">{{ teachersList.length }}</span>
+              </button>
+              <button
+                type="button"
+                class="enrollment-page__filter-option"
+                [class.is-active]="assignmentTab === 'assigned'"
+                (click)="setAssignmentTab('assigned')"
+                role="option"
+                [attr.aria-selected]="assignmentTab === 'assigned'"
+              >
+                Assigned
+                <span class="enrollment-page__filter-option-count">{{ assignedCount }}</span>
+              </button>
+              <button
+                type="button"
+                class="enrollment-page__filter-option"
+                [class.is-active]="assignmentTab === 'unassigned'"
+                (click)="setAssignmentTab('unassigned')"
+                role="option"
+                [attr.aria-selected]="assignmentTab === 'unassigned'"
+              >
+                Unassigned
+                <span class="enrollment-page__filter-option-count">{{ unassignedCount }}</span>
+              </button>
+            </div>
+          }
+        </div>
+      </header>
+
+      <div class="approval-grid-page__header-actions">
+        <div class="approval-grid-page__stats">
+          <div class="approval-grid-page__stat">
+            <p>Assigned</p>
+            <p>{{ assignedCount }}</p>
+          </div>
+          <div class="approval-grid-page__stat">
+            <p>Unassigned</p>
+            <p>{{ unassignedCount }}</p>
+          </div>
+          <div class="approval-grid-page__stat">
+            <p>Visible Records</p>
+            <p class="is-accent">{{ displayedCount }}</p>
+          </div>
+        </div>
+        <div class="approval-grid-page__actions">
+          <input
+            class="enrollment-page__search"
+            type="text"
+            [(ngModel)]="rosterFilter"
+            placeholder="Filter by name or email…"
+            aria-label="Filter teachers"
+          />
+          <button type="button" class="approval-grid-page__action-btn" (click)="selectAllVisible()">
+            <span class="material-symbols-outlined" aria-hidden="true">done_all</span>
+            Select All
+          </button>
+          <button type="button" class="approval-grid-page__action-btn" (click)="clearVisibleSelection()">
+            <span class="material-symbols-outlined" aria-hidden="true">deselect</span>
+            Clear Selection
+          </button>
+          <button
+            type="button"
+            class="approval-grid-page__approve-btn"
+            [disabled]="!hasPendingChanges()"
+            (click)="handleTeacherUpdate()"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">sync_alt</span>
+            Update Teachers
+          </button>
+        </div>
+      </div>
+
+      @if (teachersList.length === 0) {
+        <div class="approval-grid-page__empty">
+          <span class="material-symbols-outlined" aria-hidden="true">groups</span>
+          <h3>No Instructors Found</h3>
+          <p>No active instructors are registered in this organization yet.</p>
+        </div>
+      } @else if (filteredTeachersList.length === 0) {
+        <div class="approval-grid-page__empty">
+          <span class="material-symbols-outlined" aria-hidden="true">search_off</span>
+          <h3>No Matching Instructors</h3>
+          <p>
+            @if (assignmentTab === null) {
+              No instructors match your search. Try adjusting your search terms.
+            } @else {
+              No {{ assignmentTab === 'assigned' ? 'assigned' : 'unassigned' }} instructors match your filter.
+              Try adjusting your search terms or change the assignment filter.
+            }
+          </p>
+        </div>
+      } @else {
+        <div class="approval-grid-page__list">
+          <div class="approval-grid-page__list-head" aria-hidden="true">
+            <span></span>
+            <span>Name</span>
+            <span>Email</span>
+            <span>Node ID</span>
+            <span>Status</span>
+            <span>Action</span>
+          </div>
+
+          @for (teacher of filteredTeachersList; track getTeacherId(teacher) || $index) {
+            <label
+              class="approval-grid-page__list-row"
+              [class.is-selected]="isAssigned(teacher)"
+            >
+              <input
+                type="checkbox"
+                [checked]="isAssigned(teacher)"
+                (change)="onTeacherSelect(teacher, $event)"
+                [value]="getTeacherId(teacher)"
+              />
+
+              <span class="approval-grid-page__list-check" aria-hidden="true">
+                <span class="material-symbols-outlined">
+                  {{ isAssigned(teacher) ? 'check_box' : 'check_box_outline_blank' }}
+                </span>
+              </span>
+
+              <div class="approval-grid-page__list-user">
+                <div class="approval-grid-page__avatar-wrap">
+                  <div class="approval-grid-page__avatar approval-grid-page__avatar--sm">
+                    <img
+                      [src]="getTeacherAvatarUrl(teacher)"
+                      [alt]="getTeacherName(teacher)"
+                      (error)="onTeacherAvatarError($event, teacher)"
+                    />
+                  </div>
+                  @if (isAssigned(teacher)) {
+                    <div class="approval-grid-page__avatar-badge" aria-hidden="true">
+                      <span class="material-symbols-outlined">check</span>
+                    </div>
+                  } @else if (isUnassigning(teacher)) {
+                    <div class="approval-grid-page__avatar-badge is-pending" aria-hidden="true">
+                      <span class="material-symbols-outlined">hourglass_top</span>
+                    </div>
+                  }
+                </div>
+                <div class="approval-grid-page__list-user-text">
+                  <h3>{{ getTeacherName(teacher) }}</h3>
+                  <p class="approval-grid-page__role">
+                    <span class="material-symbols-outlined" aria-hidden="true">memory</span>
+                    Neural Instructor
+                  </p>
+                </div>
+              </div>
+
+              <p class="approval-grid-page__list-email">
+                {{ getTeacherEmail(teacher) || '—' }}
+              </p>
+
+              <p class="approval-grid-page__list-node">{{ getTeacherNodeId(teacher) }}</p>
+
+              @if (isAssigned(teacher)) {
+                <p class="approval-grid-page__list-status approval-grid-page__list-status--active">Assigned</p>
+              } @else if (isUnassigning(teacher)) {
+                <p class="approval-grid-page__list-status approval-grid-page__list-status--pending">Unassigning</p>
+              } @else {
+                <p class="approval-grid-page__list-status">Unassigned</p>
+              }
+
+              <span class="approval-grid-page__list-action">
+                {{ isAssigned(teacher) ? 'Selected' : 'Select' }}
+              </span>
+            </label>
+          }
+        </div>
+      }
+    }
+  </div>
 </div>

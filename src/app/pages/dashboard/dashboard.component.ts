@@ -9,7 +9,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-teacher.service';
-import { DASHBOARD_NAV_ROUTES } from './dashboard-routes.config';
+import { DASHBOARD_NAV_ROUTES, DASHBOARD_TECHNICAL_BACKDROP_SEGMENTS, isDashboardNavActive } from './dashboard-routes.config';
 import { DemoModeBannerComponent } from 'src/app/shared/demo-mode-banner/demo-mode-banner.component';
 
 @Component({
@@ -46,6 +46,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   get isApprovalPendingRoute(): boolean {
     return this.router.url.includes(DASHBOARD_NAV_ROUTES.approvalPending);
+  }
+
+  get showTechnicalBackdrop(): boolean {
+    return isDashboardNavActive(this.router.url, DASHBOARD_TECHNICAL_BACKDROP_SEGMENTS);
   }
 
   ngOnInit(): void {
@@ -145,9 +149,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
       case 'network': {
         const role = this.commonService.loginedUserInfo?.role || '';
         if (role === 'organization' || role === 'teacher') {
-          return url.includes(DASHBOARD_NAV_ROUTES.teachers) || url.includes(DASHBOARD_NAV_ROUTES.students);
+          return url.includes(DASHBOARD_NAV_ROUTES.directory);
         }
-        return url.includes(DASHBOARD_NAV_ROUTES.teachers);
+        return url.includes(DASHBOARD_NAV_ROUTES.directory);
       }
       default:
         return false;
@@ -164,9 +168,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
       courses: DASHBOARD_NAV_ROUTES.courses,
       account: DASHBOARD_NAV_ROUTES.account,
       network:
-        role === 'organization' || role === 'teacher'
+        role === 'organization'
           ? DASHBOARD_NAV_ROUTES.teachers
-          : DASHBOARD_NAV_ROUTES.teachers,
+          : DASHBOARD_NAV_ROUTES.students,
     };
 
     this.router.navigate([routes[section]]);

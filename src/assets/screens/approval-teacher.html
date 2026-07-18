@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Majestic Academy | Grid</title>
+<!-- Google Fonts: Space Grotesk, Geist, JetBrains Mono -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Geist:wght@100;300;400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#ab0063",
+                    "on-error": "#690005",
+                    "tertiary-container": "#bb7bff",
+                    "surface-variant": "#353438",
+                    "on-tertiary": "#480081",
+                    "on-surface-variant": "#e2bfb3",
+                    "on-error-container": "#ffdad6",
+                    "surface-tint": "#ffb59a",
+                    "error-container": "#93000a",
+                    "on-tertiary-container": "#4a0084",
+                    "background": "#131316",
+                    "inverse-surface": "#e4e1e6",
+                    "inverse-on-surface": "#303033",
+                    "secondary-fixed-dim": "#ffb0cc",
+                    "surface-container-high": "#2a2a2d",
+                    "surface": "#131316",
+                    "primary-fixed-dim": "#ffb59a",
+                    "on-primary-fixed-variant": "#802900",
+                    "on-surface": "#e4e1e6",
+                    "secondary-fixed": "#ffd9e4",
+                    "surface-container-highest": "#353438",
+                    "surface-bright": "#39393c",
+                    "on-tertiary-fixed": "#2c0051",
+                    "on-primary-container": "#5c1c00",
+                    "surface-dim": "#131316",
+                    "on-secondary": "#640038",
+                    "tertiary": "#dcb8ff",
+                    "surface-container": "#1f1f22",
+                    "outline": "#a98a7f",
+                    "error": "#ffb4ab",
+                    "surface-container-low": "#1b1b1e",
+                    "on-secondary-fixed": "#3e0020",
+                    "tertiary-fixed": "#efdbff",
+                    "primary-fixed": "#ffdbcf",
+                    "on-background": "#e4e1e6",
+                    "on-primary": "#5b1b00",
+                    "inverse-primary": "#a83900",
+                    "surface-container-lowest": "#0e0e11",
+                    "outline-variant": "#594139",
+                    "on-primary-fixed": "#380d00",
+                    "on-secondary-fixed-variant": "#8d0051",
+                    "on-tertiary-fixed-variant": "#6700b5",
+                    "tertiary-fixed-dim": "#dcb8ff",
+                    "secondary": "#ffb0cc",
+                    "primary-container": "#ff6b2c",
+                    "primary": "#ffb59a",
+                    "on-secondary-container": "#ffbad2"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "margin-mobile": "20px",
+                    "unit": "4px",
+                    "margin-desktop": "64px",
+                    "container-max": "1440px"
+            },
+            "fontFamily": {
+                    "label-sm": ["JetBrains Mono"],
+                    "headline-lg-mobile": ["Space Grotesk"],
+                    "headline-lg": ["Space Grotesk"],
+                    "display-lg": ["Space Grotesk"],
+                    "body-md": ["Geist"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0F0F12;
+            color: #e4e1e6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .technical-grid {
+            background-image: 
+                linear-gradient(to right, rgba(255, 181, 154, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 181, 154, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .ambient-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .glow-purple { background: #bb7bff; top: -100px; right: -100px; }
+        .glow-orange { background: #ff6b2c; bottom: -100px; left: -100px; }
+
+        .glass-card {
+            background: rgba(31, 31, 34, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: #ff6b2c;
+            box-shadow: 0 0 20px rgba(255, 107, 44, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .gradient-border-accent {
+            position: relative;
+        }
+        .gradient-border-accent::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, #ff6b2c, #ab0063);
+            opacity: 0.6;
+        }
+
+        .avatar-glow {
+            box-shadow: 0 0 15px rgba(255, 181, 154, 0.3);
+            border: 2px solid #ffb59a;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(1000%); }
+        }
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(255, 181, 154, 0.2), transparent);
+            position: absolute;
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="font-body-md overflow-x-hidden">
+<!-- Background Elements -->
+<div class="fixed inset-0 technical-grid z-[-2]"></div>
+<div class="ambient-glow glow-purple"></div>
+<div class="ambient-glow glow-orange"></div>
+<div class="scanline"></div>
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-surface-container-lowest border-r border-outline-variant/20 shadow-2xl flex flex-col py-8 hidden md:flex">
+<div class="px-6 mb-10">
+<h1 class="font-headline-lg text-primary mb-1">System Admin</h1>
+<p class="font-label-sm text-label-sm opacity-60">Terminal v2.0.4</p>
+</div>
+<nav class="flex-grow space-y-1">
+<div class="flex items-center gap-3 text-on-surface-variant py-3 px-6 hover:bg-surface-variant/50 hover:text-on-surface transition-all cursor-pointer group">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</div>
+<!-- Active Tab: Instructors -->
+<div class="flex items-center gap-3 bg-primary-container/10 text-primary border-l-2 border-primary py-3 px-6 cursor-pointer">
+<span class="material-symbols-outlined text-xl">groups</span>
+<span class="font-label-sm text-label-sm">Instructors</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant py-3 px-6 hover:bg-surface-variant/50 hover:text-on-surface transition-all cursor-pointer group">
+<span class="material-symbols-outlined text-xl">menu_book</span>
+<span class="font-label-sm text-label-sm">Curriculum</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant py-3 px-6 hover:bg-surface-variant/50 hover:text-on-surface transition-all cursor-pointer group">
+<span class="material-symbols-outlined text-xl">monitoring</span>
+<span class="font-label-sm text-label-sm">Analytics</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant py-3 px-6 hover:bg-surface-variant/50 hover:text-on-surface transition-all cursor-pointer group">
+<span class="material-symbols-outlined text-xl">terminal</span>
+<span class="font-label-sm text-label-sm">Logs</span>
+</div>
+</nav>
+<div class="mt-auto px-6 mb-8">
+<button class="w-full bg-primary text-on-primary py-3 px-4 font-label-sm text-label-sm flex items-center justify-center gap-2 active:scale-95 duration-200">
+<span class="material-symbols-outlined">add_circle</span>
+                Deploy New Node
+            </button>
+</div>
+<div class="border-t border-outline-variant/20 pt-6">
+<div class="flex items-center gap-3 text-on-surface-variant py-3 px-6 hover:bg-surface-variant/50 cursor-pointer">
+<span class="material-symbols-outlined text-xl">shield</span>
+<span class="font-label-sm text-label-sm">Security</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant py-3 px-6 hover:bg-surface-variant/50 cursor-pointer">
+<span class="material-symbols-outlined text-xl">help_center</span>
+<span class="font-label-sm text-label-sm">Support</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 min-h-screen">
+<!-- TopAppBar (Shared Component) -->
+<header class="fixed top-0 right-0 left-0 md:left-64 z-40 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex justify-between items-center h-16 px-gutter">
+<div class="flex items-center gap-4">
+<div class="font-display-lg text-primary tracking-tighter text-2xl">Majestic Academy</div>
+<div class="h-6 w-px bg-outline-variant/30 hidden sm:block"></div>
+<div class="hidden sm:flex items-center bg-surface-container-low px-4 py-1.5 border border-outline-variant/20">
+<span class="material-symbols-outlined text-primary text-sm mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm font-label-sm w-48 text-on-surface-variant" placeholder="Query Node ID..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">settings</span>
+</div>
+<div class="flex items-center gap-3 border-l border-outline-variant/30 pl-4">
+<div class="text-right hidden sm:block">
+<p class="font-label-sm text-[10px] uppercase opacity-50">System Root</p>
+<p class="font-label-sm text-xs font-bold text-on-surface">Admin_01</p>
+</div>
+<img class="w-10 h-10 rounded-full border border-primary/30 object-cover" data-alt="A portrait of a highly professional female administrator with a sleek futuristic headset, set against a dark architectural background with glowing orange holographic displays. The lighting is dramatic and technical, reflecting a cyberpunk minimalist aesthetic with high contrast and sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGJvsYNGS8_FJJf-x_stz9lMIKKkUgJImBU_dseqKZBmFlV7__q86LcWJRd2ZB-SqJ_ACKAQh2iMn1SkLyR8IuNv5upGCDUqLUUbRqWgY7u0LVSFXtP9cYHxSVD00rWiyOMuL8Ql7ZRrmVGDGfL0OG6gAJMEYb9eN8yAMagsxddeyLRsqZ6fc6DJxYIULA3euiIkKYJoVh74AsbBTPVvlGwy2Pv93w80hXI7iSsNQXYvvoP20L2eq4Jw"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="pt-24 pb-12 px-gutter max-w-container-max mx-auto">
+<!-- Page Header -->
+<div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Instructor Grid</h2>
+<div class="flex items-center gap-2 text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+<span>Authorized Node Directory</span>
+<span class="mx-2 opacity-30">|</span>
+<span class="text-on-surface-variant">Showing 12 Active Records</span>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant/30 font-label-sm text-label-sm hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                        Filter Roles
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant/30 font-label-sm text-label-sm hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">download</span>
+                        Export Data
+                    </button>
+</div>
+</div>
+<!-- The Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Instructor Card 1 (Target Focus) -->
+<div class="glass-card gradient-border-accent flex flex-col p-6 group">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-16 h-16 rounded-full overflow-hidden avatar-glow">
+<img class="w-full h-full object-cover" data-alt="A focused male neural instructor with silver hair and sharp features, wearing a high-collared dark uniform with glowing orange trim. He is surrounded by soft purple atmospheric light and technical data floating in the air, creating a sophisticated glassmorphic professional portrait." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh9mISX4Wijt7RXXiTE60Bwt28QXtFBjFvoKmZ4xvNAVRTGoA9ECPLgZ6-qC67pkG6hBqnmBYxXOxVJeu_psPa8XsnWBfP0DNw1MIOLMB9XvkAqCo6YiCpTaHJ7Uan72Wg1Kc7po5ws8aS2grfl1zdApC1Snqf8fjAsYL3WfOmyeuXof2TsNhwHA-7NCoQVta-OpMdJMnSE0v1fLoB3r3BDru1NUv_wG4sXJQCWWpai_iNVCufOe48NA"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-primary text-on-primary w-5 h-5 rounded-full flex items-center justify-center border-2 border-surface">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">NODE ID</span>
+<p class="font-label-sm text-sm font-bold mt-1">#MX-0294</p>
+</div>
+</div>
+<div class="mb-6">
+<h3 class="font-headline-lg text-xl text-on-surface mb-1">Jose S N</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-tertiary">memory</span>
+                            Senior Neural Instructor
+                        </p>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div>
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Access Level</p>
+<p class="font-label-sm text-xs font-medium text-secondary">Level 07 (Root)</p>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Status</p>
+<p class="font-label-sm text-xs font-medium text-primary">Approved</p>
+</div>
+</div>
+<button class="mt-auto w-full py-3 px-4 bg-primary-container text-on-primary-container font-label-sm text-label-sm flex items-center justify-center gap-2 hover:brightness-110 active:scale-95 transition-all">
+                        Manage Node
+                        <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+</button>
+</div>
+<!-- Repeat for Grid - Card 2 -->
+<div class="glass-card gradient-border-accent flex flex-col p-6 group">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-16 h-16 rounded-full overflow-hidden avatar-glow border-tertiary/30">
+<img class="w-full h-full object-cover" data-alt="A portrait of a female instructor with sleek dark hair and glowing bio-luminescent marks on her temples, wearing a metallic silver techwear jacket. The background is a dark, glassmorphic studio with soft purple and orange neon accents. The mood is high-octane and technically precise." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2kg6vLSHW5BbQd5D1z5uDvEW5nZKbHb-66YjAWnTWs_MJDH6TRYC9WienMPayG80IeSohS2i5sTmj6e8Qj8XE6PwyMu8EYqpxANwyqTn4TeaJJMptAQGqdu9ZMqRk6p__YIwkRO0gd2m8mKCvaAV0U_5hkhFXqT__CiHxVpKXMGjfBBGcEPn9fLrouMmpO92Q8h597b9T6CwncNzAtuPE0OoIMQkT2IQLvt_rrXm6bZ-pXbrTKzpBvw"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-primary text-on-primary w-5 h-5 rounded-full flex items-center justify-center border-2 border-surface">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">NODE ID</span>
+<p class="font-label-sm text-sm font-bold mt-1">#MX-1102</p>
+</div>
+</div>
+<div class="mb-6">
+<h3 class="font-headline-lg text-xl text-on-surface mb-1">Elena Vance</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-tertiary">code</span>
+                            Lead Algorithm Coach
+                        </p>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div>
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Access Level</p>
+<p class="font-label-sm text-xs font-medium text-secondary">Level 05 (Sec)</p>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Status</p>
+<p class="font-label-sm text-xs font-medium text-primary">Approved</p>
+</div>
+</div>
+<button class="mt-auto w-full py-3 px-4 bg-primary-container/10 text-primary border border-primary/30 font-label-sm text-label-sm flex items-center justify-center gap-2 hover:bg-primary hover:text-on-primary transition-all">
+                        Manage Node
+                        <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+</button>
+</div>
+<!-- Repeat for Grid - Card 3 -->
+<div class="glass-card gradient-border-accent flex flex-col p-6 group">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-16 h-16 rounded-full overflow-hidden avatar-glow">
+<img class="w-full h-full object-cover" data-alt="A portrait of an older, distinguished male instructor with a cybernetic eye implant, wearing a black matte exoskeleton suit. He stands in front of a massive data server wall with orange glowing cables. The overall style is dark, sleek, and high-tech with sharp digital precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAEMYIsiZM2TQi25ILZqAbZdsxYfErXx97aAz7R-LZ0ckS5VrmUj5MOj-x6DNvU1WtmYd1365j_MpbHt2SZ_GAgoR1Nuuc-OTNPcwymtrWjdsRmNPcGUf4whF12FerE8LgLKvKPV0ucFVLuzAj_V1hUYgl2Laqu62XE-AcpaX76ubV49JBEj3LaZylbjSyyOxaffPFN2EZRGvFDVLCMBuG4IoKyrWwGQ9O9kIxZ_uo9BEbS93vcmoYcA"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-primary text-on-primary w-5 h-5 rounded-full flex items-center justify-center border-2 border-surface">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">NODE ID</span>
+<p class="font-label-sm text-sm font-bold mt-1">#MX-0041</p>
+</div>
+</div>
+<div class="mb-6">
+<h3 class="font-headline-lg text-xl text-on-surface mb-1">Marcus Thorne</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-tertiary">security</span>
+                            Protocol Specialist
+                        </p>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div>
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Access Level</p>
+<p class="font-label-sm text-xs font-medium text-secondary">Level 09 (Dev)</p>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Status</p>
+<p class="font-label-sm text-xs font-medium text-primary">Approved</p>
+</div>
+</div>
+<button class="mt-auto w-full py-3 px-4 bg-primary-container/10 text-primary border border-primary/30 font-label-sm text-label-sm flex items-center justify-center gap-2 hover:bg-primary hover:text-on-primary transition-all">
+                        Manage Node
+                        <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+</button>
+</div>
+<!-- Repeat for Grid - Card 4 -->
+<div class="glass-card gradient-border-accent flex flex-col p-6 group">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-16 h-16 rounded-full overflow-hidden avatar-glow">
+<img class="w-full h-full object-cover" data-alt="A portrait of a female instructor with vibrant orange-dyed hair and a technical visor, wearing a white and grey high-tech lab coat with purple piping. She is in a laboratory setting with floating chemical holographic formulas and soft pink atmospheric backlighting. Cinematic digital art style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQ-Nl8oiOnuU9r4OD5u_Y5hyFvjE_cCZ6tkQJn0t9v1aQr5DUIgYnQ2boPYK3fR6RWkURqenSMP1ljO_H9Xnt1cymWmYJDlSwHRQ5eF5ThLwl8mpkY1nUCK37_iMnP9WGWNDEkVHTyAzOXV2ZTv8swEnnWeCYwFVcxCFFLUOgjnhV0JnNTjU5siW1iNfRORdxiW1wy8ErFsW3xYpOk4y0sr17rbT7g4BOHWu6b7Q8VCxMRIweSM0N9oA"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-primary text-on-primary w-5 h-5 rounded-full flex items-center justify-center border-2 border-surface">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">NODE ID</span>
+<p class="font-label-sm text-sm font-bold mt-1">#MX-0883</p>
+</div>
+</div>
+<div class="mb-6">
+<h3 class="font-headline-lg text-xl text-on-surface mb-1">Sia Chen</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-tertiary">science</span>
+                            Bionic Synthesis Prof.
+                        </p>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div>
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Access Level</p>
+<p class="font-label-sm text-xs font-medium text-secondary">Level 04 (Op)</p>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Status</p>
+<p class="font-label-sm text-xs font-medium text-primary">Approved</p>
+</div>
+</div>
+<button class="mt-auto w-full py-3 px-4 bg-primary-container/10 text-primary border border-primary/30 font-label-sm text-label-sm flex items-center justify-center gap-2 hover:bg-primary hover:text-on-primary transition-all">
+                        Manage Node
+                        <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+</button>
+</div>
+<!-- Repeat for Grid - Card 5 (Different Visual Variety) -->
+<div class="glass-card gradient-border-accent flex flex-col p-6 group">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-16 h-16 rounded-full overflow-hidden avatar-glow">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male instructor with close-cropped hair and a high-tech communication piece in his ear, wearing a sleek black turtleneck with glowing orange fiber optic lines. He is standing against a dark wall with a blurred city landscape visible through a glass window. Moody, futuristic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQVMw83z36hF0Qect0HmnXvVaqrJ2AevOFyd5jxR4qNqYdHHl2ZFMmYndruzQFw1xY00CsiUeOW8sxTEDo1QlFTLBd2AFmPSVcc5yeBHxkwjGiPuYTqQGXRx6jLbsnlXp9els03f4a7LZaU9bvRhieb-rWPGVr935drCbqtyNK1lhyr5fMo1c_Crc5eKqRDISe5ds1RiQz6u3m2Vp2VRmdUxNta-LPPOiKRVELnuObzg1kT6O9-8LBTA"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-primary text-on-primary w-5 h-5 rounded-full flex items-center justify-center border-2 border-surface">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">NODE ID</span>
+<p class="font-label-sm text-sm font-bold mt-1">#MX-0439</p>
+</div>
+</div>
+<div class="mb-6">
+<h3 class="font-headline-lg text-xl text-on-surface mb-1">Leo Richter</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-tertiary">hub</span>
+                            Network Architect
+                        </p>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div>
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Access Level</p>
+<p class="font-label-sm text-xs font-medium text-secondary">Level 06 (Sys)</p>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Status</p>
+<p class="font-label-sm text-xs font-medium text-primary">Approved</p>
+</div>
+</div>
+<button class="mt-auto w-full py-3 px-4 bg-primary-container/10 text-primary border border-primary/30 font-label-sm text-label-sm flex items-center justify-center gap-2 hover:bg-primary hover:text-on-primary transition-all">
+                        Manage Node
+                        <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+</button>
+</div>
+<!-- Repeat for Grid - Card 6 -->
+<div class="glass-card gradient-border-accent flex flex-col p-6 group">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-16 h-16 rounded-full overflow-hidden avatar-glow">
+<img class="w-full h-full object-cover" data-alt="A striking portrait of a female instructor with platinum blonde hair and a minimalist metallic headset, wearing a dark navy blazer with glowing purple accents. The background is a clean, glassmorphic office with subtle technical HUD elements floating in the air. High-end cyberpunk minimal style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMnA7tmwILV1YSwS_dr8OVTKpS3yGKKAToM6oNnWZWOGOyDaLKIze89QSBK0ZgqBSqN9LGfY6jUNDin1VN0_becM2KHe8ctJYp37WTrJf2LnrCVFJcHvtki4n20s6ZvFJsjX4J9-XeP8YnOPzaedgE2kTf--VZHLhfDKf0FzvWMro8A86C0ZRD2FQ0Y6mOtupR0D-mBsncdT4OY7-vvslDn-P0cM6fCskySmFeFzzmvBSWP94rBGzttw"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-primary text-on-primary w-5 h-5 rounded-full flex items-center justify-center border-2 border-surface">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">NODE ID</span>
+<p class="font-label-sm text-sm font-bold mt-1">#MX-0772</p>
+</div>
+</div>
+<div class="mb-6">
+<h3 class="font-headline-lg text-xl text-on-surface mb-1">Iris Volkov</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-tertiary">psychology</span>
+                            Cognitive Lead
+                        </p>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div>
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Access Level</p>
+<p class="font-label-sm text-xs font-medium text-secondary">Level 08 (Adm)</p>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Status</p>
+<p class="font-label-sm text-xs font-medium text-primary">Approved</p>
+</div>
+</div>
+<button class="mt-auto w-full py-3 px-4 bg-primary-container/10 text-primary border border-primary/30 font-label-sm text-label-sm flex items-center justify-center gap-2 hover:bg-primary hover:text-on-primary transition-all">
+                        Manage Node
+                        <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+</button>
+</div>
+</div>
+<!-- Footer Stats -->
+<div class="mt-12 p-8 border border-outline-variant/20 bg-surface-container-low flex flex-wrap gap-8 items-center justify-between">
+<div class="flex gap-12 flex-wrap">
+<div>
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Network Capacity</p>
+<p class="font-headline-lg text-2xl text-on-surface">94.8%</p>
+</div>
+<div>
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Active Neural Links</p>
+<p class="font-headline-lg text-2xl text-on-surface">1,024</p>
+</div>
+<div>
+<p class="font-label-sm text-[10px] uppercase opacity-40 mb-1">Uptime Duration</p>
+<p class="font-headline-lg text-2xl text-primary">14.2k Hrs</p>
+</div>
+</div>
+<div class="flex items-center gap-3 bg-background p-4 border border-outline-variant/10">
+<div class="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
+<span class="font-label-sm text-label-sm">Central Core Synchronized</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Navigation Shell -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/30 flex justify-around items-center h-16 z-50">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-label-sm">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-[10px] font-label-sm">Instructors</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="text-[10px] font-label-sm">Labs</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-label-sm">Config</span>
+</div>
+</nav>
+<script>
+        // Micro-interactions for glass cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+                
+                // Dynamic border glow effect
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)`;
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input');
+        searchInput?.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('border-primary/50');
+            searchInput.parentElement.classList.add('bg-surface-container');
+        });
+        searchInput?.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('border-primary/50');
+            searchInput.parentElement.classList.remove('bg-surface-container');
+        });
+    </script>
+</body></html>

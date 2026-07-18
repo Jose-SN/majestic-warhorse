@@ -10,9 +10,8 @@ import { CourseOverviewComponent } from './pages/course-overview/course-overview
 import { CoursesComponent } from './pages/courses/courses.component';
 import { CourseDetailsComponent } from './pages/course-details/course-details.component';
 import { EditAccountComponent } from './pages/edit-account/edit-account.component';
-import { TeachersListComponent } from './pages/teachers-list/teachers-list.component';
-import { StudentsListComponent } from './pages/students-list/students-list.component';
-import { ApprovalListComponent } from './pages/approval-list/approval-list.component';
+import { DirectoryPageComponent } from './pages/directory-page/directory-page.component';
+import { ApprovalPageComponent } from './pages/approval-page/approval-page.component';
 import { ApprovalPendingComponent } from './pages/approval-pending/approval-pending.component';
 import { StudentTeacherAssignListComponent } from './pages/student-teacher-assign-list/student-teacher-assign-list.component';
 import { QuestionnaireComponent } from './pages/questionnaire/questionnaire.component';
@@ -21,9 +20,10 @@ import { AuthCallbackComponent } from './pages/auth-callback/auth-callback.compo
 import { OrgPickerComponent } from './pages/org-picker/org-picker.component';
 import { InviteTeacherComponent } from './pages/invite-teacher/invite-teacher.component';
 import { InviteStudentComponent } from './pages/invite-student/invite-student.component';
-import { StudentApprovalListComponent } from './pages/student-approval-list/student-approval-list.component';
 import { AiModeComponent } from './pages/ai-mode/ai-mode.component';
 import { CourseUploadComponent } from './pages/course-upload/course-upload.component';
+import { ViewAssignedStudentsComponent } from './components/view-assigned-students/view-assigned-students.component';
+import { ViewAssignedTeachersComponent } from './components/view-assigned-teachers/view-assigned-teachers.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -45,10 +45,15 @@ const routes: Routes = [
       { path: 'course-upload', component: CourseUploadComponent },
       { path: 'course-details', component: CourseDetailsComponent },
       { path: 'account', component: EditAccountComponent },
-      { path: 'teachers', component: TeachersListComponent },
-      { path: 'students', component: StudentsListComponent },
-      { path: 'approval', component: ApprovalListComponent },
-      { path: 'student-approval', component: StudentApprovalListComponent },
+      { path: 'directory/teachers/:id/manage', component: ViewAssignedStudentsComponent },
+      { path: 'directory/students/:id/manage', component: ViewAssignedTeachersComponent },
+      { path: 'directory', component: DirectoryPageComponent },
+      { path: 'directory/:tab', component: DirectoryPageComponent },
+      { path: 'teachers', redirectTo: 'directory/teachers' },
+      { path: 'students', redirectTo: 'directory/students' },
+      { path: 'approval', component: ApprovalPageComponent },
+      { path: 'approval/:tab', component: ApprovalPageComponent },
+      { path: 'student-approval', redirectTo: 'approval/students' },
       { path: 'approval-pending', component: ApprovalPendingComponent },
       { path: 'assign-teacher', component: StudentTeacherAssignListComponent },
       { path: 'invite-teacher', component: InviteTeacherComponent },

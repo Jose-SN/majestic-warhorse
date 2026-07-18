@@ -1,63 +1,138 @@
-<div class="common-wrapper">
-  <header class="page-header">
-    <h1>Students List</h1>
-  </header>
-  <div class="scoll-wrapper">
-    <div class="scroll-container">
-      @if (studentList.length === 0) {
-        <div class="no-students-found">
-          <figure>
-            <svg width="140" height="140" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4ZM12 6C8.69 6 6 8.69 6 12C6 15.31 8.69 18 12 18C15.31 18 18 15.31 18 12C18 8.69 15.31 6 12 6ZM11 7H13V9H11V7ZM11 10H13V16H11V10Z" fill="currentColor"/>
-              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" fill="none" opacity="0.2"/>
-            </svg>
-          </figure>
-          <h3>No Approved Students Found</h3>
-          <p>We couldn't find any approved students in the system. This could happen if:</p>
-          <ul>
-            <li>No approved students have been registered yet</li>
-            <li>All students are pending approval</li>
-            <li>There was an issue fetching data from the server</li>
-          </ul>
-          <p class="help-text">Please try refreshing the page or contact your administrator if the problem persists.</p> 
+<div class="approval-grid-page" [class.approval-grid-page--embedded]="embedded">
+  @if (!embedded) {
+    <div class="approval-grid-page__backdrop" aria-hidden="true">
+      <div class="approval-grid-page__technical-grid"></div>
+      <div class="approval-grid-page__glow approval-grid-page__glow--purple"></div>
+      <div class="approval-grid-page__glow approval-grid-page__glow--orange"></div>
+      <div class="approval-grid-page__scanline"></div>
+    </div>
+  }
+
+  <div class="approval-grid-page__content">
+    <!-- <header class="approval-grid-page__header">
+      <div class="approval-grid-page__header-text">
+        <h2>Student Grid</h2>
+        <div class="approval-grid-page__header-meta">
+          <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+          <span>Authorized Node Directory</span>
+          <span>|</span>
+          <span class="is-muted">Showing {{ displayedCount }} Active Records</span>
         </div>
-      } @else {
-        @if (studentList | searchFilter: searchText : 'USER_LIST'; as filteredList) {
-          @if (filteredList.length > 0) {
-            <div class="common-list-wrapper">
-              @for (student of filteredList; track student.id || $index) {
-                <div class="common-list">
-                  <div class="list-left">
-                    <figure><img [src]="commonService.decodeUrl(student.profileImage || student.profile_image)" alt=""></figure>
-                    <div class="common-list-right">
-                      <h4>{{student.firstName || student.first_name}} {{student.lastName || student.last_name}}</h4>
+      </div>
+    </header> -->
+
+    <div class="approval-grid-page__header-actions">
+      <div class="approval-grid-page__stats">
+        <div class="approval-grid-page__stat">
+          <p>Active Students</p>
+          <p>{{ studentList.length }}</p>
+        </div>
+        <div class="approval-grid-page__stat">
+          <p>Visible Records</p>
+          <p class="is-accent">{{ displayedCount }}</p>
+        </div>
+      </div>
+    </div>
+
+    @if (rosterLoading) {
+      <div class="approval-grid-page__empty approval-grid-page__empty--loading" role="status" aria-live="polite">
+        <div class="approval-grid-page__spinner" aria-hidden="true"></div>
+        <h3>Loading Students</h3>
+        <p>Fetching active student nodes from the network…</p>
+      </div>
+    } @else if (studentList.length === 0) {
+      <div class="approval-grid-page__empty">
+        <span class="material-symbols-outlined" aria-hidden="true">groups</span>
+        <h3>No Approved Students Found</h3>
+        <p>No active students are registered yet, or all students may still be pending approval.</p>
+      </div>
+    } @else {
+      @if (studentList | searchFilter: searchText : 'USER_LIST'; as filteredList) {
+        @if (filteredList.length > 0) {
+          <div class="approval-grid-page__list approval-grid-page__list--roster">
+            <div class="approval-grid-page__list-head" aria-hidden="true">
+              <span>Name</span>
+              <span>Email</span>
+              <span>Node ID</span>
+              <span>Status</span>
+              <span>Action</span>
+            </div>
+
+            @for (student of filteredList; track student.id || student.rosterRowId || $index) {
+              <div class="approval-grid-page__list-row approval-grid-page__list-row--roster">
+                <div class="approval-grid-page__list-user">
+                  <div class="approval-grid-page__avatar-wrap">
+                    <div class="approval-grid-page__avatar approval-grid-page__avatar--sm">
+                      <img [src]="getStudentAvatar(student)" [alt]="getStudentName(student)" />
+                    </div>
+                    <div class="approval-grid-page__avatar-badge" aria-hidden="true">
+                      <span class="material-symbols-outlined">check</span>
                     </div>
                   </div>
-                  <div class="icon-holder">
-                    <button (click)="viewAssignedTeachers(student)" aria-label="View assigned teachers" title="View Assigned Teachers"><img src="../../../assets/images/icon-edit.svg" alt="View"></button>
+                  <div class="approval-grid-page__list-user-text">
+                    <h3>{{ getStudentName(student) }}</h3>
+                    <p class="approval-grid-page__role">
+                      <span class="material-symbols-outlined" aria-hidden="true">memory</span>
+                      Neural Student
+                    </p>
                   </div>
                 </div>
-              }
-            </div>
-          } @else {
-            <div class="no-students-found">
-              <figure>
-                <svg width="140" height="140" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill="currentColor"/>
-                  <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="currentColor" opacity="0.3"/>
-                </svg>
-              </figure>
-              <h3>No Matching Students</h3>
-              <p>We couldn't find any students matching your search criteria. Try:</p>
-              <ul>
-                <li>Adjusting your search terms</li>
-                <li>Clearing the search filter</li>
-                <li>Checking if students are pending approval</li>
-              </ul>
-            </div>
-          }
+
+                <p class="approval-grid-page__list-email">
+                  {{ getStudentEmail(student) || '—' }}
+                </p>
+
+                <p class="approval-grid-page__list-node">{{ getNodeId(student) }}</p>
+
+                <p class="approval-grid-page__list-status approval-grid-page__list-status--active">Active</p>
+
+                <div class="approval-grid-page__list-actions">
+                  <button
+                    type="button"
+                    class="approval-grid-page__card-edit"
+                    (click)="viewAssignedTeachers(student)"
+                    aria-label="View assigned teachers"
+                    title="View Assigned Teachers"
+                  >
+                    <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="approval-grid-page__list-manage-btn"
+                    (click)="viewAssignedTeachers(student)"
+                  >
+                    Manage
+                    <span class="material-symbols-outlined" aria-hidden="true">arrow_forward_ios</span>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="approval-grid-page__empty">
+            <span class="material-symbols-outlined" aria-hidden="true">search_off</span>
+            <h3>No Matching Students</h3>
+            <p>We couldn't find any students matching your search. Try adjusting your search terms.</p>
+          </div>
         }
       }
-    </div>
+    }
+
+    <!-- <footer class="approval-grid-page__footer">
+      <div class="approval-grid-page__stats">
+        <div class="approval-grid-page__stat">
+          <p>Network Capacity</p>
+          <p>{{ studentList.length }}</p>
+        </div>
+        <div class="approval-grid-page__stat">
+          <p>Active Neural Links</p>
+          <p class="is-accent">{{ displayedCount }}</p>
+        </div>
+      </div>
+      <div class="approval-grid-page__sync">
+        <span aria-hidden="true"></span>
+        <span>Central Core Synchronized</span>
+      </div>
+    </footer> -->
   </div>
 </div>

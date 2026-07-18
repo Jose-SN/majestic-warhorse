@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CoursesService } from './courses.service';
-import { Observable, of, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { ICourseList } from './modal/course-list';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
@@ -23,7 +23,8 @@ import { DASHBOARD_NAV_ROUTES } from '../dashboard/dashboard-routes.config';
 export class CoursesComponent {
   public profileUrl: string = '';
   public mobMenu: boolean = false;
-  public courseList$: Observable<ICourseList[]> = of([]);
+  public courseList: ICourseList[] = [];
+  public coursesLoading = true;
   public activeFilterTab: string = 'All';
   public searchText: string = '';
   public loginedUserPrivilege: string = '';
@@ -93,6 +94,19 @@ export class CoursesComponent {
     this.destroy$.complete();
   }
   fetchCourseList() {
-    this.courseList$ = this.coursesService.getCourseList();
+    this.coursesLoading = true;
+    this.coursesService
+      .getCourseList()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (courses) => {
+          this.courseList = courses;
+          this.coursesLoading = false;
+        },
+        error: () => {
+          this.courseList = [];
+          this.coursesLoading = false;
+        },
+      });
   }
 }

@@ -1,16 +1,11 @@
 import { Component } from '@angular/core';
-import { RegistrationPageComponent } from '../registration-page/registration-page.component';
+import { AccountSettingsComponent } from '../account-settings/account-settings.component';
 
 @Component({
   selector: 'app-edit-account',
   standalone: true,
-  imports: [RegistrationPageComponent],
+  imports: [AccountSettingsComponent],
   templateUrl: './edit-account.component.html',
   styleUrl: './edit-account.component.scss',
 })
-export class EditAccountComponent {
-  isEditMode: boolean = true;
-  ngOnDestroy(): void {
-    this.isEditMode = false;
-  }
-}
+export class EditAccountComponent {}

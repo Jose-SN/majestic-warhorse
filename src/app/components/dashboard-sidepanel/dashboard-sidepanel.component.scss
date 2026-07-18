@@ -1,4 +1,5 @@
 @import '../../../styles/index';
+@import '../../../styles/account-profile';
 
 :host {
   display: flex;
@@ -362,15 +363,13 @@
       background: rgba(31, 31, 34, 0.45);
       color: rgba(228, 225, 230, 0.55);
     }
+  }
 
-    &--logout {
-      color: #f87171;
-
-      &:hover:not(:disabled) {
-        border-color: rgba(248, 113, 113, 0.45);
-        background: rgba(248, 113, 113, 0.1);
-      }
-    }
+  &__logout-wrap {
+    width: 100%;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(89, 65, 57, 0.2);
   }
 
   &__text {

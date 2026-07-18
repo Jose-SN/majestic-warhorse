@@ -1,0 +1,8 @@
+@import '../../../styles/account-profile';
+
+:host {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}

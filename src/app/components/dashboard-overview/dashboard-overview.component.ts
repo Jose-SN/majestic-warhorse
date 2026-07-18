@@ -2,7 +2,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, skip, takeUntil } from 'rxjs';
 import { CourseUploadService } from 'src/app/pages/course-upload/course-upload.service';
 import { ICourseList } from 'src/app/pages/courses/modal/course-list';
 import { DashboardService } from 'src/app/pages/dashboard/dashboard.service';
@@ -71,6 +71,7 @@ export class DashboardOverviewComponent implements OnDestroy {
   public dashboardOverview: any = { coursesUploaded: 0 };
   public coursesLoading = false;
   public coursesLoaded = false;
+  public coursesContentLoading = false;
 
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   @ViewChild('futuristicDashboard') futuristicDashboard?: ElementRef<HTMLElement>;
@@ -102,8 +103,19 @@ export class DashboardOverviewComponent implements OnDestroy {
       });
 
     this.demoModeService.demoMode$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.refreshDashboardView());
+      .pipe(skip(1), takeUntil(this.destroy$))
+      .subscribe((isDemo) => {
+        this.refreshDashboardView();
+        if (!isDemo) {
+          void this.fetchCourseList();
+        } else {
+          this.setCoursesContentLoading(false);
+        }
+      });
+
+    if (!this.demoModeService.isDemoMode) {
+      this.setCoursesContentLoading(true);
+    }
 
     await this.fetchDashboardOverview();
     await this.courseDetailsService.getCourseStatusList(
@@ -176,7 +188,7 @@ export class DashboardOverviewComponent implements OnDestroy {
   }
 
   get isCoursesContentLoading(): boolean {
-    return this.demoModeService.isDemoLoading || (!this.demoModeService.isDemoMode && this.coursesLoading);
+    return this.demoModeService.isDemoLoading || this.coursesContentLoading;
   }
 
   get isRecommendationsEmpty(): boolean {
@@ -456,25 +468,98 @@ export class DashboardOverviewComponent implements OnDestroy {
     const overview = this.dashboardOverview ?? {};
     const widgets = createEmptyStatWidgets();
 
-    const setHeader = (id: string, value: number | undefined): void => {
-      const widget = widgets.find((item) => item.id === id);
-      if (widget) {
-        widget.headerRight = String(Math.max(0, value ?? 0));
-      }
-    };
+    const totalStudents = Math.max(
+      0,
+      Number(
+        this.loginedUserPrivilege === 'teacher'
+          ? overview.assignedStudents
+          : overview.totalStudents ?? overview.assignedStudents ?? 0
+      )
+    );
+    const newSubscriptions = Math.max(0, Number(overview.newStudentSubscriptions ?? 0));
+    const joinsByDate: number[] = Array.isArray(overview.joinsByDate)
+      ? overview.joinsByDate.map((value: number) => Math.max(0, Number(value) || 0))
+      : Array(9).fill(0);
+    const todayJoins = Math.max(0, Number(overview.todayJoins ?? joinsByDate[joinsByDate.length - 1] ?? 0));
 
-    if (this.loginedUserPrivilege === 'organization') {
-      setHeader('students-rings', overview.totalStudents);
-      setHeader('students-mixed', overview.totalTeachers);
-      setHeader('real-goals', overview.unassignedStudents);
-    } else if (this.loginedUserPrivilege === 'teacher') {
-      setHeader('students-rings', overview.assignedStudents);
-      setHeader('students-mixed', overview.uploadedCourses);
-      setHeader('real-goals', overview.unassignedStudents);
-    } else {
-      setHeader('students-rings', overview.assignedStudents);
-      setHeader('students-mixed', overview.uploadedCourses);
-      setHeader('real-goals', overview.coursesVisited);
+    const subscribedFromCourses = this.courseLists.length;
+    const completedFromCourses = this.courseLists.filter((course) => {
+      if (course.courseStatusLevel?.toLowerCase() === 'completed') {
+        return true;
+      }
+      const parsed = parseInt(String(course.completionPercent || '0').replace('%', ''), 10);
+      return Number.isFinite(parsed) && parsed >= 100;
+    }).length;
+
+    const totalSubscribed = Math.max(
+      0,
+      subscribedFromCourses ||
+        Number(overview.totalCourses ?? overview.uploadedCourses ?? 0)
+    );
+    const totalCompleted = Math.max(
+      0,
+      completedFromCourses ||
+        Number(overview.completedCourses ?? overview.courseCompleted ?? 0)
+    );
+    const completionRate =
+      totalSubscribed > 0 ? Math.round((totalCompleted / totalSubscribed) * 100) : 0;
+    const newSubRate =
+      totalStudents > 0 ? Math.min(100, Math.round((newSubscriptions / totalStudents) * 100)) : 0;
+
+    const realTime = widgets.find((widget) => widget.id === 'real-time');
+    if (realTime) {
+      const peak = Math.max(...joinsByDate, 1);
+      realTime.bars = joinsByDate.map((count) => Math.round((count / peak) * 100));
+      realTime.headerRight = `${todayJoins} today`;
+      realTime.headerRightAccent = true;
+    }
+
+    const studentsWidget = widgets.find((widget) => widget.id === 'students-rings');
+    if (studentsWidget) {
+      studentsWidget.headerRight = String(totalStudents);
+      studentsWidget.rings = [
+        {
+          value: Math.min(100, totalStudents),
+          displayValue: totalStudents,
+          color: '#ff6b2c',
+          style: 'progress',
+        },
+        {
+          value: Math.min(100, Math.max(newSubRate, totalStudents ? 35 : 0)),
+          displayValue: totalStudents,
+          style: 'concentric',
+        },
+      ];
+    }
+
+    const subscriptionsWidget = widgets.find((widget) => widget.id === 'students-mixed');
+    if (subscriptionsWidget) {
+      subscriptionsWidget.title = 'New Subscriptions';
+      subscriptionsWidget.headerRight = String(newSubscriptions);
+      subscriptionsWidget.ringValue = newSubRate;
+      subscriptionsWidget.ringDisplayValue = newSubscriptions;
+      subscriptionsWidget.miniBars = joinsByDate.slice(-8).map((count) => {
+        const peak = Math.max(...joinsByDate, 1);
+        return Math.round((count / peak) * 100);
+      });
+    }
+
+    const goalsWidget = widgets.find((widget) => widget.id === 'real-goals');
+    if (goalsWidget) {
+      goalsWidget.headerRight = `${totalCompleted}/${totalSubscribed}`;
+      goalsWidget.rings = [
+        {
+          value: completionRate,
+          displayValue: totalCompleted,
+          color: '#ffb59a',
+          style: 'progress',
+        },
+        {
+          value: totalSubscribed > 0 ? 100 : 0,
+          displayValue: totalSubscribed,
+          style: 'concentric',
+        },
+      ];
     }
 
     this.viewModel.statWidgets = widgets;
@@ -485,23 +570,76 @@ export class DashboardOverviewComponent implements OnDestroy {
     const completePercent = Number.isFinite(parsed) ? Math.min(100, Math.max(0, parsed)) : 0;
     const chapterCount = course.chapterDetails?.length || 0;
     const completedCount = course.chapterCompletedCount ?? 0;
+    const createdBy = course.createdBy;
+    const authorName = [createdBy?.firstName || createdBy?.first_name, createdBy?.lastName || createdBy?.last_name]
+      .filter(Boolean)
+      .join(' ')
+      .trim();
+    const statusLevel =
+      course.courseStatusLevel ||
+      this.courseDetailsService.resolveCourseStatusLevel(course);
 
     return {
       id: course.id,
       title: course.courseTitle || 'Untitled course',
-      categoryLabel: 'Course',
-      categoryTitle: course.courseTitle || '',
+      authorName,
+      statusLevel,
+      categoryLabel: 'A Course by',
+      categoryTitle: authorName,
       coverStyle: 'linear-gradient(135deg, #3a2458 0%, #1a1230 100%)',
       imageUrl: course.courseCoverImage,
       featured: index === 0,
       usePlaceholderIcon: !course.courseCoverImage,
+      averageRating: course.averageRating,
+      chapterCompletedCount: completedCount,
+      chapterCount,
       filledStars: Math.round(course.averageRating || 0),
-      ratingStars: 5,
+      ratingStars: Math.round(course.averageRating || 0),
       progressFraction: `${completedCount}/${chapterCount || 0}`,
       completePercent,
       ringColor: '#ff6b2c',
       nextSessionValue: `${completedCount}/${chapterCount || 0}`,
     };
+  }
+
+  getSubscribedStatus(course: SubscribedCourseItem): string {
+    if (course.statusLevel) {
+      return course.statusLevel;
+    }
+    if (course.completePercent >= 100) {
+      return 'Completed';
+    }
+    if (course.completePercent > 0) {
+      return 'Progress';
+    }
+    return 'New';
+  }
+
+  getSubscribedAuthor(course: SubscribedCourseItem): string {
+    if (course.authorName) {
+      return course.authorName;
+    }
+    if (course.categoryLabel === 'A Course by' && course.categoryTitle) {
+      return course.categoryTitle;
+    }
+    return '';
+  }
+
+  getSubscribedLessons(course: SubscribedCourseItem): { completed: number; total: number } | null {
+    if (course.chapterCount != null && course.chapterCount > 0) {
+      return {
+        completed: course.chapterCompletedCount ?? 0,
+        total: course.chapterCount,
+      };
+    }
+
+    const raw = course.progressFraction || course.nextSessionValue || '';
+    const match = raw.match(/(\d+)\s*\/\s*(\d+)/);
+    if (!match) {
+      return null;
+    }
+
+    return { completed: Number(match[1]), total: Number(match[2]) };
   }
 
   fetchFavoriteCourses(): void {
@@ -552,7 +690,7 @@ export class DashboardOverviewComponent implements OnDestroy {
       return;
     }
 
-    this.coursesLoading = true;
+    this.setCoursesContentLoading(true);
     try {
       this.courseLists = await this.courseUploadService.fetchUploadedCourses();
       this.courseLists.forEach((course) => {
@@ -594,7 +732,16 @@ export class DashboardOverviewComponent implements OnDestroy {
     } finally {
       this.coursesLoading = false;
       this.coursesLoaded = true;
+      this.setCoursesContentLoading(false);
     }
+  }
+
+  private setCoursesContentLoading(loading: boolean): void {
+    if (this.demoModeService.isDemoMode) {
+      this.coursesContentLoading = false;
+      return;
+    }
+    this.coursesContentLoading = loading;
   }
 
   openCourseDetailsPage(selectedCourse: ICourseList) {

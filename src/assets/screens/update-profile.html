@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Account Settings | MAJESTIC WARHORSE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Geist:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-surface": "#e4e1e6",
+                "on-primary-fixed": "#380d00",
+                "surface-tint": "#ffb59a",
+                "primary": "#ffb59a",
+                "outline": "#a98a7f",
+                "on-error-container": "#ffdad6",
+                "primary-container": "#ff6b2c",
+                "surface-bright": "#39393c",
+                "on-tertiary-fixed": "#2c0051",
+                "secondary-fixed": "#ffd9e4",
+                "on-secondary": "#640038",
+                "surface-dim": "#131316",
+                "primary-fixed-dim": "#ffb59a",
+                "on-surface-variant": "#e2bfb3",
+                "tertiary-fixed-dim": "#dcb8ff",
+                "secondary-fixed-dim": "#ffb0cc",
+                "inverse-primary": "#a83900",
+                "surface-container-highest": "#353438",
+                "on-background": "#e4e1e6",
+                "tertiary-container": "#bb7bff",
+                "on-tertiary-container": "#4a0084",
+                "on-primary": "#5b1b00",
+                "surface-container": "#1f1f22",
+                "surface-container-lowest": "#0e0e11",
+                "on-error": "#690005",
+                "inverse-on-surface": "#303033",
+                "surface-container-high": "#2a2a2d",
+                "on-primary-fixed-variant": "#802900",
+                "primary-fixed": "#ffdbcf",
+                "on-secondary-fixed-variant": "#8d0051",
+                "on-primary-container": "#5c1c00",
+                "outline-variant": "#594139",
+                "on-tertiary": "#480081",
+                "error-container": "#93000a",
+                "secondary": "#ffb0cc",
+                "surface-container-low": "#1b1b1e",
+                "surface-variant": "#353438",
+                "background": "#131316",
+                "on-secondary-container": "#ffbad2",
+                "inverse-surface": "#e4e1e6",
+                "on-secondary-fixed": "#3e0020",
+                "on-tertiary-fixed-variant": "#6700b5",
+                "tertiary": "#dcb8ff",
+                "error": "#ffb4ab",
+                "surface": "#131316",
+                "tertiary-fixed": "#efdbff",
+                "secondary-container": "#ab0063"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "margin-mobile": "20px",
+                "unit": "4px",
+                "gutter": "24px",
+                "container-max": "1440px",
+                "margin-desktop": "64px"
+            },
+            "fontFamily": {
+                "headline-lg": ["Space Grotesk"],
+                "display-lg": ["Space Grotesk"],
+                "label-sm": ["JetBrains Mono"],
+                "headline-lg-mobile": ["Space Grotesk"],
+                "body-md": ["Geist"]
+            },
+            "fontSize": {
+                "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "label-sm": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0F0F12;
+            color: #e4e1e6;
+            font-family: 'Geist', sans-serif;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(31, 31, 34, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .gradient-border-focus:focus-within {
+            border-bottom: 2px solid #ff6b2c;
+        }
+        .backglow-orange {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 107, 44, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+        .backglow-purple {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(187, 123, 255, 0.1) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(60px);
+        }
+        .brand-gradient {
+            background: linear-gradient(90deg, #ff6b2c 0%, #bb7bff 100%);
+        }
+        .grid-overlay {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="dark bg-surface-dim min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-outline-variant bg-surface-dim flex flex-col py-6 z-[60]">
+<div class="px-6 mb-10 flex flex-col">
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">MAKING OF</span>
+<span class="font-label-sm text-label-sm text-primary tracking-[0.2em] mt-[-4px]">MAJESTIC WARHORSE</span>
+</div>
+<nav class="flex-1 space-y-2 pr-4">
+<a class="text-on-surface-variant hover:text-on-surface p-3 flex items-center gap-4 transition-colors hover:bg-surface-container-highest ml-4 rounded-l-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface p-3 flex items-center gap-4 transition-colors hover:bg-surface-container-highest ml-4 rounded-l-lg" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-body-md text-body-md">AI Mode</span>
+</a>
+<a class="bg-gradient-to-r from-primary-container to-tertiary-container text-on-primary rounded-r-full mr-4 p-3 font-bold flex items-center justify-between border-l-2 border-primary scale-[0.98] transition-transform" href="#">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-md text-body-md">Account</span>
+</div>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface p-3 flex items-center gap-4 transition-colors hover:bg-surface-container-highest ml-4 rounded-l-lg" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-body-md text-body-md">Courses</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface p-3 flex items-center gap-4 transition-colors hover:bg-surface-container-highest ml-4 rounded-l-lg" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md text-body-md">Students</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface p-3 flex items-center gap-4 transition-colors hover:bg-surface-container-highest ml-4 rounded-l-lg" href="#">
+<span class="material-symbols-outlined">business</span>
+<span class="font-body-md text-body-md">Switch Organization</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="bg-surface-container-highest p-4 rounded-xl mb-6 relative overflow-hidden group">
+<div class="relative z-10">
+<p class="font-label-sm text-[10px] text-primary mb-1">PRO ACCOUNT</p>
+<p class="font-body-md text-sm text-on-surface leading-tight mb-3">Upgrade to unlock advanced neural labs.</p>
+<button class="w-full brand-gradient py-2 rounded-lg font-bold text-xs tracking-widest text-on-primary-fixed uppercase">UPGRADE TO PRO</button>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl">bolt</span>
+</div>
+</div>
+<div class="flex items-center gap-3 p-2">
+<div class="w-10 h-10 rounded-full border border-primary/30 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A close-up high-resolution portrait of a modern professional with short dark hair, wearing a sleek black minimalist shirt, looking directly at the camera with a confident expression. The lighting is dramatic and moody, casting soft shadows that emphasize the high-octane professional digital aesthetic, against a dark, blurred tech laboratory background with hints of orange and purple light sources." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBViLrne4_WriAUbf6inAVNkhZyr-6lxjVTI1xGEMx5hVnWikCNoeUPkR1hIv0lYZc3QrOwq9m1770d2Imq2wm_j7ldhWM0JgzVgdjBPCB-2Mb_DHKtvIh01ExU5AMbvtsf6esXJZ53wORf3pD6pnAc_zysZX7Sv-kqgQ8JDHjuWmOTKySc39wzIVfUJudYUL3eYicVk-nyrKvFe-X7dTZjdRo7HRf5zVE4GwLo1_yQz-Ca-tmUIRzTJQ"/>
+</div>
+<div>
+<p class="font-body-md text-sm font-semibold text-on-surface">Jose SN</p>
+<p class="font-label-sm text-[10px] text-on-surface-variant">App Version 1.0.0</p>
+</div>
+<button class="ml-auto text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">info</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Top AppBar -->
+<header class="flex justify-between items-center w-full px-margin-desktop h-16 ml-64 sticky top-0 z-50 bg-surface-dim/80 backdrop-blur-xl border-b border-outline-variant/30">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">home</span>
+<h1 class="font-headline-lg text-headline-lg font-semibold text-on-surface">Home</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<input class="bg-surface-container border border-outline-variant rounded-full pl-10 pr-4 py-1.5 text-sm w-64 focus:ring-1 focus:ring-primary focus:border-primary bg-transparent transition-all" placeholder="Search for..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+</div>
+<button class="border border-primary/50 text-primary px-4 py-1.5 rounded-lg font-bold text-xs tracking-widest hover:bg-primary/10 transition-colors">DEMO</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-margin-desktop min-h-[calc(100vh-64px)] grid-overlay relative">
+<div class="backglow-orange top-20 left-1/4"></div>
+<div class="backglow-purple bottom-20 right-1/4"></div>
+<div class="max-w-4xl mx-auto">
+<div class="glass-panel rounded-2xl p-8 md:p-12 border-t border-l border-white/10">
+<!-- Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">person</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Update Account Details</h2>
+</div>
+<p class="text-on-surface-variant font-body-md opacity-80">Manage your profile information and centralized system credentials.</p>
+</div>
+<div class="flex flex-col items-center">
+<div class="relative group cursor-pointer">
+<div class="w-24 h-24 rounded-full border-2 border-primary-container p-1 group-hover:border-primary transition-all">
+<img class="w-full h-full rounded-full object-cover" data-alt="A sleek circular profile picture upload interface. The central image shows a professional in a dark studio setting. Hovering over the image reveals a translucent technical overlay with grid lines and a glowing camera icon in the center, following the cyber-minimalism design system with deep blacks and neon orange accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyXogQCxZnYk5MSwkBS-v3DRJnbRI217kAyhZVZ02Vtpl6qozBwaZf6gGxUMMa_sFGEDwlPVcZxs2I1aYdqIpdmSfUD9gLkoH8N1wKF9qrkid9nf9ynslq5ljzRxT5lDj0biYLPJhWHB13CxtIPyCFr-0U5pIsCaqyh7dWDFQ6HAnjPtvv7SRac3qipM845h6H5DSWUGIPXkGvGaAUPtykVJ3ARL6m-wW57v8yWPtSX0SH0Dv3WyfMGw"/>
+</div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-background/60 rounded-full">
+<span class="material-symbols-outlined text-primary">photo_camera</span>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-12">
+<!-- Section 1: Operational Role -->
+<section class="space-y-6">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 flex items-center justify-center rounded-full bg-primary-container text-on-primary-container font-label-sm text-[10px]">1</span>
+<h3 class="font-label-sm text-sm uppercase tracking-widest text-on-surface-variant">Operational Role</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<label class="relative group cursor-pointer">
+<input checked="" class="peer sr-only" name="role" type="radio"/>
+<div class="glass-panel p-4 rounded-xl border border-outline-variant peer-checked:border-primary transition-all flex items-center gap-4">
+<div class="w-5 h-5 rounded-full border border-outline-variant flex items-center justify-center peer-checked:bg-primary">
+<span class="material-symbols-outlined text-xs text-on-primary hidden peer-checked:block">check</span>
+</div>
+<div>
+<p class="font-label-sm text-xs text-on-surface-variant mb-0.5">Access courses and content</p>
+<p class="font-headline-lg text-lg text-on-surface">Student</p>
+</div>
+</div>
+</label>
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="role" type="radio"/>
+<div class="glass-panel p-4 rounded-xl border border-outline-variant peer-checked:border-primary transition-all flex items-center gap-4">
+<div class="w-5 h-5 rounded-full border border-outline-variant flex items-center justify-center peer-checked:bg-primary">
+<span class="material-symbols-outlined text-xs text-on-primary hidden peer-checked:block">check</span>
+</div>
+<div>
+<p class="font-label-sm text-xs text-on-surface-variant mb-0.5">Manage students and labs</p>
+<p class="font-headline-lg text-lg text-on-surface">Teacher</p>
+</div>
+</div>
+</label>
+</div>
+</section>
+<!-- Section 2: Personal Intelligence -->
+<section class="space-y-6">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 flex items-center justify-center rounded-full bg-primary-container text-on-primary-container font-label-sm text-[10px]">2</span>
+<h3 class="font-label-sm text-sm uppercase tracking-widest text-on-surface-variant">Personal Intelligence</h3>
+</div>
+<div class="space-y-6">
+<div class="gradient-border-focus transition-all group">
+<label class="font-label-sm text-[10px] text-on-surface-variant mb-2 block uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">business</span> Select Organization
+                                </label>
+<select class="w-full bg-surface-container-low border-0 border-b-2 border-outline-variant py-3 text-on-surface focus:ring-0 focus:border-primary transition-all appearance-none cursor-pointer">
+<option>Majestic Warhorse Global</option>
+<option>Cyberdyne Laboratories</option>
+<option>NeuroLink Consortium</option>
+</select>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="gradient-border-focus transition-all group">
+<label class="font-label-sm text-[10px] text-on-surface-variant mb-2 block uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">person</span> First Name
+                                    </label>
+<input class="w-full bg-surface-container-low border-0 border-b-2 border-outline-variant py-3 text-on-surface focus:ring-0 focus:border-primary transition-all" type="text" value="Jose"/>
+</div>
+<div class="gradient-border-focus transition-all group">
+<label class="font-label-sm text-[10px] text-on-surface-variant mb-2 block uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">badge</span> Last Name
+                                    </label>
+<input class="w-full bg-surface-container-low border-0 border-b-2 border-outline-variant py-3 text-on-surface focus:ring-0 focus:border-primary transition-all" type="text" value="SN"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Security Clearance -->
+<section class="space-y-6">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 flex items-center justify-center rounded-full bg-primary-container text-on-primary-container font-label-sm text-[10px]">3</span>
+<h3 class="font-label-sm text-sm uppercase tracking-widest text-on-surface-variant">Security Clearance</h3>
+</div>
+<div class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="gradient-border-focus transition-all group">
+<div class="flex justify-between items-center mb-2">
+<label class="font-label-sm text-[10px] text-on-surface-variant block uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">call</span> Mobile
+                                        </label>
+<span class="text-[10px] text-error font-label-sm">Please enter a valid mobile number.</span>
+</div>
+<input class="w-full bg-surface-container-low border-0 border-b-2 border-error py-3 text-on-surface focus:ring-0 focus:border-error transition-all" type="tel" value="josesasinirmala.uk@gmail.com"/>
+</div>
+<div class="opacity-80 group">
+<div class="flex justify-between items-center mb-2">
+<label class="font-label-sm text-[10px] text-on-surface-variant block uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">mail</span> Email
+                                        </label>
+<span class="text-[10px] italic text-on-surface-variant font-body-md opacity-60">Email cannot be changed</span>
+</div>
+<input class="w-full bg-surface-container-lowest border-0 border-b-2 border-outline-variant/30 py-3 text-on-surface-variant/60 focus:ring-0 transition-all cursor-not-allowed" readonly="" type="email" value="josesnjo38@gmail.com"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="gradient-border-focus transition-all group relative">
+<label class="font-label-sm text-[10px] text-on-surface-variant mb-2 block uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">lock_reset</span> New Password (Optional)
+                                    </label>
+<input class="w-full bg-surface-container-low border-0 border-b-2 border-outline-variant py-3 text-on-surface focus:ring-0 focus:border-primary transition-all pr-10" type="password" value="********"/>
+<span class="material-symbols-outlined absolute right-3 bottom-3 text-on-surface-variant cursor-pointer hover:text-primary transition-colors text-lg">visibility</span>
+</div>
+<div class="gradient-border-focus transition-all group relative">
+<div class="flex justify-between items-center mb-2">
+<label class="font-label-sm text-[10px] text-on-surface-variant block uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">lock_open</span> Confirm New Password
+                                        </label>
+<span class="text-[10px] text-error font-label-sm">Passwords do not match.</span>
+</div>
+<input class="w-full bg-surface-container-low border-0 border-b-2 border-error py-3 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-0 focus:border-error transition-all pr-10" placeholder="Enter Your Password (6 characters)" type="password"/>
+<span class="material-symbols-outlined absolute right-3 bottom-3 text-on-surface-variant cursor-pointer hover:text-error transition-colors text-lg">visibility</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Submission CTA -->
+<div class="mt-16">
+<button class="w-full brand-gradient py-5 rounded-xl font-bold text-lg tracking-widest text-on-primary-fixed uppercase flex items-center justify-center gap-3 hover:shadow-[0_0_20px_rgba(255,107,44,0.3)] transition-all transform active:scale-[0.98]">
+<span class="material-symbols-outlined">save</span>
+                        Update Account Intelligence
+                    </button>
+</div>
+</div>
+</div>
+<!-- Footer Decorations -->
+<div class="mt-16 max-w-4xl mx-auto flex justify-between items-center opacity-40">
+<div class="flex gap-4">
+<div class="w-12 h-1 bg-primary/20 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-1/3"></div>
+</div>
+<div class="w-12 h-1 bg-outline-variant rounded-full"></div>
+<div class="w-12 h-1 bg-outline-variant rounded-full"></div>
+</div>
+<p class="font-label-sm text-[10px] uppercase tracking-tighter">System ID: 8829-NWX-001</p>
+</div>
+</main>
+<script>
+        // Micro-interactions for form states
+        document.querySelectorAll('input, select').forEach(element => {
+            element.addEventListener('focus', () => {
+                element.closest('.group').classList.add('scale-[1.01]');
+            });
+            element.addEventListener('blur', () => {
+                element.closest('.group').classList.remove('scale-[1.01]');
+            });
+        });
+
+        // Password visibility toggle simulation
+        document.querySelectorAll('.material-symbols-outlined').forEach(icon => {
+            if (icon.textContent === 'visibility') {
+                icon.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        this.textContent = 'visibility_off';
+                    } else {
+                        input.type = 'password';
+                        this.textContent = 'visibility';
+                    }
+                });
+            }
+        });
+    </script>
+</body></html>
