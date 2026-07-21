@@ -60,6 +60,12 @@
                   @if (course.courseStatusLevel) {
                     <span class="course-glass-card__badge">{{ course.courseStatusLevel }}</span>
                   }
+                  <span
+                    class="course-glass-card__access"
+                    [class.is-private]="course.access === 'private'"
+                  >
+                    {{ course.access === 'private' ? 'Private' : 'Public' }}
+                  </span>
                 </div>
 
                 <div class="course-glass-card__body">

@@ -1,0 +1,31 @@
+@if (demoModeService.demoMode$ | async) {
+  <div class="banner banner--demo" role="status" aria-live="polite">
+    <div class="banner__content">
+      <span class="banner__label">Demo mode</span>
+      <p class="banner__message">
+        You are viewing sample data. Live API values are hidden until you exit demo mode.
+      </p>
+    </div>
+    <button
+      type="button"
+      class="banner__close"
+      aria-label="Exit demo mode"
+      (click)="exitDemoMode()"
+    >
+      <span aria-hidden="true">&times;</span>
+      <span class="banner__close-text">X</span>
+    </button>
+  </div>
+}
+
+@if (showApprovalBanner) {
+  <div class="banner banner--approval" role="status" aria-live="polite">
+    <div class="banner__content">
+      <span class="banner__label">Pending approval</span>
+      <p class="banner__message">
+        You are not approved by your organization yet. You can only view public courses until
+        approval is granted. Please wait for organization approval to access private courses.
+      </p>
+    </div>
+  </div>
+}

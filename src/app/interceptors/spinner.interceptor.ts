@@ -4,6 +4,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { SKIP_SPINNER_HEADER } from '../services/api-service/health-check.service';
 
 @Injectable()
 export class SpinnerInterceptor implements HttpInterceptor {
@@ -14,8 +15,11 @@ export class SpinnerInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const pagesToExclude: string[] = ['/auth/callback'];
-    if (pagesToExclude.includes(this.router.url)) {
-      return next.handle(req);
+    if (pagesToExclude.includes(this.router.url) || req.headers.has(SKIP_SPINNER_HEADER)) {
+      const cleaned = req.headers.has(SKIP_SPINNER_HEADER)
+        ? req.clone({ headers: req.headers.delete(SKIP_SPINNER_HEADER) })
+        : req;
+      return next.handle(cleaned);
     }
 
     this.spinner.show();

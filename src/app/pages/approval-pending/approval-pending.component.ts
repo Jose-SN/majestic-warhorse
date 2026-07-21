@@ -1,12 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { interval, Subject, takeUntil, firstValueFrom } from 'rxjs';
-import { PostLoginWorkflowService } from 'src/app/core/auth/post-login-workflow.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { UserRoleApiService } from 'src/app/services/api-service/user-role-api.service';
-import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-teacher.service';
-import { isActiveStatus, isPendingStatus } from 'src/app/models/user-status.model';
 
 @Component({
   selector: 'app-approval-pending',
@@ -27,10 +24,8 @@ export class ApprovalPendingComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private postLoginWorkflow: PostLoginWorkflowService,
     private commonService: CommonService,
-    private userRoleApi: UserRoleApiService,
-    private assignTeacherService: AssignTeacherService
+    private userRoleApi: UserRoleApiService
   ) {}
 
   async ngOnInit() {
@@ -38,15 +33,19 @@ export class ApprovalPendingComponent implements OnInit, OnDestroy {
     const state = navigation?.extras?.state ?? history.state ?? {};
     this.infoMessage = state['infoMessage'] || '';
 
+    // No org selected yet → pick one; otherwise stay here until user roles exist
     const orgId = sessionStorage.getItem('organization_id') || '';
-    if (orgId && !(await this.postLoginWorkflow.hasCourseRoles(orgId))) {
+    if (!orgId) {
       this.router.navigate(['/org-picker']);
       return;
     }
 
-    if (this.shouldPollForApproval()) {
-      this.startApprovalPolling();
+    const navigatedAway = await this.checkOverviewAndNavigate();
+    if (navigatedAway) {
+      return;
     }
+
+    this.startApprovalPolling();
   }
 
   get bodyMessage(): string {
@@ -105,16 +104,11 @@ export class ApprovalPendingComponent implements OnInit, OnDestroy {
     }
 
     this.isRefreshing = true;
-    void this.checkApprovalStatus().finally(() => {
+    void this.checkOverviewAndNavigate().finally(() => {
       window.setTimeout(() => {
         this.isRefreshing = false;
       }, 1200);
     });
-  }
-
-  private shouldPollForApproval(): boolean {
-    const user = this.commonService.loginedUserInfo;
-    return isPendingStatus(user?.status) && !!user?.id;
   }
 
   private startApprovalPolling(): void {
@@ -122,55 +116,51 @@ export class ApprovalPendingComponent implements OnInit, OnDestroy {
     interval(this.pollIntervalMs)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        void this.checkApprovalStatus();
+        void this.checkOverviewAndNavigate();
       });
-    void this.checkApprovalStatus();
   }
 
-  private async checkApprovalStatus(): Promise<void> {
+  /**
+   * GET /user-role/get-overview — navigate to dashboard when any user role exists.
+   * @returns true when navigation away from this page was triggered
+   */
+  private async checkOverviewAndNavigate(): Promise<boolean> {
     const user = this.commonService.loginedUserInfo;
     const orgId = sessionStorage.getItem('organization_id') || user?.organization_id || '';
     const userId = user?.id || '';
     if (!orgId || !userId) {
-      return;
+      return false;
     }
 
     try {
       const overview = await firstValueFrom(this.userRoleApi.getOverview(orgId, userId));
       const roles = overview?.roles ?? [];
-      const activeRoles = roles.filter((r) => isActiveStatus(r.status));
 
-      if (!activeRoles.length) {
-        return;
+      // Still waiting for org to assign a role
+      if (!roles.length) {
+        return false;
       }
+
+      const primary =
+        roles.find((r) => r.role_code === 'teacher') ||
+        roles.find((r) => r.role_code === 'student') ||
+        roles[0];
 
       user.status = 'active';
-      user.role = activeRoles[0].role_code;
+      user.role = primary.role_code;
       sessionStorage.setItem('login_details', JSON.stringify(user));
+      sessionStorage.setItem('userRoles', JSON.stringify(roles));
       this.commonService.loginedUserInfo = user;
 
-      if (user.role === 'student') {
-        const res: any = await firstValueFrom(
-          this.assignTeacherService.getAssignedTeachers(userId, orgId)
-        );
-        const data = res?.data ?? res;
-        const list = Array.isArray(data) ? data : [];
-        this.commonService.hasAssignedTeachers = list.length > 0;
-        if (!list.length) {
-          this.infoMessage =
-            'You have been approved but not yet assigned to teachers. Please contact your organization.';
-          this.isPolling = false;
-          return;
-        }
-      }
-
       this.commonService.openToaster({
-        message: 'Your account has been approved!',
+        message: 'Access granted. Redirecting to your dashboard.',
         messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
       });
-      this.router.navigate(['/dashboard']);
+      this.isPolling = false;
+      await this.router.navigate(['/dashboard']);
+      return true;
     } catch {
-      // Keep polling on transient errors
+      return false;
     }
   }
 

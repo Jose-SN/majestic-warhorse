@@ -4,16 +4,99 @@
 
 | Document | Use for |
 |----------|---------|
-| **[UI_WORKFLOW.md](./UI_WORKFLOW.md)** *(this file)* | Screens, flows, stakeholders |
+| **[UI_WORKFLOW.md](./UI_WORKFLOW.md)** *(this file)* | Screens, flows, stakeholders, MVP scope, roadmap |
+| **[USER_WORKFLOW.md](./USER_WORKFLOW.md)** | Non-technical / management presentation workflow |
 | **[API_DOCUMENTATION.md](./API_DOCUMENTATION.md)** | Request/response details, architecture |
 | **[IAM_DOCUMENTATION.md](./IAM_DOCUMENTATION.md)** | IAM login, users, orgs (external service) |
 | **[TCM_DOCUMENTATION.md](./TCM_DOCUMENTATION.md)** | Reference — same IAM + local RBAC pattern |
 
 ---
 
+## Product mission & gold vision
+
+### Who we build for
+
+End users over time include **communities, churches, schools**, and especially **Sunday schools**. The product moves their learning **online** while staying **friendly and self-serve**.
+
+### Customizable / white-label end goal
+
+Organizations should be able to make the product **their own**:
+
+- Their **logo**, branding, and naming systems  
+- Their **identity** across the UI  
+- Their **own database** when they have one  
+- **Our hosted database** when they do not  
+
+**Principle:** It feels like their product; it runs on our software. That protects the platform while letting churches and similar groups own the experience.
+
+### Gold vision (full product — beyond MVP)
+
+The long-term product should help organizations and teachers:
+
+- Understand **student engagement**, interests, and thinking patterns  
+- See **where learners are strong** and **where they are lacking**  
+- **Individually validate** progress  
+- Suggest improvements (“this is where you need to improve”) to **students** and guidance to **teachers**  
+- Support responsible **program insight / monetization** understanding over time  
+
+MVP proves the school loop. Later versions add branding, data choice, and learner intelligence.
+
+---
+
+## MVP / Beta scope (what is implemented now)
+
+**Implemented in the application (MVP / Beta):**
+
+| Capability | Status |
+|------------|--------|
+| Organization + individual (teacher/student) **login / sign-up** (+ Google) | In app |
+| **Approval system** — teachers & students wait; org Approvals screen | In app |
+| Org **Directory** — Teachers / Students | In app |
+| **Invite** teacher / student screens | In app |
+| **Assign** students ↔ teachers (manage from directory) | In app |
+| Teachers **add / list courses**; students **view** courses | In app — see [Course listing rules](#course-listing-rules-mvp) |
+| Teachers add **questions**; students **submit answers** | In app |
+| Teachers **review answers** and give **feedback** | In app |
+| Pending / waiting screens after login | In app |
+
+### Course listing rules (MVP)
+
+| Role | Courses shown |
+|------|----------------|
+| **Organization** | `GET /course/get?organization_id={orgId}` — all org courses (**public + private**) |
+| **Teacher** | `GET /course/get?organization_id={orgId}` — keep **`access ≠ private`** or **`createdBy = me`** |
+| **Student** | `GET /course/student/:id?organization_id=` (**public + private** from assigned teachers) + `GET /course/get?organization_id={orgId}&access=public` |
+
+Implementation: `src/app/pages/courses/courses.service.ts`.
+
+**Not in MVP application yet:**
+
+| Capability | Status |
+|------------|--------|
+| Plans / premium checkout | Later |
+| Formal org **course-approval** queue | Later |
+| Full white-label theming + customer-owned DB | Later (gold vision) |
+| Deep analytics / “where to improve” engine | Later (gold vision) |
+
+UI work for Beta should prioritize polishing and completing the flows above — not gold-vision features yet. Keep **[USER_WORKFLOW.md](./USER_WORKFLOW.md)** Section 0c / 8b aligned when the app changes.
+
+### Roadmap after MVP (gradual)
+
+| Stage | Direction |
+|-------|-----------|
+| **MVP / Beta** | Login, approval, directory, assign, courses, Q&A, feedback |
+| **Version 1** | Stronger org experience, plans/premium basics, smoother invites in nav |
+| **Version 2** | White-label (logo, naming), customer DB option or hosted DB |
+| **Version 3** | Learner insights, gap detection, improvement suggestions |
+| **Version 4** | Church / Sunday-school ready packaging, deeper analytics, self-serve branding |
+
+Align screen priorities with the current stage. For Beta, stay inside MVP scope.
+
+---
+
 ## How it works (plain English)
 
-Think of the app like a **school**:
+Think of the app like a **school** (or Sunday school / church class):
 
 - **Login system (IAM)** — sign-in, passwords, who you are, which schools you belong to
 - **School app (this backend)** — teacher/student lists, who teaches whom, lessons, permissions
@@ -32,19 +115,21 @@ Think of the app like a **school**:
 
 ## Table of contents
 
-1. [How it works (plain English)](#how-it-works-plain-english)
-2. [Two-service model](#two-service-model)
-2. [Headers every UI call should send](#headers-every-ui-call-should-send)
-3. [Concepts the UI must know](#concepts-the-ui-must-know)
-4. [Status lifecycle](#status-lifecycle)
-5. [Screen map](#screen-map)
-6. [Authentication flows (IAM)](#authentication-flows-iam)
-7. [Organization admin flows](#organization-admin-flows)
-8. [Teacher flows](#teacher-flows)
-9. [Student flows](#student-flows)
-10. [Shared patterns (pagination, ids, errors)](#shared-patterns-pagination-ids-errors)
-11. [End-to-end sequence diagrams](#end-to-end-sequence-diagrams)
-12. [Quick API index](#quick-api-index)
+1. [Product mission & gold vision](#product-mission--gold-vision)
+2. [MVP / Beta scope](#mvp--beta-scope-what-is-implemented-now)
+3. [How it works (plain English)](#how-it-works-plain-english)
+4. [Two-service model](#two-service-model)
+5. [Headers every UI call should send](#headers-every-ui-call-should-send)
+6. [Concepts the UI must know](#concepts-the-ui-must-know)
+7. [Status lifecycle](#status-lifecycle)
+8. [Screen map](#screen-map)
+9. [Authentication flows (IAM)](#authentication-flows-iam)
+10. [Organization admin flows](#organization-admin-flows)
+11. [Teacher flows](#teacher-flows)
+12. [Student flows](#student-flows)
+13. [Shared patterns (pagination, ids, errors)](#shared-patterns-pagination-ids-errors)
+14. [End-to-end sequence diagrams](#end-to-end-sequence-diagrams)
+15. [Quick API index](#quick-api-index)
 
 ---
 
@@ -187,10 +272,11 @@ stateDiagram-v2
 | Teacher's students | Teacher | Course | `GET /teacher-students/teacher/:teacherId/students?organization_id` |
 | Student's teachers | Student | Course | `GET /teacher-students/student/:studentId/teachers?organization_id` |
 | Waiting for approval | Teacher / Student | Course | `GET /teachers/get` or `/students/get?user_id=` |
-| Create / edit course | Teacher | Course | `POST /course/save`, `PUT /course/update` |
-| My courses (teacher) | Teacher | Course | `GET /course/get` (filter by `createdBy`) |
-| My courses (student feed) | Student | Course | `GET /course/student/:studentId?organization_id` |
-| Course detail / Q&A / favorites | Student | Course | `/course`, `/question`, `/answer`, `/favorites` |
+| Create / edit course | Teacher / Org | Course | `POST /course/save`, `PUT /course/update` |
+| Course list (org) | Organization | Course | `GET /course/get?organization_id={orgId}` |
+| Course list (teacher) | Teacher | Course | `GET /course/get?organization_id={orgId}` (client: public OR createdBy=me) |
+| Course list (student) | Student | Course | `GET /course/student/:studentId?organization_id=` + `GET /course/get?organization_id={orgId}&access=public` |
+| Course detail / Q&A / favorites | Student / Teacher / Org | Course | `/course`, `/question`, `/answer`, `/favorites` |
 
 ---
 
@@ -388,13 +474,30 @@ If `pending` → waiting screen until org approves.
 
 ### Flow J — Student course feed (home)
 
-**Preconditions:** Roster `approved`; has assigned teachers.
+**Preconditions:** Roster `approved`; preferably has assigned teachers (org public courses still show).
 
+1. Load assigned teachers’ courses (**public + private**):
 ```
 GET /course/student/{studentIamUserId}?organization_id={orgId}
 ```
+2. Load organization **public** courses:
+```
+GET /course/get?organization_id={orgId}&access=public&populateChapters=true&populateFiles=true
+```
+3. Merge / de-dupe by course `id` in the UI.
 
-Returns courses from assigned teachers only. Empty = no assignments or no courses yet.
+Empty assigned-teacher feed = no assignments yet; org public courses may still appear.
+
+### Flow J2 — Teacher course list
+
+1. Load all org courses: `GET /course/get?organization_id={orgId}&populateChapters=true&populateFiles=true`
+2. Client keep: `access ≠ private` **or** `createdBy = me` (own private courses).
+3. Without `organization_id`: fallback `GET /course/get?createdBy={me}`.
+
+### Flow J3 — Organization course list
+
+1. Single call: `GET /course/get?organization_id={orgId}&populateChapters=true&populateFiles=true`
+2. Returns all courses in the org (**public + private**), org-created and teacher-created.
 
 ### Flow K — Student sees their teachers
 

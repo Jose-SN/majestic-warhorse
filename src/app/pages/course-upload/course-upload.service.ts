@@ -4,10 +4,11 @@ import { IFileObjectInfo } from './model/file-object-info';
 import { IMainCourseInfo } from './model/course-info';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
-import { Subject, takeUntil, firstValueFrom } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
 import { CoursesApiService } from 'src/app/services/api-service/courses-api.service';
 import { HttpEventType } from '@angular/common/http';
+import { CoursesService } from '../courses/courses.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,7 @@ export class CourseUploadService {
     courseCoverImage: '',
     courseTitle: '',
     courseDescription: '',
+    access: 'public',
   };
   public CHAPTER_INFO: IChapterInfo = {
     attachments: [],
@@ -33,6 +35,7 @@ export class CourseUploadService {
     courseCoverImage: 'Please Upload Course Cover Image',
     courseTitle: 'Please Enter Course Title',
     courseDescription: 'Please Enter Course Description',
+    access: 'Please select course access (Public or Private)',
   };
   public MAX_FILE_SIZE: number = 5 * 1024 * 1024; // 5 MB
   public ALLOWED_FILE_TYPES: string[] = ['image/png', 'image/jpeg', 'image/jpg'];
@@ -66,7 +69,8 @@ export class CourseUploadService {
   constructor(
     private commonService: CommonService,
     private courseApi: CoursesApiService,
-    private commonApiService: CommonApiService
+    private commonApiService: CommonApiService,
+    private coursesService: CoursesService
   ) {}
   async saveCourseDetails(
     courseDetails: ISaveCourse,
@@ -242,8 +246,14 @@ export class CourseUploadService {
 
   courseSaveValidation(courseDetails: ISaveCourse) {
     return new Promise((resolve) => {
-      for (let objectKey in courseDetails.mainCourseInfo) {
-        if (!courseDetails.mainCourseInfo[objectKey as keyof IMainCourseInfo]) {
+      const requiredKeys: (keyof IMainCourseInfo)[] = [
+        'courseCoverImage',
+        'courseTitle',
+        'courseDescription',
+        'access',
+      ];
+      for (const objectKey of requiredKeys) {
+        if (!courseDetails.mainCourseInfo[objectKey]) {
           this.commonService.openToaster({
             message: this.MESSAGES[objectKey],
             messageType: TOASTER_MESSAGE_TYPE.ERROR,
@@ -275,34 +285,8 @@ export class CourseUploadService {
       resolve(true);
     });
   }
+  /** Same role rules as Courses page (org / teacher / student). */
   async fetchUploadedCourses() {
-    const role = this.commonService.loginedUserInfo?.role || '';
-    const userId = this.commonService.loginedUserInfo?.id || '';
-    const orgId = sessionStorage.getItem('organization_id') || '';
-
-    if (role === 'student' && userId) {
-      const courses = await firstValueFrom(this.courseApi.getStudentCourses(userId, orgId)).catch(
-        () => [] as any[]
-      );
-      return courses;
-    }
-
-    const params: { createdBy?: string; organization_id?: string } = {};
-    if (orgId) params.organization_id = orgId;
-    if (role === 'teacher' && userId) params.createdBy = userId;
-
-    const courses = await this.courseApi.fetchUploadedCourses(params);
-    if (role === 'teacher' && userId) {
-      return courses.filter((course: any) => {
-        const createdBy = course.createdBy?.id ?? course.createdBy;
-        return createdBy === userId;
-      });
-    }
-    if (orgId) {
-      return courses.filter(
-        (course: any) => !course.organization_id || course.organization_id === orgId
-      );
-    }
-    return courses;
+    return this.coursesService.fetchCoursesForCurrentUser();
   }
 }

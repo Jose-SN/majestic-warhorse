@@ -15,6 +15,7 @@ export interface ICourseList {
   completionPercent?: string;
   chapterDetails: ChapterDetail[];
   organization_id?: string;
+  access?: 'public' | 'private';
 }
 
 export interface ChapterDetail {

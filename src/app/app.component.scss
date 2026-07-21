@@ -1,3 +1,109 @@
 .d-none {
-    display: none !important;
+  display: none !important;
+}
+
+.service-health-banner {
+  position: sticky;
+  top: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  color: #ffdad6;
+  background: linear-gradient(90deg, rgba(147, 0, 10, 0.96), rgba(105, 0, 5, 0.96));
+  border-bottom: 1px solid rgba(255, 180, 171, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+  &__content {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    min-width: 0;
+
+    > .material-symbols-outlined {
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+      font-size: 1.35rem;
+      color: #ffb4ab;
+    }
+  }
+
+  &__text {
+    strong {
+      display: block;
+      font-family: var(--mc-font-display, 'Space Grotesk', sans-serif);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    ul {
+      margin: 0.35rem 0 0;
+      padding-left: 1.1rem;
+      font-size: 0.8125rem;
+      line-height: 1.45;
+      color: #ffdad6;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 0;
+  }
+
+  &__btn {
+    min-height: 2rem;
+    padding: 0.35rem 0.85rem;
+    font-family: var(--mc-font-label, 'JetBrains Mono', monospace);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #1c1b1b;
+    cursor: pointer;
+    background: #ffb4ab;
+    border: none;
+    border-radius: 999px;
+    transition: filter 0.2s ease, opacity 0.2s ease;
+
+    &:hover:not(:disabled) {
+      filter: brightness(1.08);
+    }
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+  }
+
+  &__dismiss {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: #ffdad6;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+
+    .material-symbols-outlined {
+      font-size: 1.15rem;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .service-health-banner {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }

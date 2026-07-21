@@ -150,6 +150,11 @@ export class PostLoginWorkflowService {
       overview = await firstValueFrom(
         this.userRoleApi.getOverview(organizationId, userId)
       ).catch(() => null);
+      // Roster may not return a role until org approval — keep intended role for limited access
+      if (!overview?.roles?.length) {
+        mappedUser.role = roleIntent;
+        mappedUser.status = 'active';
+      }
     }
 
     this.applyRoleOverview(mappedUser, overview);
@@ -221,6 +226,10 @@ export class PostLoginWorkflowService {
     await this.registerOnRoster(role, orgId, user.id, user);
     const overview = await firstValueFrom(this.userRoleApi.getOverview(orgId, user.id));
     this.applyRoleOverview(user, overview);
+    if (!overview?.roles?.length) {
+      user.role = role;
+      user.status = 'active';
+    }
     sessionStorage.setItem('login_details', JSON.stringify(user));
     this.commonService.loginedUserInfo = user;
     await this.routeUserByRoles(user, overview, orgId);
@@ -350,7 +359,8 @@ export class PostLoginWorkflowService {
 
     if (primary) {
       user.role = primary.role_code;
-      user.status = normalizeUserStatus(primary.status) ?? 'pending';
+      // IAM account stays active; gating is based on user_roles existing
+      user.status = 'active';
     }
   }
 
@@ -361,8 +371,31 @@ export class PostLoginWorkflowService {
   ): Promise<void> {
     const roles = overview?.roles ?? [];
 
+    // No course user roles yet — teachers/students can browse public courses with a banner
     if (!roles.length) {
-      this.router.navigate(['/org-picker']);
+      if (user.role === 'teacher' || user.role === 'student') {
+        if (user.role === 'student') {
+          const studentId = user.id ?? '';
+          try {
+            const res: any = await firstValueFrom(
+              this.assignTeacherService.getAssignedTeachers(studentId, organizationId)
+            );
+            const data = res?.data ?? res;
+            const list = Array.isArray(data) ? data : [];
+            this.commonService.hasAssignedTeachers = list.length > 0;
+          } catch {
+            this.commonService.hasAssignedTeachers = false;
+          }
+        }
+        this.router.navigate(['/dashboard']);
+        return;
+      }
+      this.router.navigate(['/dashboard/approval-pending'], {
+        state: {
+          infoMessage:
+            'Your request is pending approval from your organization. Please reach out to your organization for assistance.',
+        },
+      });
       return;
     }
 
@@ -393,17 +426,6 @@ export class PostLoginWorkflowService {
       return;
     }
 
-    const hasPendingOnly = roles.every((r) => isPendingStatus(r.status));
-    if (hasPendingOnly || isPendingStatus(user.status)) {
-      this.router.navigate(['/dashboard/approval-pending'], {
-        state: {
-          infoMessage:
-            'Your request is pending approval from your organization. Please reach out to your organization for assistance.',
-        },
-      });
-      return;
-    }
-
     if (user.role === 'student') {
       const studentId = user.id ?? '';
       try {
@@ -413,23 +435,8 @@ export class PostLoginWorkflowService {
         const data = res?.data ?? res;
         const list = Array.isArray(data) ? data : [];
         this.commonService.hasAssignedTeachers = list.length > 0;
-        if (!list.length) {
-          this.router.navigate(['/dashboard/approval-pending'], {
-            state: {
-              infoMessage:
-                'You have not been assigned any teachers to view courses. Please contact your organization for assistance.',
-            },
-          });
-          return;
-        }
       } catch {
         this.commonService.hasAssignedTeachers = false;
-        this.router.navigate(['/dashboard/approval-pending'], {
-          state: {
-            infoMessage: 'Unable to verify your teacher assignments. Please contact your organization.',
-          },
-        });
-        return;
       }
     }
 

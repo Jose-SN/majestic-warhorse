@@ -61,7 +61,15 @@
 
         <div class="cd-course-header">
           <div class="cd-course-header__main">
-            <h1>{{ heroTitle }}</h1>
+            <div class="cd-course-header__title-row">
+              <h1>{{ heroTitle }}</h1>
+              <span
+                class="cd-access-badge"
+                [class.is-private]="courseAccess === 'private'"
+              >
+                {{ courseAccess === 'private' ? 'Private' : 'Public' }}
+              </span>
+            </div>
             @if (heroSubtitle) {
               <p class="cd-course-header__subtitle">{{ heroSubtitle }}</p>
             }

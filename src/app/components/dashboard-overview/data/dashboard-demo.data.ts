@@ -37,6 +37,8 @@ export interface SubscribedCourseItem {
   authorName?: string;
   /** Course status label: New | Progress | Completed */
   statusLevel?: string;
+  /** Visibility: public | private */
+  access?: 'public' | 'private';
   categoryLabel?: string;
   categoryTitle?: string;
   coverStyle: string;

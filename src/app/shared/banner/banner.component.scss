@@ -1,6 +1,6 @@
 @import '../../../styles/index';
 
-.demo-mode-banner {
+.banner {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -8,10 +8,19 @@
   margin: 0 0 12px;
   padding: 10px 14px;
   @include border-radius(12px);
-  border: 1px solid rgba(255, 107, 44, 0.45);
-  background: linear-gradient(90deg, rgba(255, 107, 44, 0.18) 0%, rgba(74, 0, 132, 0.14) 100%);
-  box-shadow: 0 8px 24px rgba(255, 107, 44, 0.12);
   flex-shrink: 0;
+
+  &--demo {
+    border: 1px solid rgba(255, 107, 44, 0.45);
+    background: linear-gradient(90deg, rgba(255, 107, 44, 0.18) 0%, rgba(74, 0, 132, 0.14) 100%);
+    box-shadow: 0 8px 24px rgba(255, 107, 44, 0.12);
+  }
+
+  &--approval {
+    border: 1px solid rgba(255, 181, 154, 0.35);
+    background: linear-gradient(90deg, rgba(255, 107, 44, 0.12) 0%, rgba(31, 31, 34, 0.85) 100%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  }
 
   &__content {
     display: flex;
@@ -70,7 +79,7 @@
 }
 
 @media screen and (max-width: 768px) {
-  .demo-mode-banner {
+  .banner {
     align-items: flex-start;
     flex-direction: column;
     gap: 10px;
@@ -92,7 +101,7 @@
 }
 
 @media screen and (min-width: 769px) {
-  .demo-mode-banner__close span[aria-hidden='true'] {
+  .banner__close span[aria-hidden='true'] {
     display: none;
   }
 }

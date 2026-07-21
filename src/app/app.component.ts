@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { PARTICLE_ROUTES_LIST } from './constants/common-constant';
 import { CommonService } from './shared/services/common.service';
@@ -12,50 +12,64 @@ import { ApplicationApiService } from './services/api-service/application-api.se
 import { AppContextService } from './core/app-context.service';
 import { environment } from 'src/environments/environment';
 import { DashboardService } from './pages/dashboard/dashboard.service';
+import {
+  HealthCheckService,
+  ServicesHealthState,
+} from './services/api-service/health-check.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'majestic-warhorse';
   public activeRouteName: string = '';
   public isDialogOpen: boolean = false;
+  public healthState: ServicesHealthState | null = null;
   private destroy$ = new Subject<void>();
   @ViewChild(CommonDialogComponent) commonDialogComponent!: CommonDialogComponent;
   public popupModelInfo: IModelInfo = {} as IModelInfo;
   public PARTICLE_ROUTES_LIST: string[] = PARTICLE_ROUTES_LIST;
+
   constructor(
     private router: Router,
     private commonService: CommonService,
     private applicationApiService: ApplicationApiService,
     private appContext: AppContextService,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private healthCheckService: HealthCheckService
   ) {}
+
   ngOnInit() {
+    this.healthCheckService.state$.pipe(takeUntil(this.destroy$)).subscribe((state) => {
+      this.healthState = state;
+    });
+    // One-time health check on app load only
+    this.healthCheckService.checkOnAppLoad().pipe(takeUntil(this.destroy$)).subscribe();
+
     this.appContext.ensureAppId().catch((error) => {
       console.error('Error loading application context:', error);
     });
 
     // Legacy application bootstrap (kept for compatibility)
-    this.applicationApiService.getApplications()
+    this.applicationApiService
+      .getApplications()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          if(response.data.length > 0){
-            const app = response.data.find((app: any) => app.client_id === environment.client_id);
-            if(app){
+          if (response.data.length > 0) {
+            const app = response.data.find((item: any) => item.client_id === environment.client_id);
+            if (app) {
               sessionStorage.setItem('application', JSON.stringify(app));
-              const client_id = app.client_id;
-              sessionStorage.setItem('client_id', client_id);
-              const app_id = app.id;
-              sessionStorage.setItem('app_id', app_id);
+              sessionStorage.setItem('client_id', app.client_id);
+              sessionStorage.setItem('app_id', app.id);
             }
           }
         },
         error: (error) => {
           console.error('Error loading application data:', error);
-        }
+        },
       });
 
     this.router.events.subscribe((event) => {
@@ -72,11 +86,20 @@ export class AppComponent implements OnInit {
     this.commonService
       .closePopupModelHandle()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((closeModel) => {
+      .subscribe(() => {
         this.closeModel();
       });
-      this.dashboardService.getAllUsers();
+    this.dashboardService.getAllUsers();
   }
+
+  retryHealthCheck(): void {
+    this.healthCheckService.checkAll({ force: true }).pipe(takeUntil(this.destroy$)).subscribe();
+  }
+
+  dismissHealthBanner(): void {
+    this.healthCheckService.dismissBanner();
+  }
+
   loadPopupComponent(modelInfo: IModelInfo) {
     this.commonDialogComponent.title = modelInfo.title;
     let componentName;
@@ -92,10 +115,12 @@ export class AppComponent implements OnInit {
     this.popupModelInfo = modelInfo;
     this.isDialogOpen = true;
   }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
   closeModel() {
     this.isDialogOpen = !this.isDialogOpen;
     this.popupModelInfo = {} as IModelInfo;

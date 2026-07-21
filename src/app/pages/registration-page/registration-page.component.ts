@@ -78,7 +78,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
         ],
         confirmPassword: ['', [Validators.required]],
         role: ['student', [Validators.required]],
-        status: ['pending'],
+        status: ['active'],
         organization_id: [''],
         name: [''],
       },

@@ -300,6 +300,7 @@ export class CourseUploadComponent implements OnChanges, OnInit, OnDestroy {
       courseCoverImage: courseInfo.courseCoverImage,
       courseTitle: courseInfo.courseTitle,
       courseDescription: courseInfo.courseDescription,
+      access: courseInfo.access === 'private' ? 'private' : 'public',
     };
     this.courseChapterList = structuredClone(courseInfo.chapterDetails as IChapterInfo[]);
   }

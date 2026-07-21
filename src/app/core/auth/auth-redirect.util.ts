@@ -7,6 +7,6 @@ export function getOAuthCallbackUrl(): string {
     : typeof window !== 'undefined' && window.location?.origin
       ? window.location.origin
       : environment.appUrl;
-
+  console.log('origin', origin);
   return `${origin.replace(/\/$/, '')}/auth/callback`;
 }

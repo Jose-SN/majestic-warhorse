@@ -303,6 +303,12 @@
                 @if (getSubscribedStatus(course); as status) {
                   <span class="course-glass-card__badge">{{ status }}</span>
                 }
+                <span
+                  class="course-glass-card__access"
+                  [class.is-private]="course.access === 'private'"
+                >
+                  {{ course.access === 'private' ? 'Private' : 'Public' }}
+                </span>
               </div>
 
               <div class="course-glass-card__body">

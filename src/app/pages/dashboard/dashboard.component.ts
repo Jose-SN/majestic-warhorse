@@ -10,7 +10,7 @@ import { CommonService } from 'src/app/shared/services/common.service';
 import { CommonSearchProfileComponent } from 'src/app/components/common-search-profile/common-search-profile.component';
 import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-teacher.service';
 import { DASHBOARD_NAV_ROUTES, DASHBOARD_TECHNICAL_BACKDROP_SEGMENTS, isDashboardNavActive } from './dashboard-routes.config';
-import { DemoModeBannerComponent } from 'src/app/shared/demo-mode-banner/demo-mode-banner.component';
+import { BannerComponent } from 'src/app/shared/banner/banner.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,7 +21,7 @@ import { DemoModeBannerComponent } from 'src/app/shared/demo-mode-banner/demo-mo
     RouterModule,
     DashboardSidepanelComponent,
     CommonSearchProfileComponent,
-    DemoModeBannerComponent,
+    BannerComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -75,39 +75,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
           next: (res: any) => {
             const data = res?.data ?? res;
             const list = Array.isArray(data) ? data : [];
-            const hasTeachers = list.length > 0;
-            this.commonService.hasAssignedTeachers = hasTeachers;
-            if (!hasTeachers) {
-              this.infoMessage =
-                'You have not been assigned any teachers to view this course. Please contact your organization for assistance';
-              this.router.navigate([DASHBOARD_NAV_ROUTES.approvalPending], {
-                state: { infoMessage: this.infoMessage },
-              });
-            }
+            this.commonService.hasAssignedTeachers = list.length > 0;
           },
           error: () => {
             this.commonService.hasAssignedTeachers = false;
-            this.infoMessage =
-              'Unable to verify your assignments. Please contact your organization for assistance.';
-            this.router.navigate([DASHBOARD_NAV_ROUTES.approvalPending], {
-              state: { infoMessage: this.infoMessage },
-            });
           },
         });
       } else {
         this.commonService.hasAssignedTeachers = false;
-        this.infoMessage =
-          'You have not been assigned any teachers to view this course. Please contact your organization for assistance';
-        this.router.navigate([DASHBOARD_NAV_ROUTES.approvalPending], {
-          state: { infoMessage: this.infoMessage },
-        });
       }
-    } else if (loginedUserData?.role === 'teacher' && loginedUserData.status === 'pending') {
-      this.infoMessage =
-        'Your request is pending approval from your organization. Please reach out to your organization for assistance.';
-      this.router.navigate([DASHBOARD_NAV_ROUTES.approvalPending], {
-        state: { infoMessage: this.infoMessage },
-      });
     }
   }
 

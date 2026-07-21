@@ -6,6 +6,7 @@ import { BehaviorSubject, Subject, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { TOASTER_MESSAGE_TYPE } from '../toaster/toaster-info';
 import { IModelInfo } from 'src/app/components/common-dialog/model/popupmodel';
+import { isActiveStatus } from 'src/app/models/user-status.model';
 
 @Injectable({
   providedIn: 'root',
@@ -77,6 +78,29 @@ export class CommonService {
   }
   transformText(text: string) {
     return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+
+  /** True when session has at least one active/approved course user-role. */
+  hasApprovedUserRole(): boolean {
+    try {
+      const raw = sessionStorage.getItem('userRoles');
+      const roles = raw ? (JSON.parse(raw) as Array<{ status?: string }>) : [];
+      if (!Array.isArray(roles) || !roles.length) {
+        return false;
+      }
+      return roles.some((role) => isActiveStatus(role.status));
+    } catch {
+      return false;
+    }
+  }
+
+  /** Teacher/student waiting on organization approval (no active user-roles). */
+  isAwaitingOrganizationApproval(): boolean {
+    const role = this.loginedUserInfo?.role || '';
+    if (role !== 'teacher' && role !== 'student') {
+      return false;
+    }
+    return !this.hasApprovedUserRole();
   }
 
   private initializeStatus() {

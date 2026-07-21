@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cyber Academy - Join Organization</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=JetBrains+Mono:wght@400;700&amp;family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#690005",
+                        "on-surface": "#e5e2e1",
+                        "on-surface-variant": "#e0c0af",
+                        "on-secondary": "#480081",
+                        "inverse-surface": "#e5e2e1",
+                        "tertiary-fixed": "#7df4ff",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-error-container": "#ffdad6",
+                        "surface": "#131313",
+                        "on-secondary-fixed": "#2c0051",
+                        "secondary-container": "#7701d0",
+                        "primary": "#ffb68b",
+                        "outline-variant": "#584235",
+                        "on-tertiary-container": "#003e42",
+                        "on-primary-fixed": "#321200",
+                        "primary-fixed": "#ffdbc8",
+                        "background": "#131313",
+                        "on-background": "#e5e2e1",
+                        "surface-dim": "#131313",
+                        "surface-container-high": "#2a2a2a",
+                        "on-tertiary-fixed-variant": "#004f54",
+                        "inverse-on-surface": "#313030",
+                        "surface-variant": "#353534",
+                        "on-primary-container": "#5c2800",
+                        "outline": "#a78b7c",
+                        "on-secondary-container": "#dcb7ff",
+                        "surface-container-low": "#1c1b1b",
+                        "on-tertiary-fixed": "#002022",
+                        "on-secondary-fixed-variant": "#6700b5",
+                        "tertiary-container": "#00b1bc",
+                        "on-primary": "#522300",
+                        "surface-container": "#201f1f",
+                        "tertiary": "#00dbe9",
+                        "secondary-fixed-dim": "#dcb8ff",
+                        "primary-container": "#ff7a00",
+                        "surface-bright": "#393939",
+                        "on-tertiary": "#00363a",
+                        "tertiary-fixed-dim": "#00dbe9",
+                        "surface-tint": "#ffb68b",
+                        "surface-container-highest": "#353534",
+                        "error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb68b",
+                        "on-primary-fixed-variant": "#753400",
+                        "secondary-fixed": "#efdbff",
+                        "secondary": "#dcb8ff",
+                        "inverse-primary": "#994700",
+                        "error": "#ffb4ab"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "unit": "4px",
+                        "gutter": "24px",
+                        "container-max": "1440px",
+                        "margin-desktop": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Space Grotesk"],
+                        "label-caps": ["JetBrains Mono"],
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-md": ["Space Grotesk"],
+                        "body-lg": ["Geist"],
+                        "display-lg": ["Space Grotesk"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #121212;
+            color: #e5e2e1;
+            overflow-x: hidden;
+        }
+        .cyber-gradient-border {
+            position: relative;
+            background: linear-gradient(to right, #ff7a00, #7701d0);
+            padding: 1px;
+        }
+        .cyber-gradient-text {
+            background: linear-gradient(to right, #ff7a00, #7701d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass-panel {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .backlight-glow:hover {
+            box-shadow: 0 0 20px rgba(255, 122, 0, 0.4);
+        }
+        .step-inactive {
+            opacity: 0.4;
+            filter: grayscale(1);
+        }
+        .step-active {
+            opacity: 1;
+            filter: grayscale(0);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased min-h-screen flex items-center justify-center p-4">
+<!-- Atmospheric Background Animation -->
+
+<main class="w-full max-w-5xl">
+<!-- Top Branding Section -->
+<div class="flex flex-col items-center mb-12 text-center">
+<div class="mb-4">
+<img class="w-24 h-24 object-contain" data-alt="A stylized, geometric horse head logo in a vibrant orange and purple gradient against a deep charcoal background, featuring clean technical lines and a cybernetic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDn-9dAvwfZGgruYOPh0qt4yq4u2UwNKCCML0155DnZpoCsw-8w7mDl_itRXwPIM1URfpi7iuDDpHXhBuwyTCMA_Uu9CBFjC8uoJn3b_mqqDOueoiwnkvbtK_XHOo2_XFeTsFRRm7BshiU4K4mwW9525C_cVLlRmEO7urvjn9HugN0q8JM59YDEER2-CgjXhV6qPNSsyxlmPxeUoj4Ic10Qt1hGs_MMuWCX0i6Fpt-22Kp9mEZBqnVFNg"/>
+</div>
+<p class="font-label-caps text-label-caps tracking-widest text-on-surface-variant mb-1">MAKING OF</p>
+<h1 class="font-headline-lg text-headline-lg font-black cyber-gradient-text tracking-tighter">MAJESTIC WARHORSE</h1>
+</div>
+<!-- High-Fidelity Wizard Card -->
+<div class="glass-panel rounded-xl shadow-2xl overflow-hidden relative border border-white/5">
+<!-- Progress Header -->
+<div class="grid grid-cols-3 border-b border-white/5 bg-surface-container-lowest/50">
+<div class="flex items-center gap-4 p-6 border-r border-white/5 step-active">
+<span class="font-data-mono text-data-mono text-primary bg-primary/10 w-8 h-8 flex items-center justify-center rounded-sm">01</span>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase">Phase One</p>
+<p class="font-headline-md text-headline-md text-[18px]">Select Org</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-6 border-r border-white/5 step-active">
+<span class="font-data-mono text-data-mono text-primary bg-primary/10 w-8 h-8 flex items-center justify-center rounded-sm">02</span>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase">Phase Two</p>
+<p class="font-headline-md text-headline-md text-[18px]">Choose Role</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-6 step-inactive">
+<span class="font-data-mono text-data-mono text-on-surface-variant bg-white/5 w-8 h-8 flex items-center justify-center rounded-sm">03</span>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase">Phase Three</p>
+<p class="font-headline-md text-headline-md text-[18px]">Sync Profile</p>
+</div>
+</div>
+</div>
+<!-- Content Area -->
+<div class="p-8 md:p-12">
+<div class="flex flex-col md:flex-row gap-12">
+<!-- Left Column: Context -->
+<div class="md:w-1/3">
+<h2 class="font-headline-lg text-headline-lg mb-4">Join Your Organization</h2>
+<p class="text-on-surface-variant mb-8">Establish your credentials within the Cyber Academy ecosystem. Select your tactical alignment and define your operational permissions.</p>
+<div class="bg-surface-container p-4 rounded-lg border border-white/5">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">SYSTEM STATUS</span>
+<span class="font-data-mono text-[10px] text-primary animate-pulse">● LIVE</span>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between font-data-mono text-[11px]">
+<span class="text-on-surface-variant">UPLINK:</span>
+<span class="text-on-surface">SECURED_SSL_v3</span>
+</div>
+<div class="flex justify-between font-data-mono text-[11px]">
+<span class="text-on-surface-variant">LATENCY:</span>
+<span class="text-on-surface">14ms</span>
+</div>
+<div class="flex justify-between font-data-mono text-[11px]">
+<span class="text-on-surface-variant">UID:</span>
+<span class="text-on-surface">CADET_4901</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Selection Flow -->
+<div class="md:w-2/3 space-y-8">
+<!-- Organization Select -->
+<div>
+<div class="flex items-center justify-between mb-4">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Step 01: Target Organization</label>
+<span class="font-data-mono text-xs text-primary">[ STATUS: PENDING ]</span>
+</div>
+<div class="cyber-gradient-border rounded-xl">
+<div class="bg-surface-container-high p-5 rounded-[11px] flex items-center justify-between cursor-pointer hover:bg-surface-bright transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center border border-white/10">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">corporate_fare</span>
+</div>
+<div>
+<h4 class="font-headline-md text-[20px] text-on-surface">Majestic Warhouse</h4>
+<p class="font-data-mono text-xs text-on-surface-variant">majesticwarhouse@gmail.com</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary">check_circle</span>
+</div>
+</div>
+</div>
+<!-- Role Selection -->
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant uppercase mb-4">Step 02: Tactical Role</label>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Role Card: Teacher -->
+<button class="group relative flex flex-col text-left p-6 rounded-xl border border-white/10 bg-surface-container-low hover:border-primary/50 transition-all duration-300">
+<div class="w-10 h-10 mb-4 bg-secondary/10 rounded flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">school</span>
+</div>
+<h5 class="font-headline-md text-[18px] mb-2">Teacher</h5>
+<p class="text-sm text-on-surface-variant leading-relaxed">Create advanced courses and manage student operatives after verification.</p>
+<div class="mt-4 pt-4 border-t border-white/5 flex items-center gap-2">
+<span class="font-data-mono text-[10px] text-secondary">LVL: COMMANDER</span>
+</div>
+</button>
+<!-- Role Card: Student -->
+<button class="group relative flex flex-col text-left p-6 rounded-xl border border-white/10 bg-surface-container-low hover:border-primary/50 transition-all duration-300">
+<div class="w-10 h-10 mb-4 bg-primary/10 rounded flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">engineering</span>
+</div>
+<h5 class="font-headline-md text-[18px] mb-2">Student</h5>
+<p class="text-sm text-on-surface-variant leading-relaxed">Access assigned training modules and tactical simulations upon approval.</p>
+<div class="mt-4 pt-4 border-t border-white/5 flex items-center gap-2">
+<span class="font-data-mono text-[10px] text-primary">LVL: CADET</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="pt-8 flex flex-col items-center">
+<button class="w-full md:w-auto px-12 py-4 bg-gradient-to-r from-primary-container to-secondary-container rounded-full font-headline-md text-[18px] text-white shadow-xl backlight-glow transition-all active:scale-95">
+                                Continue to Dashboard
+                            </button>
+<p class="mt-4 text-xs text-on-surface-variant font-data-mono text-center">
+                                UNLOCK_SEQUENCE: Organization will review your request before full terminal access is granted.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Scanline Effect -->
+<div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-50 blur-sm"></div>
+</div>
+<!-- Tech Footer -->
+<div class="mt-12 flex justify-between items-center px-4">
+<div class="flex gap-6">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors uppercase tracking-widest" href="#">Support</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors uppercase tracking-widest" href="#">Legal</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors uppercase tracking-widest" href="#">Privacy</a>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="font-data-mono text-xs">V.2.0.48_STABLE</span>
+<span class="material-symbols-outlined text-sm">terminal</span>
+</div>
+</div>
+</main>
+<script>
+        // Micro-interaction: Mouse parallax on the glass panel
+        const card = document.querySelector('.glass-panel');
+        document.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        // Micro-interaction: Active role selection
+        const roleButtons = document.querySelectorAll('button.group');
+        roleButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                roleButtons.forEach(b => b.classList.remove('ring-2', 'ring-primary', 'bg-primary/5'));
+                btn.classList.add('ring-2', 'ring-primary', 'bg-primary/5');
+            });
+        });
+    </script>
+</body></html>

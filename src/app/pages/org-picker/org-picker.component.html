@@ -1,115 +1,190 @@
-<section class="org-picker-container">
-  <div class="org-picker-card">
-    <figure class="logo">
-      <img src="../../../assets/images/logo-mejestic-hourse-landing.svg" alt="Majestic Warhorse" />
-    </figure>
+<main class="login-page org-picker-page">
+  <!-- Left: brand block -->
+  <section class="login-hero org-picker-hero">
+    <div class="login-hero__bg" aria-hidden="true"></div>
+    <div class="login-hero__overlay" aria-hidden="true"></div>
+    <div class="login-hero__glow login-hero__glow--primary" aria-hidden="true"></div>
+    <div class="login-hero__glow login-hero__glow--secondary" aria-hidden="true"></div>
 
-    <h1>{{ isSwitchMode ? 'Switch Organization' : 'Join Your Organization' }}</h1>
-    <p class="subtitle">
-      @if (isSwitchMode) {
-        Choose which organization you want to work in.
-      } @else {
-        Select your organization and how you want to join.
-      }
-    </p>
-
-    @if (loading) {
-      <div class="loading-state">
-        <span class="spinner"></span>
-        <p>Loading your organizations…</p>
+    <div class="login-card__brand org-picker-hero__brand">
+      <div class="login-card__logo-wrap">
+        <div class="login-card__logo">
+          <img
+            src="assets/images/logo-mejestic-hourse-landing.svg"
+            alt="Majestic Warhorse"
+          />
+        </div>
+        <div class="login-card__logo-glow" aria-hidden="true"></div>
       </div>
-    } @else if (organizations.length) {
-      <div class="section-label">Organization</div>
-      <div class="org-list">
-        @for (org of organizations; track org.id) {
-          <button
-            type="button"
-            class="org-card"
-            [class.active]="org.id === activeOrgId"
-            [class.selected]="org.id === selectedOrgId"
-            [class.selecting]="submitting && org.id === selectedOrgId"
-            [disabled]="submitting"
-            (click)="pickOrganization(org.id)">
-            <span class="org-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                <polyline points="9 22 9 12 15 12 15 22"/>
-              </svg>
-            </span>
-            <span class="org-details">
-              <strong>{{ displayName(org.name) }}</strong>
-              @if (org.email) {
-                <small>{{ org.email }}</small>
-              }
-              @if (org.membershipRole) {
-                <span class="role-badge">{{ org.membershipRole }}</span>
-              }
-            </span>
-            @if (org.id === activeOrgId) {
-              <span class="current-badge">Current</span>
-            }
-          </button>
+      <h1 class="login-card__heading">MAJESTIC WARHORSE</h1>
+      <p class="org-picker-hero__subtitle">
+        The learning platform for sculpting, courses, and creative mastery — built for students, teachers, and organizations.
+      </p>
+    </div>
+  </section>
+
+  <!-- Right: choose organization only -->
+  <section class="login-pane">
+    <div class="login-pane__mobile-bg" aria-hidden="true"></div>
+
+    <div class="login-card org-picker-card">
+      <div class="login-card__accent"></div>
+
+      <h2 class="org-picker-card__title">
+        {{ isSwitchMode ? 'Switch organization' : 'Choose your organization' }}
+      </h2>
+      <p class="org-picker-card__subtitle">
+        @if (isSwitchMode) {
+          Select the organization you want to continue learning with.
+        } @else {
+          Pick your school or academy, then choose whether you are joining as a teacher or a student.
         }
-      </div>
+      </p>
 
-      @if (!isSwitchMode && selectedOrgId) {
-        <div class="section-label">Join as</div>
-        <div class="role-options">
-          <button
-            type="button"
-            class="role-card teacher"
-            [class.selected]="selectedRole === 'teacher'"
-            [disabled]="submitting"
-            (click)="pickRole('teacher')">
-            <span class="role-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-              </svg>
-            </span>
-            <span class="role-details">
-              <strong>Teacher</strong>
-              <small>Create courses and manage students after approval.</small>
-            </span>
-          </button>
+      @if (loggedInEmail) {
+        <p class="org-picker-card__user">
+          Logged in as <strong>{{ loggedInEmail }}</strong>
+        </p>
+      }
 
-          <button
-            type="button"
-            class="role-card student"
-            [class.selected]="selectedRole === 'student'"
-            [disabled]="submitting"
-            (click)="pickRole('student')">
-            <span class="role-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
-              </svg>
-            </span>
-            <span class="role-details">
-              <strong>Student</strong>
-              <small>Access courses from assigned teachers after approval.</small>
-            </span>
-          </button>
+      @if (loading) {
+        <div class="org-picker-loading">
+          <span class="org-picker-loading__spinner" aria-hidden="true"></span>
+          <p>Loading organizations…</p>
+        </div>
+      } @else if (organizations.length) {
+        <div class="org-picker-section">
+          <label class="org-picker-section__label" id="org-list-label">Organization</label>
+
+          <div class="org-picker-dropdown" [class.is-open]="orgDropdownOpen">
+            <button
+              type="button"
+              class="org-picker-dropdown__trigger"
+              [class.has-value]="!!selectedOrganization"
+              [disabled]="submitting"
+              [attr.aria-expanded]="orgDropdownOpen"
+              aria-haspopup="listbox"
+              aria-labelledby="org-list-label"
+              (click)="toggleOrgDropdown()"
+            >
+              <span class="org-picker-dropdown__value">
+                @if (selectedOrganization; as org) {
+                  <strong>{{ displayName(org.name) }}</strong>
+                  @if (org.email) {
+                    <small>{{ org.email }}</small>
+                  }
+                } @else {
+                  <span class="org-picker-dropdown__placeholder">No organization selected</span>
+                }
+              </span>
+              <span
+                class="material-symbols-outlined org-picker-dropdown__chevron"
+                aria-hidden="true"
+              >{{ orgDropdownOpen ? 'expand_less' : 'expand_more' }}</span>
+            </button>
+
+            @if (orgDropdownOpen) {
+              <ul
+                class="org-picker-list"
+                role="listbox"
+                aria-labelledby="org-list-label"
+                [attr.aria-activedescendant]="selectedOrgId ? 'org-option-' + selectedOrgId : null"
+              >
+                @for (org of organizations; track org.id) {
+                  <li role="presentation">
+                    <button
+                      type="button"
+                      class="org-picker-item"
+                      role="option"
+                      [id]="'org-option-' + org.id"
+                      [attr.aria-selected]="org.id === selectedOrgId"
+                      [class.is-selected]="org.id === selectedOrgId"
+                      [class.is-current]="org.id === activeOrgId"
+                      [class.is-busy]="submitting && org.id === selectedOrgId"
+                      [disabled]="submitting"
+                      (click)="pickOrganization(org.id)"
+                    >
+                      <span class="org-picker-item__details">
+                        <strong>{{ displayName(org.name) }}</strong>
+                        @if (org.email) {
+                          <small>{{ org.email }}</small>
+                        }
+                      </span>
+                      @if (org.id === selectedOrgId) {
+                        <span class="material-symbols-outlined org-picker-item__check" aria-hidden="true">check</span>
+                      } @else if (org.id === activeOrgId) {
+                        <span class="org-picker-item__badge">Current</span>
+                      }
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+          </div>
         </div>
 
-        <button
-          type="button"
-          class="btn-continue"
-          [disabled]="!canContinue()"
-          (click)="continueToDashboard()">
-          @if (submitting) {
-            Joining…
-          } @else {
-            Continue to Dashboard
-          }
-        </button>
+        @if (!isSwitchMode) {
+          <div class="org-picker-section">
+            <label class="org-picker-section__label">Join as</label>
+            <div class="org-picker-roles">
+              <button
+                type="button"
+                class="org-picker-role"
+                [class.is-selected]="selectedRole === 'teacher'"
+                [disabled]="submitting"
+                (click)="pickRole('teacher')"
+              >
+                <span class="org-picker-role__icon" aria-hidden="true">
+                  <span class="material-symbols-outlined">school</span>
+                </span>
+                <strong>Teacher</strong>
+                <p>Create courses and guide students after your organization approves you.</p>
+              </button>
 
-        <p class="footnote">Your organization will review your request before full access is granted.</p>
+              <button
+                type="button"
+                class="org-picker-role"
+                [class.is-selected]="selectedRole === 'student'"
+                [disabled]="submitting"
+                (click)="pickRole('student')"
+              >
+                <span class="org-picker-role__icon org-picker-role__icon--student" aria-hidden="true">
+                  <span class="material-symbols-outlined">menu_book</span>
+                </span>
+                <strong>Student</strong>
+                <p>Access courses from your teachers and track your learning progress.</p>
+              </button>
+            </div>
+          </div>
+
+          <div class="login-form__actions org-picker-actions">
+            <button
+              type="button"
+              class="btn-primary"
+              [disabled]="!canContinue"
+              [attr.aria-disabled]="!canContinue"
+              (click)="continueToDashboard()"
+            >
+              @if (submitting) {
+                Joining…
+              } @else {
+                Continue
+              }
+            </button>
+            <p class="org-picker-footnote">
+              Your organization will review your request before you get full access to courses.
+            </p>
+          </div>
+        }
+
+        @if (isSwitchMode) {
+          <div class="org-picker-actions">
+            <button type="button" class="org-picker-back" (click)="cancelSwitch()" [disabled]="submitting">
+              Back to dashboard
+            </button>
+          </div>
+        }
       }
-    }
-
-    @if (isSwitchMode && !loading) {
-      <button type="button" class="btn-cancel" (click)="cancelSwitch()">Back to Dashboard</button>
-    }
-  </div>
-</section>
+    </div>
+  </section>
+</main>

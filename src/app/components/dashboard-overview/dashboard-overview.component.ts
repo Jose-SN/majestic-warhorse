@@ -584,6 +584,7 @@ export class DashboardOverviewComponent implements OnDestroy {
       title: course.courseTitle || 'Untitled course',
       authorName,
       statusLevel,
+      access: course.access === 'private' ? 'private' : 'public',
       categoryLabel: 'A Course by',
       categoryTitle: authorName,
       coverStyle: 'linear-gradient(135deg, #3a2458 0%, #1a1230 100%)',

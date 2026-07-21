@@ -39,6 +39,37 @@
               [(ngModel)]="mainCourseInfo.courseDescription"
             ></textarea>
           </div>
+
+          <div class="forge-field forge-field--access">
+            <label id="course-access-label">Access</label>
+            <div class="forge-access" role="group" aria-labelledby="course-access-label">
+              <button
+                type="button"
+                class="forge-access__btn"
+                [class.is-active]="mainCourseInfo.access === 'public'"
+                (click)="mainCourseInfo.access = 'public'"
+              >
+                <span class="material-symbols-outlined" aria-hidden="true">public</span>
+                <span>Public</span>
+              </button>
+              <button
+                type="button"
+                class="forge-access__btn"
+                [class.is-active]="mainCourseInfo.access === 'private'"
+                (click)="mainCourseInfo.access = 'private'"
+              >
+                <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+                <span>Private</span>
+              </button>
+            </div>
+            <p class="forge-access__hint">
+              {{
+                mainCourseInfo.access === 'public'
+                  ? 'Visible in your organization course catalog.'
+                  : 'Only available to assigned learners / private use.'
+              }}
+            </p>
+          </div>
         </div>
 
         <!-- Cover image -->
@@ -310,7 +341,7 @@
               }
               <div class="holographic-preview__overlay">
                 @if (mainCourseInfo.courseTitle?.trim()) {
-                  <span class="holographic-preview__badge">Course</span>
+                  <span class="holographic-preview__badge">{{ mainCourseInfo.access === 'private' ? 'Private' : 'Public' }}</span>
                 }
                 <h4>{{ mainCourseInfo.courseTitle || 'Untitled Course' }}</h4>
               </div>
@@ -365,7 +396,7 @@
                 <div class="recent-course-card__body">
                   <h4>{{ course.courseTitle }}</h4>
                   <span>{{ course.chapterDetails?.length || 0 }} Chapters</span>
-                  <span class="recent-course-card__status">Published</span>
+                  <span class="recent-course-card__status">{{ course.access === 'private' ? 'Private' : 'Public' }}</span>
                 </div>
               </button>
             } @empty {

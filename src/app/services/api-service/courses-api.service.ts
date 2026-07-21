@@ -11,6 +11,8 @@ export interface CourseListParams {
   populateFiles?: boolean;
   createdBy?: string;
   organization_id?: string;
+  /** Filter by visibility: `public` or `private` */
+  access?: 'public' | 'private';
 }
 
 export interface CourseStatusListParams {
@@ -42,6 +44,9 @@ export class CoursesApiService {
     }
     if (params.organization_id) {
       httpParams = httpParams.set('organization_id', params.organization_id);
+    }
+    if (params.access) {
+      httpParams = httpParams.set('access', params.access);
     }
     return httpParams;
   }

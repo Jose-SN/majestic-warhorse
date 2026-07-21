@@ -1,3 +1,30 @@
+@if (healthState?.hasOutage) {
+  <div class="service-health-banner" role="alert">
+    <div class="service-health-banner__content">
+      <span class="material-symbols-outlined" aria-hidden="true">cloud_off</span>
+      <div class="service-health-banner__text">
+        <strong>Some services are unavailable</strong>
+        <ul>
+          @if (healthState?.iam?.status === 'down') {
+            <li>{{ healthState?.iam?.message || 'IAM service is unavailable.' }}</li>
+          }
+          @if (healthState?.majestic?.status === 'down') {
+            <li>{{ healthState?.majestic?.message || 'Majestic Warhorse API is unavailable.' }}</li>
+          }
+        </ul>
+      </div>
+    </div>
+    <div class="service-health-banner__actions">
+      <button type="button" class="service-health-banner__btn" (click)="retryHealthCheck()" [disabled]="healthState?.checking">
+        {{ healthState?.checking ? 'Checking…' : 'Retry' }}
+      </button>
+      <button type="button" class="service-health-banner__dismiss" (click)="dismissHealthBanner()" aria-label="Dismiss">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+  </div>
+}
+
 <router-outlet></router-outlet>
 @if (PARTICLE_ROUTES_LIST.includes(activeRouteName)) {
   <app-particle></app-particle>

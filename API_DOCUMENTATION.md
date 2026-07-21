@@ -376,7 +376,16 @@ Does not sync to IAM per user — users must already exist in IAM, or use single
 | `populateFiles` | boolean | Include file data |
 
 **Response `200`:** Array of course objects.
+| `access` | enum | Filter by visibility: `public` or `private` |
+| `organization_id` | uuid | Filter by organization |
+| `createdBy` | uuid | Filter by creator user ID |
 
+**Examples:**
+- `GET /course/get?access=public`
+- `GET /course/get?organization_id={org-uuid}&access=private`
+
+**Response `200`:** Array of course objects.
+**Response `200`:** Array of course objects (each includes `access`: `public` | `private`).
 ---
 
 ### Get course by ID

@@ -148,7 +148,7 @@ export class RegistrationPageService {
         transformedPayload.password = registrationInfo.password;
       }
       if (!isEditMode) {
-        transformedPayload.status = 'pending';
+        transformedPayload.status = 'active';
       } else {
         const loginedUser = this.commonService.loginedUserInfo;
         if (loginedUser?.id) {

@@ -710,6 +710,10 @@ export class CourseDetailsComponent {
     return (this.selectedCourseInfo?.courseTitle || 'MAJESTIC WARHORSE').toUpperCase();
   }
 
+  get courseAccess(): 'public' | 'private' {
+    return this.selectedCourseInfo?.access === 'private' ? 'private' : 'public';
+  }
+
   get heroSubtitle(): string {
     if (!this.demoModeService.isDemoMode) {
       return '';

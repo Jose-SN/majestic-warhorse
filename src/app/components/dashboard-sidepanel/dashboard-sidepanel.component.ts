@@ -82,11 +82,7 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
   }
 
   disableListItems(): boolean {
-    return (
-      this.navDisabled ||
-      (this.loginedUserPrivilege === 'student' && this.commonService.hasAssignedTeachers === false) ||
-      (this.loginedUserPrivilege === 'teacher' && this.commonService.loginedUserInfo.status === 'pending')
-    );
+    return this.navDisabled;
   }
 
   @HostBinding('class.sidepanel--nav-disabled')
