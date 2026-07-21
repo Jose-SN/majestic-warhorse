@@ -233,6 +233,11 @@ export class OrgPickerComponent implements OnInit {
     }
   }
 
+  backToLogin(event: Event): void {
+    event.preventDefault();
+    this.authService.logOutApplication();
+  }
+
   cancelSwitch(): void {
     this.router.navigate(['/dashboard/overview']);
   }

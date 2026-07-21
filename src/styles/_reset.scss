@@ -2,6 +2,7 @@ body,
 html {
   height: 100vh;
   @include common-margin;
+  touch-action: manipulation;
 }
 * {
   @include user-select(none);

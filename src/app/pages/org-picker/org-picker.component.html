@@ -134,10 +134,12 @@
                 [disabled]="submitting"
                 (click)="pickRole('teacher')"
               >
-                <span class="org-picker-role__icon" aria-hidden="true">
-                  <span class="material-symbols-outlined">school</span>
+                <span class="org-picker-role__lead">
+                  <span class="org-picker-role__icon" aria-hidden="true">
+                    <span class="material-symbols-outlined">school</span>
+                  </span>
+                  <strong>Teacher</strong>
                 </span>
-                <strong>Teacher</strong>
                 <p>Create courses and guide students after your organization approves you.</p>
               </button>
 
@@ -148,16 +150,25 @@
                 [disabled]="submitting"
                 (click)="pickRole('student')"
               >
-                <span class="org-picker-role__icon org-picker-role__icon--student" aria-hidden="true">
-                  <span class="material-symbols-outlined">menu_book</span>
+                <span class="org-picker-role__lead">
+                  <span class="org-picker-role__icon org-picker-role__icon--student" aria-hidden="true">
+                    <span class="material-symbols-outlined">menu_book</span>
+                  </span>
+                  <strong>Student</strong>
                 </span>
-                <strong>Student</strong>
                 <p>Access courses from your teachers and track your learning progress.</p>
               </button>
             </div>
           </div>
 
           <div class="login-form__actions org-picker-actions">
+            <a
+              href="/login"
+              class="org-picker-back-link"
+              (click)="backToLogin($event)"
+            >
+              Back to login
+            </a>
             <button
               type="button"
               class="btn-primary"
