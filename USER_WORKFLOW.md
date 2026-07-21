@@ -99,23 +99,28 @@ This document describes the **application as it works today** for the MVP / Beta
 | Area | In the app today |
 |------|------------------|
 | **Login & sign-up** | Organization or Individual (Teacher / Student); email/password; **Continue with Google** |
-| **After login** | Organization → Dashboard; Teacher / Student may go to **Waiting for approval** until approved |
+| **After login** | Organization → Dashboard; Teacher / Student → Dashboard with a **pending-approval** message until the organization approves them |
 | **Approvals** | Organization opens **Approvals** and approves pending teachers and students |
 | **Directory** | Organization manages **Teachers** and **Students** lists |
 | **Invite** | Organization can invite teachers and students (invite screens in the app) |
 | **Assignments** | From a teacher or student profile, link **students ↔ teachers** (a teacher can have many students) |
-| **Courses** | Teachers and organizations can **upload / list courses**; listing follows role rules (org / teacher / student — see Course listing rules) |
+| **Courses** | Teachers and organizations can **upload / list courses**; listing follows role + approval rules (see Course listing rules) |
 | **Questions** | On a course, teachers add questions (**Questionnaire**) |
 | **Answers** | Students open **Assessment**, answer questions, and submit |
 | **Feedback** | Teachers open **Answers**, review submissions, grade, and give feedback |
 
 ### Course listing rules (MVP — in the app)
 
-| Role | What appears in Courses |
-|------|-------------------------|
-| **Organization** | All courses in the org via `organization_id` — **public + private** (org-created and teacher-created). |
-| **Teacher** | All courses in the org via `organization_id`, then keep **public** courses plus **my** courses (**public + private**). |
-| **Student** | 1) Courses from **assigned teachers** (student feed) — **public + private**. 2) All **public** courses in the org via `organization_id` + `access=public`. |
+Course access depends on **role** and whether the person is **approved by the organization**.
+
+| Role | Before organization approval | After organization approval |
+|------|------------------------------|-----------------------------|
+| **Organization** | — | All courses in the organization — **public + private** (org-created and teacher-created). |
+| **Teacher** | Organization **public** courses only. Private courses are hidden until approval. | Organization **public** courses **plus** the teacher’s own courses (**public + private**). |
+| **Student** | Organization **public** courses only. Private courses and assigned-teacher courses stay hidden until approval. | Organization **public** courses **plus** courses from **assigned teachers** (**public + private**). |
+
+**Simple rule for teachers and students:**  
+Log in → see your organization’s **public** courses right away → once the organization **approves** you → also see **private** courses (and for students, your **assigned teachers’** courses).
 
 ### Not in the MVP application yet (later)
 
@@ -168,16 +173,19 @@ There are **three login types**:
 3. Log in
         ↓
 4a. Organization → goes to Organization Dashboard
-4b. Teacher / Student → may see “Waiting for approval”
+4b. Teacher / Student → Dashboard (pending approval banner)
         ↓
-5. After organization approval → full access for that role
+5. While pending → can already browse organization **public** courses
+        ↓
+6. After organization approval → also see **private** courses
+   (students: + assigned teachers’ courses)
 ```
 
 ### Sign-up choices (simple)
 
 - **Organization** — create a school / church / community account → land on the organization dashboard  
-- **Individual → Student** — join as a learner → wait for organization approval  
-- **Individual → Teacher** — join as an instructor → wait for organization approval  
+- **Individual → Student** — join as a learner → see public courses while waiting; full access after approval  
+- **Individual → Teacher** — join as an instructor → see public courses while waiting; full access after approval  
 
 Optional: **Continue with Google** is available as a recommended sign-up / sign-in option.
 
@@ -230,9 +238,10 @@ Plans and purchase are **not in the Beta application yet**. Later, organizations
    - A teacher can have **multiple students**; a student can be linked to teacher(s)  
 
 4. **Courses**
-   - Browse all courses in the organization via `organization_id` (public + private)
+   - Browse all courses in the organization (**public + private**)
    - Includes org-created and teacher-created courses
    - Formal “approve each course before publish” is **later** — not a separate MVP step
+   - Teachers and students only see **private** content after the organization approves them; until then they see **public** courses only
 
 ### 4.5 Organization success path (MVP slide)
 
@@ -256,41 +265,44 @@ Create org account
 
 - Teachers use an **individual account** (not the organization login)  
 - They belong to an organization (school)  
-- They must be **approved by the organization** before full teaching tools unlock  
+- Before approval they can already see the organization’s **public** courses  
+- They must be **approved by the organization** before **private** courses and full teaching tools unlock  
 
 ### 5.2 Teacher first-time journey
 
 1. Create account as **Individual → Teacher** (or log in if already registered)  
 2. Select / join the **organization**  
-3. Status becomes **Waiting for approval**  
-4. Organization admin approves the teacher  
-5. Teacher can now use the full teacher experience  
+3. Land on the dashboard with a **pending approval** message  
+4. While pending → browse the organization’s **public** courses only  
+5. Organization admin approves the teacher  
+6. After approval → see **public** courses **plus** own courses (**public + private**), and use the full teacher experience  
 
-### 5.3 What teachers can do after approval (MVP)
+### 5.3 What teachers can do (MVP)
 
-| Step | Action in the app |
-|------|-------------------|
-| 1 | **Add courses** — upload / create learning content (public or private) |
-| 2 | **List courses** — org courses via `organization_id` (keep public + my public/private) |
-| 3 | **Add questions** — Questionnaire tab on a course |
-| 4 | **Review student answers** — Answers tab on a course |
-| 5 | **Give feedback** — grade and write feedback on submissions |
-| 6 | **Work with students** — via Directory / assigned students |
-
-While **pending**, teacher navigation stays limited until the organization approves them.
+| When | What they see / can do |
+|------|------------------------|
+| **Before approval** | Organization **public** courses only (banner explains they are waiting for approval) |
+| **After approval** | Organization **public** courses **plus** my courses (**public + private**) |
+| **After approval** | **Add courses** — upload / create learning content (public or private) |
+| **After approval** | **Add questions** — Questionnaire tab on a course |
+| **After approval** | **Review student answers** — Answers tab on a course |
+| **After approval** | **Give feedback** — grade and write feedback on submissions |
+| **After approval** | **Work with students** — via Directory / assigned students |
 
 ### 5.4 Teacher flow (simple diagram)
 
 ```
 Sign up / Log in (Individual – Teacher)
         ↓
-Waiting for organization approval
+Join organization → Dashboard (pending approval)
         ↓
-Approved
+See organization public courses
         ↓
-Create & list courses
+Organization approves teacher
         ↓
-Add questions
+See public + private (my) courses
+        ↓
+Create & list courses → Add questions
         ↓
 Students submit answers
         ↓
@@ -300,7 +312,7 @@ Validate answers + give feedback
 ### 5.5 Teacher notes for management
 
 - One teacher can have **many students**  
-- Teachers only fully operate after **organization approval**  
+- Before approval: **public courses only**; after approval: **private** access for their own courses too  
 - Course quality and student progress are visible through questions, answers, and feedback  
 
 ---
@@ -311,46 +323,50 @@ Validate answers + give feedback
 
 - Students use an **individual account**  
 - They join an organization  
-- They must wait for **organization approval** before learning starts  
+- Before approval they can already see the organization’s **public** courses  
+- They must be **approved by the organization** before **private** courses and **assigned teachers’** courses unlock  
 
 ### 6.2 Student first-time journey
 
 1. Create account as **Individual → Student** (or log in)  
 2. Select / join the **organization**  
-3. Status becomes **Waiting for approval**  
-4. Organization admin approves the student  
-5. Organization (or school process) assigns the student to one or more **teachers**  
-6. Student can view those teachers’ **courses**  
+3. Land on the dashboard with a **pending approval** message  
+4. While pending → browse the organization’s **public** courses only  
+5. Organization admin approves the student  
+6. Organization (or school process) assigns the student to one or more **teachers**  
+7. After approval → see **public** courses **plus** assigned teachers’ courses (**public + private**)  
 
-### 6.3 What students can do after approval (MVP)
+### 6.3 What students can do (MVP)
 
-| Step | Action in the app |
-|------|-------------------|
-| 1 | Learn once linked to teacher(s) — otherwise may still wait for assignment |
-| 2 | Open **Courses** from assigned teachers (public + private) **and** org **public** courses (`organization_id` + `access=public`) |
-| 3 | Complete course content |
-| 4 | Open **Assessment** / questions on the course |
-| 5 | **Submit answers** |
-| 6 | Teacher reviews and can leave **feedback** (student can see review outcome when available) |
+| When | What they see / can do |
+|------|------------------------|
+| **Before approval** | Organization **public** courses only (banner explains they are waiting for approval) |
+| **After approval** | Organization **public** courses **plus** courses from **assigned teachers** (**public + private**) |
+| **After approval** | Complete course content |
+| **After approval** | Open **Assessment** / questions on the course |
+| **After approval** | **Submit answers** |
+| **After approval** | Teacher reviews and can leave **feedback** (student can see review outcome when available) |
 
-While **pending** (or with no teacher assigned yet), student access stays limited.
+If approved but not yet assigned to a teacher, the student still sees organization **public** courses; assigned-teacher courses appear after the link is made.
 
 ### 6.4 Student flow (simple diagram)
 
 ```
 Sign up / Log in (Individual – Student)
         ↓
-Waiting for organization approval
+Join organization → Dashboard (pending approval)
         ↓
-Approved
+See organization public courses
+        ↓
+Organization approves student
         ↓
 Assigned to teacher(s)
         ↓
-View teacher courses
+See public + assigned teachers’ courses (public + private)
         ↓
 Complete courses + answer questions
         ↓
-Wait for teacher approval / feedback
+Wait for teacher review / feedback
 ```
 
 ---
@@ -379,21 +395,21 @@ Use this as the **main workflow slide** for management — this matches the **MV
 
 ### Story in one paragraph
 
-A church, Sunday school, school, or community creates an **organization account** and reaches its dashboard. Teachers and students sign up with **individual accounts** and wait on **Approvals**. Once the organization approves them and **assigns students to teachers**, teachers create **courses** and **questions**, and students study those courses, **submit answers**, and receive **teacher feedback**.
+A church, Sunday school, school, or community creates an **organization account** and reaches its dashboard. Teachers and students sign up with **individual accounts**, join the organization, and can immediately browse that organization’s **public** courses while they wait on **Approvals**. Once the organization approves them, teachers also see their **private** courses, and students also see **private** courses and **assigned teachers’** courses. Teachers create **courses** and **questions**; students study, **submit answers**, and receive **teacher feedback**.
 
-**MVP reality check:** That approval → assign → course → Q&A → feedback loop is what the Beta application delivers today. Plans/premium checkout, white-label branding, own-database options, formal org course-approval queues, and smart “where to improve” insights are **gold vision / later versions** — update this document when they ship.
+**MVP reality check:** That public-first → approval → private / assigned access → course → Q&A → feedback loop is what the Beta application delivers today. Plans/premium checkout, white-label branding, own-database options, formal org course-approval queues, and smart “where to improve” insights are **gold vision / later versions** — update this document when they ship.
 
 ---
 
 ## 8. Waiting states (easy to explain)
 
-| Person | Waiting for | Until… | In MVP app? |
-|--------|-------------|--------|-------------|
-| New teacher | Organization approval | Organization approves them | Yes — Approvals + Waiting screen |
-| New student | Organization approval | Organization approves them | Yes — Approvals + Waiting screen |
-| Approved student with no teacher | Assignment | Org links them to a teacher | Yes — limited until assigned |
-| Student answers | Teacher review | Teacher grades / feedback | Yes — Answers / feedback |
-| Organization | Plan selection | Plan purchased | **Later** — not in MVP |
+| Person | Waiting for | Until… | What they can see meanwhile | In MVP app? |
+|--------|-------------|--------|-----------------------------|-------------|
+| New teacher | Organization approval | Organization approves them | Org **public** courses only | Yes — pending banner + Approvals |
+| New student | Organization approval | Organization approves them | Org **public** courses only | Yes — pending banner + Approvals |
+| Approved student with no teacher | Assignment | Org links them to a teacher | Org **public** courses; no assigned-teacher courses yet | Yes |
+| Student answers | Teacher review | Teacher grades / feedback | Their submitted work | Yes — Answers / feedback |
+| Organization | Plan selection | Plan purchased | — | **Later** — not in MVP |
 
 **Presentation tip:** Use a yellow “Waiting” badge and a green “Approved / Active” badge on slides.
 
@@ -408,14 +424,16 @@ Use this when updating the deck or the product. **MVP = what the application doe
 | 3 login types (Org / Teacher / Student) | Yes | Login + signup account type |
 | Google continue | Yes | Login + signup |
 | Org → dashboard after signup/login | Yes | |
-| Teacher/Student waiting for approval | Yes | Approval-pending screen |
+| Teacher/Student pending approval (public courses only) | Yes | Dashboard banner; private locked until approved |
 | Org Approvals for teachers & students | Yes | Approvals menu |
 | Directory Teachers / Students | Yes | |
 | Invite teacher / student | Yes | Invite screens in app |
 | Assign students ↔ teachers | Yes | Manage from directory lists |
-| Teacher create & list courses | Yes | Mine (public+private) + org public |
-| Student course list | Yes | Assigned teachers (public+private) + org public |
-| Organization course list | Yes | `organization_id` — all org courses (public+private) |
+| Teacher courses before approval | Yes | Org **public** only |
+| Teacher courses after approval | Yes | Org **public** + my courses (**public + private**) |
+| Student courses before approval | Yes | Org **public** only |
+| Student courses after approval | Yes | Org **public** + assigned teachers (**public + private**) |
+| Organization course list | Yes | All org courses (**public + private**) |
 | Questionnaire (teacher) | Yes | Course → Questionnaire |
 | Student assessment / answers | Yes | Course → Assessment |
 | Teacher feedback on answers | Yes | Course → Answers |
@@ -438,10 +456,10 @@ Copy this outline into a deck generator:
 4. **Gold vision** — Their brand + our software; understand learners; guide improvement  
 5. **MVP / Beta in the app today** — Login, approvals, directory, assign, courses, Q&A, feedback  
 6. **Three logins** — Organization / Teacher / Student  
-7. **New user path** — Sign up → role → login → dashboard or waiting  
+7. **New user path** — Sign up → role → login → dashboard (public courses while pending)  
 8. **Organization journey (MVP)** — Approvals, Directory, assign, courses  
-9. **Teacher journey (MVP)** — wait → courses → questions → feedback  
-10. **Student journey (MVP)** — wait → assigned courses → answers → feedback  
+9. **Teacher journey (MVP)** — public courses → approval → public + private → questions → feedback  
+10. **Student journey (MVP)** — public courses → approval → assigned teachers’ courses → answers → feedback  
 11. **Full story diagram** — matches the live app loop  
 12. **Coming later** — plans, white-label, insights (Versions 1–4)  
 13. **Summary** — Document describes the MVP app; update when the app changes  
@@ -453,8 +471,8 @@ Copy this outline into a deck generator:
 | Role | Login style | First screen after signup/login | Key responsibility (MVP) |
 |------|-------------|----------------------------------|--------------------------|
 | Organization | Organization account | Dashboard | Approvals, Directory, assign people, courses |
-| Teacher | Individual account | Waiting → then Teacher home | Courses, questions, answer review, feedback |
-| Student | Individual account | Waiting → then Student home | Assigned courses, answers, receive feedback |
+| Teacher | Individual account | Dashboard (public courses while pending; full access after approval) | Courses, questions, answer review, feedback |
+| Student | Individual account | Dashboard (public courses while pending; assigned + private after approval) | Courses, answers, receive feedback |
 
 ---
 
