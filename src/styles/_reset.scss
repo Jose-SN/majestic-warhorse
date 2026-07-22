@@ -1,6 +1,7 @@
 body,
 html {
   height: 100vh;
+  height: 100dvh;
   @include common-margin;
   touch-action: manipulation;
 }
@@ -13,6 +14,7 @@ html {
 body {
   font-family: $archivo-regular;
   height: 100vh;
+  height: 100dvh;
   background: var(--bg-main);
   @include common-margin;
 }

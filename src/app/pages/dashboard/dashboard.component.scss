@@ -144,11 +144,15 @@
   .dashboard-container {
     --mobile-dashboard-nav-height: 72px;
     --mobile-dashboard-header-height: 72px;
+    --mobile-safe-top: env(safe-area-inset-top, 0px);
+    --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
     display: flex;
     flex-direction: column;
     zoom: 1;
     height: 100vh;
+    height: 100dvh;
     max-height: 100vh;
+    max-height: 100dvh;
     overflow: hidden;
   }
 
@@ -187,7 +191,10 @@
       flex-shrink: 0;
       width: 100%;
       z-index: 110;
-      padding: 12px 16px 14px;
+      /* Keep header below iPhone status bar / Dynamic Island */
+      padding: calc(12px + var(--mobile-safe-top)) 16px 14px;
+      padding-left: max(16px, env(safe-area-inset-left, 0px));
+      padding-right: max(16px, env(safe-area-inset-right, 0px));
       background:
         radial-gradient(ellipse 80% 50% at 20% -10%, rgba(255, 107, 44, 0.14) 0%, transparent 55%),
         radial-gradient(ellipse 60% 40% at 90% 10%, rgba(74, 0, 132, 0.16) 0%, transparent 50%),
@@ -205,7 +212,7 @@
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       overscroll-behavior: contain;
-      padding: 12px 16px calc(16px + var(--mobile-dashboard-nav-height) + env(safe-area-inset-bottom, 0px));
+      padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(16px + var(--mobile-dashboard-nav-height) + var(--mobile-safe-bottom)) max(16px, env(safe-area-inset-left, 0px));
       scrollbar-width: thin;
       scrollbar-color: rgba(255, 107, 44, 0.45) rgba(255, 255, 255, 0.06);
 
@@ -252,8 +259,8 @@
     right: 0;
     bottom: 0;
     z-index: 120;
-    height: calc(var(--mobile-dashboard-nav-height) + env(safe-area-inset-bottom, 0px));
-    padding: 0 20px env(safe-area-inset-bottom, 0px);
+    height: calc(var(--mobile-dashboard-nav-height) + var(--mobile-safe-bottom));
+    padding: 0 max(20px, env(safe-area-inset-right, 0px)) var(--mobile-safe-bottom) max(20px, env(safe-area-inset-left, 0px));
     @include dashboard-glass-card;
     border-top: 1px solid rgba(89, 65, 57, 0.35);
     border-left: 0;

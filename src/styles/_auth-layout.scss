@@ -646,13 +646,17 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     max-height: none;
     height: auto;
     min-height: 100vh;
+    min-height: 100dvh;
   }
 
   .login-pane {
     min-height: 100vh;
+    min-height: 100dvh;
     align-items: flex-start;
-    padding-top: 1.5rem;
-    // padding-bottom: 10px !important;
+    padding-top: calc(1.5rem + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    padding-left: max(1.25rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1.25rem, env(safe-area-inset-right, 0px));
   }
 
   .login-card {
@@ -662,7 +666,7 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   }
 
   .login-help-fab {
-    right: 1.25rem;
-    bottom: 1.25rem;
+    right: max(1.25rem, env(safe-area-inset-right, 0px));
+    bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
   }
 }
