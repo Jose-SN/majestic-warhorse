@@ -195,6 +195,124 @@
   }
 }
 
+@media screen and (max-width: 1024px) {
+  :host {
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .enrollment-page {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+
+    &__content {
+      flex: 1;
+      min-height: 0;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 107, 44, 0.45) rgba(255, 255, 255, 0.06);
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 6px;
+        background: rgba(255, 107, 44, 0.45);
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.06);
+      }
+    }
+
+    &__search {
+      min-width: 0;
+      max-width: none;
+      width: 100%;
+    }
+
+    &__header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    &__filter-wrap {
+      width: 100%;
+    }
+
+    &__filter-trigger {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    &__filter-popup {
+      left: 0;
+      right: 0;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .approval-grid-page__header-actions {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .approval-grid-page__stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      width: 100%;
+      gap: 1rem;
+    }
+
+    .approval-grid-page__actions {
+      width: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .approval-grid-page__action-btn,
+    .approval-grid-page__approve-btn {
+      width: 100%;
+      min-width: 0;
+      justify-content: center;
+    }
+
+    .approval-grid-page__list {
+      flex: none;
+      flex-shrink: 0;
+      height: auto;
+      min-height: min-content;
+      overflow: visible;
+    }
+
+    .approval-grid-page__list-row {
+      flex: none;
+      flex-shrink: 0;
+      height: auto;
+      min-height: min-content;
+    }
+  }
+
+  .enrollment-context-bar {
+    flex-shrink: 0;
+  }
+}
+
 .enrollment-context-bar {
   display: flex;
   align-items: center;

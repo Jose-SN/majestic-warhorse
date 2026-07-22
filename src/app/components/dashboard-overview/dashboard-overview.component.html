@@ -227,24 +227,22 @@
           }
         </div>
 
-        <div class="mobile-recommendations-list">
+        <div class="recommendations-stack">
           @for (item of recommendationsDisplay; track item.id; let i = $index) {
-            <article class="mobile-rec-card" [class.is-dimmed]="i > 1">
-              <span class="mobile-rec-card__accent" aria-hidden="true"></span>
-              <div class="mobile-rec-card__content">
-                <div class="mobile-rec-card__icon" [class.mobile-rec-card__icon--secondary]="i % 3 === 1" [class.mobile-rec-card__icon--tertiary]="i % 3 === 2">
-                  <span class="material-symbols-outlined">{{ recIcon(i) }}</span>
-                </div>
-                <div class="mobile-rec-card__body">
-                  <h3>{{ item.title }}</h3>
-                  <p>{{ item.subtitle }}</p>
-                  <div class="mobile-rec-card__meta">
-                    <span class="mobile-rec-card__match">
-                      <span class="material-symbols-outlined">bolt</span>
-                      {{ recMatchPercent(i) }}% Match
-                    </span>
-                    <span class="mobile-rec-card__time">{{ recReadTime(i) }}</span>
-                  </div>
+            <article class="recommendation-card" [style.background]="item.coverStyle">
+              <div class="recommendation-card__overlay">
+                <span class="recommendation-card__badge">
+                  <span class="material-symbols-outlined" aria-hidden="true">bolt</span>
+                  {{ recMatchPercent(i) }}% Match
+                </span>
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.subtitle }}</p>
+                <div class="recommendation-card__meta">
+                  <span>{{ recReadTime(i) }}</span>
+                  <button type="button" class="recommendation-card__cta" aria-label="Open course">
+                    <span>{{ item.ctaLabel || 'Open' }}</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </button>
                 </div>
               </div>
             </article>
@@ -281,6 +279,13 @@
             <p class="panel-state__eyebrow">No data</p>
             <p class="panel-state__message">No subscribed courses found</p>
             <p class="panel-state__hint">Courses you subscribe to will appear here once they are available.</p>
+          </div>
+        } @else if (!subscribedCoursesDisplay.length) {
+          <div class="panel-state panel-state--empty panel-state--subscribed">
+            <span class="panel-state__icon material-symbols-outlined" aria-hidden="true">filter_alt_off</span>
+            <p class="panel-state__eyebrow">No matches</p>
+            <p class="panel-state__message">No {{ activeFilterTab }} courses</p>
+            <p class="panel-state__hint">Try another filter tab to see your subscribed courses.</p>
           </div>
         } @else {
         <div class="subscribed-grid-viewport" #subscribedGridViewport>

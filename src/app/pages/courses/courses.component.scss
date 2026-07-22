@@ -513,6 +513,33 @@
   }
 }
 
+/* Let .common-container own vertical scroll (dashboard shell ≤1024). */
+@media screen and (max-width: 1024px) {
+  :host {
+    display: block;
+    flex: none;
+    height: auto;
+    min-height: min-content;
+    overflow: visible;
+  }
+
+  .dashboard-inner {
+    flex: none;
+    height: auto;
+    min-height: min-content;
+    overflow: visible;
+    padding: 8px 0 24px;
+  }
+
+  .courses-page-body {
+    overflow: visible;
+  }
+
+  .courses-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media screen and (max-width: 767px) {
   .courses-page-header {
     margin-bottom: 32px;

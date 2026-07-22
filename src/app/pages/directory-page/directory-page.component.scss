@@ -62,3 +62,103 @@
     }
   }
 }
+
+@media screen and (max-width: 1024px) {
+  :host {
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .directory-page {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+
+    .approval-grid-page__content {
+      flex: 1;
+      min-height: 0;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 107, 44, 0.45) rgba(255, 255, 255, 0.06);
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 6px;
+        background: rgba(255, 107, 44, 0.45);
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.06);
+      }
+    }
+
+    .approval-grid-page__header-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    .directory-page__tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-column: 1 / -1;
+      width: 100%;
+
+      li {
+        padding: 8px 12px;
+        text-align: center;
+      }
+    }
+
+    .directory-page__panel {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: visible;
+
+      .approval-grid-page__header-actions {
+        display: block;
+        flex-shrink: 0;
+      }
+
+      .approval-grid-page__stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+        gap: 1rem;
+      }
+
+      app-teachers-list,
+      app-students-list {
+        display: block;
+        height: auto;
+        min-height: min-content;
+        flex: none;
+      }
+
+      .approval-grid-page--embedded,
+      .approval-grid-page__content {
+        height: auto;
+        min-height: min-content;
+        overflow: visible;
+      }
+
+      .approval-grid-page__list,
+      .approval-grid-page__list-row {
+        flex-shrink: 0;
+        height: auto;
+        min-height: min-content;
+      }
+    }
+  }
+}

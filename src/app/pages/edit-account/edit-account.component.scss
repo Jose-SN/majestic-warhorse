@@ -28,7 +28,20 @@
 }
 
 @media screen and (max-width: 1024px) {
+  :host {
+    display: block;
+    flex: none;
+    height: auto;
+    min-height: min-content;
+    overflow: visible;
+  }
+
+  .common-container,
   .content-area {
-    overflow-y: auto;
+    display: block;
+    flex: none;
+    height: auto;
+    min-height: min-content;
+    overflow: visible;
   }
 }

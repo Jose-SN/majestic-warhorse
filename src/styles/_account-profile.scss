@@ -36,6 +36,12 @@
     max-width: none;
     margin: 0;
     padding: 0;
+
+    @media (max-width: 1024px) {
+      height: auto;
+      min-height: min-content;
+      overflow: visible;
+    }
   }
 
   &__split-form {
@@ -43,6 +49,14 @@
     flex: 1;
     min-height: 0;
     height: 100%;
+
+    @media (max-width: 1024px) {
+      flex: none;
+      flex-direction: column;
+      height: auto;
+      min-height: min-content;
+      overflow: visible;
+    }
   }
 
   &__ambient {
@@ -88,7 +102,10 @@
 
     @media (max-width: 1024px) {
       flex-direction: column;
-      overflow-y: auto;
+      flex: none;
+      height: auto;
+      min-height: min-content;
+      overflow: visible;
     }
   }
 
@@ -106,8 +123,16 @@
 
     @media (max-width: 1024px) {
       width: 100%;
+      height: auto;
+      min-height: min-content;
+      max-height: none;
+      flex: none;
+      flex-shrink: 0;
+      overflow: visible;
       border-right: none;
       border-bottom: 1px solid rgba(89, 65, 57, 0.2);
+      padding: 1.25rem 1rem;
+      gap: 1.25rem;
     }
   }
 
@@ -244,6 +269,12 @@
     flex-direction: column;
     gap: 1rem;
     width: 100%;
+
+    @media (max-width: 1024px) {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
   }
 
   &__stat-card {
@@ -329,7 +360,12 @@
     // background: var(--mc-surface-dim, #131316);
     background: rgba(31, 31, 34, 0.6);
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
+      flex: none;
+      width: 100%;
+      min-height: 50dvh;
+      height: auto;
+      overflow: visible;
       padding: 1.5rem 1rem 2.5rem;
     }
   }

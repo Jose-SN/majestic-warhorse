@@ -1,14 +1,10 @@
 <div class="search-and-profile">
   <div class="mobile-brand-header">
-    <div class="mobile-brand-header__identity">
-      <figure class="mobile-brand-header__logo">
-        <img src="assets/images/logo-majestic-hourse.svg" alt="Majestic Warhorse" />
-      </figure>
-      <div class="mobile-brand-header__text">
-        <h1>MAKING OF</h1>
-        <p>MAJESTIC WARHORSE</p>
-      </div>
-    </div>
+    <img
+      class="mobile-brand-header__logo"
+      src="assets/images/logo-majestic-hourse.svg"
+      alt="Majestic Warhorse"
+    />
     <button
       type="button"
       class="mobile-brand-header__demo"
@@ -19,10 +15,92 @@
     >
       {{ demoModeService.isDemoLoading ? 'Loading…' : (demoModeService.isDemoMode ? 'Exit Demo' : 'Demo') }}
     </button>
-    <button type="button" class="mobile-brand-header__notify" aria-label="Notifications">
-      <span class="material-symbols-outlined">notifications</span>
-      <span class="mobile-brand-header__notify-dot" aria-hidden="true"></span>
-    </button>
+
+    <div #userMenu class="sidenav-user sidenav-user--mobile-header" [class.is-open]="userMenuOpen">
+      @if (userMenuOpen) {
+        <div class="sidenav-user__popup insight-card hologram-card" role="menu">
+          <div class="hologram-ring hologram-ring--popup">
+            <div class="hologram-ring__glow" aria-hidden="true"></div>
+            <figure class="hologram-figure">
+              <img
+                [src]="profileImageUrl"
+                [alt]="userDisplayName || 'Profile'"
+                [class.is-brand-fallback]="!hasProfileImage"
+              />
+            </figure>
+          </div>
+
+          @if (userDisplayName) {
+            <h3 class="hologram-name">{{ userDisplayName }}</h3>
+          }
+          @if (userRoleLabel) {
+            <span class="hologram-account-type">{{ userRoleLabel }}</span>
+          }
+          @if (userEmail) {
+            <p class="hologram-email">{{ userEmail }}</p>
+          }
+          @if (userPhone) {
+            <p class="hologram-email">{{ userPhone }}</p>
+          }
+          @if (organizationName) {
+            <p class="hologram-label">{{ organizationName }}</p>
+          }
+
+          <div class="sidenav-user__actions">
+            <button
+              type="button"
+              class="hologram-profile-btn"
+              role="menuitem"
+              (click)="goToAccount()"
+            >
+              Account
+            </button>
+            @if (showSwitchOrganization) {
+              <button
+                type="button"
+                class="hologram-profile-btn"
+                role="menuitem"
+                (click)="goToSwitchOrganization()"
+              >
+                Switch Organization
+              </button>
+            }
+          </div>
+
+          <div class="sidenav-user__logout-wrap">
+            <button
+              type="button"
+              class="account-profile__logout"
+              role="menuitem"
+              (click)="logOut()"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">logout</span>
+              Log Out
+            </button>
+          </div>
+        </div>
+      }
+
+      <button
+        type="button"
+        class="sidenav-user__trigger mobile-brand-header__user"
+        [attr.aria-expanded]="userMenuOpen"
+        aria-haspopup="menu"
+        aria-label="Open account menu"
+        (click)="toggleUserMenu($event)"
+      >
+        <div class="hologram-ring hologram-ring--compact">
+          <div class="hologram-ring__glow" aria-hidden="true"></div>
+          <figure class="hologram-figure">
+            <img
+              [src]="profileImageUrl"
+              [alt]="userDisplayName || 'Profile'"
+              [class.is-brand-fallback]="!hasProfileImage"
+            />
+          </figure>
+        </div>
+      </button>
+    </div>
   </div>
 
   @if (isCourseDetailsRoute) {

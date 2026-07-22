@@ -76,10 +76,11 @@ app-under-construction {
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   app-search-profile {
     display: block;
     width: 100%;
+    flex-shrink: 0;
   }
 
   app-dashboard-overview,

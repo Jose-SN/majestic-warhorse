@@ -170,6 +170,16 @@
     padding: 25px;
     background: var(--mc-surface-container-low);
     border: 1px solid rgba(89, 65, 57, 0.2);
+
+    @media screen and (max-width: 1024px) {
+      padding: 16px;
+      gap: 12px;
+      margin-bottom: 16px;
+
+      > .approval-grid-page__stats {
+        width: 100%;
+      }
+    }
   }
   
   &__actions {
@@ -255,6 +265,7 @@
 
   &__list-row {
     position: relative;
+    flex-shrink: 0;
     cursor: pointer;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     transition: background-color 0.2s ease, border-color 0.2s ease;
@@ -422,38 +433,7 @@
 
     .approval-grid-page__list-row--roster {
       cursor: default;
-
-      @media (max-width: 767px) {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-        padding: 1rem 1.25rem;
-
-        .approval-grid-page__list-user {
-          grid-column: 1;
-          grid-row: 1;
-        }
-
-        .approval-grid-page__list-email {
-          grid-column: 1;
-          grid-row: 2;
-        }
-
-        .approval-grid-page__list-node {
-          grid-column: 1;
-          grid-row: 3;
-        }
-
-        .approval-grid-page__list-status {
-          grid-column: 1;
-          grid-row: 4;
-        }
-
-        .approval-grid-page__list-actions {
-          grid-column: 1;
-          grid-row: 5;
-          justify-self: start;
-        }
-      }
+      flex-shrink: 0;
     }
   }
 
@@ -926,6 +906,198 @@
       opacity: 0.45;
       cursor: not-allowed;
       box-shadow: none;
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    &__content {
+      min-height: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 107, 44, 0.45) rgba(255, 255, 255, 0.06);
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 6px;
+        background: rgba(255, 107, 44, 0.45);
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.06);
+      }
+    }
+
+    &--embedded .approval-grid-page__content {
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 107, 44, 0.45) rgba(255, 255, 255, 0.06);
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 6px;
+        background: rgba(255, 107, 44, 0.45);
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.06);
+      }
+    }
+
+    &__stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      width: 100%;
+      min-width: 0;
+      gap: 1rem 1.5rem;
+    }
+
+    &__stat {
+      min-width: 0;
+    }
+
+    &__list {
+      flex: none;
+      flex-shrink: 0;
+      min-height: min-content;
+      height: auto;
+      overflow: visible;
+    }
+
+    &__list-head {
+      display: none;
+    }
+
+    &__list-row {
+      flex: none;
+      flex-shrink: 0;
+      height: auto;
+      min-height: min-content;
+      grid-template-columns: 2.5rem minmax(0, 1fr);
+      gap: 0.375rem 1rem;
+      padding: 1rem 1.25rem;
+      align-content: start;
+    }
+
+    &__list-check {
+      grid-row: 1 / span 4;
+      align-self: start;
+      margin-top: 0.125rem;
+    }
+
+    &__list-user {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    &__list-email {
+      grid-column: 2;
+      grid-row: 2;
+      white-space: normal;
+
+      &::before {
+        content: 'Email: ';
+        color: var(--mc-on-surface-variant);
+      }
+    }
+
+    &__list-node {
+      grid-column: 2;
+      grid-row: 3;
+      white-space: normal;
+
+      &::before {
+        content: 'Node: ';
+        color: var(--mc-on-surface-variant);
+        font-weight: 500;
+      }
+    }
+
+    &__list-status {
+      grid-column: 2;
+      grid-row: 4;
+      white-space: normal;
+
+      &::before {
+        content: 'Status: ';
+        color: var(--mc-on-surface-variant);
+        font-weight: 500;
+      }
+    }
+
+    &__list-action {
+      display: none;
+    }
+
+    &__list--roster {
+      .approval-grid-page__list-row--roster {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+        padding: 1rem 1.25rem;
+        flex: none;
+        flex-shrink: 0;
+        height: auto;
+        min-height: min-content;
+        align-content: start;
+
+        .approval-grid-page__list-user {
+          grid-column: 1;
+          grid-row: 1;
+        }
+
+        .approval-grid-page__list-email {
+          grid-column: 1;
+          grid-row: 2;
+          white-space: normal;
+
+          &::before {
+            content: 'Email: ';
+            color: var(--mc-on-surface-variant);
+          }
+        }
+
+        .approval-grid-page__list-node {
+          grid-column: 1;
+          grid-row: 3;
+          white-space: normal;
+
+          &::before {
+            content: 'Node: ';
+            color: var(--mc-on-surface-variant);
+            font-weight: 500;
+          }
+        }
+
+        .approval-grid-page__list-status {
+          grid-column: 1;
+          grid-row: 4;
+          white-space: normal;
+
+          &::before {
+            content: 'Status: ';
+            color: var(--mc-on-surface-variant);
+            font-weight: 500;
+          }
+        }
+
+        .approval-grid-page__list-actions {
+          grid-column: 1;
+          grid-row: 5;
+          justify-self: start;
+        }
+      }
     }
   }
 }

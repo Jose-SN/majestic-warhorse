@@ -44,48 +44,50 @@
     <div class="cd-layout">
       <!-- Left: video + title + description -->
       <section class="cd-main">
-        <div class="cd-video-block">
-          <span
-            class="cd-video-block__status"
-            [ngClass]="'cd-video-block__status--' + courseStatusLevel.toLowerCase()"
-          >
-            {{ courseStatusLevel }}
-          </span>
-          <img class="cd-video-block__logo" src="../../../assets/images/logo-majestic-hourse.svg" alt="" />
-          <app-video-player
-            [videoUrl]="{ url: activeVideoInfo.fileURL }"
-            (videoDuration)="videoDurationHandler($event)"
-            (videoStatusUpdate)="videoStatusUpdateHandler($event)">
-          </app-video-player>
-        </div>
-
-        <div class="cd-course-header">
-          <div class="cd-course-header__main">
-            <div class="cd-course-header__title-row">
-              <h1>{{ heroTitle }}</h1>
-              <span
-                class="cd-access-badge"
-                [class.is-private]="courseAccess === 'private'"
-              >
-                {{ courseAccess === 'private' ? 'Private' : 'Public' }}
-              </span>
-            </div>
-            @if (heroSubtitle) {
-              <p class="cd-course-header__subtitle">{{ heroSubtitle }}</p>
-            }
+        <div class="cd-hero">
+          <div class="cd-video-block">
+            <span
+              class="cd-video-block__status"
+              [ngClass]="'cd-video-block__status--' + courseStatusLevel.toLowerCase()"
+            >
+              {{ courseStatusLevel }}
+            </span>
+            <img class="cd-video-block__logo" src="../../../assets/images/logo-majestic-hourse.svg" alt="" />
+            <app-video-player
+              [videoUrl]="{ url: activeVideoInfo.fileURL }"
+              (videoDuration)="videoDurationHandler($event)"
+              (videoStatusUpdate)="videoStatusUpdateHandler($event)">
+            </app-video-player>
           </div>
-          <div class="cd-course-header__rating">
-            <span class="cd-course-header__rating-label">Rate course</span>
-            <star-rating
-              class="cd-course-header__stars"
-              [rating]="courseRating"
-              [hoverEnabled]="canRateCourse"
-              [readOnly]="!canRateCourse || ratingSaving"
-              (starClickChange)="onCourseRatingChange($event)"
-            ></star-rating>
-            @if (courseRating > 0) {
-              <span class="cd-course-header__rating-value">{{ courseRating | number: '1.0-1' }}</span>
-            }
+
+          <div class="cd-course-header">
+            <div class="cd-course-header__main">
+              <div class="cd-course-header__title-row">
+                <h1>{{ heroTitle }}</h1>
+                <span
+                  class="cd-access-badge"
+                  [class.is-private]="courseAccess === 'private'"
+                >
+                  {{ courseAccess === 'private' ? 'Private' : 'Public' }}
+                </span>
+              </div>
+              @if (heroSubtitle) {
+                <p class="cd-course-header__subtitle">{{ heroSubtitle }}</p>
+              }
+            </div>
+            <div class="cd-course-header__rating">
+              <span class="cd-course-header__rating-label">Rate course</span>
+              <star-rating
+                class="cd-course-header__stars"
+                [rating]="courseRating"
+                [hoverEnabled]="canRateCourse"
+                [readOnly]="!canRateCourse || ratingSaving"
+                (starClickChange)="onCourseRatingChange($event)"
+              ></star-rating>
+              @if (courseRating > 0) {
+                <span class="cd-course-header__rating-value">{{ courseRating | number: '1.0-1' }}</span>
+              }
+            </div>
           </div>
         </div>
 

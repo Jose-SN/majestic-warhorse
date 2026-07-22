@@ -74,6 +74,11 @@
   padding: 0;
 }
 
+/* Desktop: unwrap so video/header stay in .cd-main grid. Mobile overrides below. */
+.cd-hero {
+  display: contents;
+}
+
 .cd-video-block {
   position: relative;
   min-height: 0;
@@ -871,9 +876,111 @@
   }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1024px) {
+  .course-details-page {
+    height: auto;
+    min-height: min-content;
+    overflow: visible;
+    gap: 12px;
+  }
+
   .cd-layout {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: min-content;
+    overflow: visible;
+    gap: 16px;
+  }
+
+  .cd-main {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    gap: 12px;
+  }
+
+  /* First viewport: video + header ≈ 50% */
+  .cd-hero {
+    display: flex;
+    flex-direction: column;
+    height: 50dvh;
+    min-height: 260px;
+    max-height: 50vh;
+    gap: 10px;
+    overflow: hidden;
+  }
+
+  .cd-video-block {
+    flex: 1;
+    min-height: 0;
+
+    ::ng-deep video {
+      min-height: 0;
+    }
+  }
+
+  .cd-course-header {
+    flex-shrink: 0;
+
+    h1 {
+      font-size: clamp(1.15rem, 5vw, 1.5rem);
+      letter-spacing: 0.04em;
+    }
+
+    &__subtitle {
+      font-size: 0.95rem;
+    }
+
+    &__rating {
+      align-items: flex-start;
+    }
+  }
+
+  .cd-description,
+  .cd-assessment-cta {
+    flex-shrink: 0;
+  }
+
+  /* Then lesson list; attachments follow further down the scroll */
+  .cd-lessons,
+  .cd-sidebar {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .cd-lessons {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cd-instructor {
+    display: none;
+  }
+
+  .cd-lesson-list {
+    overflow: visible;
+    max-height: none;
+  }
+
+  .cd-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .cd-materials,
+  .cd-discussions {
+    overflow: visible;
+  }
+
+  .cd-materials-list,
+  .cd-discussion-list {
+    overflow: visible;
+    max-height: none;
   }
 
   .cd-tabs {
@@ -885,5 +992,17 @@
       text-align: center;
       padding: 8px 12px;
     }
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .cd-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cd-course-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
   }
 }

@@ -11,6 +11,16 @@
   overflow: hidden;
 }
 
+@media screen and (max-width: 1024px) {
+  :host {
+    display: block;
+    flex: none;
+    height: auto;
+    min-height: min-content;
+    overflow: visible;
+  }
+}
+
   .content-area {
     @include flex(flex, null, space-between, null);
     gap: 22px;

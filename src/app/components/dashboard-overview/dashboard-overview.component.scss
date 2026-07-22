@@ -1187,100 +1187,117 @@
   }
 }
 @media screen and (max-width: 1024px) {
+  :host {
+    display: block !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: min-content !important;
+    flex: none !important;
+  }
+
   .content-area {
-   @include flex(flex, column, null, null);
-   .content-left {
-     .courses-wrapper {
-      .course-top {
-        ul {
-          li {
-            @include border-radius(7px);
-            padding: 13px 17px;
+    @include flex(flex, column, null, null);
+    height: auto !important;
+    min-height: min-content !important;
+    overflow: visible !important;
+
+    .content-left {
+      overflow: visible !important;
+      height: auto !important;
+      min-height: min-content !important;
+      flex: none !important;
+
+      .courses-wrapper {
+        .course-top {
+          ul {
+            li {
+              @include border-radius(7px);
+              padding: 13px 17px;
+            }
+          }
+        }
+
+        .scroll-container {
+          height: auto;
+          overflow: visible;
+        }
+
+        .course-card-holder {
+          position: static;
+
+          .course-card {
+            width: 32%;
+
+            .card-content {
+              &:last-child {
+                .loader-holder {
+                  max-width: 100%;
+                }
+              }
+            }
           }
         }
       }
-       .scroll-container {
-         height: 500px;      
-       }
-       .course-card-holder {
-         position: static;
-         .course-card {
-           width: 32%; 
-           .card-content {
-             &:last-child {
-               .loader-holder {
-                 max-width: 100%;
-               }
-             }
-           }      
-         }
-       }
-     }
-   }
-   .content-right.right-insights-panel {
-     display: grid;
-     grid-template-columns: repeat(2, minmax(0, 1fr));
-     grid-template-rows: repeat(3, minmax(0, auto));
-     grid-auto-rows: minmax(0, auto);
-     max-width: 100%;
-     height: auto;
-     max-height: none;
+    }
 
-     .insight-card {
-       min-height: 180px;
-     }
-
-     .analytics-card {
-       grid-column: 1 / -1;
-     }
-   }
+    .content-right.right-insights-panel {
+      display: none !important;
+    }
   }
- }
+}
  
- @media screen and (max-width: 880px) {
-   .content-area {
-     margin-top: 0;
-     @include flex(flex, column, null, null);
-     .content-left {      
-       .courses-wrapper {
-         .scroll-container {
-           height: 500px;
-         }
-         .course-card-holder {
-           position: static;
-           .course-card {
+@media screen and (max-width: 880px) {
+  .content-area {
+    margin-top: 0;
+    @include flex(flex, column, null, null);
+
+    .content-left {
+      .courses-wrapper {
+        .scroll-container {
+          height: auto;
+          overflow: visible;
+        }
+
+        .course-card-holder {
+          position: static;
+
+          .course-card {
             width: 46%;
             max-width: 100%;
-             .card-content {
-               &:last-child {
-                 .loader-holder {
-                   max-width: 100%;
-                 }
-               }
-             }      
-           }
-         }
-       }
-     }
+
+            .card-content {
+              &:last-child {
+                .loader-holder {
+                  max-width: 100%;
+                }
+              }
+            }
+          }
+        }
+      }
     }
- }
- 
- @media screen and (max-width: 640px) {
-   .content-area {
-     margin: 0;
-     @include flex(flex, column, null, null);
-     .content-left {
-       .courses-wrapper {
-         .course-top {
-           h2 {
-             font-size: 1.25rem;
-             margin: 0 auto;
-             display: block;
-           }
-         } 
-         .scroll-container {
-           height: 965px;
-         }
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .content-area {
+    margin: 0;
+    @include flex(flex, column, null, null);
+
+    .content-left {
+      .courses-wrapper {
+        .course-top {
+          h2 {
+            font-size: 1.25rem;
+            margin: 0 auto;
+            display: block;
+          }
+        }
+
+        .scroll-container {
+          height: auto;
+          overflow: visible;
+        }
          .course-card-holder {
            position: static;
            .course-card {

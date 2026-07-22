@@ -142,23 +142,23 @@
 
 @media screen and (max-width: 1024px) {
   .dashboard-container {
-    display: block;
+    --mobile-dashboard-nav-height: 72px;
+    --mobile-dashboard-header-height: 72px;
+    display: flex;
+    flex-direction: column;
     zoom: 1;
     height: 100vh;
     max-height: 100vh;
-
-    .common-container {
-      height: min-content;
-    }
+    overflow: hidden;
   }
 
   .dashboard-left {
     height: 100%;
     padding: 30px 10px;
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
-    z-index: 100;
+    z-index: 130;
     transform: translateX(-100%);
     @include transition(transform, 0.3s ease-in-out);
 
@@ -169,55 +169,76 @@
 
   .dashboard-right {
     @include flex(flex, column, null, null);
+    flex: 1;
+    width: 100%;
+    min-height: 0;
     height: 100%;
+    max-height: 100%;
+    padding: 0;
     overflow: hidden;
-  }
-}
 
-@media screen and (max-width: 768px) {
-  .dashboard-container {
-    --mobile-dashboard-nav-height: 72px;
-
-    .dashboard-left {
-      display: none;
+    app-banner {
+      flex-shrink: 0;
     }
 
-    .dashboard-right {
+    app-search-profile {
+      position: sticky;
+      top: 0;
+      flex-shrink: 0;
       width: 100%;
-      height: 100vh;
-      max-height: 100vh;
-      padding: 0;
-      overflow: hidden;
-      @include flex(flex, column, null, null);
+      z-index: 110;
+      padding: 12px 16px 14px;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(255, 107, 44, 0.14) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(74, 0, 132, 0.16) 0%, transparent 50%),
+        var(--bg-main);
+      border-bottom: 1px solid rgba(89, 65, 57, 0.35);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
 
-      app-search-profile {
-        flex-shrink: 0;
-        width: 100%;
-        z-index: 110;
-        padding: 12px 16px 16px;
-        background:
-          radial-gradient(ellipse 80% 50% at 20% -10%, rgba(255, 107, 44, 0.14) 0%, transparent 55%),
-          radial-gradient(ellipse 60% 40% at 90% 10%, rgba(74, 0, 132, 0.16) 0%, transparent 50%),
-          var(--bg-main);
-        border-bottom: 1px solid rgba(89, 65, 57, 0.35);
+    .common-container {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      height: auto;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      padding: 12px 16px calc(16px + var(--mobile-dashboard-nav-height) + env(safe-area-inset-bottom, 0px));
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 107, 44, 0.45) rgba(255, 255, 255, 0.06);
+
+      &::-webkit-scrollbar {
+        width: 6px;
       }
 
-      .common-container {
-        flex: 1;
-        min-height: 0;
-        height: auto;
-        width: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        padding: 12px 16px calc(16px + var(--mobile-dashboard-nav-height));
+      &::-webkit-scrollbar-thumb {
+        border-radius: 6px;
+        background: rgba(255, 107, 44, 0.45);
+      }
 
-        router-outlet + * {
-          display: block;
-          width: 100%;
-          min-height: min-content;
-          height: auto;
-        }
+      &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      router-outlet + * {
+        display: block;
+        width: 100%;
+        min-height: min-content;
+        height: auto;
+      }
+
+      /* Directory / approval / manage grids scroll inside their content pane */
+      router-outlet + app-directory-page,
+      router-outlet + app-approval-page,
+      router-outlet + app-view-assigned-students,
+      router-outlet + app-view-assigned-teachers {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
       }
     }
   }
@@ -231,15 +252,15 @@
     right: 0;
     bottom: 0;
     z-index: 120;
-    height: 72px;
-    padding: 0 20px;
+    height: calc(var(--mobile-dashboard-nav-height) + env(safe-area-inset-bottom, 0px));
+    padding: 0 20px env(safe-area-inset-bottom, 0px);
     @include dashboard-glass-card;
     border-top: 1px solid rgba(89, 65, 57, 0.35);
     border-left: 0;
     border-right: 0;
     border-bottom: 0;
     backdrop-filter: blur(20px);
-    background: rgba(19, 19, 22, 0.88);
+    background: rgba(19, 19, 22, 0.92);
 
     &__item {
       display: flex;
@@ -299,9 +320,28 @@
   }
 }
 
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 1025px) {
   .dashboard-mobile-nav {
     display: none;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .dashboard-container {
+    .dashboard-left {
+      display: none;
+
+      &.active {
+        display: flex;
+      }
+    }
+
+    .dashboard-right {
+      app-search-profile {
+        position: sticky;
+        top: 0;
+      }
+    }
   }
 }
 
@@ -329,19 +369,10 @@
 
   .dashboard-left {
     max-width: 255px;
-    height: 100%;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 100;
 
     header {
       display: none;
     }
-  }
-
-  .dashboard-container {
-    @include flex(flex, column, null, null);
   }
 
   .dashboard-right {

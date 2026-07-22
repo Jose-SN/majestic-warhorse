@@ -90,7 +90,7 @@ export interface DashboardDemoViewModel {
 }
 
 export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
-  filterTabs: ['All', 'New', 'Pending', 'Completed'],
+  filterTabs: ['All', 'New', 'Progress', 'Completed'],
   statWidgets: [
     {
       id: 'real-time',
@@ -209,6 +209,7 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
       id: 'sub-1',
       title: 'Systems v1.0',
       featured: true,
+      statusLevel: 'Progress',
       coverStyle: 'linear-gradient(135deg, #1a3a5c 0%, #0d1f33 50%, #2d1b4e 100%)',
       filledStars: 4,
       ratingStars: 3,
@@ -221,6 +222,7 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
       id: 'sub-2',
       title: 'Strategic Soundscapes',
       usePlaceholderIcon: true,
+      statusLevel: 'Progress',
       coverStyle: 'linear-gradient(135deg, #4a2a5c 0%, #2a1a44 100%)',
       filledStars: 4,
       ratingStars: 3,
@@ -233,11 +235,12 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
       id: 'sub-3',
       title: 'Data Architecture',
       usePlaceholderIcon: true,
+      statusLevel: 'Completed',
       coverStyle: 'linear-gradient(135deg, #3a5a6b 0%, #1a3444 100%)',
       filledStars: 4,
       ratingStars: 3,
-      progressFraction: '3/35 Progress',
-      completePercent: 85,
+      progressFraction: '35/35 Progress',
+      completePercent: 100,
       ringColor: '#bb7bff',
       nextSessionValue: '1:00',
     },
@@ -245,11 +248,12 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
       id: 'sub-4',
       title: 'Neural Interfacing',
       usePlaceholderIcon: true,
+      statusLevel: 'New',
       coverStyle: 'linear-gradient(135deg, #5a4a3b 0%, #3a2a1b 100%)',
       filledStars: 4,
       ratingStars: 3,
-      progressFraction: '4/8 Progress',
-      completePercent: 10,
+      progressFraction: '0/8 Progress',
+      completePercent: 0,
       ringColor: '#ff6b2c',
       nextSessionValue: '1/10',
     },
@@ -484,7 +488,7 @@ export function createEmptyStatWidgets(): DashboardStatWidget[] {
 
 export function createEmptyDashboardViewModel(): DashboardDemoViewModel {
   return {
-    filterTabs: ['All', 'New', 'Pending', 'Completed'],
+    filterTabs: ['All', 'New', 'Progress', 'Completed'],
     statWidgets: createEmptyStatWidgets(),
     recommendations: [],
     subscribedCourses: [],
