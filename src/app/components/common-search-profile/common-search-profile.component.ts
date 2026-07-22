@@ -8,6 +8,10 @@ import { AuthService } from 'src/app/services/api-service/auth.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { DemoModeService } from 'src/app/shared/services/demo-mode.service';
 import { DASHBOARD_NAV_ROUTES } from 'src/app/pages/dashboard/dashboard-routes.config';
+import {
+  ActivityFeedItem,
+  DASHBOARD_DEMO_DATA,
+} from 'src/app/components/dashboard-overview/data/dashboard-demo.data';
 
 @Component({
   selector: 'app-search-profile',
@@ -22,6 +26,8 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
   public searchText: string = '';
   public isCourseDetailsRoute = false;
   public userMenuOpen = false;
+  public activityFeedOpen = false;
+  public activityFeedItems: ActivityFeedItem[] = [];
   @Output() mobNavchild = new EventEmitter<void>();
   public mobMenu: boolean = false;
   public loginedUserInfo: UserModel = {} as UserModel;
@@ -29,6 +35,7 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   @ViewChild('userMenu') userMenuRef?: ElementRef<HTMLElement>;
+  @ViewChild('notificationMenu') notificationMenuRef?: ElementRef<HTMLElement>;
 
   constructor(
     private authService: AuthService,
@@ -55,6 +62,22 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe((event) => this.updateRouteContext(event.urlAfterRedirects));
+
+    this.commonService
+      .getActivityFeed$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((items) => {
+        this.activityFeedItems = items ?? [];
+      });
+
+    this.demoModeService.demoMode$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isDemo) => {
+        if (isDemo) {
+          this.activityFeedItems = structuredClone(DASHBOARD_DEMO_DATA.insights.activityFeed);
+          this.commonService.setActivityFeed(this.activityFeedItems);
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -121,6 +144,7 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
 
   toggleUserMenu(event: Event): void {
     event.stopPropagation();
+    this.closeActivityFeed();
     this.userMenuOpen = !this.userMenuOpen;
   }
 
@@ -128,15 +152,36 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
     this.userMenuOpen = false;
   }
 
+  toggleActivityFeed(event: Event): void {
+    event.stopPropagation();
+    this.closeUserMenu();
+    this.activityFeedOpen = !this.activityFeedOpen;
+
+    if (this.activityFeedOpen && this.demoModeService.isDemoMode && !this.activityFeedItems.length) {
+      this.activityFeedItems = structuredClone(DASHBOARD_DEMO_DATA.insights.activityFeed);
+    }
+  }
+
+  closeActivityFeed(): void {
+    this.activityFeedOpen = false;
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    if (!this.userMenuOpen) {
-      return;
+    const target = event.target as Node;
+
+    if (this.userMenuOpen) {
+      const menu = this.userMenuRef?.nativeElement;
+      if (menu && !menu.contains(target)) {
+        this.userMenuOpen = false;
+      }
     }
 
-    const menu = this.userMenuRef?.nativeElement;
-    if (menu && !menu.contains(event.target as Node)) {
-      this.userMenuOpen = false;
+    if (this.activityFeedOpen) {
+      const notifications = this.notificationMenuRef?.nativeElement;
+      if (notifications && !notifications.contains(target)) {
+        this.activityFeedOpen = false;
+      }
     }
   }
 

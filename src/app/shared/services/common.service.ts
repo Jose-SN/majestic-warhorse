@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TOASTER_MESSAGE_TYPE } from '../toaster/toaster-info';
 import { IModelInfo } from 'src/app/components/common-dialog/model/popupmodel';
 import { isActiveStatus } from 'src/app/models/user-status.model';
+import { ActivityFeedItem } from 'src/app/components/dashboard-overview/data/dashboard-demo.data';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,7 @@ export class CommonService {
   private openpopupModel$: Subject<any> = new Subject<any>();
   private closePopupModel$: Subject<any> = new Subject<any>();
   private commonSearchText: Subject<string> = new BehaviorSubject('');
+  private activityFeed$ = new BehaviorSubject<ActivityFeedItem[]>([]);
   public onlineStatusChanged = new EventEmitter<boolean>();
   constructor(private toastrService: ToastrService) {
     this.initializeStatus();
@@ -131,5 +133,17 @@ export class CommonService {
   }
   getCommonSearchText(){
     return this.commonSearchText.asObservable();
+  }
+
+  setActivityFeed(items: ActivityFeedItem[]): void {
+    this.activityFeed$.next(Array.isArray(items) ? items : []);
+  }
+
+  getActivityFeed(): ActivityFeedItem[] {
+    return this.activityFeed$.value;
+  }
+
+  getActivityFeed$() {
+    return this.activityFeed$.asObservable();
   }
 }

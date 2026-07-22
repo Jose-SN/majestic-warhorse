@@ -121,7 +121,13 @@
   <div class="search-left">
     <div class="search-holder">
       <div class="input-holder">
-        <input type="text" placeholder="Search for..." [(ngModel)]="searchText" (input)="setInputSearch()" />
+        <input
+          type="text"
+          placeholder="Search courses, AI recommendations…"
+          [(ngModel)]="searchText"
+          (input)="setInputSearch()"
+          aria-label="Search courses"
+        />
         <button type="button" aria-label="Search button"></button>
       </div>
     </div>
@@ -137,10 +143,67 @@
       >
         {{ demoModeService.isDemoLoading ? 'Loading…' : (demoModeService.isDemoMode ? 'Exit Demo' : 'Demo') }}
       </button>
-      <div class="notification-holder">
-        <figure>
-          <img src="../../../assets/images/icon-notification.svg" alt="Notification" />
-        </figure>
+      <div
+        #notificationMenu
+        class="notification-holder"
+        [class.is-open]="activityFeedOpen"
+      >
+        <button
+          type="button"
+          class="notification-holder__trigger"
+          (click)="toggleActivityFeed($event)"
+          [attr.aria-expanded]="activityFeedOpen"
+          aria-haspopup="true"
+          aria-label="Open activity feed"
+        >
+          <figure>
+            <img src="../../../assets/images/icon-notification.svg" alt="" />
+          </figure>
+          @if (activityFeedItems.length) {
+            <span class="notification-holder__badge" aria-hidden="true">{{ activityFeedItems.length }}</span>
+          }
+        </button>
+
+        @if (activityFeedOpen) {
+          <div class="notification-holder__popup" role="dialog" aria-label="Activity Feed">
+            <div class="notification-holder__popup-head">
+              <h3>Activity Feed</h3>
+              <button
+                type="button"
+                class="notification-holder__close"
+                (click)="closeActivityFeed()"
+                aria-label="Close activity feed"
+              >
+                <span class="material-symbols-outlined" aria-hidden="true">close</span>
+              </button>
+            </div>
+
+            @if (!activityFeedItems.length) {
+              <div class="notification-holder__empty">
+                <span class="material-symbols-outlined" aria-hidden="true">timeline</span>
+                <p>No activity found</p>
+                <small>Recent completions and milestones will show up here.</small>
+              </div>
+            } @else {
+              <ul class="notification-holder__feed">
+                @for (item of activityFeedItems; track $index) {
+                  <li class="notification-holder__item">
+                    <span class="notification-holder__icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                    <span class="notification-holder__text">
+                      <strong>{{ item.title }}</strong>
+                      <small>{{ item.subtitle }}</small>
+                    </span>
+                    <span class="notification-holder__dot" aria-hidden="true"></span>
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+        }
       </div>
     </div>
   </div>

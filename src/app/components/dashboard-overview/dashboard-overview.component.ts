@@ -72,6 +72,7 @@ export class DashboardOverviewComponent implements OnDestroy {
   public coursesLoading = false;
   public coursesLoaded = false;
   public coursesContentLoading = false;
+  public searchText = '';
 
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   @ViewChild('futuristicDashboard') futuristicDashboard?: ElementRef<HTMLElement>;
@@ -113,6 +114,15 @@ export class DashboardOverviewComponent implements OnDestroy {
         }
       });
 
+    this.commonService
+      .getCommonSearchText()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((searchText) => {
+        this.searchText = searchText ?? '';
+        this.recommendationIndex = 0;
+        this.carouselOffset = 0;
+      });
+
     if (!this.demoModeService.isDemoMode) {
       this.setCoursesContentLoading(true);
     }
@@ -137,6 +147,7 @@ export class DashboardOverviewComponent implements OnDestroy {
       this.viewModel = structuredClone(DASHBOARD_DEMO_DATA);
       this.recommendationIndex = 0;
       this.carouselOffset = 0;
+      this.commonService.setActivityFeed(this.viewModel.insights.activityFeed ?? []);
       return;
     }
 
@@ -146,7 +157,10 @@ export class DashboardOverviewComponent implements OnDestroy {
   }
 
   get recommendationsDisplay(): RecommendedCourseItem[] {
-    return this.viewModel.recommendations ?? [];
+    const all = this.viewModel.recommendations ?? [];
+    return all.filter((item) =>
+      this.matchesCourseSearch([item.title, item.subtitle, item.ctaLabel, item.id])
+    );
   }
 
   get visibleRecommendations(): RecommendedCourseItem[] {
@@ -155,6 +169,10 @@ export class DashboardOverviewComponent implements OnDestroy {
       return all;
     }
     return all.slice(this.carouselOffset, this.carouselOffset + this.carouselPageSize);
+  }
+
+  get hasActiveCourseSearch(): boolean {
+    return !!this.searchText?.trim();
   }
 
   get canSlideRecommendationsPrev(): boolean {
@@ -183,8 +201,38 @@ export class DashboardOverviewComponent implements OnDestroy {
     this.carouselOffset = Math.min(this.recommendationPageOffset, maxOffset);
   }
 
-  get subscribedCoursesDisplay(): SubscribedCourseItem[] {
+  get allSubscribedCourses(): SubscribedCourseItem[] {
     return this.viewModel.subscribedCourses ?? [];
+  }
+
+  get subscribedCoursesDisplay(): SubscribedCourseItem[] {
+    const all = this.allSubscribedCourses;
+    const active = this.normalizeFilterTab(this.activeFilterTab);
+    const byStatus =
+      !active || active === 'All'
+        ? all
+        : all.filter((course) => this.normalizeFilterTab(this.getSubscribedStatus(course)) === active);
+
+    return byStatus.filter((course) =>
+      this.matchesCourseSearch([
+        course.title,
+        course.authorName,
+        course.statusLevel,
+        course.categoryLabel,
+        course.categoryTitle,
+        course.access,
+        this.getSubscribedAuthor(course),
+        this.getSubscribedStatus(course),
+      ])
+    );
+  }
+
+  private matchesCourseSearch(values: Array<string | undefined | null>): boolean {
+    const term = this.searchText?.trim().toLowerCase() ?? '';
+    if (!term) {
+      return true;
+    }
+    return values.some((value) => (value || '').toLowerCase().includes(term));
   }
 
   get isCoursesContentLoading(): boolean {
@@ -196,7 +244,7 @@ export class DashboardOverviewComponent implements OnDestroy {
       !this.demoModeService.isDemoLoading &&
       !this.demoModeService.isDemoMode &&
       this.coursesLoaded &&
-      !this.recommendationsDisplay.length
+      !(this.viewModel.recommendations ?? []).length
     );
   }
 
@@ -205,7 +253,7 @@ export class DashboardOverviewComponent implements OnDestroy {
       !this.demoModeService.isDemoLoading &&
       !this.demoModeService.isDemoMode &&
       this.coursesLoaded &&
-      !this.subscribedCoursesDisplay.length
+      !this.allSubscribedCourses.length
     );
   }
 
@@ -260,7 +308,7 @@ export class DashboardOverviewComponent implements OnDestroy {
   }
 
   get badgeTitleDisplay(): string {
-    return this.viewModel.insights.badgeTitle?.trim() || 'No badges earned yet';
+    return this.viewModel.insights.badgeTitle?.trim() || 'Beginner badge';
   }
 
   get userEmail(): string {
@@ -413,6 +461,10 @@ export class DashboardOverviewComponent implements OnDestroy {
     this.applyStatWidgetsFromOverview();
 
     if (!this.courseLists.length) {
+      this.viewModel.insights.activityFeed = [];
+      this.commonService.setActivityFeed([]);
+      this.viewModel.insights.badgeTitle = 'Beginner badge';
+      this.viewModel.insights.badgeStars = 1;
       return;
     }
 
@@ -431,11 +483,20 @@ export class DashboardOverviewComponent implements OnDestroy {
 
     const completedCourses = this.courseLists.filter((c) => (c.chapterCompletedCount ?? 0) > 0);
     if (completedCourses.length) {
-      this.viewModel.insights.activityFeed = completedCourses.slice(0, 2).map((c) => ({
+      this.viewModel.insights.activityFeed = completedCourses.slice(0, 5).map((c) => ({
         title: 'Recent course completion',
         subtitle: c.courseTitle || 'Recent course',
       }));
+    } else {
+      this.viewModel.insights.activityFeed = this.courseLists.slice(0, 5).map((c) => ({
+        title: 'Subscribed course',
+        subtitle: c.courseTitle || 'Recent course',
+      }));
     }
+    this.commonService.setActivityFeed(this.viewModel.insights.activityFeed);
+
+    this.viewModel.insights.badgeTitle = 'Beginner badge';
+    this.viewModel.insights.badgeStars = 1;
 
     this.viewModel.insights.dailyGoals = this.courseLists
       .map((course) => {
@@ -480,7 +541,6 @@ export class DashboardOverviewComponent implements OnDestroy {
     const joinsByDate: number[] = Array.isArray(overview.joinsByDate)
       ? overview.joinsByDate.map((value: number) => Math.max(0, Number(value) || 0))
       : Array(9).fill(0);
-    const todayJoins = Math.max(0, Number(overview.todayJoins ?? joinsByDate[joinsByDate.length - 1] ?? 0));
 
     const subscribedFromCourses = this.courseLists.length;
     const completedFromCourses = this.courseLists.filter((course) => {
@@ -506,11 +566,18 @@ export class DashboardOverviewComponent implements OnDestroy {
     const newSubRate =
       totalStudents > 0 ? Math.min(100, Math.round((newSubscriptions / totalStudents) * 100)) : 0;
 
+    // Bar chart: subscribed courses by creation_date (last 9 days)
+    const coursesByDate = this.buildCountsByCreationDate(
+      this.courseLists.map((course) => course.creation_date),
+      9
+    );
+    const todayCourseCreates = coursesByDate[coursesByDate.length - 1] ?? 0;
+
     const realTime = widgets.find((widget) => widget.id === 'real-time');
     if (realTime) {
-      const peak = Math.max(...joinsByDate, 1);
-      realTime.bars = joinsByDate.map((count) => Math.round((count / peak) * 100));
-      realTime.headerRight = `${todayJoins} today`;
+      const peak = Math.max(...coursesByDate, 1);
+      realTime.bars = coursesByDate.map((count) => Math.round((count / peak) * 100));
+      realTime.headerRight = `${todayCourseCreates} today`;
       realTime.headerRightAccent = true;
     }
 
@@ -563,6 +630,33 @@ export class DashboardOverviewComponent implements OnDestroy {
     }
 
     this.viewModel.statWidgets = widgets;
+  }
+
+  /** Daily counts for the last `dayCount` calendar days (oldest → newest). */
+  private buildCountsByCreationDate(
+    dates: Array<Date | string | undefined | null>,
+    dayCount = 9
+  ): number[] {
+    const counts = Array.from({ length: dayCount }, () => 0);
+    const today = new Date();
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+    dates.forEach((raw) => {
+      if (raw == null || raw === '') {
+        return;
+      }
+      const parsed = new Date(raw);
+      if (Number.isNaN(parsed.getTime())) {
+        return;
+      }
+      const dayStart = new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
+      const diffDays = Math.round((todayStart.getTime() - dayStart.getTime()) / 86_400_000);
+      if (diffDays >= 0 && diffDays < dayCount) {
+        counts[dayCount - 1 - diffDays] += 1;
+      }
+    });
+
+    return counts;
   }
 
   private mapCourseToSubscribedItemLive(course: ICourseList, index: number): SubscribedCourseItem {
@@ -764,8 +858,20 @@ export class DashboardOverviewComponent implements OnDestroy {
     this.refreshTime = this.datePipe.transform(currentDate, 'MMMM dd, yyyy hh:mm a') ?? '';
   }
 
-  setActiveFilterTab(filter: string) {
+  setActiveFilterTab(filter: string): void {
     this.activeFilterTab = filter;
+  }
+
+  /** Align tab labels with course status (Pending → Progress). */
+  private normalizeFilterTab(value: string | undefined | null): string {
+    const tab = (value || '').trim();
+    if (!tab) {
+      return 'All';
+    }
+    if (tab.toLowerCase() === 'pending') {
+      return 'Progress';
+    }
+    return tab;
   }
 
   trackByIndex(index: number): number {

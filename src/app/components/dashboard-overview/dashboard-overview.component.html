@@ -197,6 +197,13 @@
             <p class="panel-state__message">No AI recommendations found</p>
             <p class="panel-state__hint">Recommendations will appear when courses are available for your account.</p>
           </div>
+        } @else if (!recommendationsDisplay.length) {
+          <div class="panel-state panel-state--empty">
+            <span class="panel-state__icon material-symbols-outlined" aria-hidden="true">search_off</span>
+            <p class="panel-state__eyebrow">No matches</p>
+            <p class="panel-state__message">No matching AI recommendations</p>
+            <p class="panel-state__hint">Try a different search term to find recommended courses.</p>
+          </div>
         } @else {
         <div class="recommendations-carousel">
           <button type="button" class="carousel-nav prev" (click)="slideRecommendations(-1)" [disabled]="!canSlideRecommendationsPrev" aria-label="Previous">
@@ -282,10 +289,22 @@
           </div>
         } @else if (!subscribedCoursesDisplay.length) {
           <div class="panel-state panel-state--empty panel-state--subscribed">
-            <span class="panel-state__icon material-symbols-outlined" aria-hidden="true">filter_alt_off</span>
+            <span class="panel-state__icon material-symbols-outlined" aria-hidden="true">{{ hasActiveCourseSearch ? 'search_off' : 'filter_alt_off' }}</span>
             <p class="panel-state__eyebrow">No matches</p>
-            <p class="panel-state__message">No {{ activeFilterTab }} courses</p>
-            <p class="panel-state__hint">Try another filter tab to see your subscribed courses.</p>
+            <p class="panel-state__message">
+              @if (hasActiveCourseSearch) {
+                No subscribed courses match “{{ searchText.trim() }}”
+              } @else {
+                No {{ activeFilterTab }} courses
+              }
+            </p>
+            <p class="panel-state__hint">
+              @if (hasActiveCourseSearch) {
+                Try adjusting your search or clear the search field.
+              } @else {
+                Try another filter tab to see your subscribed courses.
+              }
+            </p>
           </div>
         } @else {
         <div class="subscribed-grid-viewport" #subscribedGridViewport>
