@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Member Directory | Syncra</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>body {
+    background-color: #010103;
+    color: #e4e1e9;
+    font-family: "Hanken Grotesk", sans-serif;
+    overflow-x: hidden
+    }
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+.glow-magenta {
+    box-shadow: 0 0 16px rgba(212, 0, 168, 0.35)
+    }
+.gradient-stroke {
+    position: relative;
+    background: #130821;
+    background-clip: padding-box;
+    border: 2px solid transparent
+    }
+.gradient-stroke::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    bottom: -2px;
+    left: -2px;
+    right: -2px;
+    background: linear-gradient(180deg, #6B1789 0%, #4F1563 50%, #652010 100%);
+    border-radius: inherit;
+    z-index: -1
+    }
+.grainy-overlay {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuDz235oj6AsFsS5Ai8euH_l_NsgE-xOUSdm4dTGZemlJYNNybsf1FFNlGq4DvBG70Q0NlvEAxnq1DIy0a3L1GNZzMaPzOGHYKwrfDFb6I_uJ-mmYJgP5aE19y5VrUSix-1E9XgnuGV-VbE-LnManjv9_WzBSbq1l-KtJ0cbL8kRlb8CB_5-XndnQJozDeGly0dHh6rHKFXPRX-XPePh4Iqtn-tPLCjE_4AdLCxjQ4fUNckk55L9eQ_f);
+    filter: contrast(150%) brightness(100%);
+    opacity: 0.05;
+    pointer-events: none
+    }
+.hero-blur {
+    filter: blur(120px);
+    background: linear-gradient(135deg, #CA6BEF 0%, #D400A8 50%, #FD4B36 100%)
+    }
+.no-scrollbar::-webkit-scrollbar {
+    display: none
+    }</style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-pill": "#1A0024",
+                        "background": "#131319",
+                        "tertiary-fixed": "#ffdad4",
+                        "outline": "#a58998",
+                        "on-secondary-container": "#e69dff",
+                        "on-surface-variant": "#ddbece",
+                        "surface": "#131319",
+                        "secondary-container": "#770f9d",
+                        "inverse-on-surface": "#303036",
+                        "outline-variant": "#57404d",
+                        "on-primary-container": "#fff6f8",
+                        "surface-container": "#1f1f25",
+                        "on-tertiary-fixed": "#410100",
+                        "border-grad-bottom": "#652010",
+                        "surface-tint": "#ffaede",
+                        "surface-container-highest": "#35343a",
+                        "on-tertiary": "#680200",
+                        "on-primary-fixed": "#3b002d",
+                        "surface-variant": "#35343a",
+                        "error": "#ffb4ab",
+                        "accent-violet": "#8322A9",
+                        "accent-magenta": "#D400A8",
+                        "primary-fixed-dim": "#ffaede",
+                        "surface-dim": "#131319",
+                        "secondary": "#edb1ff",
+                        "surface-card-top": "#140A12",
+                        "on-secondary-fixed": "#320046",
+                        "on-surface": "#e4e1e9",
+                        "tertiary": "#ffb4a8",
+                        "secondary-fixed": "#f9d8ff",
+                        "accent-crimson": "#FD4B36",
+                        "on-background": "#e4e1e9",
+                        "on-tertiary-container": "#fff7f5",
+                        "tertiary-container": "#d8301f",
+                        "surface-card-bottom": "#0A0508",
+                        "primary-fixed": "#ffd8ec",
+                        "surface-bright": "#39383f",
+                        "on-primary-fixed-variant": "#87006a",
+                        "secondary-fixed-dim": "#edb1ff",
+                        "accent-purple": "#600084",
+                        "on-secondary": "#530070",
+                        "on-primary": "#60004b",
+                        "border-hairline": "#383838",
+                        "primary": "#ffaede",
+                        "on-secondary-fixed-variant": "#74099a",
+                        "tertiary-fixed-dim": "#ffb4a8",
+                        "surface-cta": "#130821",
+                        "on-tertiary-fixed-variant": "#930300",
+                        "error-container": "#93000a",
+                        "surface-container-high": "#2a2930",
+                        "primary-container": "#d400a8",
+                        "border-grad-top": "#6B1789",
+                        "canvas": "#010103",
+                        "inverse-primary": "#b1008c",
+                        "surface-container-lowest": "#0e0e13",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#1b1b21",
+                        "on-error": "#690005",
+                        "inverse-surface": "#e4e1e9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-xl": "48px",
+                        "stack-sm": "8px",
+                        "stack-md": "24px",
+                        "stack-lg": "40px",
+                        "safe-margin": "24px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Hanken Grotesk"],
+                        "pill-label": ["Hanken Grotesk"],
+                        "card-label": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "cta-label": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["30px", {"lineHeight": "36px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                        "pill-label": ["14px", {"lineHeight": "14px", "fontWeight": "400"}],
+                        "card-label": ["16px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-md": ["15px", {"lineHeight": "22.5px", "fontWeight": "400"}],
+                        "cta-label": ["15px", {"lineHeight": "15px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-canvas text-on-surface">
+<!-- Global Background Elements -->
+<div class="fixed inset-0 grainy-overlay pointer-events-none"></div>
+<div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] hero-blur opacity-20 pointer-events-none rounded-full"></div>
+<!-- Side Navigation Bar -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-border-hairline bg-canvas flex flex-col py-stack-md z-50">
+<div class="px-6 mb-10">
+<h1 class="font-display-lg text-display-lg font-light text-on-surface tracking-tight">Syncra</h1>
+<p class="text-xs text-on-surface-variant tracking-widest uppercase opacity-60">AI Learning Platform</p>
+</div>
+<nav class="flex-1 space-y-2 px-2">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-pill-label text-pill-label">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-pill-label text-pill-label">Courses</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-pill-label text-pill-label">Assignments</span>
+</a>
+<a class="flex items-center gap-3 bg-surface-pill text-on-primary border-r-2 border-accent-magenta px-4 py-3 shadow-[0_0_16px_rgba(212,0,168,0.35)]" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-pill-label text-pill-label">Mentors</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-pill-label text-pill-label">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<div class="p-4 bg-surface-container rounded-xl border border-border-hairline">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border border-accent-magenta overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a young female professional with glowing neon pink and blue light reflections on her face, cinematic high-contrast lighting, 8k resolution, minimalist black background, sophisticated and futuristic vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVkihFsp3_ItZoDqkENxdfprHfTFE54wiqWT_nZcHTtpD5zbM7xXIwQnJTHoEhPnbLll82ljelxVLOSSdD8M3bhLf4_kdL1VOqkG7YQx4DCu_NrgJm7Xqpc0gDOV7IkskRynp6JoXyxqvKRFUSggNV6zbWXH7K2dBhRxpUxtAeLm_CiLyd0u8If5A2Cpx8IhML6In_X_BMsehTr9-1qSMuV3XzlIf1chpihYlN-G_uTeq6fRyBLwdJ"/>
+</div>
+<div>
+<p class="text-sm font-bold">Alex Chen</p>
+<p class="text-[10px] text-accent-magenta font-bold">PRO MEMBER</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen relative">
+<!-- Top App Bar -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-canvas/80 backdrop-blur-md border-b border-border-hairline flex justify-between items-center px-safe-margin z-40">
+<h2 class="font-display-lg text-display-lg text-on-surface font-bold">Member Directory</h2>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-lg">search</span>
+<input class="bg-surface-container border border-border-hairline rounded-full py-2 pl-10 pr-4 text-body-md focus:outline-none focus:border-accent-magenta w-64 transition-all duration-300" placeholder="Search students..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-opacity cursor-pointer active:opacity-70">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-opacity cursor-pointer active:opacity-70">settings_input_component</button>
+</div>
+</div>
+</header>
+<!-- Hero Canvas Area -->
+<div class="pt-24 px-safe-margin pb-stack-xl">
+<!-- Animated Hero Artwork Placeholder -->
+<div class="relative h-48 w-full mb-stack-lg rounded-3xl overflow-hidden flex items-center justify-center">
+
+<div class="relative z-10 text-center">
+<h3 class="font-display-lg text-4xl mb-2">Connect with the future</h3>
+<p class="text-on-surface-variant font-body-md opacity-80 max-w-lg mx-auto">Discover top-tier students and mentors across the Syncra AI Learning ecosystem.</p>
+</div>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-stack-sm mb-stack-md overflow-x-auto no-scrollbar pb-2">
+<button class="gradient-stroke glow-magenta px-6 py-2 rounded-full font-pill-label text-pill-label flex items-center gap-2 scale-100 active:scale-95 transition-all">
+                    All Members
+                </button>
+<button class="bg-surface-container border border-border-hairline px-6 py-2 rounded-full font-pill-label text-pill-label hover:bg-surface-variant transition-colors">
+                    AI Ethics
+                </button>
+<button class="bg-surface-container border border-border-hairline px-6 py-2 rounded-full font-pill-label text-pill-label hover:bg-surface-variant transition-colors">
+                    Neural Networks
+                </button>
+<button class="bg-surface-container border border-border-hairline px-6 py-2 rounded-full font-pill-label text-pill-label hover:bg-surface-variant transition-colors">
+                    Data Science
+                </button>
+<button class="bg-surface-container border border-border-hairline px-6 py-2 rounded-full font-pill-label text-pill-label hover:bg-surface-variant transition-colors">
+                    UI Designers
+                </button>
+</div>
+<!-- Member Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-gutter">
+<!-- Profile Card 1 -->
+<div class="group bg-gradient-to-b from-[#140A12] to-[#0A0508] border border-border-hairline rounded-2xl p-6 transition-all duration-300 hover:border-accent-magenta/50">
+<div class="relative w-20 h-20 mx-auto mb-4">
+<div class="absolute inset-0 rounded-full bg-gradient-to-tr from-accent-magenta to-accent-violet animate-pulse opacity-40 blur-md"></div>
+<div class="relative w-full h-full rounded-full border-2 border-accent-magenta overflow-hidden bg-canvas">
+<img class="w-full h-full object-cover" data-alt="A portrait of a creative male student, stylish glasses, wearing a dark futuristic techwear jacket. The lighting is cinematic with vibrant pink and blue neon rims, deep black background, ultra-realistic texture, 8k digital art style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfCThfJZumVS__vWe90iserOpPN6b3Wp3dlXUl7cVnaqBHWxOT4tPYr1nkykcemEba-aRftR_q53fAv_L3nc5Wu8FDkX5X4B7QV0G87PoD8O84s13n5fR7RhhFxR_ts0gGgDGZMInIPesE-38SD-4_jOPobUFhb2nuTS8T4YWPBvmsfSLym-K7ymLy8AanG48_I36lPcmC1z1i1B-pSlJMMYyDRrYVNebqFu2WmfpvOY0gDNE6Fh2-"/>
+</div>
+</div>
+<div class="text-center mb-6">
+<h4 class="font-card-label text-card-label font-bold mb-1">Jordan Miller</h4>
+<p class="text-xs text-on-surface-variant">Advanced Neural Architectures</p>
+</div>
+<div class="flex flex-col gap-2">
+<button class="w-full py-2 bg-surface-container border border-border-hairline rounded-lg font-pill-label text-pill-label hover:bg-surface-variant transition-colors">
+                            View Profile
+                        </button>
+<button class="w-full gradient-stroke glow-magenta py-2 rounded-lg font-cta-label text-cta-label active:scale-95 transition-all">
+                            Connect
+                        </button>
+</div>
+</div>
+<!-- Profile Card 2 -->
+<div class="group bg-gradient-to-b from-[#140A12] to-[#0A0508] border border-border-hairline rounded-2xl p-6 transition-all duration-300 hover:border-accent-magenta/50">
+<div class="relative w-20 h-20 mx-auto mb-4">
+<div class="absolute inset-0 rounded-full bg-gradient-to-tr from-accent-magenta to-accent-violet animate-pulse opacity-20 blur-md"></div>
+<div class="relative w-full h-full rounded-full border-2 border-accent-crimson overflow-hidden bg-canvas">
+<img class="w-full h-full object-cover" data-alt="A portrait of a young woman with short futuristic dyed hair, glowing teal and magenta neon lighting, wearing a minimalist black turtleneck. High-end aesthetic, glossy skin, sharp focus, nocturnal cinematic feel, minimalist pure black background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsKkO-2PRioxL6PXWWlg5RHE4J4TNsr-5qe3kO9Qpmoat06vh20LoTuqRf9sf7U32TxEAoYqbmms4tZy5x3ZGIppL30Bckkc9Pmsi5folmkgHa5X6GR35CypJolx5ISBrv3CABPSL9NUZDLTWTNu-nWC1eNQSxVZRbIkGPb248hFfXlGNWTA3rKgj1lzNR118fgIG7-LwxMDErElBvGaDGB5THfsQCdF-XAPBdWJT2vQZHNNQgdXPG"/>
+</div>
+</div>
+<div class="text-center mb-6">
+<h4 class="font-card-label text-card-label font-bold mb-1">Sophia Vane</h4>
+<p class="text-xs text-on-surface-variant">Generative Art &amp; UX</p>
+</div>
+<div class="flex flex-col gap-2">
+<button class="w-full py-2 bg-surface-container border border-border-hairline rounded-lg font-pill-label text-pill-label hover:bg-surface-variant transition-colors">
+                            View Profile
+                        </button>
+<button class="w-full gradient-stroke glow-magenta py-2 rounded-lg font-cta-label text-cta-label active:scale-95 transition-all">
+                            Connect
+                        </button>
+</div>
+</div>
+<!-- Profile Card 3 -->
+<div class="group bg-gradient-to-b from-[#140A12] to-[#0A0508] border border-border-hairline rounded-2xl p-6 transition-all duration-300 hover:border-accent-magenta/50">
+<div class="relative w-20 h-20 mx-auto mb-4">
+<div class="absolute inset-0 rounded-full bg-gradient-to-tr from-accent-violet to-accent-crimson animate-pulse opacity-30 blur-md"></div>
+<div class="relative w-full h-full rounded-full border-2 border-accent-violet overflow-hidden bg-canvas">
+<img class="w-full h-full object-cover" data-alt="Close up of a person with cybernetic inspired face markings that glow faintly in blue. Dramatic side lighting from a neon pink source, deep black shadows, cinematic movie still, high fashion, sophisticated futuristic look, 8k." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQWPacNRBPDhW6S8RQWRb-ivs1X5yXaqqO2cgdAOSyWCCRmRlanDxAzHOsyrSl6DjD-vSGRQwZypeWGfEwJtWJCRMlFBMeErjkqekY0h6Qi1TrlsMvQSpXNCV31VKeiVcKGlhvJaiubmL9rDJZNVonHDVyH2P79G74kEoAbPSIC07N2r8IAINttfMipkuM-AY5exLlpmS2EKUeZb8EYtBULhDIBJpeQxRhgNOgACKJ4VCSopPsO_Hg"/>
+</div>
+</div>
+<div class="text-center mb-6">
+<h4 class="font-card-label text-card-label font-bold mb-1">Liam Koda</h4>
+<p class="text-xs text-on-surface-variant">AI Ethics &amp; Policy</p>
+</div>
+<div class="flex flex-col gap-2">
+<button class="w-full py-2 bg-surface-container border border-border-hairline rounded-lg font-pill-label text-pill-label hover:bg-surface-variant transition-colors">
+                            View Profile
+                        </button>
+<button class="w-full gradient-stroke glow-magenta py-2 rounded-lg font-cta-label text-cta-label active:scale-95 transition-all">
+                            Connect
+                        </button>
+</div>
+</div>
+<!-- Profile Card 4 -->
+<div class="group bg-gradient-to-b from-[#140A12] to-[#0A0508] border border-border-hairline rounded-2xl p-6 transition-all duration-300 hover:border-accent-magenta/50">
+<div class="relative w-20 h-20 mx-auto mb-4">
+<div class="absolute inset-0 rounded-full bg-gradient-to-tr from-accent-crimson to-accent-magenta animate-pulse opacity-40 blur-md"></div>
+<div class="relative w-full h-full rounded-full border-2 border-accent-crimson overflow-hidden bg-canvas">
+<img class="w-full h-full object-cover" data-alt="Portrait of a diverse student with a confident expression, wearing high-tech headphones. Glowing red and violet neon highlights on the edges of the hair and face. Dark nocturnal background with subtle grainy film texture, sophisticated digital lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4iJff5FBoAc6m4--2_jzcsAemOm8LbqNq7wHez8STwWBaTd8HFJXdTYPihUW46ibvm6CfThzN08s8M-kK1GcwrUO_2kUVK4d8bhUQFq2o7TXPPh7I91dv7ZmVk2ks8hVUdTgDZU_Q3egSY-Zuad-T-LlVAbn20WJkGneT-QZ2GaxJsOs6IqMRfgD5WL_pBezsDvDmWW4w4XQ39FHKJ4cPNMZWd0-SiHghOIM0S6Z2eiMcqrKwvRcI"/>
+</div>
+</div>
+<div class="text-center mb-6">
+<h4 class="font-card-label text-card-label font-bold mb-1">Aria Stark</h4>
+<p class="text-xs text-on-surface-variant">Robotics Engineering</p>
+</div>
+<div class="flex flex-col gap-2">
+<button class="w-full py-2 bg-surface-container border border-border-hairline rounded-lg font-pill-label text-pill-label hover:bg-surface-variant transition-colors">
+                            View Profile
+                        </button>
+<button class="w-full gradient-stroke glow-magenta py-2 rounded-lg font-cta-label text-cta-label active:scale-95 transition-all">
+                            Connect
+                        </button>
+</div>
+</div>
+<!-- Repeat Profile Card (Simulated) -->
+<div class="group bg-gradient-to-b from-[#140A12] to-[#0A0508] border border-border-hairline rounded-2xl p-6 transition-all duration-300 hover:border-accent-magenta/50">
+<div class="relative w-20 h-20 mx-auto mb-4">
+<div class="absolute inset-0 rounded-full bg-gradient-to-tr from-accent-magenta to-accent-violet animate-pulse opacity-40 blur-md"></div>
+<div class="relative w-full h-full rounded-full border-2 border-accent-magenta overflow-hidden bg-canvas">
+<img class="w-full h-full object-cover" data-alt="Portrait of a young tech innovator, intense focus, dramatic lighting with soft magenta glow from one side and cold blue from the other. Cinematic high-contrast, black studio background, minimalist and premium style, grainy texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDX9Vil8_LEBRnAjWev7LrbDrr03mtHRa8PBNZZx5vDDMOq4PoCxmhdz_LR3FqZhdHx7Sd1zx8omBJRjhA7JgC4Y3-TL0x9QVANMnm2oE-jsq4rO2kepPu9KVJQfUcEVyvYRuP9i0K-yGXWabuOfz62yEIUzwhsDCIoXFE_JAH5F8KGPLoC3G9vhcc1_9F5_2WiTxEW0byv2FX6wVVSqlY29RF0W8aLCSwoYuRiIpw5eYeSecro3tMo"/>
+</div>
+</div>
+<div class="text-center mb-6">
+<h4 class="font-card-label text-card-label font-bold mb-1">Marcus Thorne</h4>
+<p class="text-xs text-on-surface-variant">Data Visualisation</p>
+</div>
+<div class="flex flex-col gap-2">
+<button class="w-full py-2 bg-surface-container border border-border-hairline rounded-lg font-pill-label text-pill-label hover:bg-surface-variant transition-colors">
+                            View Profile
+                        </button>
+<button class="w-full gradient-stroke glow-magenta py-2 rounded-lg font-cta-label text-cta-label active:scale-95 transition-all">
+                            Connect
+                        </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Action Button Contextual -->
+<button class="fixed bottom-10 right-10 gradient-stroke glow-magenta w-16 h-16 rounded-full flex items-center justify-center group active:scale-90 transition-all z-50">
+<span class="material-symbols-outlined text-3xl">add</span>
+<div class="absolute right-full mr-4 bg-surface-pill px-4 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-border-hairline">
+<span class="text-pill-label font-pill-label">New Discussion</span>
+</div>
+</button>
+</main>
+<script>
+        // Micro-interaction for cards
+        document.querySelectorAll('.group').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // Simple tab active logic
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                navLinks.forEach(l => {
+                    l.className = 'flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-variant transition-colors duration-200';
+                });
+                link.className = 'flex items-center gap-3 bg-surface-pill text-on-primary border-r-2 border-accent-magenta px-4 py-3 shadow-[0_0_16px_rgba(212,0,168,0.35)]';
+            });
+        });
+    </script>
+</body></html>
