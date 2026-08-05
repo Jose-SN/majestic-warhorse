@@ -11,6 +11,9 @@
     "prettier": "prettier --write \"src/**/*.{ts,js,json,css,scss,html}\""
   },
   "private": true,
+  "engines": {
+    "node": ">=20 <23"
+  },
   "dependencies": {
     "@angular/animations": "^18.0.0",
     "@angular/cdk": "^18.2.14",
@@ -36,7 +39,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.6",
     "@angular-eslint/schematics": "^18.4.0",
-    "@angular/cli": "~17.3.8",
+    "@angular/cli": "^18.2.21",
     "@angular/compiler-cli": "^18.0.0",
     "@types/jasmine": "~4.3.0",
     "jasmine-core": "~4.6.0",
