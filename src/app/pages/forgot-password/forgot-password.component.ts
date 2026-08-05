@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,9 +9,11 @@ import {
 import { Router } from '@angular/router';
 import { FormValidators } from 'src/app/shared/form-validators';
 import { ForgotPasswordService } from './forgot-password.service';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
+import { BrandingService } from 'src/app/core/branding/branding.service';
+import { AppBranding } from 'src/app/core/branding/branding.model';
 
 @Component({
   selector: 'app-forgot-password',
@@ -20,7 +22,7 @@ import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
 })
-export class ForgotPasswordComponent implements OnDestroy {
+export class ForgotPasswordComponent implements OnInit, OnDestroy {
   public isFieldInvalid: (arg1: FormGroup, arg2: string) => boolean | undefined;
   public getPasswordError: (arg1: FormGroup, arg2: string) => boolean;
   public isPasswordMismatch: (arg1: FormGroup, arg2: string, arg3: string) => boolean | null;
@@ -31,12 +33,16 @@ export class ForgotPasswordComponent implements OnDestroy {
   public showOtpSection: boolean = false;
   public heroTransform = 'scale(1.05)';
   private selectedAccountType: string = 'user';
+  public brandLogo = '';
+  public appName = '';
+  public tagline = '';
 
   constructor(
     private formGroup: FormBuilder,
     private router: Router,
     private forgotPasswordService: ForgotPasswordService,
     private commonService: CommonService,
+    private brandingService: BrandingService,
   ) {
     this.resetPasswordForm = this.formGroup.group({
       accountType: ['user', [Validators.required]],
@@ -56,6 +62,17 @@ export class ForgotPasswordComponent implements OnDestroy {
     this.isFieldInvalid = this.formValidator.isFieldInvalid;
     this.getPasswordError = this.formValidator.getPasswordError;
     this.isPasswordMismatch = this.formValidator.isPasswordMismatch;
+  }
+
+  ngOnInit(): void {
+    this.brandingService.branding$.pipe(takeUntil(this.destroy$)).subscribe((b) => this.applyBrand(b));
+    this.applyBrand(this.brandingService.branding);
+  }
+
+  private applyBrand(branding: AppBranding): void {
+    this.brandLogo = branding.logoUrl;
+    this.appName = branding.appName;
+    this.tagline = branding.tagline;
   }
 
   onSubmit() {

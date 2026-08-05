@@ -17,6 +17,8 @@ import { CommonModule } from '@angular/common';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
 import { decodeText } from 'src/app/shared/utils/utils';
+import { BrandingService } from 'src/app/core/branding/branding.service';
+import { AppBranding } from 'src/app/core/branding/branding.model';
 import { OAuthService } from 'src/app/core/auth/oauth.service';
 
 @Component({
@@ -51,6 +53,9 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   public showConfirmPassword: boolean = false;
   public isGoogleLoading: boolean = false;
   public organizationsList: Organization[] = [];
+  public brandLogo = '';
+  public appName = '';
+  public tagline = '';
   @ViewChild('profileImageInput') profileImageInput!: ElementRef<HTMLInputElement>;
 
   constructor(
@@ -59,7 +64,8 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     private commonService: CommonService,
     public registrationService: RegistrationPageService,
     private organizationApiService: OrganizationApiService,
-    private oauthService: OAuthService
+    private oauthService: OAuthService,
+    private brandingService: BrandingService
   ) {
     this.createAccountForm = this.formBuilder.group(
       {
@@ -92,6 +98,8 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
+    this.brandingService.branding$.pipe(takeUntil(this.destroy$)).subscribe((b) => this.applyBrand(b));
+    this.applyBrand(this.brandingService.branding);
     this.loadOrganizations();
     this.setupRoleValidators();
 
@@ -264,6 +272,12 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
 
   navigateLogin() {
     this.router.navigate(['/login']);
+  }
+
+  private applyBrand(branding: AppBranding): void {
+    this.brandLogo = branding.logoUrl;
+    this.appName = branding.appName;
+    this.tagline = branding.tagline;
   }
 
   ngOnDestroy(): void {

@@ -9,10 +9,12 @@ import {
 } from '@angular/forms';
 import { LoginService } from './login.service';
 import { AuthService } from 'src/app/services/api-service/auth.service';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { OAuthService } from 'src/app/core/auth/oauth.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
+import { BrandingService } from 'src/app/core/branding/branding.service';
+import { AppBranding } from 'src/app/core/branding/branding.model';
 
 @Component({
   selector: 'app-login-page',
@@ -25,6 +27,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   public loginForm!: FormGroup;
   public isGoogleLoading = false;
   public heroTransform = 'scale(1.05)';
+  public brandLogo = '';
+  public appName = '';
+  public tagline = '';
   private destroy$ = new Subject<void>();
   constructor(
     private formBuilder: FormBuilder,
@@ -32,9 +37,13 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private authService: AuthService,
     private oauthService: OAuthService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private brandingService: BrandingService
   ) {}
   ngOnInit(): void {
+    this.brandingService.branding$.pipe(takeUntil(this.destroy$)).subscribe((b) => this.applyBrand(b));
+    this.applyBrand(this.brandingService.branding);
+
     this.loginForm = this.formBuilder.group({
       accountType: ['user', [Validators.required]],
       email: ['', Validators.required],
@@ -47,6 +56,12 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         this.router.navigate(['/dashboard']);
       }
     }
+  }
+
+  private applyBrand(branding: AppBranding): void {
+    this.brandLogo = branding.logoUrl;
+    this.appName = branding.appName;
+    this.tagline = branding.tagline;
   }
   onSubmit(): void {
     this.loginForm.markAllAsTouched();

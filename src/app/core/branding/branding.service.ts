@@ -11,6 +11,7 @@ import { BrandingApiService } from 'src/app/services/api-service/branding-api.se
 import { CommonService } from 'src/app/shared/services/common.service';
 
 const STORAGE_PREFIX = 'mw-branding';
+const LAST_ORG_KEY = `${STORAGE_PREFIX}:last-org`;
 
 @Injectable({ providedIn: 'root' })
 export class BrandingService {
@@ -52,11 +53,20 @@ export class BrandingService {
   }
 
   /**
-   * Load branding for the active organization from the backend.
-   * Uses defaults when no row exists or organization_id is missing.
-   * Caches last successful payload in localStorage as offline fallback.
+   * Bootstrap branding for the whole app (including public auth pages).
+   * Applies defaults immediately, then last-known org cache (if any), then live org fetch.
    */
   init(): void {
+    this.applyLocal(this.cloneDefault());
+
+    const lastOrgId = this.readLastOrganizationId();
+    if (lastOrgId) {
+      const cached = this.readFromStorage(this.storageKey(lastOrgId));
+      if (cached) {
+        this.applyLocal(this.mergeWithDefaults(cached));
+      }
+    }
+
     void this.reloadForOrganization();
   }
 
@@ -66,6 +76,15 @@ export class BrandingService {
     const organizationId = this.resolveOrganizationId();
 
     if (!organizationId) {
+      // Public auth routes: keep last-known org branding (or defaults from init).
+      const lastOrgId = this.readLastOrganizationId();
+      if (lastOrgId) {
+        const cached = this.readFromStorage(this.storageKey(lastOrgId));
+        if (cached) {
+          this.applyLocal(this.mergeWithDefaults(cached));
+          return;
+        }
+      }
       this.applyLocal(this.cloneDefault());
       return;
     }
@@ -189,8 +208,19 @@ export class BrandingService {
   private persistCache(organizationId: string, branding: AppBranding): void {
     try {
       localStorage.setItem(this.storageKey(organizationId), JSON.stringify(branding));
+      if (organizationId) {
+        localStorage.setItem(LAST_ORG_KEY, organizationId);
+      }
     } catch {
       // Quota / private mode — keep in-memory only
+    }
+  }
+
+  private readLastOrganizationId(): string {
+    try {
+      return (localStorage.getItem(LAST_ORG_KEY) || '').trim();
+    } catch {
+      return '';
     }
   }
 

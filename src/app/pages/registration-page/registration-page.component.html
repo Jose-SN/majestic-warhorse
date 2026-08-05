@@ -7,15 +7,15 @@
       <div class="signup-hero__brand">
         <img
           class="signup-hero__logo"
-          src="../../../assets/images/logo-mejestic-hourse-landing.svg"
-          alt="Majestic Warhorse"
+          [src]="brandLogo"
+          [alt]="appName"
         />
       </div>
       <h1 class="signup-hero__title">
         Start your <span class="signup-hero__title-accent">learning</span> journey
       </h1>
       <p class="signup-hero__subtitle">
-        Join Majestic Warhorse — the platform for sculpting, courses, and creative mastery, built for students, teachers, and organizations.
+        {{ tagline || ('Join ' + appName + ' — courses and creative mastery for students, teachers, and organizations.') }}
       </p>
       <div class="signup-hero__stats">
         <div class="signup-hero__stat">

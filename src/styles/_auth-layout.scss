@@ -1,6 +1,12 @@
 @import './mixins';
 @import './variables';
 
+/**
+ * Auth pages layout — docs/design_v1/15_AUTH_LAYOUTS.md
+ * Buttons — 18_BUTTONS.md · Inputs — 20_INPUTS.md
+ * All colors via design tokens so BrandingService org overrides apply.
+ */
+
 $login-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB1KPaNHKXSvmcTZuoCSi7T2wMwiRLBjwt9mOe4qz1s9OAuuHHlCTHY-oPCs9hpM34hJTuQle7s_YbGf3Q7sKFo5cLDIgEKpp4pKuPfLlLfQ-CNTixG31PUOmxcv_l5z6CY3a72yff7XyTWOJQKssZaIqnFXt_Lccl3s6A93Ge3K2_Id-GUPigCfltHOWz7sGnMTYE-yMzgFlECMl4Gp5zcCPpIP7TW3ooOICLjnWp9H9YMYngz1Qr0iA');
 $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6dB1s4N1S6jRuCkorVgydIjDPefUwP2kilWhGZ8SMhsgzT1WvGH_kybpCOLRoVD9a2jlvHPQkMca5Ay5btBCtxGevToFAcRUdJwyBQTv4iQRzszrSLNytaFa5IHWfV5IfQyKCbnDdfLw0a5YEaVUJXjN7lSUF_J_TkziuFC9y5ovph6E0TKmmcfd-ZA2nbXo3aaD1lwdPew2RjC-T0bqrmh0ujxwO_pFMdrzpg5v8DkOBJ7M888J2mg');
 
@@ -12,8 +18,8 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   overflow: hidden;
   position: relative;
   z-index: 1;
-  background: transparent;
-  color: var(--mc-on-surface);
+  background: var(--ds-background, var(--mc-surface-container-lowest));
+  color: var(--ds-text, var(--mc-on-surface));
   font-family: var(--mc-font-body);
 }
 
@@ -36,7 +42,7 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     background-size: cover;
     background-position: center;
     transform: scale(1.05);
-    transition: transform 0.3s ease-out;
+    transition: transform var(--ds-motion-normal, 250ms) ease-out;
     will-change: transform;
   }
 
@@ -46,7 +52,7 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     background: linear-gradient(
       to right,
       var(--ds-background, var(--mc-surface-container-lowest)) 0%,
-      color-mix(in srgb, var(--ds-background) 40%, transparent) 50%,
+      color-mix(in srgb, var(--ds-background, #030304) 40%, transparent) 50%,
       transparent 100%
     );
   }
@@ -64,8 +70,8 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
       left: 25%;
       width: 24rem;
       height: 24rem;
-      background: var(--ds-gradient-orange, var(--mc-brand-gradient));
-      opacity: 0.22;
+      background: var(--mc-brand-gradient);
+      opacity: 0.28;
     }
 
     &--secondary {
@@ -73,16 +79,16 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
       left: 33%;
       width: 16rem;
       height: 16rem;
-      background: var(--ds-gold, var(--mc-secondary));
-      opacity: 0.14;
+      background: var(--ds-primary-dark, var(--mc-secondary-container));
+      opacity: 0.18;
       animation-delay: 2s;
     }
   }
 
   &__narrative {
     position: absolute;
-    bottom: 4rem;
-    left: 4rem;
+    bottom: var(--ds-space-8, 48px);
+    left: var(--ds-space-8, 48px);
     z-index: 10;
     max-width: 32rem;
   }
@@ -93,22 +99,22 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     font-weight: 700;
     line-height: 1.1;
     letter-spacing: -0.02em;
-    color: var(--mc-on-surface);
+    color: var(--ds-text, var(--mc-on-surface));
     margin: 0;
   }
 
   &__title-accent {
-    background: var(--mc-brand-text-gradient);
+    background: var(--mc-brand-text-gradient, var(--mc-brand-gradient));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   &__subtitle {
-    margin: 1rem 0 0;
+    margin: var(--ds-space-4, 16px) 0 0;
     font-size: 1rem;
     line-height: 1.6;
-    color: var(--mc-on-surface-variant);
+    color: var(--ds-text-muted, var(--mc-on-surface-variant));
     max-width: 24rem;
   }
 }
@@ -121,15 +127,36 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   justify-content: center;
   width: 100%;
   height: 100%;
-  padding: 1.25rem;
-  background: rgba(14, 14, 17, 0.72);
+  padding: var(--ds-space-4, 16px);
+  background:
+    radial-gradient(
+      ellipse 60% 40% at 50% 0%,
+      color-mix(in srgb, var(--ds-primary, #ff6b2c) 16%, transparent) 0%,
+      transparent 55%
+    ),
+    color-mix(in srgb, var(--ds-background, #030304) 72%, transparent);
   overflow-y: auto;
+
+  /* Grid pattern — design_v1 auth background */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--ds-primary, #ff6b2c) 8%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--ds-primary, #ff6b2c) 8%, transparent) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
+  }
 
   @media (min-width: 1024px) {
     width: 40%;
     flex-shrink: 0;
-    padding: 3rem;
-    background: rgba(14, 14, 17, 0.45);
+    padding: var(--ds-space-6, 32px);
     overflow-y: hidden;
   }
 
@@ -146,7 +173,7 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
       content: '';
       position: absolute;
       inset: 0;
-      background: var(--mc-surface-container-lowest);
+      background: var(--ds-background, var(--mc-surface-container-lowest));
     }
 
     &::after {
@@ -161,22 +188,23 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   }
 }
 
+/* Auth card — max 420px, padding 32px, radius 24px */
 .login-card {
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 28rem;
-  padding: 2rem;
+  max-width: 420px;
+  padding: var(--ds-space-6, 32px);
   overflow: hidden;
-  background: rgba(15, 17, 21, 0.55);
-  -webkit-backdrop-filter: blur(24px);
-  backdrop-filter: blur(24px);
+  background: var(--ds-surface, var(--mc-surface));
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 50px -10px rgba(255, 107, 44, 0.12);
-  @include border-radius(16px);
+  border-radius: var(--radius-xl, 24px);
+  box-shadow: var(--shadow-card), 0 0 48px -12px color-mix(in srgb, var(--ds-primary, #ff6b2c) 18%, transparent);
 
-  @media (min-width: 1024px) {
-    padding: 2.5rem;
+  @media (max-width: 767px) {
+    box-shadow: none;
   }
 
   &__accent {
@@ -192,13 +220,13 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: var(--ds-space-6, 32px);
     text-align: center;
   }
 
   &__logo-wrap {
     position: relative;
-    margin-bottom: 1rem;
+    margin-bottom: var(--ds-space-4, 16px);
   }
 
   &__logo {
@@ -209,7 +237,7 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     justify-content: center;
     width: 9.5rem;
     height: auto;
-    transition: transform 0.5s ease;
+    transition: transform var(--ds-motion-normal, 250ms) ease;
 
     img {
       width: 100%;
@@ -228,8 +256,8 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     inset: -0.5rem;
     background: var(--mc-brand-gradient);
     filter: blur(1rem);
-    opacity: 0.2;
-    @include border-radius(8px);
+    opacity: 0.22;
+    border-radius: var(--radius-md, 12px);
   }
 
   &__eyebrow {
@@ -239,28 +267,28 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     font-weight: 500;
     letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--mc-primary);
+    color: var(--ds-primary, var(--mc-primary-container));
   }
 
   &__heading {
-    margin: 0.5rem 0 0;
+    margin: var(--ds-space-2, 8px) 0 0;
     font-family: var(--mc-font-display);
     font-size: 2rem;
     font-weight: 600;
     line-height: 1.2;
-    color: var(--mc-on-surface);
+    color: var(--ds-text, var(--mc-on-surface));
   }
 
   &__description {
-    margin: 0.75rem 0 0;
+    margin: var(--ds-space-3, 12px) 0 0;
     font-size: 0.875rem;
     line-height: 1.5;
-    color: var(--mc-on-surface-variant);
+    color: var(--ds-text-muted, var(--mc-on-surface-variant));
     max-width: 20rem;
   }
 
   &__footer {
-    margin-top: 2rem;
+    margin-top: var(--ds-space-6, 32px);
     text-align: center;
 
     p {
@@ -268,17 +296,17 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
       font-family: var(--mc-font-label);
       font-size: 0.75rem;
       letter-spacing: 0.05em;
-      color: var(--mc-on-surface-variant);
+      color: var(--ds-text-muted, var(--mc-on-surface-variant));
     }
   }
 
   &__signup,
   &__link {
-    color: var(--mc-primary);
+    color: var(--ds-primary, var(--mc-primary-container));
     font-weight: 700;
     cursor: pointer;
     text-decoration: none;
-    transition: opacity 0.2s ease;
+    transition: opacity var(--ds-motion-fast, 150ms) ease;
 
     &:hover {
       text-decoration: underline;
@@ -290,30 +318,29 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   &__roles {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: var(--ds-space-4, 16px);
+    margin-bottom: var(--ds-space-5, 24px);
   }
 
   &__fields {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: var(--ds-space-5, 24px);
   }
 
   &__meta {
     display: flex;
     justify-content: flex-end;
-    margin-top: 0.75rem;
+    margin-top: var(--ds-space-3, 12px);
   }
 
   &__recover {
     font-family: var(--mc-font-label);
     font-size: 0.75rem;
     letter-spacing: 0.05em;
-    color: var(--mc-primary);
+    color: var(--ds-primary, var(--mc-primary-container));
     cursor: pointer;
     text-decoration: none;
-    transition: opacity 0.2s ease;
 
     &:hover {
       text-decoration: underline;
@@ -321,31 +348,31 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   }
 
   &__actions {
-    padding-top: 1.25rem;
+    padding-top: var(--ds-space-5, 24px);
   }
 
   &__divider {
     position: relative;
     display: flex;
     align-items: center;
-    margin: 1.25rem 0;
+    margin: var(--ds-space-5, 24px) 0;
 
     &::before,
     &::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: rgba(255, 255, 255, 0.12);
+      background: color-mix(in srgb, var(--ds-border, #1e293b) 80%, transparent);
     }
 
     span {
       flex-shrink: 0;
-      margin: 0 1rem;
+      margin: 0 var(--ds-space-4, 16px);
       font-family: var(--mc-font-label);
       font-size: 0.75rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--mc-outline);
+      color: var(--ds-text-muted, var(--mc-on-surface-variant));
     }
   }
 }
@@ -355,12 +382,16 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  min-height: 44px;
+  padding: var(--ds-space-4, 16px);
   cursor: pointer;
-  background: var(--mc-surface-container-low);
-  border: 1px solid var(--mc-outline-variant);
-  @include border-radius(8px);
-  transition: border-color 0.3s ease, background 0.3s ease;
+  background: var(--ds-surface-alt, var(--mc-surface-container));
+  border: 1px solid var(--ds-border, #334155);
+  border-radius: var(--radius-md, 12px);
+  transition:
+    border-color var(--ds-motion-fast, 150ms) ease,
+    background var(--ds-motion-fast, 150ms) ease,
+    box-shadow var(--ds-motion-fast, 150ms) ease;
 
   input {
     position: absolute;
@@ -371,10 +402,10 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   }
 
   .material-symbols-outlined {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--ds-space-2, 8px);
     font-size: 1.5rem;
-    color: var(--mc-outline);
-    transition: color 0.3s ease;
+    color: var(--ds-text-muted, var(--mc-on-surface-variant));
+    transition: color var(--ds-motion-fast, 150ms) ease;
   }
 
   &__label {
@@ -382,179 +413,215 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     font-size: 0.8125rem;
     font-weight: 500;
     letter-spacing: 0.02em;
-    color: var(--mc-on-surface-variant);
-    transition: color 0.3s ease;
+    color: var(--ds-text-muted, var(--mc-on-surface-variant));
+    transition: color var(--ds-motion-fast, 150ms) ease;
   }
 
   &:hover,
   &.is-active {
-    border-color: var(--mc-primary);
+    border-color: var(--ds-primary, var(--mc-primary-container));
 
     .material-symbols-outlined {
-      color: var(--mc-primary);
+      color: var(--ds-primary, var(--mc-primary-container));
     }
 
     .role-btn__label {
-      color: var(--mc-on-surface);
+      color: var(--ds-text, var(--mc-on-surface));
     }
   }
 
   &.is-active {
-    background: rgba(255, 107, 44, 0.08);
+    background: color-mix(in srgb, var(--ds-primary, #ff6b2c) 12%, var(--ds-surface-alt, #171a20));
+    box-shadow: 0 0 16px color-mix(in srgb, var(--ds-primary, #ff6b2c) 20%, transparent);
   }
 
   &:focus-within {
-    outline: 2px solid var(--mc-primary);
+    outline: 2px solid var(--ds-primary, var(--mc-primary-container));
     outline-offset: 2px;
   }
 }
 
+/* Inputs — design_v1/20_INPUTS.md */
 .field-group {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-2, 8px);
 
   &__label {
-    position: absolute;
-    top: -0.5rem;
-    left: 0.75rem;
-    z-index: 1;
-    padding: 0 0.25rem;
-    font-family: var(--mc-font-label);
-    font-size: 0.625rem;
+    position: static;
+    padding: 0;
+    font-family: var(--mc-font-body);
+    font-size: 14px;
     font-weight: 500;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.45);
-    background: rgba(0, 0, 0, 0.5);
-    transition: color 0.2s ease;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ds-text-muted, var(--mc-on-surface-variant));
+    background: transparent;
   }
 
   &:focus-within &__label {
-    color: var(--mc-primary);
+    color: var(--ds-primary, var(--mc-primary-container));
   }
 
   input {
     width: 100%;
-    height: 3rem;
-    padding: 0.75rem 1rem;
+    height: var(--ds-input-height, 48px);
+    padding: 0 var(--ds-space-4, 16px);
     font-family: var(--mc-font-body);
-    font-size: 0.875rem;
-    color: var(--mc-on-surface);
-    background: rgba(0, 0, 0, 0.5);
-    border: none;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px 8px 0 0;
+    font-size: 16px;
+    color: var(--ds-text, var(--mc-on-surface));
+    background: var(--ds-surface-alt, var(--mc-surface-container));
+    border: 1px solid #334155;
+    border-radius: var(--radius-md, 12px);
     outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      border-color var(--ds-motion-fast, 150ms) ease,
+      box-shadow var(--ds-motion-fast, 150ms) ease;
 
     &::placeholder {
-      color: rgba(255, 255, 255, 0.3);
+      color: var(--ds-text-muted, var(--mc-on-surface-variant));
     }
 
     &:focus {
-      border-bottom-color: var(--mc-primary-container);
-      box-shadow: 0 10px 20px -10px rgba(255, 107, 44, 0.35);
+      border-color: var(--ds-primary, var(--mc-primary-container));
+      outline: 2px solid var(--ds-primary, var(--mc-primary-container));
+      outline-offset: 1px;
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--ds-primary, #ff6b2c) 18%, transparent);
     }
 
     &:disabled {
-      opacity: 0.65;
+      opacity: 0.5;
       cursor: not-allowed;
+      background: color-mix(in srgb, var(--ds-surface-alt, #171a20) 70%, transparent);
+    }
+
+    @media (max-width: 767px) {
+      height: 52px;
     }
   }
 
   &.has-error input {
-    border-bottom-color: #ffb4ab;
-    box-shadow: 0 10px 20px -10px rgba(255, 180, 171, 0.25);
+    border-color: var(--ds-error, #ef4444);
+    outline-color: var(--ds-error, #ef4444);
   }
 
   &__error {
     display: block;
-    margin-top: 0.35rem;
     font-family: var(--mc-font-label);
-    font-size: 0.625rem;
-    color: #ffb4ab;
+    font-size: 12px;
+    color: var(--ds-error, #ef4444);
   }
 
   &__hints {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-    margin-top: 0.35rem;
+    gap: 2px;
 
     span {
       font-family: var(--mc-font-label);
-      font-size: 0.625rem;
-      color: var(--mc-on-surface-variant);
+      font-size: 12px;
+      color: var(--ds-text-muted, var(--mc-on-surface-variant));
     }
   }
 }
 
+/* Primary — design_v1/18_BUTTONS.md */
 .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  min-height: 2.75rem;
-  padding: 0.875rem 1rem;
-  font-family: var(--mc-font-label);
-  font-size: 0.875rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #fff;
+  min-height: 48px;
+  padding: 0 24px;
+  font-family: var(--mc-font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #ffffff;
   cursor: pointer;
   background: var(--mc-brand-gradient);
   border: none;
-  @include border-radius(999px);
-  box-shadow: 0 0 20px -5px rgba(255, 107, 44, 0.45);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 999px;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--ds-primary, #ff6b2c) 40%, transparent);
+  transition:
+    transform var(--ds-motion-fast, 150ms) ease,
+    box-shadow var(--ds-motion-fast, 150ms) ease,
+    opacity var(--ds-motion-fast, 150ms) ease;
 
-  &:hover {
-    box-shadow: 0 0 30px -5px rgba(255, 107, 44, 0.55);
-    transform: scale(1.02);
+  &:hover:not(:disabled) {
+    box-shadow: var(--shadow-orange);
   }
 
-  &:active {
+  &:active:not(:disabled) {
     transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ds-primary, #ff6b2c);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
+/* Secondary-style Google CTA */
 .btn-google {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: var(--ds-space-3, 12px);
   width: 100%;
-  min-height: 2.75rem;
-  padding: 0.75rem 1rem;
+  min-height: 48px;
+  padding: 0 24px;
   font-family: var(--mc-font-body);
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--mc-on-surface);
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
   cursor: pointer;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  @include border-radius(999px);
-  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  background: var(--ds-surface, var(--mc-surface));
+  border: 1px solid #334155;
+  border-radius: 999px;
+  transition:
+    background var(--ds-motion-fast, 150ms) ease,
+    border-color var(--ds-motion-fast, 150ms) ease,
+    box-shadow var(--ds-motion-fast, 150ms) ease,
+    transform var(--ds-motion-fast, 150ms) ease;
 
   &__icon {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 20px;
+    height: 20px;
     flex-shrink: 0;
   }
 
   &:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 181, 154, 0.35);
-    box-shadow: 0 0 20px -5px rgba(255, 107, 44, 0.25);
+    background: var(--ds-surface-alt, var(--mc-surface-container));
+    border-color: var(--ds-primary, var(--mc-primary-container));
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ds-primary, #ff6b2c);
+    outline-offset: 2px;
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
   }
 }
 
 .login-help-fab {
   position: fixed;
-  right: 2rem;
-  bottom: 2rem;
+  right: var(--ds-space-6, 32px);
+  bottom: var(--ds-space-6, 32px);
   z-index: 50;
 
   &__btn {
@@ -565,27 +632,22 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     width: 3.5rem;
     height: 3.5rem;
     cursor: pointer;
-    background: rgba(27, 27, 30, 0.4);
-    -webkit-backdrop-filter: blur(24px);
-    backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 181, 154, 0.2);
-    @include border-radius(50%);
-    transition: transform 0.3s ease;
+    background: color-mix(in srgb, var(--ds-surface, #0f1115) 80%, transparent);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border: 1px solid color-mix(in srgb, var(--ds-primary, #ff6b2c) 25%, transparent);
+    border-radius: 50%;
+    transition: transform var(--ds-motion-fast, 150ms) ease;
 
     .material-symbols-outlined {
       position: relative;
       z-index: 1;
       font-size: 1.5rem;
-      color: var(--mc-primary);
-      transition: transform 0.3s ease;
+      color: var(--ds-primary, var(--mc-primary-container));
     }
 
     &:hover {
-      transform: scale(1.1);
-
-      .material-symbols-outlined {
-        transform: rotate(12deg);
-      }
+      transform: scale(1.05);
 
       .login-help-fab__tooltip {
         opacity: 1;
@@ -597,7 +659,7 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     }
 
     &:active {
-      transform: scale(0.95);
+      transform: scale(0.98);
     }
   }
 
@@ -607,8 +669,8 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     background: var(--mc-brand-gradient);
     filter: blur(0.75rem);
     opacity: 0.2;
-    @include border-radius(50%);
-    transition: opacity 0.3s ease;
+    border-radius: 50%;
+    transition: opacity var(--ds-motion-fast, 150ms) ease;
     pointer-events: none;
   }
 
@@ -617,28 +679,28 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     right: calc(100% + 1rem);
     top: 50%;
     transform: translateY(-50%);
-    padding: 0.5rem 1rem;
+    padding: var(--ds-space-2, 8px) var(--ds-space-4, 16px);
     font-family: var(--mc-font-label);
     font-size: 0.75rem;
     letter-spacing: 0.05em;
     white-space: nowrap;
-    color: var(--mc-on-surface);
+    color: var(--ds-text, var(--mc-on-surface));
     pointer-events: none;
     opacity: 0;
-    background: var(--mc-surface-container-high);
-    border: 1px solid var(--mc-outline-variant);
-    @include border-radius(8px);
-    transition: opacity 0.3s ease;
+    background: var(--ds-surface-alt, var(--mc-surface-container));
+    border: 1px solid var(--ds-border, var(--mc-outline));
+    border-radius: var(--radius-md, 12px);
+    transition: opacity var(--ds-motion-fast, 150ms) ease;
   }
 }
 
 @keyframes login-pulse-slow {
   0%,
   100% {
-    opacity: 0.1;
+    opacity: 0.12;
   }
   50% {
-    opacity: 0.2;
+    opacity: 0.22;
   }
 }
 
@@ -655,10 +717,10 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     min-height: 100vh;
     min-height: 100dvh;
     align-items: flex-start;
-    padding-top: calc(1.5rem + env(safe-area-inset-top, 0px));
-    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
-    padding-left: max(1.25rem, env(safe-area-inset-left, 0px));
-    padding-right: max(1.25rem, env(safe-area-inset-right, 0px));
+    padding-top: calc(var(--ds-space-4, 16px) + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(var(--ds-space-4, 16px) + env(safe-area-inset-bottom, 0px));
+    padding-left: max(var(--ds-space-4, 16px), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--ds-space-4, 16px), env(safe-area-inset-right, 0px));
   }
 
   .login-card {
@@ -668,7 +730,7 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   }
 
   .login-help-fab {
-    right: max(1.25rem, env(safe-area-inset-right, 0px));
-    bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
+    right: max(var(--ds-space-4, 16px), env(safe-area-inset-right, 0px));
+    bottom: max(var(--ds-space-4, 16px), env(safe-area-inset-bottom, 0px));
   }
 }
