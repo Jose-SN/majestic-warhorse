@@ -165,42 +165,46 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
     }
   }
 
-  colorKeys(): (keyof BrandingThemeColors)[] {
-    return [
-      'primaryContainer',
-      'secondaryContainer',
-      'tertiaryContainer',
-      'primary',
-      'secondary',
-      'tertiary',
-      'surface',
-      'surfaceContainer',
-      'onSurface',
-      'onSurfaceVariant',
-      'outline',
-      'gradientStart',
-      'gradientMid',
-      'gradientEnd',
-    ];
-  }
+  readonly colorGroups: { title: string; keys: (keyof BrandingThemeColors)[] }[] = [
+    {
+      title: 'Surfaces',
+      keys: ['surfaceContainerLow', 'surface', 'surfaceContainer'],
+    },
+    {
+      title: 'Brand',
+      keys: ['primaryContainer', 'primary', 'gradientStart', 'gradientMid', 'gradientEnd'],
+    },
+    {
+      title: 'Text',
+      keys: ['onSurface', 'onSurfaceVariant'],
+    },
+    {
+      title: 'Accents',
+      keys: ['secondary', 'secondaryContainer', 'tertiary', 'tertiaryContainer'],
+    },
+    {
+      title: 'Border',
+      keys: ['outline'],
+    },
+  ];
 
   colorLabel(key: keyof BrandingThemeColors): string {
     const labels: Record<keyof BrandingThemeColors, string> = {
+      surfaceContainerLow: 'Background',
       surface: 'Surface',
-      surfaceContainer: 'Panel',
-      surfaceContainerLow: 'Panel low',
+      surfaceContainer: 'Surface alt',
       onSurface: 'Text',
-      onSurfaceVariant: 'Muted text',
-      primary: 'Primary text',
-      primaryContainer: 'Primary',
-      secondary: 'Secondary text',
-      secondaryContainer: 'Secondary',
-      tertiary: 'Tertiary text',
-      tertiaryContainer: 'Tertiary',
-      outline: 'Outline',
-      gradientStart: 'Gradient start',
-      gradientMid: 'Gradient mid',
-      gradientEnd: 'Gradient end',
+      onSurfaceVariant: 'Text muted',
+      primary: 'Primary',
+      primaryContainer: 'Primary accent',
+      secondary: 'Gold',
+      secondaryContainer: 'Primary dark',
+      tertiary: 'Gold alt',
+      tertiaryContainer: 'Gold container',
+      outline: 'Border',
+      gradientStart: 'Orange start',
+      gradientMid: 'Bitcoin mid',
+      gradientEnd: 'Gold end',
     };
     return labels[key];
   }

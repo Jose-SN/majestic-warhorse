@@ -1,4 +1,6 @@
-/** Runtime white-label / org branding config (persisted per organization_id on course backend). */
+/** Runtime white-label / org branding (persisted per organization_id).
+ * Color values follow design.xml Enterprise Bitcoin tokens; see docs/design_v1.
+ */
 export interface BrandingThemeColors {
   surface: string;
   surfaceContainer: string;

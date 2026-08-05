@@ -1,52 +1,69 @@
 <section class="customize-app" *ngIf="draft">
-  <header class="customize-app__hero">
-    <p class="customize-app__eyebrow">White-label</p>
-    <h1 class="customize-app__title">Customize your app</h1>
-    <p class="customize-app__lead">
-      Make the product feel like yours — logo, favicon, app name, and color theme.
-      Changes are saved for this organisation and applied for every member on login.
-    </p>
+  <header class="customize-app__toolbar">
+    <div class="customize-app__heading">
+      <p class="customize-app__eyebrow">White-label</p>
+      <h1 class="customize-app__title">Customize your app</h1>
+      <p class="customize-app__lead">
+        Brand identity and Enterprise Bitcoin theme tokens. Saved per organisation.
+      </p>
+    </div>
+    <div class="customize-app__actions">
+      <button type="button" class="customize-app__btn customize-app__btn--ghost" (click)="reset()" [disabled]="saving">
+        Reset
+      </button>
+      <button type="button" class="customize-app__btn customize-app__btn--secondary" (click)="previewLive()">
+        Preview
+      </button>
+      <button
+        type="button"
+        class="customize-app__btn customize-app__btn--primary"
+        [disabled]="saving"
+        (click)="save()"
+      >
+        {{ saving ? 'Saving…' : 'Save' }}
+      </button>
+    </div>
   </header>
 
-  <div class="customize-app__grid">
-    <div class="customize-app__main">
+  <div class="customize-app__workspace">
+    <div class="customize-app__editor">
       <section class="customize-app__card">
-        <h2>Identity</h2>
-        <label class="customize-app__field">
-          <span>App name</span>
-          <input type="text" [(ngModel)]="draft.appName" name="appName" maxlength="80" />
-        </label>
-        <label class="customize-app__field">
-          <span>Tagline</span>
-          <input type="text" [(ngModel)]="draft.tagline" name="tagline" maxlength="160" />
-        </label>
-
-        <div class="customize-app__uploads">
-          <label class="customize-app__upload">
+        <h2 class="customize-app__card-title">Identity</h2>
+        <div class="customize-app__form-grid">
+          <label class="customize-app__field">
+            <span>App name</span>
+            <input type="text" [(ngModel)]="draft.appName" name="appName" maxlength="80" />
+          </label>
+          <label class="customize-app__field">
+            <span>Tagline</span>
+            <input type="text" [(ngModel)]="draft.tagline" name="tagline" maxlength="160" />
+          </label>
+          <label class="customize-app__field customize-app__field--upload">
             <span>Logo</span>
-            <input type="file" accept="image/*" (change)="onLogoSelected($event)" />
-            <div class="customize-app__upload-preview">
+            <div class="customize-app__upload-box">
               <img [src]="draft.logoUrl" [alt]="draft.appName || 'Logo'" />
+              <input type="file" accept="image/*" (change)="onLogoSelected($event)" aria-label="Upload logo" />
             </div>
           </label>
-          <label class="customize-app__upload">
+          <label class="customize-app__field customize-app__field--upload">
             <span>Favicon</span>
-            <input type="file" accept="image/*" (change)="onFaviconSelected($event)" />
-            <div class="customize-app__upload-preview customize-app__upload-preview--favicon">
+            <div class="customize-app__upload-box customize-app__upload-box--favicon">
               <img [src]="draft.faviconUrl" alt="Favicon" />
+              <input type="file" accept="image/*" (change)="onFaviconSelected($event)" aria-label="Upload favicon" />
             </div>
           </label>
         </div>
       </section>
 
       <section class="customize-app__card">
-        <h2>Theme presets</h2>
-        <div class="customize-app__presets">
+        <h2 class="customize-app__card-title">Theme presets</h2>
+        <div class="customize-app__presets" role="list">
           <button
             type="button"
             class="customize-app__preset"
             *ngFor="let preset of presets"
             (click)="applyPreset(preset)"
+            [attr.aria-label]="'Apply ' + preset.label + ' preset'"
           >
             <span
               class="customize-app__preset-swatch"
@@ -65,47 +82,43 @@
         </div>
       </section>
 
-      <section class="customize-app__card">
-        <h2>Color theme</h2>
-        <p class="customize-app__hint">
-          These map to the Majestic Cyber design tokens (<code>--mc-*</code>) used across the UI.
-        </p>
-        <div class="customize-app__colors">
-          <label class="customize-app__color" *ngFor="let key of colorKeys()">
-            <span>{{ colorLabel(key) }}</span>
-            <input type="color" [(ngModel)]="draft.colors[key]" [name]="key" />
-            <input type="text" [(ngModel)]="draft.colors[key]" [name]="key + '-hex'" maxlength="7" />
-          </label>
+      <section class="customize-app__card customize-app__card--colors">
+        <div class="customize-app__card-head">
+          <h2 class="customize-app__card-title">Color system</h2>
+          <p class="customize-app__hint">Maps to design.xml / <code>--ds-*</code> and <code>--mc-*</code> tokens</p>
+        </div>
+
+        <div class="customize-app__color-groups">
+          <div class="customize-app__color-group" *ngFor="let group of colorGroups">
+            <h3>{{ group.title }}</h3>
+            <div class="customize-app__colors">
+              <label class="customize-app__color" *ngFor="let key of group.keys">
+                <input
+                  type="color"
+                  [(ngModel)]="draft.colors[key]"
+                  [name]="key"
+                  [attr.title]="colorLabel(key)"
+                  [attr.aria-label]="colorLabel(key)"
+                />
+                <span>{{ colorLabel(key) }}</span>
+                <input type="text" [(ngModel)]="draft.colors[key]" [name]="key + '-hex'" maxlength="7" />
+              </label>
+            </div>
+          </div>
         </div>
       </section>
-
-      <div class="customize-app__actions">
-        <button type="button" class="customize-app__btn customize-app__btn--ghost" (click)="reset()">
-          Reset defaults
-        </button>
-        <button type="button" class="customize-app__btn customize-app__btn--secondary" (click)="previewLive()">
-          Preview live
-        </button>
-        <button
-          type="button"
-          class="customize-app__btn customize-app__btn--primary"
-          [disabled]="saving"
-          (click)="save()"
-        >
-          {{ saving ? 'Saving…' : 'Save branding' }}
-        </button>
-      </div>
     </div>
 
     <aside class="customize-app__preview" aria-live="polite">
-      <h2>Live preview</h2>
+      <h2 class="customize-app__card-title">Live preview</h2>
       <div
         class="customize-app__preview-shell"
+        [style.--preview-bg]="draft.colors.surfaceContainerLow"
         [style.--preview-surface]="draft.colors.surface"
         [style.--preview-panel]="draft.colors.surfaceContainer"
+        [style.--preview-border]="draft.colors.outline"
         [style.--preview-text]="draft.colors.onSurface"
         [style.--preview-muted]="draft.colors.onSurfaceVariant"
-        [style.--preview-accent]="draft.colors.primaryContainer"
         [style.--preview-gradient]="
           'linear-gradient(135deg,' +
           draft.colors.gradientStart +
@@ -121,15 +134,14 @@
           <span>{{ draft.appName || 'App name' }}</span>
         </div>
         <div class="customize-app__preview-body">
-          <p class="customize-app__preview-eyebrow">Your school</p>
+          <p class="customize-app__preview-eyebrow">Your organisation</p>
           <h3>{{ draft.appName || 'App name' }}</h3>
           <p>{{ draft.tagline || 'Tagline appears here' }}</p>
           <button type="button" class="customize-app__preview-cta">Continue learning</button>
         </div>
       </div>
       <p class="customize-app__note">
-        Saved on the server for this organisation (<code>organization_id</code> required).
-        Teachers and students see this theme after login.
+        Follows design.xml: 8pt grid, Bitcoin orange identity, enterprise clarity.
       </p>
     </aside>
   </div>

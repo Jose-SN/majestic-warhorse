@@ -234,12 +234,26 @@ export class BrandingService {
 
     const set = (name: string, value: string) => root.style.setProperty(name, value);
 
+    // design.xml / design_v1 semantic tokens
+    set('--ds-background', c.surfaceContainerLow);
+    set('--ds-surface', c.surface);
+    set('--ds-surface-alt', c.surfaceContainer);
+    set('--ds-border', c.outline);
+    set('--ds-primary', c.primaryContainer);
+    set('--ds-primary-dark', c.gradientStart);
+    set('--ds-gold', c.secondary);
+    set('--ds-text', c.onSurface);
+    set('--ds-text-muted', c.onSurfaceVariant);
+    set('--ds-gradient-orange', `linear-gradient(135deg, ${c.gradientStart} 0%, ${c.primaryContainer} 100%)`);
+    set('--ds-gradient-gold', `linear-gradient(135deg, ${c.primaryContainer} 0%, ${c.secondary} 100%)`);
+
+    // App --mc-* tokens
     set('--mc-surface', c.surface);
     set('--mc-surface-container', c.surfaceContainer);
     set('--mc-surface-container-low', c.surfaceContainerLow);
-    set('--mc-surface-container-lowest', c.surface);
+    set('--mc-surface-container-lowest', c.surfaceContainerLow);
     set('--mc-surface-container-high', c.surfaceContainer);
-    set('--mc-surface-container-highest', c.surfaceContainer);
+    set('--mc-surface-container-highest', c.outline);
     set('--mc-on-surface', c.onSurface);
     set('--mc-on-surface-variant', c.onSurfaceVariant);
     set('--mc-primary', c.primary);
@@ -249,6 +263,7 @@ export class BrandingService {
     set('--mc-tertiary', c.tertiary);
     set('--mc-tertiary-container', c.tertiaryContainer);
     set('--mc-outline', c.outline);
+    set('--mc-outline-variant', c.outline);
     set(
       '--mc-brand-gradient',
       `linear-gradient(135deg, ${c.gradientStart} 0%, ${c.gradientMid} 50%, ${c.gradientEnd} 100%)`
@@ -258,22 +273,26 @@ export class BrandingService {
       `linear-gradient(135deg, ${c.primary} 0%, ${c.secondary} 100%)`
     );
 
-    set('--bg-main', c.surface);
-    set('--bg-left-panel', c.surface);
-    set('--bg-dark-blue', c.surfaceContainerLow);
-    set('--bg-hover', c.secondaryContainer);
+    // Legacy aliases
+    set('--bg-main', c.surfaceContainerLow);
+    set('--bg-left-panel', c.surfaceContainerLow);
+    set('--bg-dark-blue', c.surface);
+    set('--bg-hover', c.gradientStart);
     set('--bg-orange', c.primaryContainer);
     set('--bg-magento', c.secondaryContainer);
     set('--btn-add', c.primaryContainer);
-    set('--btn-upload', c.secondaryContainer);
-    set('--bg-mit1', c.primaryContainer);
-    set('--bg-mit2', c.secondaryContainer);
+    set('--btn-upload', c.gradientStart);
+    set('--bg-mit1', c.gradientStart);
+    set('--bg-mit2', c.primaryContainer);
     set('--bg-mit4', c.gradientEnd);
+    set('--bg-card-border', c.outline);
+    set('--bg-border-input', c.outline);
+    set('--bg-input', c.surface);
 
     document.title = branding.appName || DEFAULT_APP_BRANDING.appName;
     this.updateFavicon(branding.faviconUrl || DEFAULT_BRAND_FAVICON);
     this.updateAppleTouchIcon(branding.logoUrl || DEFAULT_BRAND_LOGO);
-    this.updateThemeColor(c.surface);
+    this.updateThemeColor(c.surfaceContainerLow);
   }
 
   private updateFavicon(href: string): void {

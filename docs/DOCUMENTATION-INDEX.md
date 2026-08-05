@@ -150,7 +150,92 @@ These were written for product and API consumers. They are **in scope as sources
 | `ngsw-config.json` | Service worker config (SW registration `enabled: false` in `AppModule`) |
 | `.github/workflows/main.yml` | CI deploy to EC2 via SSH on `master` |
 | `.eslintrc.json`, `.prettierrc`, `.editorconfig` | Lint/format |
-| `design.xml` | **Unknown role in runtime** — not imported by Angular build paths observed in `angular.json`; treat as design artefact until a consumer is found |
+| `design.xml` | Design system source artefact — mirrored into [`design_v1/`](./design_v1/README.md) (Batch 1 foundations); not imported by Angular build |
+
+### 4.4 Design system — `/docs/design_v1` (Enterprise Bitcoin)
+
+Product UI foundations. Prefer these over ad-hoc hex/spacing in new work. Root [`design.xml`](../design.xml) is the compact machine-readable twin.
+
+Index: [`design_v1/README.md`](./design_v1/README.md)
+
+**Batch 1 — Foundations (01–10)**
+
+| File | Topic |
+|------|-------|
+| [01_COLOR_SYSTEM.md](./design_v1/01_COLOR_SYSTEM.md) | Palette, brand, semantics, gradients |
+| [02_DESIGN_TOKENS.md](./design_v1/02_DESIGN_TOKENS.md) | Token catalog |
+| [03_TYPOGRAPHY.md](./design_v1/03_TYPOGRAPHY.md) | Fonts and scale |
+| [04_SPACING_SYSTEM.md](./design_v1/04_SPACING_SYSTEM.md) | 8pt grid |
+| [05_GRID_SYSTEM.md](./design_v1/05_GRID_SYSTEM.md) | 12 / 8 / 4 columns |
+| [06_BREAKPOINTS.md](./design_v1/06_BREAKPOINTS.md) | Responsive ranges |
+| [07_RADIUS_SYSTEM.md](./design_v1/07_RADIUS_SYSTEM.md) | Corner radii |
+| [08_SHADOWS_AND_GLOW.md](./design_v1/08_SHADOWS_AND_GLOW.md) | Orange / gold glow |
+| [09_ELEVATION_SYSTEM.md](./design_v1/09_ELEVATION_SYSTEM.md) | Depth + glass |
+| [10_ICONOGRAPHY.md](./design_v1/10_ICONOGRAPHY.md) | Lucide icons |
+
+**Batch 2 — Layout System (11–17)**
+
+| File | Topic |
+|------|-------|
+| [11_WEB_LAYOUT_SYSTEM.md](./design_v1/11_WEB_LAYOUT_SYSTEM.md) | Desktop shell |
+| [12_MOBILE_LAYOUT_SYSTEM.md](./design_v1/12_MOBILE_LAYOUT_SYSTEM.md) | Mobile-first layouts |
+| [13_DASHBOARD_LAYOUTS.md](./design_v1/13_DASHBOARD_LAYOUTS.md) | Dashboard grids |
+| [14_ADMIN_LAYOUTS.md](./design_v1/14_ADMIN_LAYOUTS.md) | Admin shell |
+| [15_AUTH_LAYOUTS.md](./design_v1/15_AUTH_LAYOUTS.md) | Auth pages |
+| [16_SETTINGS_LAYOUTS.md](./design_v1/16_SETTINGS_LAYOUTS.md) | Settings |
+| [17_DETAIL_PAGE_LAYOUTS.md](./design_v1/17_DETAIL_PAGE_LAYOUTS.md) | Detail pages |
+
+**Batch 3 — Component System (18–37)**
+
+| File | Topic |
+|------|-------|
+| [18_BUTTONS.md](./design_v1/18_BUTTONS.md) | Buttons |
+| [19_CARDS.md](./design_v1/19_CARDS.md) | Cards |
+| [20_INPUTS.md](./design_v1/20_INPUTS.md) | Inputs |
+| [21_FORMS.md](./design_v1/21_FORMS.md) | Forms |
+| [22_SELECTS_AND_DROPDOWNS.md](./design_v1/22_SELECTS_AND_DROPDOWNS.md) | Selects |
+| [23_CHECKBOX_RADIO_SWITCH.md](./design_v1/23_CHECKBOX_RADIO_SWITCH.md) | Selection controls |
+| [24_TABLES.md](./design_v1/24_TABLES.md) | Tables |
+| [25_LISTS.md](./design_v1/25_LISTS.md) | Lists |
+| [26_TABS.md](./design_v1/26_TABS.md) | Tabs |
+| [27_BADGES_AND_TAGS.md](./design_v1/27_BADGES_AND_TAGS.md) | Badges |
+| [28_MODAL_DIALOGS.md](./design_v1/28_MODAL_DIALOGS.md) | Modals |
+| [29_DRAWERS_AND_SIDEPANELS.md](./design_v1/29_DRAWERS_AND_SIDEPANELS.md) | Drawers |
+| [30_TOASTS_ALERTS.md](./design_v1/30_TOASTS_ALERTS.md) | Toasts |
+| [31_SEARCH_FILTERS.md](./design_v1/31_SEARCH_FILTERS.md) | Search & filters |
+| [32_DATE_TIME_COMPONENTS.md](./design_v1/32_DATE_TIME_COMPONENTS.md) | Date / time |
+| [33_FILE_UPLOAD.md](./design_v1/33_FILE_UPLOAD.md) | File upload |
+| [34_AVATARS.md](./design_v1/34_AVATARS.md) | Avatars |
+| [35_EMPTY_STATES.md](./design_v1/35_EMPTY_STATES.md) | Empty states |
+| [36_ERROR_STATES.md](./design_v1/36_ERROR_STATES.md) | Error states |
+| [37_LOADING_SKELETONS.md](./design_v1/37_LOADING_SKELETONS.md) | Loading skeletons |
+
+**Batch 4 — Navigation + Interaction (38–43)**
+
+| File | Topic |
+|------|-------|
+| [38_HEADER_NAVIGATION.md](./design_v1/38_HEADER_NAVIGATION.md) | Header |
+| [39_SIDEBAR_NAVIGATION.md](./design_v1/39_SIDEBAR_NAVIGATION.md) | Sidebar |
+| [40_MOBILE_NAVIGATION.md](./design_v1/40_MOBILE_NAVIGATION.md) | Mobile nav |
+| [41_MOTION_SYSTEM.md](./design_v1/41_MOTION_SYSTEM.md) | Motion |
+| [42_MICRO_INTERACTIONS.md](./design_v1/42_MICRO_INTERACTIONS.md) | Micro-interactions |
+| [43_HOVER_FOCUS_STATES.md](./design_v1/43_HOVER_FOCUS_STATES.md) | Interaction states |
+
+**Batch 5 — Accessibility + Engineering + AI (44–50)**
+
+| File | Topic |
+|------|-------|
+| [44_ACCESSIBILITY_WCAG.md](./design_v1/44_ACCESSIBILITY_WCAG.md) | WCAG 2.2 AA |
+| [45_KEYBOARD_NAVIGATION.md](./design_v1/45_KEYBOARD_NAVIGATION.md) | Keyboard |
+| [46_REACT_IMPLEMENTATION.md](./design_v1/46_REACT_IMPLEMENTATION.md) | React |
+| [47_ANGULAR_IMPLEMENTATION.md](./design_v1/47_ANGULAR_IMPLEMENTATION.md) | Angular |
+| [48_TAILWIND_IMPLEMENTATION.md](./design_v1/48_TAILWIND_IMPLEMENTATION.md) | Tailwind |
+| [49_CSS_SCSS_ARCHITECTURE.md](./design_v1/49_CSS_SCSS_ARCHITECTURE.md) | SCSS architecture |
+| [50_AI_GENERATION_RULES.md](./design_v1/50_AI_GENERATION_RULES.md) | AI rules |
+
+**Assets:** [`design-tokens.json`](./design_v1/design-tokens.json) · [`variables.scss`](./design_v1/variables.scss) · [`tailwind.config.js`](./design_v1/tailwind.config.js) · root [`design.xml`](../design.xml)
+
+**Enterprise Bitcoin Design System V1 complete (01–50).**
 
 ---
 

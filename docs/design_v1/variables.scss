@@ -1,0 +1,40 @@
+:root {
+  /* Enterprise Bitcoin Design System V1 — package tokens */
+  --color-background: #030304;
+  --color-surface: #0f1115;
+  --color-surface-elevated: #171a20;
+  --color-primary: #f7931a;
+  --color-secondary: #ea580c;
+  --color-gold: #ffd600;
+  --color-text: #ffffff;
+  --color-muted: #94a3b8;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-card: 16px;
+  --radius-xl: 24px;
+  --radius-button: 999px;
+
+  --motion-instant: 100ms;
+  --motion-fast: 150ms;
+  --motion-normal: 250ms;
+  --motion-slow: 400ms;
+
+  --header-height: 64px;
+  --sidebar-width: 280px;
+  --sidebar-collapsed: 72px;
+  --button-height: 48px;
+  --input-height: 48px;
+}
