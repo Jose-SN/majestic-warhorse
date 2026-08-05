@@ -139,12 +139,17 @@
     height: 100% !important;
   }
 
-  ::ng-deep video {
+  ::ng-deep video,
+  ::ng-deep .vp-embed,
+  ::ng-deep .vp-external {
     width: 100%;
     height: 100% !important;
     min-height: 220px;
-    object-fit: cover;
     display: block;
+  }
+
+  ::ng-deep video {
+    object-fit: cover;
   }
 }
 

@@ -1,1 +1,68 @@
-<video #videoPlayer [src]="sourceUrl" controls="true" (play)="onPlay()" (pause)="onPause()" (loadedmetadata)="setVideoDuration($event)"></video>
+@if (mode === 'file' && sourceUrl) {
+  <video
+    #videoPlayer
+    [src]="sourceUrl"
+    controls
+    (play)="onPlay()"
+    (pause)="onPause()"
+    (ended)="onEnded()"
+    (loadedmetadata)="setVideoDuration($event)"
+  ></video>
+} @else if ((mode === 'youtube' || mode === 'vimeo') && embedUrl) {
+  <div class="vp-embed">
+    <iframe
+      #apiFrame
+      [id]="iframePlayerId"
+      [src]="embedUrl"
+      title="{{ providerLabel }} player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin"
+    ></iframe>
+    <a
+      class="vp-embed__open"
+      [href]="rawUrl"
+      target="_blank"
+      rel="noopener noreferrer"
+      (click)="onPlay()"
+    >
+      Open in {{ providerLabel }}
+    </a>
+  </div>
+} @else if (mode === 'embed' && embedUrl) {
+  <div class="vp-embed">
+    <iframe
+      [src]="embedUrl"
+      title="{{ providerLabel }} player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin"
+    ></iframe>
+    <a
+      class="vp-embed__open"
+      [href]="rawUrl"
+      target="_blank"
+      rel="noopener noreferrer"
+      (click)="onPlay()"
+    >
+      Open in {{ providerLabel }}
+    </a>
+  </div>
+} @else {
+  <div class="vp-external">
+    <div class="vp-external__panel">
+      <span class="material-symbols-outlined vp-external__icon" aria-hidden="true">link</span>
+      <p class="vp-external__label">{{ providerLabel }}</p>
+      <p class="vp-external__hint">
+        @if (providerLabel.toLowerCase().includes('zoom')) {
+          This Zoom link opens in Zoom or your browser.
+        } @else {
+          This link opens in a new tab.
+        }
+      </p>
+      <button type="button" class="vp-external__cta" (click)="openExternal()" [disabled]="!rawUrl">
+        Open {{ providerLabel }}
+      </button>
+    </div>
+  </div>
+}

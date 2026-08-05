@@ -22,6 +22,7 @@ import { IAttachmentObjectInfo, IFileObjectInfo } from './model/file-object-info
 import { CommonService } from 'src/app/shared/services/common.service';
 import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
 import { ProgressBarComponent } from 'src/app/shared/progress-bar/progress-bar.component';
+import { VideoPlayerComponent } from 'src/app/components/video-player/video-player.component';
 import { DASHBOARD_NAV_ROUTES } from '../dashboard/dashboard-routes.config';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -30,7 +31,7 @@ type RightPaneTab = 'preview' | 'recent';
 @Component({
   selector: 'app-course-upload',
   standalone: true,
-  imports: [FormsModule, CommonModule, ProgressBarComponent],
+  imports: [FormsModule, CommonModule, ProgressBarComponent, VideoPlayerComponent],
   templateUrl: './course-upload.component.html',
   styleUrl: './course-upload.component.scss',
 })
@@ -185,6 +186,15 @@ export class CourseUploadComponent implements OnChanges, OnInit, OnDestroy {
     if (url.includes('youtube.com') || url.includes('youtu.be')) {
       return 'YouTube Video';
     }
+    if (url.includes('zoom.us')) {
+      return 'Zoom Link';
+    }
+    if (url.includes('loom.com')) {
+      return 'Loom Video';
+    }
+    if (/^https?:\/\//.test(url) && !/\.(mp4|webm|ogg|ogv|mov|m4v|m3u8)(\?|$)/i.test(url)) {
+      return 'External Link';
+    }
     return item.fileURL?.trim() ? 'Video File' : 'Pending Upload';
   }
 
@@ -303,16 +313,6 @@ export class CourseUploadComponent implements OnChanges, OnInit, OnDestroy {
       access: courseInfo.access === 'private' ? 'private' : 'public',
     };
     this.courseChapterList = structuredClone(courseInfo.chapterDetails as IChapterInfo[]);
-  }
-
-  previewVideo(fileDetails: IFileObjectInfo) {
-    this.commonService.openPopupModel({
-      url: fileDetails.fileURL,
-      data: fileDetails,
-      title: fileDetails.name,
-      fileType: 'VIDEO',
-      componentName: COMPONENT_NAME.FILE_VIEWER,
-    });
   }
 
   previewAttachment(attachment: IAttachmentObjectInfo): void {

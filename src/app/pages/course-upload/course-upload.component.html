@@ -3,13 +3,15 @@
     <!-- Left: Editor -->
     <section class="course-forge-editor">
       <header class="course-forge-editor__header">
-        <button type="button" class="course-forge-back" (click)="navigateBack()">
-          <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
-          Back to Courses
-        </button>
-        <div class="course-forge-editor__eyebrow">
-          <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
-          Creator Mode
+        <div class="course-forge-editor__top">
+          <button type="button" class="course-forge-back" (click)="navigateBack()">
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            Back to Courses
+          </button>
+          <div class="course-forge-editor__eyebrow">
+            <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
+            Creator Mode
+          </div>
         </div>
         <h1 class="course-forge-editor__title">Course Architecture</h1>
         <p class="course-forge-editor__subtitle">
@@ -176,15 +178,6 @@
                             <div class="curriculum-attachment-item__actions">
                               <button
                                 type="button"
-                                class="curriculum-attachment-item__action"
-                                [disabled]="!item.fileURL?.trim()"
-                                (click)="previewVideo(item)"
-                                aria-label="Preview video"
-                              >
-                                <span class="material-symbols-outlined">play_circle</span>
-                              </button>
-                              <button
-                                type="button"
                                 class="curriculum-attachment-item__action curriculum-attachment-item__action--danger"
                                 (click)="removeVideo(chapter, videoIndex)"
                                 [disabled]="chapter.fileDetails.length <= 1"
@@ -195,6 +188,17 @@
                             </div>
                           </div>
 
+                          <div class="curriculum-video-preview" aria-label="Video preview">
+                            @if (item.fileURL?.trim()) {
+                              <app-video-player [videoUrl]="item.fileURL"></app-video-player>
+                            } @else {
+                              <div class="curriculum-video-preview__empty">
+                                <span class="material-symbols-outlined" aria-hidden="true">videocam</span>
+                                <p>Paste a URL or upload a video to preview</p>
+                              </div>
+                            }
+                          </div>
+
                           <div class="curriculum-attachment-item__fields">
                             <div class="curriculum-field">
                               <label [for]="'video-url-' + parentIndex + '-' + videoIndex">Video URL / Upload</label>
@@ -202,7 +206,7 @@
                                 <input
                                   [id]="'video-url-' + parentIndex + '-' + videoIndex"
                                   type="text"
-                                  placeholder="https://vimeo.com/..."
+                                  placeholder="YouTube, Vimeo, Zoom, or video URL..."
                                   [(ngModel)]="item.fileURL"
                                 />
                                 <input
@@ -214,7 +218,7 @@
                                   class="hidden-file-input"
                                 />
                                 <button type="button" class="curriculum-field__icon-btn" (click)="openFileUploadWindow(videoItemInput)" aria-label="Upload video">
-                                  <img src="assets/images/icon-file-upload.svg" alt="" class="forge-upload-icon" aria-hidden="true" />
+                                  <span class="material-symbols-outlined forge-upload-icon" aria-hidden="true">upload</span>
                                 </button>
                               </div>
                               @if (item.completedPercentage && +item.completedPercentage !== 100) {
@@ -253,7 +257,7 @@
                       class="hidden-file-input"
                     />
                     <button type="button" class="forge-gradient-btn forge-gradient-btn--compact" (click)="openFileUploadWindow(attachmentInput)">
-                      <img src="assets/images/icon-file-upload.svg" alt="" class="forge-upload-icon" aria-hidden="true" />
+                      <span class="material-symbols-outlined forge-upload-icon" aria-hidden="true">upload</span>
                       Add Attachment
                     </button>
                   </div>

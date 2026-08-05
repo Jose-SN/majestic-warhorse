@@ -570,7 +570,7 @@ export class CourseDetailsComponent {
     }
   }
   videoStatusUpdateHandler(triggerType: string) {
-    if (triggerType === 'PAUSE' || !this.courseStatusInfo?.id) {
+    if (triggerType === 'PAUSE' || triggerType === 'ENDED' || !this.courseStatusInfo?.id) {
       this.updateVideoStatus(undefined, true);
     }
   }
@@ -621,8 +621,14 @@ export class CourseDetailsComponent {
     if (event?.rating) {
       this.videoRating = event?.rating;
     }
-    const videoTimeInfo = this.videoPlayerComponent.getVideoTimeUpdate;
-    const videoPercentage = (videoTimeInfo.currentTime / videoTimeInfo.duration) * 100;
+    const videoTimeInfo = this.videoPlayerComponent?.getVideoTimeUpdate ?? {
+      currentTime: 0,
+      duration: 0,
+    };
+    const videoPercentage =
+      videoTimeInfo.duration > 0
+        ? (videoTimeInfo.currentTime / videoTimeInfo.duration) * 100
+        : 0;
     await this.courseDetailsService.saveCourseRating(
       {
         isVideo: isVideo,
