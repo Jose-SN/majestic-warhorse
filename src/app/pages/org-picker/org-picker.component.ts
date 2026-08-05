@@ -98,7 +98,7 @@ export class OrgPickerComponent implements OnInit {
           message: 'No organizations found.',
           messageType: TOASTER_MESSAGE_TYPE.ERROR,
         });
-        this.router.navigate(['/dashboard/approval-pending'], {
+        this.router.navigate(['/approval-pending'], {
           state: {
             infoMessage: 'No organizations are available yet. Please contact your administrator.',
           },
@@ -239,7 +239,7 @@ export class OrgPickerComponent implements OnInit {
   }
 
   cancelSwitch(): void {
-    this.router.navigate(['/dashboard/overview']);
+    this.router.navigate(['/dashboard']);
   }
 
   private readUserFromSession() {

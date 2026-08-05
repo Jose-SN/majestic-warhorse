@@ -1,34 +1,34 @@
-/** Dashboard child routes — single source of truth for sidenav and programmatic navigation. */
+/** App shell child routes — sidenav + programmatic navigation (flat URLs). */
 export const DASHBOARD_NAV_ROUTES = {
-  overview: '/dashboard/overview',
-  aiMode: '/dashboard/ai-mode',
-  courseOverview: '/dashboard/course-overview',
-  courses: '/dashboard/courses',
-  courseUpload: '/dashboard/course-upload',
-  courseDetails: '/dashboard/course-details',
-  account: '/dashboard/account',
-  customizeApp: '/dashboard/customize-app',
-  directory: '/dashboard/directory',
-  teachers: '/dashboard/directory/teachers',
-  students: '/dashboard/directory/students',
+  overview: '/dashboard',
+  aiMode: '/ai-mode',
+  courseOverview: '/course-overview',
+  courses: '/courses',
+  courseUpload: '/course-upload',
+  courseDetails: '/course-details',
+  account: '/account',
+  customizeApp: '/customize-app',
+  directory: '/directory',
+  teachers: '/directory/teachers',
+  students: '/directory/students',
   manageTeacherStudents: (teacherId: string) =>
-    `/dashboard/directory/teachers/${teacherId}/manage`,
+    `/directory/teachers/${teacherId}/manage`,
   manageStudentTeachers: (studentId: string) =>
-    `/dashboard/directory/students/${studentId}/manage`,
-  approval: '/dashboard/approval',
-  teacherApproval: '/dashboard/approval/teachers',
-  studentApproval: '/dashboard/approval/students',
-  approvalPending: '/dashboard/approval-pending',
-  assignTeacher: '/dashboard/assign-teacher',
-  inviteTeacher: '/dashboard/invite-teacher',
-  inviteStudent: '/dashboard/invite-student',
-  assessment: '/dashboard/assessment',
+    `/directory/students/${studentId}/manage`,
+  approval: '/approval',
+  teacherApproval: '/approval/teachers',
+  studentApproval: '/approval/students',
+  approvalPending: '/approval-pending',
+  assignTeacher: '/assign-teacher',
+  inviteTeacher: '/invite-teacher',
+  inviteStudent: '/invite-student',
+  assessment: '/assessment',
   switchOrg: '/org-picker',
 } as const;
 
 /** Route segments that show the grid + scanline backdrop in the main content area. */
 export const DASHBOARD_TECHNICAL_BACKDROP_SEGMENTS = [
-  'overview',
+  'dashboard',
   'course-overview',
   'account',
   'customize-app',
@@ -36,9 +36,9 @@ export const DASHBOARD_TECHNICAL_BACKDROP_SEGMENTS = [
   'courses',
 ] as const;
 
-/** Route segments under `/dashboard/` that should highlight a nav item. */
+/** Path segments that should highlight a nav item. */
 export const DASHBOARD_NAV_ACTIVE_SEGMENTS = {
-  overview: ['overview', 'course-overview'],
+  overview: ['dashboard', 'course-overview'],
   aiMode: ['ai-mode'],
   account: ['account'],
   customizeApp: ['customize-app'],
@@ -52,6 +52,13 @@ export const DASHBOARD_NAV_ACTIVE_SEGMENTS = {
   assessment: ['assessment'],
 } as const;
 
+/** True when the current URL path matches any of the given first-level segments. */
 export function isDashboardNavActive(url: string, segments: readonly string[]): boolean {
-  return segments.some((segment) => url.includes(`/dashboard/${segment}`));
+  const path = url.split('?')[0].split('#')[0];
+  return segments.some((segment) => {
+    if (segment === 'dashboard') {
+      return path === '/dashboard' || path === '/';
+    }
+    return path === `/${segment}` || path.startsWith(`/${segment}/`);
+  });
 }

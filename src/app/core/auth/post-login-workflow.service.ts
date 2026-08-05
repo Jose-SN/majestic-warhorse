@@ -395,7 +395,7 @@ export class PostLoginWorkflowService {
         this.router.navigate(['/dashboard']);
         return;
       }
-      this.router.navigate(['/dashboard/approval-pending'], {
+      this.router.navigate(['/approval-pending'], {
         state: {
           infoMessage:
             'Your request is pending approval from your organization. Please reach out to your organization for assistance.',
@@ -405,7 +405,7 @@ export class PostLoginWorkflowService {
     }
 
     if (user.status === 'deleted') {
-      this.router.navigate(['/dashboard/approval-pending'], {
+      this.router.navigate(['/approval-pending'], {
         state: {
           infoMessage: 'Your account has been deleted. Please contact your organization.',
         },
@@ -414,7 +414,7 @@ export class PostLoginWorkflowService {
     }
 
     if (user.status === 'rejected') {
-      this.router.navigate(['/dashboard/approval-pending'], {
+      this.router.navigate(['/approval-pending'], {
         state: {
           infoMessage: 'Your access request was rejected. Please contact your organization.',
         },
@@ -423,7 +423,7 @@ export class PostLoginWorkflowService {
     }
 
     if (user.status === 'suspended') {
-      this.router.navigate(['/dashboard/approval-pending'], {
+      this.router.navigate(['/approval-pending'], {
         state: {
           infoMessage: 'Your account has been suspended. Please contact your organization.',
         },

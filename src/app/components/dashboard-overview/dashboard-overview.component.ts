@@ -6,6 +6,7 @@ import { Subject, skip, takeUntil } from 'rxjs';
 import { CourseUploadService } from 'src/app/pages/course-upload/course-upload.service';
 import { ICourseList } from 'src/app/pages/courses/modal/course-list';
 import { DashboardService } from 'src/app/pages/dashboard/dashboard.service';
+import { DASHBOARD_NAV_ROUTES } from 'src/app/pages/dashboard/dashboard-routes.config';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { FavoritesApiService } from 'src/app/services/api-service/favorites-api.service';
@@ -773,7 +774,7 @@ export class DashboardOverviewComponent implements OnDestroy {
   }
 
   navigateToFavorites(): void {
-    this.router.navigate(['/dashboard/courses']);
+    this.router.navigate([DASHBOARD_NAV_ROUTES.courses]);
   }
 
   async fetchReadingFiles() {

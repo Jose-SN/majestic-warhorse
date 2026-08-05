@@ -17,6 +17,7 @@ import { COMPONENT_NAME } from 'src/app/constants/popup-constants';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { VideoDurationService } from 'src/app/shared/services/video-duration.service';
 import { DashboardService } from '../dashboard/dashboard.service';
+import { DASHBOARD_NAV_ROUTES } from '../dashboard/dashboard-routes.config';
 import { QuestionnaireComponent } from '../questionnaire/questionnaire.component';
 import { AssessmentAnswersComponent } from 'src/app/components/assessment-answers/assessment-answers.component';
 import { StudentAssessmentComponent } from 'src/app/components/student-assessment/student-assessment.component';
@@ -118,7 +119,7 @@ export class CourseDetailsComponent {
 
     // If no course info, redirect back to courses
     if (!this.selectedCourseInfo || !this.selectedCourseInfo.id) {
-      this.router.navigate(['/dashboard/courses']);
+      this.router.navigate([DASHBOARD_NAV_ROUTES.courses]);
       return;
     }
 

@@ -26,20 +26,24 @@ import { ViewAssignedStudentsComponent } from './components/view-assigned-studen
 import { ViewAssignedTeachersComponent } from './components/view-assigned-teachers/view-assigned-teachers.component';
 import { CustomizeAppComponent } from './pages/customize-app/customize-app.component';
 
+/**
+ * App shell (DashboardComponent) wraps authenticated pages at the root.
+ * Overview lives at `/dashboard`; all other pages are flat (`/courses`, `/account`, …).
+ */
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginPageComponent },
   { path: 'auth/callback', component: AuthCallbackComponent },
   { path: 'forgetpassword', component: ForgotPasswordComponent },
   { path: 'signup', component: RegistrationPageComponent },
   { path: 'org-picker', component: OrgPickerComponent, canActivate: [authGuard] },
   {
-    path: 'dashboard',
+    path: '',
     component: DashboardComponent,
     canActivate: [authGuard],
     children: [
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: DashboardOverviewComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardOverviewComponent },
+      { path: 'overview', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'ai-mode', component: AiModeComponent },
       { path: 'course-overview', component: CourseOverviewComponent },
       { path: 'courses', component: CoursesComponent },

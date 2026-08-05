@@ -115,7 +115,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const url = this.router.url;
     switch (section) {
       case 'overview':
-        return url.includes(DASHBOARD_NAV_ROUTES.overview) || url.includes(DASHBOARD_NAV_ROUTES.courseOverview) || url === '/dashboard';
+        return (
+          url.includes(DASHBOARD_NAV_ROUTES.overview) ||
+          url.includes(DASHBOARD_NAV_ROUTES.courseOverview) ||
+          url === '/'
+        );
       case 'ai-mode':
         return url.includes(DASHBOARD_NAV_ROUTES.aiMode);
       case 'courses':
