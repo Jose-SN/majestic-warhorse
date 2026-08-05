@@ -1,5 +1,5 @@
 /** Runtime white-label / org branding (persisted per organization_id).
- * Color values follow design.xml Enterprise Bitcoin tokens; see docs/design_v1.
+ * Color values follow design.xml / docs/design_v1; orgs override via customize-app.
  */
 export interface BrandingThemeColors {
   surface: string;

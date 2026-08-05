@@ -22,6 +22,7 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
   draft!: AppBranding;
   saving = false;
   loading = true;
+  activePresetId: string | null = null;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -52,6 +53,7 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
 
     this.brandingService.branding$.pipe(takeUntil(this.destroy$)).subscribe((branding) => {
       this.draft = this.clone(branding);
+      this.syncActivePreset();
     });
 
     this.loading = true;
@@ -60,6 +62,7 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
     } finally {
       this.loading = false;
       this.draft = this.clone(this.brandingService.branding);
+      this.syncActivePreset();
     }
   }
 
@@ -70,6 +73,11 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
 
   applyPreset(preset: BrandingPreset): void {
     this.draft.colors = { ...preset.colors };
+    this.activePresetId = preset.id;
+  }
+
+  onColorEdited(): void {
+    this.syncActivePreset();
   }
 
   async onLogoSelected(event: Event): Promise<void> {
@@ -154,6 +162,7 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
     try {
       await this.brandingService.resetToDefault();
       this.draft = this.clone(this.brandingService.branding);
+      this.syncActivePreset();
       this.toast('Restored Majestic default branding.', TOASTER_MESSAGE_TYPE.SUCCESS);
     } catch (err: unknown) {
       const message =
@@ -197,16 +206,33 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
       onSurfaceVariant: 'Text muted',
       primary: 'Primary',
       primaryContainer: 'Primary accent',
-      secondary: 'Gold',
-      secondaryContainer: 'Primary dark',
-      tertiary: 'Gold alt',
-      tertiaryContainer: 'Gold container',
+      secondary: 'Secondary',
+      secondaryContainer: 'Secondary dark',
+      tertiary: 'Tertiary',
+      tertiaryContainer: 'Tertiary dark',
       outline: 'Border',
-      gradientStart: 'Orange start',
-      gradientMid: 'Bitcoin mid',
-      gradientEnd: 'Gold end',
+      gradientStart: 'Gradient start',
+      gradientMid: 'Gradient mid',
+      gradientEnd: 'Gradient end',
     };
     return labels[key];
+  }
+
+  private syncActivePreset(): void {
+    if (!this.draft?.colors) {
+      this.activePresetId = null;
+      return;
+    }
+    const match = this.presets.find((preset) =>
+      this.colorsEqual(preset.colors, this.draft.colors)
+    );
+    this.activePresetId = match?.id ?? null;
+  }
+
+  private colorsEqual(a: BrandingThemeColors, b: BrandingThemeColors): boolean {
+    return (Object.keys(a) as (keyof BrandingThemeColors)[]).every(
+      (key) => a[key].toLowerCase() === b[key].toLowerCase()
+    );
   }
 
   private clone(branding: AppBranding): AppBranding {

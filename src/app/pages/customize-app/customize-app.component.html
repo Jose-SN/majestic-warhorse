@@ -1,55 +1,71 @@
 <section class="customize-app" *ngIf="draft">
-  <header class="customize-app__toolbar">
-    <div class="customize-app__heading">
-      <p class="customize-app__eyebrow">White-label</p>
-      <h1 class="customize-app__title">Customize your app</h1>
-      <p class="customize-app__lead">
-        Brand identity and Enterprise Bitcoin theme tokens. Saved per organisation.
-      </p>
-    </div>
-    <div class="customize-app__actions">
-      <button type="button" class="customize-app__btn customize-app__btn--ghost" (click)="reset()" [disabled]="saving">
-        Reset
-      </button>
-      <button type="button" class="customize-app__btn customize-app__btn--secondary" (click)="previewLive()">
-        Preview
-      </button>
-      <button
-        type="button"
-        class="customize-app__btn customize-app__btn--primary"
-        [disabled]="saving"
-        (click)="save()"
-      >
-        {{ saving ? 'Saving…' : 'Save' }}
-      </button>
-    </div>
-  </header>
+  <div class="customize-app__grid">
+    <header class="customize-app__toolbar">
+      <div class="customize-app__heading">
+        <p class="customize-app__eyebrow">White-label</p>
+        <h1 class="customize-app__title">Customize your app</h1>
+        <p class="customize-app__lead">
+          Brand identity and theme tokens for your organisation. Preview live, then save.
+        </p>
+      </div>
+      <div class="customize-app__actions" role="group" aria-label="Branding actions">
+        <button
+          type="button"
+          class="customize-app__btn customize-app__btn--ghost"
+          (click)="reset()"
+          [disabled]="saving"
+        >
+          Reset
+        </button>
+        <button
+          type="button"
+          class="customize-app__btn customize-app__btn--secondary"
+          (click)="previewLive()"
+          [disabled]="saving"
+        >
+          Preview
+        </button>
+        <button
+          type="button"
+          class="customize-app__btn customize-app__btn--primary"
+          [disabled]="saving"
+          (click)="save()"
+        >
+          {{ saving ? 'Saving…' : 'Save changes' }}
+        </button>
+      </div>
+    </header>
 
-  <div class="customize-app__workspace">
     <div class="customize-app__editor">
       <section class="customize-app__card">
         <h2 class="customize-app__card-title">Identity</h2>
+        <p class="customize-app__card-desc">App name, tagline, and marks shown across the product.</p>
         <div class="customize-app__form-grid">
-          <label class="customize-app__field">
+          <label class="customize-app__field customize-app__field--span-6">
             <span>App name</span>
             <input type="text" [(ngModel)]="draft.appName" name="appName" maxlength="80" />
           </label>
-          <label class="customize-app__field">
+          <label class="customize-app__field customize-app__field--span-6">
             <span>Tagline</span>
             <input type="text" [(ngModel)]="draft.tagline" name="tagline" maxlength="160" />
           </label>
-          <label class="customize-app__field customize-app__field--upload">
+          <label class="customize-app__field customize-app__field--span-6 customize-app__field--upload">
             <span>Logo</span>
             <div class="customize-app__upload-box">
               <img [src]="draft.logoUrl" [alt]="draft.appName || 'Logo'" />
               <input type="file" accept="image/*" (change)="onLogoSelected($event)" aria-label="Upload logo" />
             </div>
           </label>
-          <label class="customize-app__field customize-app__field--upload">
+          <label class="customize-app__field customize-app__field--span-6 customize-app__field--upload">
             <span>Favicon</span>
             <div class="customize-app__upload-box customize-app__upload-box--favicon">
               <img [src]="draft.faviconUrl" alt="Favicon" />
-              <input type="file" accept="image/*" (change)="onFaviconSelected($event)" aria-label="Upload favicon" />
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onFaviconSelected($event)"
+                aria-label="Upload favicon"
+              />
             </div>
           </label>
         </div>
@@ -57,12 +73,17 @@
 
       <section class="customize-app__card">
         <h2 class="customize-app__card-title">Theme presets</h2>
+        <p class="customize-app__card-desc">
+          Pick a starting palette. Each preset sets accents and the brand gradient.
+        </p>
         <div class="customize-app__presets" role="list">
           <button
             type="button"
             class="customize-app__preset"
             *ngFor="let preset of presets"
             (click)="applyPreset(preset)"
+            [class.customize-app__preset--active]="activePresetId === preset.id"
+            [attr.aria-pressed]="activePresetId === preset.id"
             [attr.aria-label]="'Apply ' + preset.label + ' preset'"
           >
             <span
@@ -70,22 +91,31 @@
               [style.background]="
                 'linear-gradient(135deg,' +
                 preset.colors.gradientStart +
-                ',' +
+                ' 0%,' +
                 preset.colors.gradientMid +
-                ',' +
+                ' 50%,' +
                 preset.colors.gradientEnd +
-                ')'
+                ' 100%)'
               "
             ></span>
-            <span>{{ preset.label }}</span>
+            <span class="customize-app__preset-meta">
+              <span class="customize-app__preset-label">{{ preset.label }}</span>
+              <span class="customize-app__preset-stops">
+                {{ preset.colors.gradientStart }} · {{ preset.colors.gradientMid }}
+              </span>
+            </span>
           </button>
         </div>
       </section>
 
       <section class="customize-app__card customize-app__card--colors">
         <div class="customize-app__card-head">
-          <h2 class="customize-app__card-title">Color system</h2>
-          <p class="customize-app__hint">Maps to design.xml / <code>--ds-*</code> and <code>--mc-*</code> tokens</p>
+          <div>
+            <h2 class="customize-app__card-title">Color system</h2>
+            <p class="customize-app__hint">
+              Maps to <code>--ds-*</code> and <code>--mc-*</code> tokens at runtime
+            </p>
+          </div>
         </div>
 
         <div class="customize-app__color-groups">
@@ -99,9 +129,16 @@
                   [name]="key"
                   [attr.title]="colorLabel(key)"
                   [attr.aria-label]="colorLabel(key)"
+                  (ngModelChange)="onColorEdited()"
                 />
                 <span>{{ colorLabel(key) }}</span>
-                <input type="text" [(ngModel)]="draft.colors[key]" [name]="key + '-hex'" maxlength="7" />
+                <input
+                  type="text"
+                  [(ngModel)]="draft.colors[key]"
+                  [name]="key + '-hex'"
+                  maxlength="7"
+                  (ngModelChange)="onColorEdited()"
+                />
               </label>
             </div>
           </div>
@@ -110,39 +147,49 @@
     </div>
 
     <aside class="customize-app__preview" aria-live="polite">
-      <h2 class="customize-app__card-title">Live preview</h2>
-      <div
-        class="customize-app__preview-shell"
-        [style.--preview-bg]="draft.colors.surfaceContainerLow"
-        [style.--preview-surface]="draft.colors.surface"
-        [style.--preview-panel]="draft.colors.surfaceContainer"
-        [style.--preview-border]="draft.colors.outline"
-        [style.--preview-text]="draft.colors.onSurface"
-        [style.--preview-muted]="draft.colors.onSurfaceVariant"
-        [style.--preview-gradient]="
-          'linear-gradient(135deg,' +
-          draft.colors.gradientStart +
-          ',' +
-          draft.colors.gradientMid +
-          ',' +
-          draft.colors.gradientEnd +
-          ')'
-        "
-      >
-        <div class="customize-app__preview-nav">
-          <img [src]="draft.logoUrl" [alt]="draft.appName" />
-          <span>{{ draft.appName || 'App name' }}</span>
+      <div class="customize-app__preview-sticky">
+        <h2 class="customize-app__card-title">Live preview</h2>
+        <div
+          class="customize-app__preview-shell"
+          [style.--preview-bg]="draft.colors.surfaceContainerLow"
+          [style.--preview-surface]="draft.colors.surface"
+          [style.--preview-panel]="draft.colors.surfaceContainer"
+          [style.--preview-border]="draft.colors.outline"
+          [style.--preview-text]="draft.colors.onSurface"
+          [style.--preview-muted]="draft.colors.onSurfaceVariant"
+          [style.--preview-gradient]="
+            'linear-gradient(135deg,' +
+            draft.colors.gradientStart +
+            ' 0%,' +
+            draft.colors.gradientMid +
+            ' 50%,' +
+            draft.colors.gradientEnd +
+            ' 100%)'
+          "
+        >
+          <div class="customize-app__preview-nav">
+            <img [src]="draft.logoUrl" [alt]="draft.appName" />
+            <span>{{ draft.appName || 'App name' }}</span>
+          </div>
+          <div class="customize-app__preview-body">
+            <p class="customize-app__preview-eyebrow">Your organisation</p>
+            <h3>{{ draft.appName || 'App name' }}</h3>
+            <p>{{ draft.tagline || 'Tagline appears here' }}</p>
+            <div class="customize-app__preview-actions">
+              <button type="button" class="customize-app__preview-cta" tabindex="-1">
+                Continue learning
+              </button>
+              <button type="button" class="customize-app__preview-cta customize-app__preview-cta--secondary" tabindex="-1">
+                Secondary
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="customize-app__preview-body">
-          <p class="customize-app__preview-eyebrow">Your organisation</p>
-          <h3>{{ draft.appName || 'App name' }}</h3>
-          <p>{{ draft.tagline || 'Tagline appears here' }}</p>
-          <button type="button" class="customize-app__preview-cta">Continue learning</button>
-        </div>
+        <p class="customize-app__note">
+          Primary actions use the brand gradient. Secondary uses surface + border per design system
+          buttons.
+        </p>
       </div>
-      <p class="customize-app__note">
-        Follows design.xml: 8pt grid, Bitcoin orange identity, enterprise clarity.
-      </p>
     </aside>
   </div>
 </section>
