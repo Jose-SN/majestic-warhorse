@@ -125,7 +125,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       case 'courses':
         return url.includes(DASHBOARD_NAV_ROUTES.courses) || url.includes(DASHBOARD_NAV_ROUTES.courseDetails);
       case 'account':
-        return url.includes(DASHBOARD_NAV_ROUTES.account);
+        return url.includes(DASHBOARD_NAV_ROUTES.settings);
       case 'network': {
         const role = this.commonService.loginedUserInfo?.role || '';
         if (role === 'organization' || role === 'teacher') {
@@ -146,7 +146,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       overview: DASHBOARD_NAV_ROUTES.overview,
       'ai-mode': DASHBOARD_NAV_ROUTES.aiMode,
       courses: DASHBOARD_NAV_ROUTES.courses,
-      account: DASHBOARD_NAV_ROUTES.account,
+      account: DASHBOARD_NAV_ROUTES.settings,
       network:
         role === 'organization'
           ? DASHBOARD_NAV_ROUTES.teachers

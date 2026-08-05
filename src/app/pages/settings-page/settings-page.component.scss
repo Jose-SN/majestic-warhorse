@@ -1,3 +1,4 @@
+@import '../../../styles/mixins';
 @import '../../../styles/approval-grid';
 
 :host {
@@ -7,7 +8,7 @@
   width: 100%;
 }
 
-.approval-page {
+.settings-page {
   .approval-grid-page__content {
     display: flex;
     flex-direction: column;
@@ -61,17 +62,19 @@
     display: flex;
     flex-direction: column;
 
-    app-approval-list,
-    app-student-approval-list {
+    app-account-settings,
+    app-customize-app {
       flex: 1;
       min-height: 0;
       width: 100%;
+      display: flex;
+      flex-direction: column;
     }
   }
 }
 
 @media screen and (max-width: 1024px) {
-  .approval-page {
+  .settings-page {
     .approval-grid-page__header-actions {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -79,15 +82,33 @@
       gap: 12px;
     }
 
-    .approval-page__tabs {
+    .settings-page__tabs {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       grid-column: 1 / -1;
       width: 100%;
 
+      &--single {
+        grid-template-columns: 1fr;
+      }
+
       li {
         padding: 0 12px;
         text-align: center;
+      }
+    }
+
+    .settings-page__panel {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: visible;
+
+      app-account-settings,
+      app-customize-app {
+        display: block;
+        height: auto;
+        min-height: min-content;
+        flex: none;
       }
     }
   }

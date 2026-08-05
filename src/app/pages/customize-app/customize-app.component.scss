@@ -6,6 +6,10 @@
   width: 100%;
   max-width: 100%;
   overflow: hidden;
+
+  &.customize-app-host--embedded {
+    overflow: visible;
+  }
 }
 
 .customize-app {
@@ -97,6 +101,21 @@
     justify-content: flex-end;
     align-items: center;
     gap: var(--ds-space-2, 8px);
+  }
+
+  &--embedded {
+    padding: 0;
+    background: transparent;
+    overflow: visible;
+
+    .customize-app__toolbar {
+      margin-bottom: 0;
+    }
+
+    .customize-app__actions {
+      grid-column: 1 / -1;
+      justify-content: flex-end;
+    }
   }
 
   /* Buttons — docs/design_v1/18_BUTTONS.md */
@@ -316,7 +335,7 @@
     cursor: pointer;
 
     img {
-      // max-height: 32px;
+      height: 100%;
       max-width: 100%;
       object-fit: contain;
     }
@@ -516,8 +535,8 @@
     border-bottom: 1px solid var(--preview-border, var(--ds-border));
 
     img {
-      width: 32px;
-      height: 32px;
+      width: 200px;
+      height: 100px;
       object-fit: contain;
     }
 

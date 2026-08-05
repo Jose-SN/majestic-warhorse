@@ -16,7 +16,11 @@
               </div>
             </div>
           </div>
-          <span class="account-profile__avatar-status" aria-hidden="true"></span>
+          <span
+            class="account-profile__avatar-status"
+            [class.account-profile__avatar-status--warning]="accountStatus.toLowerCase() !== 'active'"
+            aria-hidden="true"
+          ></span>
           <input
             type="file"
             #profileImageInput
@@ -72,9 +76,19 @@
             </div>
             <p class="account-profile__stat-value">Operational // {{ systemId }}</p>
           </div> -->
-          <div class="account-profile__stat-card account-profile__stat-card--tertiary">
+          <div
+            class="account-profile__stat-card"
+            [class.account-profile__stat-card--success]="accountStatus.toLowerCase() === 'active'"
+            [class.account-profile__stat-card--warning]="accountStatus.toLowerCase() !== 'active'"
+          >
             <p class="account-profile__stat-label">Account Status</p>
-            <p class="account-profile__stat-value account-profile__stat-value--lg">{{ accountStatus }}</p>
+            <p
+              class="account-profile__stat-value account-profile__stat-value--lg"
+              [class.account-profile__stat-value--success]="accountStatus.toLowerCase() === 'active'"
+              [class.account-profile__stat-value--warning]="accountStatus.toLowerCase() !== 'active'"
+            >
+              {{ accountStatus }}
+            </p>
           </div>
           <div class="account-profile__stat-card account-profile__stat-card--secondary">
             <p class="account-profile__stat-label">Last Updated</p>
@@ -95,13 +109,13 @@
         </div>
 
         <div class="account-profile__workspace-inner">
-          <div class="account-profile__workspace-header">
+          <!-- <div class="account-profile__workspace-header">
             <div class="account-profile__workspace-title">
               <span class="material-symbols-outlined" aria-hidden="true">manage_accounts</span>
               <h2>Update Account Details</h2>
             </div>
             <p>Synchronize your biometrics and security protocols across the Majestic Warhorse infrastructure.</p>
-          </div>
+          </div> -->
 
           <div class="account-profile__form-block">
             <div class="account-profile__form-block-head">
@@ -275,11 +289,11 @@
           </div>
 
           <div class="account-profile__actions">
+            <button type="button" class="account-profile__reset" (click)="resetForm()">Reset</button>
             <button class="account-profile__submit" type="submit">
               <span class="material-symbols-outlined" aria-hidden="true">save</span>
               Commit Changes
             </button>
-            <button type="button" class="account-profile__reset" (click)="resetForm()">Reset</button>
           </div>
         </div>
       </section>

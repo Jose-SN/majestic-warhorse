@@ -6,8 +6,9 @@ export const DASHBOARD_NAV_ROUTES = {
   courses: '/courses',
   courseUpload: '/course-upload',
   courseDetails: '/course-details',
-  account: '/account',
-  customizeApp: '/customize-app',
+  settings: '/settings',
+  account: '/settings/account',
+  customizeApp: '/settings/customize',
   directory: '/directory',
   teachers: '/directory/teachers',
   students: '/directory/students',
@@ -30,8 +31,7 @@ export const DASHBOARD_NAV_ROUTES = {
 export const DASHBOARD_TECHNICAL_BACKDROP_SEGMENTS = [
   'dashboard',
   'course-overview',
-  'account',
-  'customize-app',
+  'settings',
   'ai-mode',
   'courses',
 ] as const;
@@ -40,8 +40,9 @@ export const DASHBOARD_TECHNICAL_BACKDROP_SEGMENTS = [
 export const DASHBOARD_NAV_ACTIVE_SEGMENTS = {
   overview: ['dashboard', 'course-overview'],
   aiMode: ['ai-mode'],
-  account: ['account'],
-  customizeApp: ['customize-app'],
+  settings: ['settings'],
+  account: ['settings'],
+  customizeApp: ['settings'],
   courses: ['courses', 'course-details', 'course-upload'],
   directory: ['directory'],
   approval: ['approval'],

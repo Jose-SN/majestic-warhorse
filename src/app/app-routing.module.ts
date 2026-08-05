@@ -9,7 +9,6 @@ import { DashboardOverviewComponent } from './components/dashboard-overview/dash
 import { CourseOverviewComponent } from './pages/course-overview/course-overview.component';
 import { CoursesComponent } from './pages/courses/courses.component';
 import { CourseDetailsComponent } from './pages/course-details/course-details.component';
-import { EditAccountComponent } from './pages/edit-account/edit-account.component';
 import { DirectoryPageComponent } from './pages/directory-page/directory-page.component';
 import { ApprovalPageComponent } from './pages/approval-page/approval-page.component';
 import { ApprovalPendingComponent } from './pages/approval-pending/approval-pending.component';
@@ -24,11 +23,11 @@ import { AiModeComponent } from './pages/ai-mode/ai-mode.component';
 import { CourseUploadComponent } from './pages/course-upload/course-upload.component';
 import { ViewAssignedStudentsComponent } from './components/view-assigned-students/view-assigned-students.component';
 import { ViewAssignedTeachersComponent } from './components/view-assigned-teachers/view-assigned-teachers.component';
-import { CustomizeAppComponent } from './pages/customize-app/customize-app.component';
+import { SettingsPageComponent } from './pages/settings-page/settings-page.component';
 
 /**
  * App shell (DashboardComponent) wraps authenticated pages at the root.
- * Overview lives at `/dashboard`; all other pages are flat (`/courses`, `/account`, …).
+ * Overview lives at `/dashboard`; all other pages are flat (`/courses`, `/settings`, …).
  */
 const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
@@ -49,8 +48,10 @@ const routes: Routes = [
       { path: 'courses', component: CoursesComponent },
       { path: 'course-upload', component: CourseUploadComponent },
       { path: 'course-details', component: CourseDetailsComponent },
-      { path: 'account', component: EditAccountComponent },
-      { path: 'customize-app', component: CustomizeAppComponent },
+      { path: 'settings', component: SettingsPageComponent },
+      { path: 'settings/:tab', component: SettingsPageComponent },
+      { path: 'account', redirectTo: 'settings/account', pathMatch: 'full' },
+      { path: 'customize-app', redirectTo: 'settings/customize', pathMatch: 'full' },
       { path: 'directory/teachers/:id/manage', component: ViewAssignedStudentsComponent },
       { path: 'directory/students/:id/manage', component: ViewAssignedTeachersComponent },
       { path: 'directory', component: DirectoryPageComponent },

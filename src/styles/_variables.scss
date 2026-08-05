@@ -113,6 +113,7 @@ $titilliumWeb-regular: 'TitilliumWeb-Regular';
 
   /* ─── App --mc-* (existing components; overridden by BrandingService) ─── */
   --mc-surface: #0f1115;
+  --mc-surface-variant: #171a20;
   --mc-surface-container-lowest: #030304;
   --mc-surface-container-low: #030304;
   --mc-surface-container: #171a20;
@@ -123,11 +124,16 @@ $titilliumWeb-regular: 'TitilliumWeb-Regular';
   --mc-outline: #1e293b;
   --mc-outline-variant: #1e293b;
   --mc-primary: #ffb59a;
+  --mc-on-primary: #ffffff;
   --mc-primary-container: #ff6b2c;
   --mc-secondary: #ffb0cc;
   --mc-secondary-container: #ab0063;
   --mc-tertiary: #dcb8ff;
+  --mc-on-tertiary: #ffffff;
   --mc-tertiary-container: #4a0084;
+  --mc-success: #22c55e;
+  --mc-warning: #ffd600;
+  --mc-error: #ef4444;
   --mc-brand-gradient: linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #4a0084 100%);
   --mc-brand-text-gradient: linear-gradient(135deg, #ff6b2c 0%, #ab0063 100%);
   --mc-font-display: 'Space Grotesk', 'Poppins-Bold', sans-serif;

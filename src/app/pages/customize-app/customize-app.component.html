@@ -1,13 +1,15 @@
-<section class="customize-app" *ngIf="draft">
+<section class="customize-app" [class.customize-app--embedded]="embedded" *ngIf="draft">
   <div class="customize-app__grid">
     <header class="customize-app__toolbar">
-      <div class="customize-app__heading">
-        <p class="customize-app__eyebrow">White-label</p>
-        <h1 class="customize-app__title">Customize your app</h1>
-        <p class="customize-app__lead">
-          Brand identity and theme tokens for your organisation. Preview live, then save.
-        </p>
-      </div>
+      @if (!embedded) {
+        <div class="customize-app__heading">
+          <p class="customize-app__eyebrow">White-label</p>
+          <h1 class="customize-app__title">Customize your app</h1>
+          <p class="customize-app__lead">
+            Brand identity and theme tokens for your organisation. Preview live, then save.
+          </p>
+        </div>
+      }
       <div class="customize-app__actions" role="group" aria-label="Branding actions">
         <button
           type="button"

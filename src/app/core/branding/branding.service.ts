@@ -305,6 +305,7 @@ export class BrandingService {
 
     // App --mc-*
     set('--mc-surface', c.surface);
+    set('--mc-surface-variant', c.surfaceContainer);
     set('--mc-surface-container', c.surfaceContainer);
     set('--mc-surface-container-low', c.surfaceContainerLow);
     set('--mc-surface-container-lowest', c.surfaceContainerLow);
@@ -313,10 +314,12 @@ export class BrandingService {
     set('--mc-on-surface', c.onSurface);
     set('--mc-on-surface-variant', c.onSurfaceVariant);
     set('--mc-primary', c.primary);
+    set('--mc-on-primary', '#ffffff');
     set('--mc-primary-container', c.primaryContainer);
     set('--mc-secondary', c.secondary);
     set('--mc-secondary-container', c.secondaryContainer);
     set('--mc-tertiary', c.tertiary);
+    set('--mc-on-tertiary', '#ffffff');
     set('--mc-tertiary-container', c.tertiaryContainer);
     set('--mc-outline', c.outline);
     set('--mc-outline-variant', c.outline);

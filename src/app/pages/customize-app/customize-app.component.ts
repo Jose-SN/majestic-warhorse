@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -18,6 +18,13 @@ import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
   styleUrl: './customize-app.component.scss',
 })
 export class CustomizeAppComponent implements OnInit, OnDestroy {
+  @Input() embedded = false;
+
+  @HostBinding('class.customize-app-host--embedded')
+  get embeddedHost(): boolean {
+    return this.embedded;
+  }
+
   readonly presets: BrandingPreset[] = BRANDING_PRESETS;
   draft!: AppBranding;
   saving = false;
@@ -41,13 +48,21 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     if (!this.isOrganization) {
-      void this.router.navigate([DASHBOARD_NAV_ROUTES.overview]);
+      void this.router.navigate(
+        this.embedded
+          ? [DASHBOARD_NAV_ROUTES.settings, 'account']
+          : [DASHBOARD_NAV_ROUTES.overview]
+      );
       return;
     }
 
     if (!this.organizationId) {
       this.toast('organization_id is required for branding.', TOASTER_MESSAGE_TYPE.ERROR);
-      void this.router.navigate([DASHBOARD_NAV_ROUTES.overview]);
+      void this.router.navigate(
+        this.embedded
+          ? [DASHBOARD_NAV_ROUTES.settings, 'account']
+          : [DASHBOARD_NAV_ROUTES.overview]
+      );
       return;
     }
 
