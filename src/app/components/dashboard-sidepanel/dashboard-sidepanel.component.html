@@ -1,10 +1,6 @@
 <header (click)="navigateToHome()">
   <figure class="logo-main">
-    <img class="logo-main__mark" src="assets/images/logo-majestic-hourse.svg" alt="Majestic Warhorse" />
-    <!-- <figcaption class="logo-main__text">
-      <span class="logo-main__eyebrow">MAKING OF</span>
-      <span class="logo-main__title">MAJESTIC WARHORSE</span>
-    </figcaption> -->
+    <img class="logo-main__mark" [src]="brandLogo" [alt]="appName" />
   </figure>
 </header>
 <div class="left-navigation">
@@ -94,6 +90,27 @@
           </svg>
         </figure>
         <span>Account</span>
+      </a>
+    </li>
+    <li *ngIf="loginedUserPrivilege === 'organization'" [ngClass]="{ disabled: disableListItems() }">
+      <a
+        [routerLink]="navRoutes.customizeApp"
+        [class.active]="isNavActive(navActiveSegments.customizeApp)"
+        (click)="onNavClick($event)"
+      >
+        <figure>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"
+              fill="currentColor"
+            />
+            <path
+              d="M5 16l.9 2.1L8 19l-2.1.9L5 22l-.9-2.1L2 19l2.1-.9L5 16zm14-2l.7 1.7L21.5 16l-1.8.7L19 18.5l-.7-1.8L16.5 16l1.8-.7L19 14z"
+              fill="currentColor"
+            />
+          </svg>
+        </figure>
+        <span>Customize</span>
       </a>
     </li>
     <li [ngClass]="{ disabled: disableListItems() }">

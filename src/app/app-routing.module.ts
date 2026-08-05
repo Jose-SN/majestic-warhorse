@@ -24,6 +24,7 @@ import { AiModeComponent } from './pages/ai-mode/ai-mode.component';
 import { CourseUploadComponent } from './pages/course-upload/course-upload.component';
 import { ViewAssignedStudentsComponent } from './components/view-assigned-students/view-assigned-students.component';
 import { ViewAssignedTeachersComponent } from './components/view-assigned-teachers/view-assigned-teachers.component';
+import { CustomizeAppComponent } from './pages/customize-app/customize-app.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -45,6 +46,7 @@ const routes: Routes = [
       { path: 'course-upload', component: CourseUploadComponent },
       { path: 'course-details', component: CourseDetailsComponent },
       { path: 'account', component: EditAccountComponent },
+      { path: 'customize-app', component: CustomizeAppComponent },
       { path: 'directory/teachers/:id/manage', component: ViewAssignedStudentsComponent },
       { path: 'directory/students/:id/manage', component: ViewAssignedTeachersComponent },
       { path: 'directory', component: DirectoryPageComponent },

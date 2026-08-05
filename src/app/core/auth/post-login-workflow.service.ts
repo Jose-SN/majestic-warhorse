@@ -12,6 +12,7 @@ import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-
 import { RosterRegistrationService } from 'src/app/services/api-service/roster-registration.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { mapOrganizationToUserShape, mapUserToLegacy } from 'src/app/shared/utils/user-mapper.util';
+import { BrandingService } from 'src/app/core/branding/branding.service';
 
 export type LoginType = 'user' | 'organization';
 export type RoleIntent = 'teacher' | 'student';
@@ -33,7 +34,8 @@ export class PostLoginWorkflowService {
     private organizationApiService: OrganizationApiService,
     private userRoleApi: UserRoleApiService,
     private assignTeacherService: AssignTeacherService,
-    private rosterRegistration: RosterRegistrationService
+    private rosterRegistration: RosterRegistrationService,
+    private brandingService: BrandingService
   ) {}
 
   /** Run the full post-login workflow per UI_WORKFLOW.md Flow 0 + 0b. */
@@ -42,6 +44,7 @@ export class PostLoginWorkflowService {
 
     if (loginType === 'organization') {
       this.persistOrganizationSession(jwt, profile, authProvider);
+      await this.brandingService.reloadForOrganization();
       await this.authService.getAllUsers().then((users) => {
         this.commonService.allUsersList = users || [];
       }).catch(() => {});
@@ -74,6 +77,7 @@ export class PostLoginWorkflowService {
           sessionStorage.setItem('activeOrganizationName', org.name);
         }
         sessionStorage.removeItem('needsOrgPicker');
+        await this.brandingService.reloadForOrganization();
         const finalOverview = await this.continueWithOrganization(
           mappedUser,
           organizationId
@@ -105,6 +109,7 @@ export class PostLoginWorkflowService {
     user.organization_id = organizationId;
     sessionStorage.setItem('login_details', JSON.stringify(user));
     this.commonService.loginedUserInfo = user;
+    await this.brandingService.reloadForOrganization();
 
     const intent =
       options.roleIntent ||

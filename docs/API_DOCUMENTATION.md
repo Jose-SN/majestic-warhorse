@@ -45,6 +45,7 @@ Complete reference for the **course backend** HTTP API (rosters, RBAC, assignmen
 | [Teachers roster](#teachers-roster--teachers) | `/teachers` |
 | [Students roster](#students-roster--students) | `/students` |
 | [Course discussions](#course-discussions--discussion) | `/discussion` |
+| [Organization branding](#organization-branding--branding) | `/branding` |
 | [Teacher–Students assignments](#teacherstudents--teacher-students) | `/teacher-students` |
 | [HTTP status codes](#http-status-codes) | — |
 
@@ -75,6 +76,8 @@ Complete reference for the **course backend** HTTP API (rosters, RBAC, assignmen
 | Course discussions (list) | `GET` | `/discussion/get?course_id=&organization_id=` | — |
 | Course discussions (post) | `POST` | `/discussion/save` | — |
 | Create course | `POST` | `/course/save` | — |
+| Get org branding | `GET` | `/branding/get?organization_id=` | — |
+| Save org branding | `POST` | `/branding/save` | `organization_id` required |
 
 See [UI_WORKFLOW.md](./UI_WORKFLOW.md) for step-by-step flows per role.
 
@@ -986,6 +989,87 @@ PostgreSQL-backed. Supports single-choice (string) and checkbox (JSON string) an
   "message": "Successfully deleted"
 }
 ```
+
+---
+
+## Organization branding — `/branding`
+
+Per-organization white-label theme (app name, logo, favicon, color tokens).  
+`organization_id` is **always required** (IAM organization UUID). One row per organization.
+
+**Table:** `organization_branding` (see `scripts/create_organization_branding_table.sql` in the backend repo).
+
+### Get branding
+`GET /branding/get?organization_id=`
+
+| Param | Required | Notes |
+|-------|----------|-------|
+| `organization_id` | **Yes** | IAM org UUID |
+
+**Response `200` (exists):**
+```json
+{
+  "success": true,
+  "message": "Branding found",
+  "data": {
+    "id": "uuid",
+    "organization_id": "org-uuid",
+    "app_name": "My Academy",
+    "tagline": "Learn with us",
+    "logo_url": "https://…/logo.png",
+    "favicon_url": "https://…/favicon.png",
+    "colors": {
+      "surface": "#131316",
+      "primaryContainer": "#ff6b2c"
+    },
+    "created_at": "…",
+    "updated_at": "…"
+  }
+}
+```
+
+**Response `200` (none saved):**
+```json
+{
+  "success": true,
+  "data": null,
+  "message": "No branding saved for this organization"
+}
+```
+
+Frontend treats `data: null` as **use Majestic defaults**.
+
+**Response `400`:** missing `organization_id`.
+
+### Save branding
+`POST /branding/save`
+
+**Body** (`organization_id` and `app_name` required; camelCase aliases also accepted):
+
+```json
+{
+  "organization_id": "org-uuid",
+  "app_name": "My Academy",
+  "tagline": "Learn with us",
+  "logo_url": "…",
+  "favicon_url": "…",
+  "colors": {
+    "surface": "#131316",
+    "surfaceContainer": "#1f1f22",
+    "primaryContainer": "#ff6b2c",
+    "gradientStart": "#ff6b2c",
+    "gradientMid": "#ab0063",
+    "gradientEnd": "#4a0084"
+  }
+}
+```
+
+Upserts by `organization_id`. **Response `200`:** `{ success: true, message: "Branding saved", data: { … } }`.
+
+### Delete branding
+`DELETE /branding?organization_id=`
+
+Removes the row so clients fall back to defaults. **Response `200`:** `{ success: true, data: { deleted: true|false } }`.
 
 ---
 

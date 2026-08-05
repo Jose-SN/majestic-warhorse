@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import {
   DASHBOARD_NAV_ACTIVE_SEGMENTS,
   DASHBOARD_NAV_ROUTES,
@@ -13,6 +13,7 @@ import { AppService } from 'src/app/shared/services/app.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { IModelInfo } from '../common-dialog/model/popupmodel';
 import { AuthService } from 'src/app/services/api-service/auth.service';
+import { BrandingService } from 'src/app/core/branding/branding.service';
 
 @Component({
   selector: 'app-dashboard-sidepanel',
@@ -30,7 +31,8 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
   public currentYear: number = new Date().getFullYear();
   private destroy$ = new Subject<void>();
   public showAssigningPopup: boolean = false;
-  readonly brandLogo = 'assets/images/logo-majestic-hourse.svg';
+  brandLogo = 'assets/images/logo-majestic-hourse.svg';
+  appName = 'Majestic Warhorse';
   readonly navRoutes = DASHBOARD_NAV_ROUTES;
   readonly navActiveSegments = DASHBOARD_NAV_ACTIVE_SEGMENTS;
 
@@ -46,7 +48,8 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
     public commonService: CommonService,
     private router: Router,
     public appService: AppService,
-    public authService: AuthService
+    public authService: AuthService,
+    private brandingService: BrandingService
   ) {
     this.loginedUserPrivilege = this.commonService.loginedUserInfo?.role || '';
   }
@@ -56,6 +59,10 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
     this.loginedUserInfo.profileImage = this.commonService.decodeUrl(
       (this.loginedUserInfo.profileImage || this.loginedUserInfo.profile_image) ?? ''
     );
+    this.brandingService.branding$.pipe(takeUntil(this.destroy$)).subscribe((branding) => {
+      this.brandLogo = branding.logoUrl;
+      this.appName = branding.appName;
+    });
   }
 
   ngOnDestroy(): void {

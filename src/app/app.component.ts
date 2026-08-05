@@ -16,6 +16,7 @@ import {
   HealthCheckService,
   ServicesHealthState,
 } from './services/api-service/health-check.service';
+import { BrandingService } from './core/branding/branding.service';
 
 @Component({
   selector: 'app-root',
@@ -38,10 +39,13 @@ export class AppComponent implements OnInit, OnDestroy {
     private applicationApiService: ApplicationApiService,
     private appContext: AppContextService,
     private dashboardService: DashboardService,
-    private healthCheckService: HealthCheckService
+    private healthCheckService: HealthCheckService,
+    private brandingService: BrandingService
   ) {}
 
   ngOnInit() {
+    this.brandingService.init();
+
     this.healthCheckService.state$.pipe(takeUntil(this.destroy$)).subscribe((state) => {
       this.healthState = state;
     });

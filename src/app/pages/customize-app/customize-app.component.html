@@ -1,0 +1,136 @@
+<section class="customize-app" *ngIf="draft">
+  <header class="customize-app__hero">
+    <p class="customize-app__eyebrow">White-label</p>
+    <h1 class="customize-app__title">Customize your app</h1>
+    <p class="customize-app__lead">
+      Make the product feel like yours — logo, favicon, app name, and color theme.
+      Changes are saved for this organisation and applied for every member on login.
+    </p>
+  </header>
+
+  <div class="customize-app__grid">
+    <div class="customize-app__main">
+      <section class="customize-app__card">
+        <h2>Identity</h2>
+        <label class="customize-app__field">
+          <span>App name</span>
+          <input type="text" [(ngModel)]="draft.appName" name="appName" maxlength="80" />
+        </label>
+        <label class="customize-app__field">
+          <span>Tagline</span>
+          <input type="text" [(ngModel)]="draft.tagline" name="tagline" maxlength="160" />
+        </label>
+
+        <div class="customize-app__uploads">
+          <label class="customize-app__upload">
+            <span>Logo</span>
+            <input type="file" accept="image/*" (change)="onLogoSelected($event)" />
+            <div class="customize-app__upload-preview">
+              <img [src]="draft.logoUrl" [alt]="draft.appName || 'Logo'" />
+            </div>
+          </label>
+          <label class="customize-app__upload">
+            <span>Favicon</span>
+            <input type="file" accept="image/*" (change)="onFaviconSelected($event)" />
+            <div class="customize-app__upload-preview customize-app__upload-preview--favicon">
+              <img [src]="draft.faviconUrl" alt="Favicon" />
+            </div>
+          </label>
+        </div>
+      </section>
+
+      <section class="customize-app__card">
+        <h2>Theme presets</h2>
+        <div class="customize-app__presets">
+          <button
+            type="button"
+            class="customize-app__preset"
+            *ngFor="let preset of presets"
+            (click)="applyPreset(preset)"
+          >
+            <span
+              class="customize-app__preset-swatch"
+              [style.background]="
+                'linear-gradient(135deg,' +
+                preset.colors.gradientStart +
+                ',' +
+                preset.colors.gradientMid +
+                ',' +
+                preset.colors.gradientEnd +
+                ')'
+              "
+            ></span>
+            <span>{{ preset.label }}</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="customize-app__card">
+        <h2>Color theme</h2>
+        <p class="customize-app__hint">
+          These map to the Majestic Cyber design tokens (<code>--mc-*</code>) used across the UI.
+        </p>
+        <div class="customize-app__colors">
+          <label class="customize-app__color" *ngFor="let key of colorKeys()">
+            <span>{{ colorLabel(key) }}</span>
+            <input type="color" [(ngModel)]="draft.colors[key]" [name]="key" />
+            <input type="text" [(ngModel)]="draft.colors[key]" [name]="key + '-hex'" maxlength="7" />
+          </label>
+        </div>
+      </section>
+
+      <div class="customize-app__actions">
+        <button type="button" class="customize-app__btn customize-app__btn--ghost" (click)="reset()">
+          Reset defaults
+        </button>
+        <button type="button" class="customize-app__btn customize-app__btn--secondary" (click)="previewLive()">
+          Preview live
+        </button>
+        <button
+          type="button"
+          class="customize-app__btn customize-app__btn--primary"
+          [disabled]="saving"
+          (click)="save()"
+        >
+          {{ saving ? 'Saving…' : 'Save branding' }}
+        </button>
+      </div>
+    </div>
+
+    <aside class="customize-app__preview" aria-live="polite">
+      <h2>Live preview</h2>
+      <div
+        class="customize-app__preview-shell"
+        [style.--preview-surface]="draft.colors.surface"
+        [style.--preview-panel]="draft.colors.surfaceContainer"
+        [style.--preview-text]="draft.colors.onSurface"
+        [style.--preview-muted]="draft.colors.onSurfaceVariant"
+        [style.--preview-accent]="draft.colors.primaryContainer"
+        [style.--preview-gradient]="
+          'linear-gradient(135deg,' +
+          draft.colors.gradientStart +
+          ',' +
+          draft.colors.gradientMid +
+          ',' +
+          draft.colors.gradientEnd +
+          ')'
+        "
+      >
+        <div class="customize-app__preview-nav">
+          <img [src]="draft.logoUrl" [alt]="draft.appName" />
+          <span>{{ draft.appName || 'App name' }}</span>
+        </div>
+        <div class="customize-app__preview-body">
+          <p class="customize-app__preview-eyebrow">Your school</p>
+          <h3>{{ draft.appName || 'App name' }}</h3>
+          <p>{{ draft.tagline || 'Tagline appears here' }}</p>
+          <button type="button" class="customize-app__preview-cta">Continue learning</button>
+        </div>
+      </div>
+      <p class="customize-app__note">
+        Saved on the server for this organisation (<code>organization_id</code> required).
+        Teachers and students see this theme after login.
+      </p>
+    </aside>
+  </div>
+</section>

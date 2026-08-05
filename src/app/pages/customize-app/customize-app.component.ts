@@ -1,0 +1,218 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+import { BRANDING_PRESETS } from 'src/app/core/branding/branding.defaults';
+import { AppBranding, BrandingPreset, BrandingThemeColors } from 'src/app/core/branding/branding.model';
+import { BrandingService } from 'src/app/core/branding/branding.service';
+import { DASHBOARD_NAV_ROUTES } from 'src/app/pages/dashboard/dashboard-routes.config';
+import { CommonService } from 'src/app/shared/services/common.service';
+import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
+
+@Component({
+  selector: 'app-customize-app',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './customize-app.component.html',
+  styleUrl: './customize-app.component.scss',
+})
+export class CustomizeAppComponent implements OnInit, OnDestroy {
+  readonly presets: BrandingPreset[] = BRANDING_PRESETS;
+  draft!: AppBranding;
+  saving = false;
+  loading = true;
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private brandingService: BrandingService,
+    private commonService: CommonService,
+    private router: Router
+  ) {}
+
+  get isOrganization(): boolean {
+    return this.commonService.loginedUserInfo?.role === 'organization';
+  }
+
+  get organizationId(): string {
+    return this.brandingService.resolveOrganizationId();
+  }
+
+  async ngOnInit(): Promise<void> {
+    if (!this.isOrganization) {
+      void this.router.navigate([DASHBOARD_NAV_ROUTES.overview]);
+      return;
+    }
+
+    if (!this.organizationId) {
+      this.toast('organization_id is required for branding.', TOASTER_MESSAGE_TYPE.ERROR);
+      void this.router.navigate([DASHBOARD_NAV_ROUTES.overview]);
+      return;
+    }
+
+    this.brandingService.branding$.pipe(takeUntil(this.destroy$)).subscribe((branding) => {
+      this.draft = this.clone(branding);
+    });
+
+    this.loading = true;
+    try {
+      await this.brandingService.reloadForOrganization();
+    } finally {
+      this.loading = false;
+      this.draft = this.clone(this.brandingService.branding);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  applyPreset(preset: BrandingPreset): void {
+    this.draft.colors = { ...preset.colors };
+  }
+
+  async onLogoSelected(event: Event): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      this.toast('Please choose an image file for the logo.', TOASTER_MESSAGE_TYPE.ERROR);
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      this.toast('Logo must be under 2 MB.', TOASTER_MESSAGE_TYPE.ERROR);
+      return;
+    }
+    try {
+      this.draft.logoUrl = await this.brandingService.readFileAsDataUrl(file);
+    } catch {
+      this.toast('Could not read logo file.', TOASTER_MESSAGE_TYPE.ERROR);
+    }
+  }
+
+  async onFaviconSelected(event: Event): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      this.toast('Please choose an image file for the favicon.', TOASTER_MESSAGE_TYPE.ERROR);
+      return;
+    }
+    if (file.size > 512 * 1024) {
+      this.toast('Favicon must be under 512 KB.', TOASTER_MESSAGE_TYPE.ERROR);
+      return;
+    }
+    try {
+      this.draft.faviconUrl = await this.brandingService.readFileAsDataUrl(file);
+    } catch {
+      this.toast('Could not read favicon file.', TOASTER_MESSAGE_TYPE.ERROR);
+    }
+  }
+
+  async save(): Promise<void> {
+    if (!this.draft.appName?.trim()) {
+      this.toast('App name is required.', TOASTER_MESSAGE_TYPE.ERROR);
+      return;
+    }
+    if (!this.organizationId) {
+      this.toast('organization_id is required to save branding.', TOASTER_MESSAGE_TYPE.ERROR);
+      return;
+    }
+
+    this.saving = true;
+    try {
+      await this.brandingService.save({
+        appName: this.draft.appName.trim(),
+        tagline: this.draft.tagline?.trim() || '',
+        logoUrl: this.draft.logoUrl,
+        faviconUrl: this.draft.faviconUrl,
+        colors: { ...this.draft.colors },
+      });
+      this.toast('Branding saved for your organisation.', TOASTER_MESSAGE_TYPE.SUCCESS);
+    } catch (err: unknown) {
+      const message =
+        (err as { message?: string })?.message ||
+        'Could not save branding. Please try again.';
+      this.toast(message, TOASTER_MESSAGE_TYPE.ERROR);
+    } finally {
+      this.saving = false;
+    }
+  }
+
+  previewLive(): void {
+    this.brandingService.previewLocal({
+      appName: this.draft.appName.trim() || this.brandingService.appName,
+      tagline: this.draft.tagline?.trim() || '',
+      logoUrl: this.draft.logoUrl,
+      faviconUrl: this.draft.faviconUrl,
+      colors: { ...this.draft.colors },
+    });
+    this.toast('Live preview applied (not saved yet).', TOASTER_MESSAGE_TYPE.SUCCESS);
+  }
+
+  async reset(): Promise<void> {
+    this.saving = true;
+    try {
+      await this.brandingService.resetToDefault();
+      this.draft = this.clone(this.brandingService.branding);
+      this.toast('Restored Majestic default branding.', TOASTER_MESSAGE_TYPE.SUCCESS);
+    } catch (err: unknown) {
+      const message =
+        (err as { message?: string })?.message ||
+        'Could not reset branding. Please try again.';
+      this.toast(message, TOASTER_MESSAGE_TYPE.ERROR);
+    } finally {
+      this.saving = false;
+    }
+  }
+
+  colorKeys(): (keyof BrandingThemeColors)[] {
+    return [
+      'primaryContainer',
+      'secondaryContainer',
+      'tertiaryContainer',
+      'primary',
+      'secondary',
+      'tertiary',
+      'surface',
+      'surfaceContainer',
+      'onSurface',
+      'onSurfaceVariant',
+      'outline',
+      'gradientStart',
+      'gradientMid',
+      'gradientEnd',
+    ];
+  }
+
+  colorLabel(key: keyof BrandingThemeColors): string {
+    const labels: Record<keyof BrandingThemeColors, string> = {
+      surface: 'Surface',
+      surfaceContainer: 'Panel',
+      surfaceContainerLow: 'Panel low',
+      onSurface: 'Text',
+      onSurfaceVariant: 'Muted text',
+      primary: 'Primary text',
+      primaryContainer: 'Primary',
+      secondary: 'Secondary text',
+      secondaryContainer: 'Secondary',
+      tertiary: 'Tertiary text',
+      tertiaryContainer: 'Tertiary',
+      outline: 'Outline',
+      gradientStart: 'Gradient start',
+      gradientMid: 'Gradient mid',
+      gradientEnd: 'Gradient end',
+    };
+    return labels[key];
+  }
+
+  private clone(branding: AppBranding): AppBranding {
+    return {
+      ...branding,
+      colors: { ...branding.colors },
+    };
+  }
+
+  private toast(message: string, messageType: string): void {
+    this.commonService.openToaster({ message, messageType });
+  }
+}

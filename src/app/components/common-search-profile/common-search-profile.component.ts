@@ -12,6 +12,7 @@ import {
   ActivityFeedItem,
   DASHBOARD_DEMO_DATA,
 } from 'src/app/components/dashboard-overview/data/dashboard-demo.data';
+import { BrandingService } from 'src/app/core/branding/branding.service';
 
 @Component({
   selector: 'app-search-profile',
@@ -31,7 +32,8 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
   @Output() mobNavchild = new EventEmitter<void>();
   public mobMenu: boolean = false;
   public loginedUserInfo: UserModel = {} as UserModel;
-  readonly brandLogo = 'assets/images/logo-majestic-hourse.svg';
+  brandLogo = 'assets/images/logo-majestic-hourse.svg';
+  appName = 'Majestic Warhorse';
   private destroy$ = new Subject<void>();
 
   @ViewChild('userMenu') userMenuRef?: ElementRef<HTMLElement>;
@@ -41,7 +43,8 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     public commonService: CommonService,
     public demoModeService: DemoModeService,
-    private router: Router
+    private router: Router,
+    private brandingService: BrandingService
   ) {
     this.loginedUserInfo = this.commonService.loginedUserInfo ?? {};
     this.profileUrl =
@@ -78,6 +81,11 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
           this.commonService.setActivityFeed(this.activityFeedItems);
         }
       });
+
+    this.brandingService.branding$.pipe(takeUntil(this.destroy$)).subscribe((branding) => {
+      this.brandLogo = branding.logoUrl;
+      this.appName = branding.appName;
+    });
   }
 
   ngOnDestroy(): void {
