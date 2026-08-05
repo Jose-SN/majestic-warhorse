@@ -1,23 +1,36 @@
 <design-system version="1.0">
 
   <brand>
-    <name>Enterprise Bitcoin Design System</name>
+    <name>Majestic Warhorse Design System</name>
     <style>
-      Premium dark fintech SaaS interface
-      with Bitcoin DeFi identity.
+      Premium dark learning platform with
+      Majestic Cyber brand gradient identity.
     </style>
   </brand>
 
   <colors>
-    <background>#030304</background>
-    <surface>#0F1115</surface>
+    <background name="True Void">#030304</background>
+    <surface name="Dark Matter">#0F1115</surface>
     <surface-elevated>#171A20</surface-elevated>
-    <primary>#F7931A</primary>
-    <secondary>#EA580C</secondary>
-    <gold>#FFD600</gold>
+    <border>#1E293B</border>
+    <primary name="Brand Orange">#ff6b2c</primary>
+    <secondary name="Brand Magenta">#ab0063</secondary>
+    <tertiary name="Brand Purple">#4a0084</tertiary>
+    <gold name="Digital Gold">#FFD600</gold>
     <text>#FFFFFF</text>
     <muted>#94A3B8</muted>
+    <success>#22C55E</success>
+    <warning>#F59E0B</warning>
+    <error>#EF4444</error>
+    <info>#3B82F6</info>
   </colors>
+
+  <gradients>
+    <!-- Canonical product brand gradient — use via --mc-brand-gradient -->
+    <brand>linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #4a0084 100%)</brand>
+    <orange>linear-gradient(135deg, #ff6b2c 0%, #ab0063 100%)</orange>
+    <magenta>linear-gradient(135deg, #ab0063 0%, #4a0084 100%)</magenta>
+  </gradients>
 
   <typography>
     <headings>Space Grotesk</headings>
@@ -28,24 +41,47 @@
   <layout>
     <grid>12 columns desktop</grid>
     <spacing>8 point system</spacing>
+    <page-max-width>1280px</page-max-width>
+    <sidebar-width>280px</sidebar-width>
+    <header-height>64px</header-height>
+    <button-height>48px</button-height>
+    <input-height>48px</input-height>
     <radius>
-      16px cards
-      999px buttons
+      <card>16px</card>
+      <input>12px</input>
+      <nav>10px</nav>
+      <button>999px</button>
     </radius>
   </layout>
 
+  <!-- Runtime CSS mapping (src/styles/_variables.scss). BrandingService may override for org white-label. -->
+  <css-tokens>
+    <token xml="background" css="--color-background --ds-background --bg-main"/>
+    <token xml="surface" css="--color-surface --ds-surface --mc-surface"/>
+    <token xml="surface-elevated" css="--color-surface-elevated --ds-surface-alt --mc-surface-container"/>
+    <token xml="border" css="--color-border --ds-border --mc-outline"/>
+    <token xml="primary" css="--color-primary --ds-primary --mc-primary-container"/>
+    <token xml="secondary" css="--color-secondary --ds-primary-dark"/>
+    <token xml="gold" css="--color-gold --ds-gold --mc-secondary"/>
+    <token xml="text" css="--color-text --ds-text --mc-on-surface"/>
+    <token xml="muted" css="--color-muted --ds-text-muted --mc-on-surface-variant"/>
+    <token xml="headings" css="--mc-font-display"/>
+    <token xml="body" css="--mc-font-body"/>
+    <token xml="technical" css="--mc-font-label"/>
+  </css-tokens>
+
   <rules>
     Use reusable components.
-    Use design tokens.
-    Maintain accessibility.
+    Use design tokens — never hardcode palette hex in components.
+    Maintain accessibility (WCAG 2.2 AA).
     Mobile first.
-    Never hardcode values.
+    Org branding customizes color tokens only; spacing/typography stay system-owned.
   </rules>
 
   <documentation>
     Full system: docs/design_v1/ (files 01–50)
     Tokens: docs/design_v1/design-tokens.json
-    SCSS: docs/design_v1/variables.scss
+    SCSS: docs/design_v1/variables.scss → src/styles/_variables.scss
     Tailwind: docs/design_v1/tailwind.config.js
   </documentation>
 

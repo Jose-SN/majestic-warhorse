@@ -107,11 +107,11 @@ Do not use pure black (`#000000`).
 
 # Brand Colors
 
-## Bitcoin Orange
+## Brand Orange
 
 **Token:** `color.brand.primary`
 
-**Value:** `#F7931A`
+**Value:** `#ff6b2c`
 
 **Usage:**
 
@@ -119,17 +119,30 @@ Do not use pure black (`#000000`).
 - Links
 - Active navigation
 - Highlights
+- Brand gradient start
 
-## Burnt Orange
+## Brand Magenta
 
 **Token:** `color.brand.secondary`
 
-**Value:** `#EA580C`
+**Value:** `#ab0063`
 
 **Usage:**
 
-- Gradient starts
-- Secondary actions
+- Gradient mid stop
+- Secondary accents
+- Hover / active emphasis
+
+## Brand Purple
+
+**Token:** `color.brand.tertiary`
+
+**Value:** `#4a0084`
+
+**Usage:**
+
+- Brand gradient end
+- Deep accents
 
 ## Digital Gold
 
@@ -158,24 +171,24 @@ Do not use pure black (`#000000`).
 
 # Gradients
 
-## Primary Brand Gradient
+## Primary Brand Gradient (canonical)
+
+CSS token: `--mc-brand-gradient`
 
 ```css
-linear-gradient(
-  to right,
-  #EA580C,
-  #F7931A
-)
+linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #4a0084 100%);
 ```
 
-## Gold Gradient
+Use this for CTAs, nav active states, loaders, and brand text fills. Do not invent alternate brand gradients in components.
+
+## Supporting Gradients
 
 ```css
-linear-gradient(
-  to right,
-  #F7931A,
-  #FFD600
-)
+/* Orange → Magenta */
+linear-gradient(135deg, #ff6b2c 0%, #ab0063 100%);
+
+/* Magenta → Purple */
+linear-gradient(135deg, #ab0063 0%, #4a0084 100%);
 ```
 
 ---

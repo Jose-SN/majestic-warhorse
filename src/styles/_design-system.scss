@@ -1,0 +1,136 @@
+/**
+ * Shared Enterprise Bitcoin utilities (docs/design_v1).
+ * Prefer tokens; BrandingService may override color vars at runtime.
+ */
+
+@mixin ds-focus-ring {
+  outline: 2px solid var(--ds-primary, var(--color-primary));
+  outline-offset: 4px;
+}
+
+@mixin ds-glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@mixin ds-card {
+  background: var(--ds-surface, var(--color-surface));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--ds-radius-card, var(--radius-card));
+  padding: var(--ds-space-5, 24px);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--ds-motion-fast, 150ms) ease-out,
+    box-shadow var(--ds-motion-fast, 150ms) ease-out;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-orange);
+    }
+  }
+}
+
+@mixin ds-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ds-btn-height, 48px);
+  padding: 0 var(--ds-space-5, 24px);
+  border: none;
+  border-radius: var(--ds-radius-full, 999px);
+  background: var(--mc-brand-gradient, var(--ds-gradient-orange));
+  color: #fff;
+  font-family: var(--mc-font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--ds-primary) 40%, transparent);
+  transition:
+    transform var(--ds-motion-fast, 150ms) ease-out,
+    box-shadow var(--ds-motion-fast, 150ms) ease-out,
+    opacity var(--ds-motion-fast, 150ms) ease-out;
+
+  &:hover:not(:disabled) {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-orange);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    @include ds-focus-ring;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@mixin ds-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ds-btn-height, 48px);
+  padding: 0 var(--ds-space-5, 24px);
+  border: 1px solid #334155;
+  border-radius: var(--ds-radius-full, 999px);
+  background: var(--ds-surface, var(--color-surface));
+  color: var(--ds-text, #fff);
+  font-family: var(--mc-font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background var(--ds-motion-fast, 150ms) ease-out,
+    border-color var(--ds-motion-fast, 150ms) ease-out;
+
+  &:hover:not(:disabled) {
+    background: var(--ds-surface-alt);
+    border-color: var(--ds-primary);
+  }
+
+  &:focus-visible {
+    @include ds-focus-ring;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* Global focus for keyboard users (WCAG) — do not remove outlines */
+:where(a, button, input, select, textarea, [tabindex]:not([tabindex='-1'])):focus-visible {
+  outline: 2px solid var(--ds-primary, var(--color-primary));
+  outline-offset: 2px;
+}
+
+.ds-page {
+  max-width: var(--ds-page-max, 1280px);
+  margin: 0 auto;
+  padding: var(--ds-space-6, 32px);
+  color: var(--ds-text);
+  font-family: var(--mc-font-body);
+  line-height: 1.5;
+
+  @media screen and (max-width: 767px) {
+    padding: var(--ds-space-4, 16px);
+  }
+}
+
+.ds-card {
+  @include ds-card;
+}
+
+.ds-btn-primary {
+  @include ds-btn-primary;
+}
+
+.ds-btn-secondary {
+  @include ds-btn-secondary;
+}

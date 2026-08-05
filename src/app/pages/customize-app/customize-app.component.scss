@@ -23,7 +23,7 @@
   line-height: 1.5;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 70% 40% at 10% -10%, color-mix(in srgb, var(--ds-primary, #f7931a) 18%, transparent) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 40% at 10% -10%, color-mix(in srgb, var(--ds-primary, #ff6b2c) 18%, transparent) 0%, transparent 55%),
     radial-gradient(ellipse 50% 35% at 90% 0%, color-mix(in srgb, var(--ds-gold, #ffd600) 10%, transparent) 0%, transparent 50%),
     transparent;
 
@@ -99,17 +99,17 @@
     }
 
     &:focus-visible {
-      outline: 2px solid var(--ds-primary, #f7931a);
+      outline: 2px solid var(--ds-primary, #ff6b2c);
       outline-offset: 2px;
     }
 
     &--primary {
       background: var(--mc-brand-gradient, var(--ds-gradient-orange));
       color: #fff;
-      box-shadow: 0 0 24px color-mix(in srgb, var(--ds-primary, #f7931a) 35%, transparent);
+      box-shadow: 0 0 24px color-mix(in srgb, var(--ds-primary, #ff6b2c) 35%, transparent);
 
       &:not(:disabled):hover {
-        box-shadow: 0 0 32px color-mix(in srgb, var(--ds-primary, #f7931a) 50%, transparent);
+        box-shadow: 0 0 32px color-mix(in srgb, var(--ds-primary, #ff6b2c) 50%, transparent);
       }
     }
 
@@ -142,7 +142,7 @@
     min-height: 0;
     overflow: auto;
     scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--ds-primary, #f7931a) 45%, transparent) transparent;
+    scrollbar-color: color-mix(in srgb, var(--ds-primary, #ff6b2c) 45%, transparent) transparent;
   }
 
   &__card {
@@ -150,12 +150,12 @@
     border: 1px solid var(--ds-border, var(--mc-outline));
     border-radius: var(--ds-radius-card, 16px);
     padding: var(--ds-space-5, 24px);
-    box-shadow: 0 0 0 1px transparent, 0 8px 32px color-mix(in srgb, var(--ds-primary, #f7931a) 8%, transparent);
+    box-shadow: 0 0 0 1px transparent, 0 8px 32px color-mix(in srgb, var(--ds-primary, #ff6b2c) 8%, transparent);
     transition: transform 200ms ease, box-shadow 200ms ease;
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 24px color-mix(in srgb, var(--ds-primary, #f7931a) 16%, transparent);
+      box-shadow: 0 0 24px color-mix(in srgb, var(--ds-primary, #ff6b2c) 16%, transparent);
     }
 
     &--colors {
@@ -218,9 +218,9 @@
       font-size: 16px;
 
       &:focus {
-        outline: 2px solid var(--ds-primary, #f7931a);
+        outline: 2px solid var(--ds-primary, #ff6b2c);
         outline-offset: 1px;
-        border-color: var(--ds-primary, #f7931a);
+        border-color: var(--ds-primary, #ff6b2c);
       }
     }
   }
@@ -278,13 +278,13 @@
     transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
 
     &:hover {
-      border-color: var(--ds-primary, #f7931a);
-      box-shadow: 0 0 16px color-mix(in srgb, var(--ds-primary, #f7931a) 25%, transparent);
+      border-color: var(--ds-primary, #ff6b2c);
+      box-shadow: 0 0 16px color-mix(in srgb, var(--ds-primary, #ff6b2c) 25%, transparent);
       transform: scale(1.02);
     }
 
     &:focus-visible {
-      outline: 2px solid var(--ds-primary, #f7931a);
+      outline: 2px solid var(--ds-primary, #ff6b2c);
       outline-offset: 2px;
     }
   }
@@ -400,7 +400,7 @@
     border: 1px solid var(--preview-border, var(--ds-border));
     background: var(--preview-bg, var(--ds-background));
     color: var(--preview-text, var(--ds-text));
-    box-shadow: 0 0 32px color-mix(in srgb, var(--ds-primary, #f7931a) 12%, transparent);
+    box-shadow: 0 0 32px color-mix(in srgb, var(--ds-primary, #ff6b2c) 12%, transparent);
   }
 
   &__preview-nav {
@@ -472,7 +472,7 @@
     font-size: 14px;
     font-weight: 600;
     cursor: default;
-    box-shadow: 0 0 20px color-mix(in srgb, var(--ds-primary, #f7931a) 35%, transparent);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--ds-primary, #ff6b2c) 35%, transparent);
   }
 
   &__note {

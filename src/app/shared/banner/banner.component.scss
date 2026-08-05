@@ -4,39 +4,47 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin: 0 0 12px;
+  gap: var(--ds-space-4, 16px);
+  margin: 0 0 var(--ds-space-3, 12px);
   padding: 10px 14px;
-  @include border-radius(12px);
+  @include border-radius(var(--ds-radius-md, 12px));
   flex-shrink: 0;
 
   &--demo {
-    border: 1px solid rgba(255, 107, 44, 0.45);
-    background: linear-gradient(90deg, rgba(255, 107, 44, 0.18) 0%, rgba(74, 0, 132, 0.14) 100%);
-    box-shadow: 0 8px 24px rgba(255, 107, 44, 0.12);
+    border: 1px solid color-mix(in srgb, var(--ds-primary) 45%, transparent);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--ds-primary) 18%, transparent) 0%,
+      color-mix(in srgb, var(--ds-gold) 14%, transparent) 100%
+    );
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--ds-primary) 12%, transparent);
   }
 
   &--approval {
-    border: 1px solid rgba(255, 181, 154, 0.35);
-    background: linear-gradient(90deg, rgba(255, 107, 44, 0.12) 0%, rgba(31, 31, 34, 0.85) 100%);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    border: 1px solid color-mix(in srgb, var(--ds-primary) 35%, transparent);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--ds-primary) 12%, transparent) 0%,
+      color-mix(in srgb, var(--ds-surface) 85%, transparent) 100%
+    );
+    box-shadow: 0 8px 24px rgba(3, 3, 4, 0.35);
   }
 
   &__content {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--ds-space-3, 12px);
     min-width: 0;
   }
 
   &__label {
     flex-shrink: 0;
     padding: 4px 10px;
-    @include border-radius(999px);
-    background: rgba(255, 107, 44, 0.22);
-    border: 1px solid rgba(255, 107, 44, 0.45);
-    color: #ffb59a;
-    font-family: $archivo-medium;
+    @include border-radius(var(--ds-radius-full, 999px));
+    background: color-mix(in srgb, var(--ds-primary) 22%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ds-primary) 45%, transparent);
+    color: var(--ds-primary);
+    font-family: var(--mc-font-label);
     font-size: 0.6875rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -44,8 +52,8 @@
 
   &__message {
     margin: 0;
-    color: var(--white);
-    font-family: $archivo-regular;
+    color: var(--ds-text);
+    font-family: var(--mc-font-body);
     font-size: 0.875rem;
     line-height: 1.4;
   }
@@ -55,15 +63,16 @@
     align-items: center;
     gap: 6px;
     flex-shrink: 0;
+    min-height: 44px;
     padding: 8px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    @include border-radius(999px);
-    background: rgba(31, 31, 34, 0.72);
-    color: var(--white);
-    font-family: $archivo-medium;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    @include border-radius(var(--ds-radius-full, 999px));
+    background: color-mix(in srgb, var(--ds-surface-alt) 72%, transparent);
+    color: var(--ds-text);
+    font-family: var(--mc-font-body);
     font-size: 0.8125rem;
     cursor: pointer;
-    @include transition(all 0.2s ease);
+    @include transition(all var(--ds-motion-fast, 150ms) ease-out);
 
     span[aria-hidden='true'] {
       font-size: 1.125rem;
@@ -71,9 +80,14 @@
     }
 
     &:hover {
-      border-color: rgba(255, 107, 44, 0.55);
-      background: rgba(255, 107, 44, 0.16);
-      color: #ffb59a;
+      border-color: color-mix(in srgb, var(--ds-primary) 55%, transparent);
+      background: color-mix(in srgb, var(--ds-primary) 16%, transparent);
+      color: var(--ds-primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--ds-primary);
+      outline-offset: 2px;
     }
   }
 }
@@ -89,19 +103,5 @@
       align-items: flex-start;
       gap: 8px;
     }
-
-    &__close {
-      align-self: flex-end;
-    }
-
-    &__close-text {
-      display: none;
-    }
-  }
-}
-
-@media screen and (min-width: 769px) {
-  .banner__close span[aria-hidden='true'] {
-    display: none;
   }
 }

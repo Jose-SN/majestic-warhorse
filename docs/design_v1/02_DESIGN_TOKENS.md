@@ -13,9 +13,11 @@ No hardcoded values inside components.
 | `background.primary` | `#030304` |
 | `surface.primary` | `#0F1115` |
 | `surface.elevated` | `#171A20` |
-| `brand.primary` | `#F7931A` |
-| `brand.secondary` | `#EA580C` |
+| `brand.primary` | `#ff6b2c` |
+| `brand.secondary` | `#ab0063` |
+| `brand.tertiary` | `#4a0084` |
 | `brand.gold` | `#FFD600` |
+| `brand.gradient` | `linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #4a0084 100%)` |
 
 ---
 

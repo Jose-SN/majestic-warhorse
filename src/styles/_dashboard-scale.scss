@@ -1,30 +1,33 @@
-// Match 100% browser zoom to prior 67% zoom density (67 / 100)
-$dashboard-scale: 0.6705882353;
-
-@function ds($px) {
-  @return $px * $dashboard-scale;
-}
-
-@mixin dashboard-glass-card {
-  background: rgba(31, 31, 34, 0.6);
-  border: 1px solid rgba(169, 138, 127, 0.14);
-  backdrop-filter: blur(16px);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 107, 44, 0.08),
-    0 8px 24px rgba(0, 0, 0, 0.35);
-}
-
-@mixin dashboard-nav-active {
-  background: var(--mc-brand-gradient);
-  box-shadow: 0 4px 20px rgba(255, 107, 44, 0.35);
-}
-
-@mixin dashboard-cyan-glow {
-  color: var(--mc-primary);
-  text-shadow: 0 0 12px rgba(255, 107, 44, 0.45);
-}
-
-@mixin mc-luminous-stroke {
-  box-shadow: inset 0 0 0 1px rgba(255, 107, 44, 0.12);
-}
-
+// Match 100% browser zoom to prior 67% zoom density (67 / 100)
+$dashboard-scale: 0.6705882353;
+
+@function ds($px) {
+  @return $px * $dashboard-scale;
+}
+
+/** Glass elevation — design_v1 elevation / shadows */
+@mixin dashboard-glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--ds-primary, #ff6b2c) 12%, transparent),
+    0 8px 24px rgba(3, 3, 4, 0.45);
+}
+
+/** Sidebar active — design_v1 39_SIDEBAR (orange wash + left border) */
+@mixin dashboard-nav-active {
+  background: color-mix(in srgb, var(--ds-primary, #ff6b2c) 12%, transparent);
+  box-shadow:
+    inset 3px 0 0 0 var(--ds-primary, #ff6b2c),
+    0 0 16px color-mix(in srgb, var(--ds-primary, #ff6b2c) 18%, transparent);
+}
+
+@mixin dashboard-cyan-glow {
+  color: var(--mc-primary);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--ds-primary, #ff6b2c) 45%, transparent);
+}
+
+@mixin mc-luminous-stroke {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ds-primary, #ff6b2c) 12%, transparent);
+}

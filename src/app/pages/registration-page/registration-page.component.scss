@@ -18,7 +18,7 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
   overflow: hidden;
   position: relative;
   z-index: 1;
-  background: var(--mc-surface-container-lowest, #0e0e11);
+  background: var(--mc-surface-container-lowest, #030304);
   color: var(--mc-on-surface);
   font-family: var(--mc-font-body);
 }
@@ -200,7 +200,7 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
     left: 0;
     width: 4px;
     height: 100%;
-    background: linear-gradient(135deg, #ff6b2c 0%, #ab0063 100%);
+    background: var(--mc-brand-gradient, var(--ds-gradient-orange));
   }
 
   &__brand {
@@ -279,10 +279,10 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #0e0e11;
-    background: linear-gradient(90deg, #ff6b2c, #ffb59a);
+    color: var(--ds-background, #030304);
+    background: var(--ds-gradient-gold, var(--mc-brand-text-gradient));
     @include border-radius(999px);
-    box-shadow: 0 0 12px rgba(255, 107, 44, 0.4);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--ds-primary) 40%, transparent);
   }
 
   &__icon {
@@ -482,12 +482,12 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
   }
 
   &.is-active {
-    color: #0e0e11;
-    background: linear-gradient(90deg, #ff6b2c, #ffb59a);
+    color: #030304;
+    background: var(--mc-brand-gradient);
     box-shadow: 0 0 14px -4px rgba(255, 107, 44, 0.55);
 
     .material-symbols-outlined {
-      color: #0e0e11;
+      color: #030304;
     }
   }
 }

@@ -209,7 +209,7 @@
   &__rating-value {
     font-family: $archivo-medium;
     font-size: 0.875rem;
-    color: #ffb59a;
+    color: var(--color-primary, #ff6b2c);
   }
 
   &__stars {

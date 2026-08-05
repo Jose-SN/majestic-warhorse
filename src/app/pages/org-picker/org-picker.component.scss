@@ -207,7 +207,7 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
     &:hover:not(:disabled) {
-      border-color: rgba(247, 147, 26, 0.45);
+      border-color: rgba(255, 107, 44, 0.45);
     }
 
     &.has-value {
@@ -282,9 +282,9 @@
   backdrop-filter: blur(16px);
   box-shadow:
     0 16px 40px rgba(0, 0, 0, 0.55),
-    0 0 24px -8px rgba(247, 147, 26, 0.2);
+    0 0 24px -8px rgba(255, 107, 44, 0.2);
   scrollbar-width: thin;
-  scrollbar-color: rgba(247, 147, 26, 0.45) transparent;
+  scrollbar-color: rgba(255, 107, 44, 0.45) transparent;
 
   > li {
     margin: 0;
@@ -306,7 +306,7 @@
   transition: background 0.15s ease;
 
   &:hover:not(:disabled) {
-    background: rgba(247, 147, 26, 0.1);
+    background: rgba(255, 107, 44, 0.1);
   }
 
   &.is-selected {
@@ -383,13 +383,13 @@
   transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 
   &:hover:not(:disabled) {
-    border-color: rgba(247, 147, 26, 0.45);
+    border-color: rgba(255, 107, 44, 0.45);
   }
 
   &.is-selected {
     border-color: var(--mc-primary-container);
     background: rgba(255, 107, 44, 0.08);
-    box-shadow: 0 0 18px -6px rgba(247, 147, 26, 0.35);
+    box-shadow: 0 0 18px -6px rgba(255, 107, 44, 0.35);
   }
 
   &:disabled {
@@ -474,7 +474,7 @@
 
   &:hover:not(:disabled) {
     color: var(--mc-primary);
-    border-color: rgba(247, 147, 26, 0.45);
+    border-color: rgba(255, 107, 44, 0.45);
   }
 
   &:disabled {

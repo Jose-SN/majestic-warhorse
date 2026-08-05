@@ -1,17 +1,26 @@
 :root {
-  /* Enterprise Bitcoin Design System V1 — package tokens */
+  /* Design System V1 — package tokens
+   * Brand gradient: linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #4a0084 100%)
+   * Runtime app: src/styles/_variables.scss (synced; BrandingService overrides for orgs)
+   */
   --color-background: #030304;
   --color-surface: #0f1115;
   --color-surface-elevated: #171a20;
-  --color-primary: #f7931a;
-  --color-secondary: #ea580c;
+  --color-primary: #ff6b2c;
+  --color-secondary: #ab0063;
+  --color-tertiary: #4a0084;
   --color-gold: #ffd600;
   --color-text: #ffffff;
   --color-muted: #94a3b8;
+  --color-disabled: #64748b;
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
   --color-info: #3b82f6;
+  --color-border: #1e293b;
+
+  --mc-brand-gradient: linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #4a0084 100%);
+  --ds-gradient-brand: var(--mc-brand-gradient);
 
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -37,4 +46,9 @@
   --sidebar-collapsed: 72px;
   --button-height: 48px;
   --input-height: 48px;
+  --page-max-width: 1280px;
+
+  --shadow-orange: 0 0 24px rgba(255, 107, 44, 0.5);
+  --shadow-gold: 0 0 24px rgba(171, 0, 99, 0.35);
+  --shadow-card: 0 8px 32px rgba(74, 0, 132, 0.12);
 }

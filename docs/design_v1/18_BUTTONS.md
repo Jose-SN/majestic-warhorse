@@ -18,8 +18,8 @@ Every screen should have a clear primary action.
 
 | Property | Value |
 |----------|-------|
-| Background | Bitcoin Orange Gradient |
-| Gradient | `#EA580C` → `#F7931A` |
+| Background | Brand Gradient (`--mc-brand-gradient`) |
+| Gradient | `#ff6b2c` → `#ab0063` → `#4a0084` |
 | Text | `#FFFFFF` |
 | Height | 48px |
 | Padding | 24px horizontal |

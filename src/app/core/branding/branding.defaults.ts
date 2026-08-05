@@ -3,33 +3,30 @@ import { AppBranding, BrandingPreset, BrandingThemeColors } from './branding.mod
 export const DEFAULT_BRAND_LOGO = 'assets/images/logo-majestic-hourse.svg';
 export const DEFAULT_BRAND_FAVICON = 'assets/icons/favicon-196.png';
 
+/** Canonical brand gradient used across the product. */
+export const BRAND_GRADIENT =
+  'linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #4a0084 100%)';
+
 /**
- * Default theme aligned to design.xml + docs/design_v1 (Enterprise Bitcoin).
- * Values map onto existing --mc-* tokens used across the app.
+ * Default theme — surfaces from design.xml; brand gradient is Majestic Cyber
+ * (orange → magenta → purple). BrandingService applies --mc-brand-gradient.
  */
 export const DEFAULT_THEME_COLORS: BrandingThemeColors = {
-  // Background / surfaces
   surface: '#0F1115',
   surfaceContainer: '#171A20',
   surfaceContainerLow: '#030304',
-  // Text
   onSurface: '#FFFFFF',
   onSurfaceVariant: '#94A3B8',
-  // Brand orange
-  primary: '#F7931A',
-  primaryContainer: '#F7931A',
-  // Gold accents
-  secondary: '#FFD600',
-  secondaryContainer: '#EA580C',
-  // Supporting accents
-  tertiary: '#FFD600',
-  tertiaryContainer: '#FFD600',
-  // Border
+  primary: '#ffb59a',
+  primaryContainer: '#ff6b2c',
+  secondary: '#ffb0cc',
+  secondaryContainer: '#ab0063',
+  tertiary: '#dcb8ff',
+  tertiaryContainer: '#4a0084',
   outline: '#1E293B',
-  // Gradients: Orange → Bitcoin → Gold
-  gradientStart: '#EA580C',
-  gradientMid: '#F7931A',
-  gradientEnd: '#FFD600',
+  gradientStart: '#ff6b2c',
+  gradientMid: '#ab0063',
+  gradientEnd: '#4a0084',
 };
 
 export const DEFAULT_APP_BRANDING: AppBranding = {
@@ -40,74 +37,56 @@ export const DEFAULT_APP_BRANDING: AppBranding = {
   colors: { ...DEFAULT_THEME_COLORS },
 };
 
-/** Presets stay within the Enterprise Bitcoin design system. */
 export const BRANDING_PRESETS: BrandingPreset[] = [
   {
-    id: 'enterprise-bitcoin',
-    label: 'Enterprise Bitcoin',
+    id: 'majestic-cyber',
+    label: 'Majestic Cyber',
     colors: { ...DEFAULT_THEME_COLORS },
   },
   {
-    id: 'gold-ledger',
-    label: 'Gold Ledger',
+    id: 'ember-academy',
+    label: 'Ember Academy',
     colors: {
-      surface: '#0F1115',
-      surfaceContainer: '#171A20',
-      surfaceContainerLow: '#030304',
-      onSurface: '#FFFFFF',
-      onSurfaceVariant: '#94A3B8',
-      primary: '#FFD600',
-      primaryContainer: '#F7931A',
-      secondary: '#FFD600',
-      secondaryContainer: '#F7931A',
-      tertiary: '#FFD600',
-      tertiaryContainer: '#EA580C',
-      outline: '#1E293B',
-      gradientStart: '#F7931A',
-      gradientMid: '#FFD600',
-      gradientEnd: '#FFD600',
+      ...DEFAULT_THEME_COLORS,
+      primaryContainer: '#e85d04',
+      secondaryContainer: '#9c2d0e',
+      tertiaryContainer: '#c47a00',
+      gradientStart: '#ff6b2c',
+      gradientMid: '#ab0063',
+      gradientEnd: '#4a0084',
     },
   },
   {
-    id: 'deep-ledger',
-    label: 'Deep Ledger',
+    id: 'ocean-school',
+    label: 'Ocean School',
     colors: {
-      surface: '#030304',
-      surfaceContainer: '#0F1115',
-      surfaceContainerLow: '#030304',
-      onSurface: '#FFFFFF',
-      onSurfaceVariant: '#94A3B8',
-      primary: '#F7931A',
-      primaryContainer: '#EA580C',
-      secondary: '#FFD600',
-      secondaryContainer: '#EA580C',
-      tertiary: '#F7931A',
-      tertiaryContainer: '#FFD600',
-      outline: '#1E293B',
-      gradientStart: '#EA580C',
-      gradientMid: '#EA580C',
-      gradientEnd: '#F7931A',
+      ...DEFAULT_THEME_COLORS,
+      primary: '#7ec8ff',
+      primaryContainer: '#1f7aec',
+      secondary: '#9ad4c8',
+      secondaryContainer: '#0d7377',
+      tertiary: '#b8a9ff',
+      tertiaryContainer: '#5c4db8',
+      // Keep product brand gradient unless org customizes
+      gradientStart: '#ff6b2c',
+      gradientMid: '#ab0063',
+      gradientEnd: '#4a0084',
     },
   },
   {
-    id: 'ramp-warm',
-    label: 'Ramp Warm',
+    id: 'forest-community',
+    label: 'Forest Community',
     colors: {
-      surface: '#0F1115',
-      surfaceContainer: '#171A20',
-      surfaceContainerLow: '#0A0B0E',
-      onSurface: '#FFFFFF',
-      onSurfaceVariant: '#94A3B8',
-      primary: '#F7931A',
-      primaryContainer: '#F7931A',
-      secondary: '#FFD600',
-      secondaryContainer: '#F59E0B',
-      tertiary: '#FFD600',
-      tertiaryContainer: '#F7931A',
-      outline: '#1E293B',
-      gradientStart: '#EA580C',
-      gradientMid: '#F7931A',
-      gradientEnd: '#F59E0B',
+      ...DEFAULT_THEME_COLORS,
+      primary: '#a8e6a1',
+      primaryContainer: '#2d6a4f',
+      secondary: '#d8f3dc',
+      secondaryContainer: '#40916c',
+      tertiary: '#f4a261',
+      tertiaryContainer: '#bc6c25',
+      gradientStart: '#ff6b2c',
+      gradientMid: '#ab0063',
+      gradientEnd: '#4a0084',
     },
   },
 ];

@@ -234,20 +234,41 @@ export class BrandingService {
 
     const set = (name: string, value: string) => root.style.setProperty(name, value);
 
-    // design.xml / design_v1 semantic tokens
+    // Package --color-* (design_v1) — org white-label
+    set('--color-background', c.surfaceContainerLow);
+    set('--color-surface', c.surface);
+    set('--color-surface-elevated', c.surfaceContainer);
+    set('--color-primary', c.primaryContainer);
+    set('--color-secondary', c.gradientMid);
+    set('--color-gold', c.secondary);
+    set('--color-text', c.onSurface);
+    set('--color-muted', c.onSurfaceVariant);
+    set('--color-border', c.outline);
+
+    // Semantic --ds-*
     set('--ds-background', c.surfaceContainerLow);
     set('--ds-surface', c.surface);
     set('--ds-surface-alt', c.surfaceContainer);
     set('--ds-border', c.outline);
     set('--ds-primary', c.primaryContainer);
-    set('--ds-primary-dark', c.gradientStart);
+    set('--ds-primary-dark', c.gradientMid);
     set('--ds-gold', c.secondary);
     set('--ds-text', c.onSurface);
     set('--ds-text-muted', c.onSurfaceVariant);
-    set('--ds-gradient-orange', `linear-gradient(135deg, ${c.gradientStart} 0%, ${c.primaryContainer} 100%)`);
-    set('--ds-gradient-gold', `linear-gradient(135deg, ${c.primaryContainer} 0%, ${c.secondary} 100%)`);
+    set(
+      '--ds-gradient-orange',
+      `linear-gradient(135deg, ${c.gradientStart} 0%, ${c.gradientMid} 100%)`
+    );
+    set(
+      '--ds-gradient-gold',
+      `linear-gradient(135deg, ${c.gradientMid} 0%, ${c.gradientEnd} 100%)`
+    );
+    set(
+      '--ds-gradient-brand',
+      `linear-gradient(135deg, ${c.gradientStart} 0%, ${c.gradientMid} 50%, ${c.gradientEnd} 100%)`
+    );
 
-    // App --mc-* tokens
+    // App --mc-*
     set('--mc-surface', c.surface);
     set('--mc-surface-container', c.surfaceContainer);
     set('--mc-surface-container-low', c.surfaceContainerLow);
@@ -270,24 +291,43 @@ export class BrandingService {
     );
     set(
       '--mc-brand-text-gradient',
-      `linear-gradient(135deg, ${c.primary} 0%, ${c.secondary} 100%)`
+      `linear-gradient(135deg, ${c.gradientStart} 0%, ${c.gradientMid} 100%)`
     );
+
+    // Glow tokens track brand
+    set('--shadow-orange', `0 0 24px color-mix(in srgb, ${c.primaryContainer} 50%, transparent)`);
+    set('--shadow-gold', `0 0 24px color-mix(in srgb, ${c.secondary} 30%, transparent)`);
+    set('--shadow-card', `0 8px 32px color-mix(in srgb, ${c.primaryContainer} 8%, transparent)`);
 
     // Legacy aliases
     set('--bg-main', c.surfaceContainerLow);
+    set('--bg-login', c.surfaceContainerLow);
     set('--bg-left-panel', c.surfaceContainerLow);
     set('--bg-dark-blue', c.surface);
-    set('--bg-hover', c.gradientStart);
+    set('--bg-hover', c.gradientMid);
     set('--bg-orange', c.primaryContainer);
     set('--bg-magento', c.secondaryContainer);
+    set('--bg-nav-color', c.onSurfaceVariant);
+    set('--bg-grey', c.onSurfaceVariant);
+    set('--bg-label', c.onSurfaceVariant);
     set('--btn-add', c.primaryContainer);
-    set('--btn-upload', c.gradientStart);
+    set('--btn-upload', c.gradientMid);
+    set('--btn-add-upload', c.gradientEnd);
     set('--bg-mit1', c.gradientStart);
-    set('--bg-mit2', c.primaryContainer);
+    set('--bg-mit2', c.gradientMid);
+    set('--bg-mit3', c.gradientEnd);
     set('--bg-mit4', c.gradientEnd);
+    set('--bg-file-active', c.primaryContainer);
+    set('--bg-text-orange', c.primaryContainer);
+    set('--bg-log-out', c.primaryContainer);
+    set('--border-file', c.primaryContainer);
     set('--bg-card-border', c.outline);
     set('--bg-border-input', c.outline);
+    set('--bg-input-border', c.outline);
     set('--bg-input', c.surface);
+    set('--bg-divider', c.outline);
+    set('--dashboard-glass', `color-mix(in srgb, ${c.surface} 72%, transparent)`);
+    set('--dashboard-accent-magenta', c.gradientMid);
 
     document.title = branding.appName || DEFAULT_APP_BRANDING.appName;
     this.updateFavicon(branding.faviconUrl || DEFAULT_BRAND_FAVICON);

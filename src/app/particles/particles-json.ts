@@ -1,3 +1,4 @@
+/** Particle accents follow Majestic Cyber brand (#ff6b2c / #ab0063) */
 export const PARTICLES_JSON = {
   particles: {
     number: {
@@ -8,13 +9,13 @@ export const PARTICLES_JSON = {
       },
     },
     color: {
-      value: '#cd1aa7',
+      value: '#ff6b2c',
     },
     shape: {
       type: 'circle',
       stroke: {
         width: 1,
-        color: '#cd1aa7',
+        color: '#ab0063',
       },
       polygon: {
         nb_sides: 5,
@@ -48,7 +49,7 @@ export const PARTICLES_JSON = {
     line_linked: {
       enable: true,
       distance: 150,
-      color: '#cd1aa7',
+      color: '#ab0063',
       opacity: 0.4,
       width: 1,
     },

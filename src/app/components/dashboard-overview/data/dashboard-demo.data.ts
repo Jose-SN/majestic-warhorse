@@ -126,7 +126,7 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
       variant: 'goal-rings',
       headerRight: '3/10',
       rings: [
-        { value: 30, displayValue: 3, color: '#ffb59a', style: 'progress' },
+        { value: 30, displayValue: 3, color: '#ff6b2c', style: 'progress' },
         { value: 100, displayValue: 10, style: 'concentric' },
       ],
     },
@@ -479,7 +479,7 @@ export function createEmptyStatWidgets(): DashboardStatWidget[] {
       variant: 'goal-rings',
       headerRight: '0/0',
       rings: [
-        { value: 0, displayValue: 0, color: '#ffb59a', style: 'progress' },
+        { value: 0, displayValue: 0, color: '#ff6b2c', style: 'progress' },
         { value: 0, displayValue: 0, style: 'concentric' },
       ],
     },

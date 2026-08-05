@@ -1,4 +1,4 @@
-/** Enterprise Bitcoin Design System V1 — Tailwind theme extension */
+/** Design System V1 — Tailwind theme (Majestic Cyber brand gradient) */
 module.exports = {
   theme: {
     extend: {
@@ -8,8 +8,9 @@ module.exports = {
           DEFAULT: '#0F1115',
           elevated: '#171A20',
         },
-        primary: '#F7931A',
-        secondary: '#EA580C',
+        primary: '#ff6b2c',
+        secondary: '#ab0063',
+        tertiary: '#4a0084',
         gold: '#FFD600',
         muted: '#94A3B8',
         success: '#22C55E',
@@ -33,14 +34,18 @@ module.exports = {
         mono: ['JetBrains Mono', 'monospace'],
       },
       boxShadow: {
-        orange: '0 0 24px rgba(247, 147, 26, 0.5)',
-        gold: '0 0 24px rgba(255, 214, 0, 0.3)',
+        orange: '0 0 24px rgba(255, 107, 44, 0.5)',
+        magenta: '0 0 24px rgba(171, 0, 99, 0.35)',
       },
       transitionDuration: {
         instant: '100ms',
         fast: '150ms',
         normal: '250ms',
         slow: '400ms',
+      },
+      backgroundImage: {
+        'brand-gradient':
+          'linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #4a0084 100%)',
       },
     },
   },

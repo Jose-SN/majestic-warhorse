@@ -27,9 +27,9 @@
   max-height: 100vh;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(255, 107, 44, 0.14) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(74, 0, 132, 0.16) 0%, transparent 50%),
-    var(--bg-main);
+    radial-gradient(ellipse 80% 50% at 20% -10%, color-mix(in srgb, var(--ds-primary) 16%, transparent) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 90% 10%, color-mix(in srgb, var(--ds-gold) 10%, transparent) 0%, transparent 50%),
+    var(--ds-background, var(--bg-main));
   @include flex(flex, null, null, stretch);
 
   .dashboard-content {
@@ -52,13 +52,14 @@
 .dashboard-left {
   position: relative;
   background: var(--bg-left-panel);
-  max-width: 325px;
-  width: 325px;
+  max-width: var(--ds-sidebar, 280px);
+  width: var(--ds-sidebar, 280px);
   flex-shrink: 0;
   align-self: stretch;
   padding: 24px 16px;
-  border-right: 1px solid var(--mc-outline-variant);
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.35);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 4px 0 24px color-mix(in srgb, var(--ds-primary) 8%, transparent);
+  background: var(--ds-background, var(--bg-left-panel));
   @include flex(flex, column, null, null);
   min-height: 0;
   overflow: hidden;
@@ -68,7 +69,7 @@
   @include flex(flex, column, null, null);
   flex: 1;
   align-self: stretch;
-  padding: 12px 20px 8px;
+  padding: var(--ds-space-4, 16px) var(--ds-space-6, 32px) var(--ds-space-2, 8px);
   position: relative;
   overflow: hidden;
   min-width: 0;
@@ -196,9 +197,9 @@
       padding-left: max(16px, env(safe-area-inset-left, 0px));
       padding-right: max(16px, env(safe-area-inset-right, 0px));
       background:
-        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(255, 107, 44, 0.14) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(74, 0, 132, 0.16) 0%, transparent 50%),
-        var(--bg-main);
+        radial-gradient(ellipse 80% 50% at 20% -10%, color-mix(in srgb, var(--ds-primary) 16%, transparent) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 90% 10%, color-mix(in srgb, var(--ds-gold) 10%, transparent) 0%, transparent 50%),
+        var(--ds-background, var(--bg-main));
       border-bottom: 1px solid rgba(89, 65, 57, 0.35);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
     }
@@ -214,7 +215,7 @@
       overscroll-behavior: contain;
       padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(16px + var(--mobile-dashboard-nav-height) + var(--mobile-safe-bottom)) max(16px, env(safe-area-inset-left, 0px));
       scrollbar-width: thin;
-      scrollbar-color: rgba(255, 107, 44, 0.45) rgba(255, 255, 255, 0.06);
+      scrollbar-color: color-mix(in srgb, var(--ds-primary) 45%, transparent) rgba(255, 255, 255, 0.06);
 
       &::-webkit-scrollbar {
         width: 6px;
@@ -222,7 +223,7 @@
 
       &::-webkit-scrollbar-thumb {
         border-radius: 6px;
-        background: rgba(255, 107, 44, 0.45);
+        background: color-mix(in srgb, var(--ds-primary) 45%, transparent);
       }
 
       &::-webkit-scrollbar-track {
@@ -308,7 +309,7 @@
       background: var(--mc-brand-gradient);
       color: var(--white);
       cursor: pointer;
-      box-shadow: 0 0 15px rgba(255, 107, 44, 0.35);
+      box-shadow: 0 0 15px color-mix(in srgb, var(--ds-primary) 35%, transparent);
       @include flex(flex, null, center, center);
       @include transition(transform 0.2s ease);
 

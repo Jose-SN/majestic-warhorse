@@ -2,23 +2,23 @@
 @import '~css-star-rating/css/star-rating.min.css';
 
 ::-webkit-scrollbar {
-  height: 10px;
-  width: 10px;
+  height: 8px;
+  width: 8px;
 }
-::-webkit-scrollbar-thumb:horizontal {
-  background: var(--bg-shadow);
-  border-radius: 10px;
-}
+::-webkit-scrollbar-thumb:horizontal,
 ::-webkit-scrollbar-thumb:vertical {
-  background: var(--bg-shadow);
-  border-radius: 10px;
+  background: color-mix(in srgb, var(--ds-primary, #ff6b2c) 45%, transparent);
+  border-radius: var(--ds-radius-full, 999px);
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
 }
 .la-ball-clip-rotate-pulse.la-2x {
   > div:first-child {
-    color: #cd1aa7 !important;
+    color: var(--ds-primary-dark, #ab0063) !important;
   }
   > div:last-child {
-    color: #ff5c38 !important;
+    color: var(--ds-primary, #ff6b2c) !important;
   }
 }
 app-common-slider {

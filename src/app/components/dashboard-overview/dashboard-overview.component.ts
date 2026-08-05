@@ -618,7 +618,7 @@ export class DashboardOverviewComponent implements OnDestroy {
         {
           value: completionRate,
           displayValue: totalCompleted,
-          color: '#ffb59a',
+          color: '#ff6b2c',
           style: 'progress',
         },
         {
