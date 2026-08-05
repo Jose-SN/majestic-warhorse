@@ -143,6 +143,66 @@
       >
         {{ demoModeService.isDemoLoading ? 'Loading…' : (demoModeService.isDemoMode ? 'Exit Demo' : 'Demo') }}
       </button>
+
+      <div
+        #themeMenu
+        class="theme-holder"
+        [class.is-open]="themeMenuOpen"
+      >
+        <button
+          type="button"
+          class="theme-holder__trigger"
+          (click)="toggleThemeMenu($event)"
+          [attr.aria-expanded]="themeMenuOpen"
+          aria-haspopup="true"
+          aria-label="Change theme"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">{{ themeTriggerIcon }}</span>
+        </button>
+
+        @if (themeMenuOpen) {
+          <div class="theme-holder__popup" role="dialog" aria-label="Theme">
+            <div class="theme-holder__popup-head">
+              <h3>Theme</h3>
+              <button
+                type="button"
+                class="theme-holder__close"
+                (click)="closeThemeMenu()"
+                aria-label="Close theme menu"
+              >
+                <span class="material-symbols-outlined" aria-hidden="true">close</span>
+              </button>
+            </div>
+            <ul class="theme-holder__list" role="listbox" [attr.aria-activedescendant]="'theme-' + activeTheme">
+              @for (option of themeOptions; track option.id) {
+                <li>
+                  <button
+                    type="button"
+                    class="theme-holder__option"
+                    [id]="'theme-' + option.id"
+                    role="option"
+                    [attr.aria-selected]="activeTheme === option.id"
+                    [class.is-active]="activeTheme === option.id"
+                    (click)="selectTheme(option.id)"
+                  >
+                    <span class="theme-holder__option-icon" aria-hidden="true">
+                      <span class="material-symbols-outlined">{{ option.icon }}</span>
+                    </span>
+                    <span class="theme-holder__option-text">
+                      <strong>{{ option.label }}</strong>
+                      <small>{{ option.description }}</small>
+                    </span>
+                    @if (activeTheme === option.id) {
+                      <span class="material-symbols-outlined theme-holder__check" aria-hidden="true">check</span>
+                    }
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      </div>
+
       <div
         #notificationMenu
         class="notification-holder"

@@ -1,0 +1,355 @@
+/**
+ * App appearance modes (data-theme on <html>).
+ * Default = Majestic Cyber
+ * Dark / Light = calm modes (no grids, no button gradients, no decorative motion)
+ */
+
+:root,
+html[data-theme='default'],
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+}
+
+/* ── Shared calm mode (dark + light): strip cyber decoration ── */
+html[data-theme='dark'],
+html[data-theme='light'] {
+  --mc-brand-gradient: var(--ds-primary, #ff6b2c);
+  --mc-brand-text-gradient: var(--ds-primary, #ff6b2c);
+  --ds-gradient-orange: var(--ds-primary, #ff6b2c);
+  --ds-gradient-gold: var(--ds-primary, #ff6b2c);
+  --ds-gradient-brand: var(--ds-primary, #ff6b2c);
+  --shadow-orange: none;
+  --shadow-gold: none;
+  --ds-motion-fast: 0ms;
+  --ds-motion-normal: 0ms;
+  --ds-motion-slow: 0ms;
+  --motion-fast: 0ms;
+  --motion-normal: 0ms;
+  --motion-slow: 0ms;
+
+  /* Background grids + scanlines + glows */
+  .dashboard-right__backdrop,
+  .dashboard-right__backdrop-grid,
+  .dashboard-right__backdrop-scanline,
+  .approval-grid-page__backdrop,
+  .approval-grid-page__technical-grid,
+  .approval-grid-page__scanline,
+  .approval-grid-page__glow,
+  .ap-page__grid,
+  .ap-page__glow,
+  .aa-portal__grid,
+  .signup-pane__grid,
+  .signup-pane__scan,
+  .login-hero__glow,
+  .login-pane::before,
+  .login-card__accent,
+  .signup-card__accent,
+  .login-card__logo-glow,
+  .login-help-fab__glow {
+    display: none !important;
+  }
+
+  /* Flat shell backgrounds (no radial brand washes) */
+  .dashboard-container,
+  .dashboard-right.has-technical-backdrop,
+  .customize-app,
+  .login-pane,
+  .signup-pane {
+    background: var(--ds-background) !important;
+  }
+
+  .dashboard-left {
+    box-shadow: none !important;
+    background: var(--ds-background) !important;
+    border-right-color: var(--ds-border) !important;
+  }
+
+  /* Primary / gradient buttons → solid fill */
+  .btn-primary,
+  .btn-deploy,
+  .customize-app__btn--primary,
+  .customize-app__preview-cta:not(.customize-app__preview-cta--secondary),
+  .approval-grid-page__approve-btn,
+  button[class*='btn-primary'],
+  a[class*='btn-primary'] {
+    background: var(--ds-primary, #ff6b2c) !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+    transform: none !important;
+    transition: opacity 0ms, background-color 0ms, filter 0ms !important;
+
+    &:hover:not(:disabled),
+    &:active:not(:disabled) {
+      transform: none !important;
+      box-shadow: none !important;
+      filter: brightness(1.05);
+    }
+  }
+
+  /* Brand text gradients → solid primary */
+  .login-hero__title-accent,
+  .signup-hero__title-accent,
+  .customize-app__title,
+  [class*='brand-text'],
+  [class*='title-accent'] {
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    -webkit-text-fill-color: var(--ds-primary, #ff6b2c) !important;
+    color: var(--ds-primary, #ff6b2c) !important;
+  }
+
+  .dashboard-right__backdrop-scanline::after,
+  .approval-grid-page__scanline::after,
+  .login-hero__glow,
+  .signup-pane__scan,
+  .ap-page__glow,
+  .approval-grid-page__glow {
+    animation: none !important;
+  }
+
+  .customize-app__card,
+  .ds-card,
+  [class*='__card']:hover {
+    transform: none !important;
+  }
+}
+
+/* ── Dark-only surfaces ── */
+html[data-theme='dark'] {
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.35);
+
+  body {
+    background: var(--ds-background, #0a0a0b);
+    color: var(--ds-text, #f4f4f5);
+  }
+}
+
+/* ── Light theme: calm mode + readable cards / text ── */
+html[data-theme='light'] {
+  --shadow-card: 0 4px 16px rgba(15, 23, 42, 0.08);
+  --dashboard-glass: #ffffff;
+  --bg-magento: color-mix(in srgb, var(--ds-primary, #ff6b2c) 12%, transparent);
+
+  body {
+    background: var(--ds-background, #f8fafc);
+    color: var(--ds-text, #0f172a);
+  }
+
+  /* Headings / body copy inherit readable tokens */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  label,
+  span,
+  li,
+  td,
+  th,
+  small,
+  strong {
+    color: inherit;
+  }
+
+  /* Cards + glass panels that assumed dark translucent white */
+  .customize-app__card,
+  .ds-card,
+  .login-card,
+  .signup-card,
+  .theme-holder__popup,
+  .notification-holder__popup,
+  .approval-grid-page__list-row,
+  .approval-grid-page__stat,
+  .ap-page,
+  [class*='glass'],
+  [class*='__card']:not([class*='preview']) {
+    background: var(--ds-surface, #ffffff) !important;
+    color: var(--ds-text, #0f172a) !important;
+    border-color: var(--ds-border, #e2e8f0) !important;
+    box-shadow: var(--shadow-card) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Inputs / fields */
+  input:not([type='color']):not([type='checkbox']):not([type='radio']),
+  select,
+  textarea,
+  .field-group input,
+  .signup-field input,
+  .signup-field select,
+  .customize-app__field input[type='text'] {
+    background: var(--ds-surface, #ffffff) !important;
+    color: var(--ds-text, #0f172a) !important;
+    border-color: var(--ds-border, #cbd5e1) !important;
+    caret-color: var(--ds-text, #0f172a);
+
+    &::placeholder {
+      color: var(--ds-text-muted, #64748b) !important;
+    }
+  }
+
+  /* Muted / secondary text */
+  .customize-app__lead,
+  .customize-app__hint,
+  .customize-app__note,
+  .customize-app__card-desc,
+  .customize-app__eyebrow,
+  .login-card__description,
+  .login-card__footer p,
+  .signup-card__footer p,
+  .theme-holder__option-text small,
+  .notification-holder__empty small,
+  [class*='__muted'],
+  [class*='text-muted'],
+  [class*='__subtitle'],
+  [class*='__description'],
+  [class*='__label']:not(.role-btn__label) {
+    color: var(--ds-text-muted, #64748b) !important;
+  }
+
+  /* Primary readable text on light chrome */
+  .page-title,
+  .page-title span,
+  .login-card__heading,
+  .signup-hero__title,
+  .theme-holder__popup-head h3,
+  .notification-holder__popup-head h3,
+  .customize-app__card-title,
+  .left-navigation a span,
+  .dashboard-mobile-nav__item span {
+    color: var(--ds-text, #0f172a) !important;
+    -webkit-text-fill-color: unset;
+  }
+
+  /* Sidepanel / nav — replace glass wash with solid light surfaces */
+  .dashboard-left,
+  .left-navigation li a,
+  .theme-holder__trigger,
+  .notification-holder__trigger,
+  .demo-mode-btn,
+  .role-btn,
+  .signup-role,
+  .customize-app__preset,
+  .customize-app__color,
+  .theme-holder__option {
+    background: var(--ds-surface, #ffffff) !important;
+    color: var(--ds-text, #0f172a) !important;
+    border-color: var(--ds-border, #e2e8f0) !important;
+  }
+
+  .left-navigation li a .material-symbols-outlined,
+  .theme-holder__trigger .material-symbols-outlined,
+  .theme-holder__option-icon {
+    color: var(--ds-primary, #ff6b2c) !important;
+  }
+
+  .left-navigation li a.active,
+  .left-navigation li a:hover,
+  .theme-holder__option.is-active,
+  .customize-app__preset--active,
+  .role-btn.is-active,
+  .signup-role.is-active {
+    background: color-mix(in srgb, var(--ds-primary, #ff6b2c) 10%, #ffffff) !important;
+    color: var(--ds-text, #0f172a) !important;
+    border-color: color-mix(in srgb, var(--ds-primary, #ff6b2c) 45%, var(--ds-border, #e2e8f0)) !important;
+    box-shadow: none !important;
+  }
+
+  /* Secondary / ghost buttons — dark text on light surface */
+  .btn-google,
+  .customize-app__btn--secondary,
+  .customize-app__btn--ghost,
+  .customize-app__preview-cta--secondary,
+  .approval-grid-page__action-btn {
+    background: var(--ds-surface, #ffffff) !important;
+    color: var(--ds-text, #0f172a) !important;
+    border: 1px solid var(--ds-border, #cbd5e1) !important;
+    box-shadow: none !important;
+  }
+
+  /* Icons that used white-on-dark strokes */
+  .dashboard-mobile-nav {
+    background: var(--ds-surface, #ffffff) !important;
+    border-color: var(--ds-border, #e2e8f0) !important;
+    color: var(--ds-text, #0f172a);
+  }
+
+  .dashboard-mobile-nav__item {
+    color: var(--ds-text-muted, #64748b) !important;
+
+    &.is-active {
+      color: var(--ds-primary, #ff6b2c) !important;
+    }
+  }
+
+  /* Search bar / header strip */
+  .search-holder,
+  .input-holder,
+  .profile-area {
+    color: var(--ds-text, #0f172a);
+  }
+
+  .input-holder input {
+    background: var(--ds-surface, #ffffff) !important;
+    color: var(--ds-text, #0f172a) !important;
+    border-color: var(--ds-border, #e2e8f0) !important;
+  }
+
+  /* Overview / list rows that used translucent panels */
+  .approval-grid-page__content,
+  .approval-grid-page__header,
+  .common-container,
+  .dashboard-right {
+    color: var(--ds-text, #0f172a);
+  }
+
+  .approval-grid-page__list-head,
+  .approval-grid-page__empty,
+  .notification-holder__empty,
+  .notification-holder__item {
+    color: var(--ds-text, #0f172a) !important;
+    background: var(--ds-surface, #ffffff) !important;
+    border-color: var(--ds-border, #e2e8f0) !important;
+  }
+
+  .notification-holder__item small,
+  .approval-grid-page__header-meta,
+  .approval-grid-page__stat small {
+    color: var(--ds-text-muted, #64748b) !important;
+  }
+
+  /* SVG paths that inherit fill from white */
+  .left-navigation a:not(.active) path {
+    fill: var(--ds-text-muted, #64748b);
+  }
+
+  .left-navigation a.active path {
+    fill: var(--ds-primary, #ff6b2c);
+  }
+
+  /* Soft borders that were white@10% (invisible on light) */
+  .dashboard-left,
+  .login-card,
+  .signup-card,
+  .customize-app__card,
+  .theme-holder__popup,
+  .notification-holder__popup {
+    border: 1px solid var(--ds-border, #e2e8f0) !important;
+  }
+
+  /* Keep primary CTAs white-on-brand */
+  .btn-primary,
+  .btn-deploy,
+  .customize-app__btn--primary,
+  .approval-grid-page__approve-btn {
+    color: #ffffff !important;
+  }
+}

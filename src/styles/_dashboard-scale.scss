@@ -5,14 +5,20 @@ $dashboard-scale: 0.6705882353;
   @return $px * $dashboard-scale;
 }
 
-/** Glass elevation — design_v1 elevation / shadows */
+/** Glass elevation — design_v1 elevation / shadows (theme-aware) */
 @mixin dashboard-glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--dashboard-glass, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--ds-border, rgba(255, 255, 255, 0.1));
   backdrop-filter: blur(16px);
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--ds-primary, #ff6b2c) 12%, transparent),
-    0 8px 24px rgba(3, 3, 4, 0.45);
+    var(--shadow-card, 0 8px 24px rgba(3, 3, 4, 0.45));
+
+  html[data-theme='light'] & {
+    backdrop-filter: none;
+    background: var(--ds-surface, #ffffff);
+    box-shadow: var(--shadow-card, 0 4px 16px rgba(15, 23, 42, 0.08));
+  }
 }
 
 /** Sidebar active — design_v1 39_SIDEBAR (orange wash + left border) */

@@ -9,16 +9,22 @@
 }
 
 @mixin ds-glass {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--dashboard-glass, rgba(255, 255, 255, 0.05));
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--ds-border, rgba(255, 255, 255, 0.1));
+
+  html[data-theme='light'] & {
+    backdrop-filter: none;
+    background: var(--ds-surface, #ffffff);
+  }
 }
 
 @mixin ds-card {
   background: var(--ds-surface, var(--color-surface));
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--ds-border, rgba(255, 255, 255, 0.1));
   border-radius: var(--ds-radius-card, var(--radius-card));
   padding: var(--ds-space-5, 24px);
+  color: var(--ds-text, var(--mc-on-surface));
   box-shadow: var(--shadow-card);
   transition:
     transform var(--ds-motion-fast, 150ms) ease-out,
@@ -27,7 +33,17 @@
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       transform: translateY(-2px);
-      box-shadow: var(--shadow-orange);
+      box-shadow: var(--shadow-orange, var(--shadow-card));
+    }
+  }
+
+  html[data-theme='light'] &,
+  html[data-theme='dark'] & {
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        transform: none;
+        box-shadow: var(--shadow-card);
+      }
     }
   }
 }

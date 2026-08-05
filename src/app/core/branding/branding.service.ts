@@ -201,6 +201,11 @@ export class BrandingService {
     this.applyToDom(branding);
   }
 
+  /** Re-paint current branding tokens on :root (used when restoring Default / Cyber theme). */
+  reapplyDom(): void {
+    this.applyToDom(this.brandingSubject.value);
+  }
+
   private storageKey(organizationId: string): string {
     return organizationId ? `${STORAGE_PREFIX}:${organizationId}` : `${STORAGE_PREFIX}:global`;
   }

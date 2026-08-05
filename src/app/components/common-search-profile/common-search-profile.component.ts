@@ -13,6 +13,8 @@ import {
   DASHBOARD_DEMO_DATA,
 } from 'src/app/components/dashboard-overview/data/dashboard-demo.data';
 import { BrandingService } from 'src/app/core/branding/branding.service';
+import { ThemeService } from 'src/app/core/theme/theme.service';
+import { AppThemeMode, ThemeOption } from 'src/app/core/theme/theme.model';
 
 @Component({
   selector: 'app-search-profile',
@@ -28,7 +30,10 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
   public isCourseDetailsRoute = false;
   public userMenuOpen = false;
   public activityFeedOpen = false;
+  public themeMenuOpen = false;
   public activityFeedItems: ActivityFeedItem[] = [];
+  public themeOptions: ThemeOption[] = [];
+  public activeTheme: AppThemeMode = 'default';
   @Output() mobNavchild = new EventEmitter<void>();
   public mobMenu: boolean = false;
   public loginedUserInfo: UserModel = {} as UserModel;
@@ -38,13 +43,15 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
 
   @ViewChild('userMenu') userMenuRef?: ElementRef<HTMLElement>;
   @ViewChild('notificationMenu') notificationMenuRef?: ElementRef<HTMLElement>;
+  @ViewChild('themeMenu') themeMenuRef?: ElementRef<HTMLElement>;
 
   constructor(
     private authService: AuthService,
     public commonService: CommonService,
     public demoModeService: DemoModeService,
     private router: Router,
-    private brandingService: BrandingService
+    private brandingService: BrandingService,
+    private themeService: ThemeService
   ) {
     this.loginedUserInfo = this.commonService.loginedUserInfo ?? {};
     this.profileUrl =
@@ -86,6 +93,17 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
       this.brandLogo = branding.logoUrl;
       this.appName = branding.appName;
     });
+
+    this.themeOptions = this.themeService.options;
+    this.activeTheme = this.themeService.mode;
+    this.themeService.mode$.pipe(takeUntil(this.destroy$)).subscribe((mode) => {
+      this.activeTheme = mode;
+    });
+  }
+
+  get themeTriggerIcon(): string {
+    const match = this.themeOptions.find((o) => o.id === this.activeTheme);
+    return match?.icon || 'palette';
   }
 
   ngOnDestroy(): void {
@@ -153,6 +171,7 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
   toggleUserMenu(event: Event): void {
     event.stopPropagation();
     this.closeActivityFeed();
+    this.closeThemeMenu();
     this.userMenuOpen = !this.userMenuOpen;
   }
 
@@ -163,6 +182,7 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
   toggleActivityFeed(event: Event): void {
     event.stopPropagation();
     this.closeUserMenu();
+    this.closeThemeMenu();
     this.activityFeedOpen = !this.activityFeedOpen;
 
     if (this.activityFeedOpen && this.demoModeService.isDemoMode && !this.activityFeedItems.length) {
@@ -172,6 +192,22 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
 
   closeActivityFeed(): void {
     this.activityFeedOpen = false;
+  }
+
+  toggleThemeMenu(event: Event): void {
+    event.stopPropagation();
+    this.closeUserMenu();
+    this.closeActivityFeed();
+    this.themeMenuOpen = !this.themeMenuOpen;
+  }
+
+  closeThemeMenu(): void {
+    this.themeMenuOpen = false;
+  }
+
+  selectTheme(mode: AppThemeMode): void {
+    this.themeService.setTheme(mode);
+    this.closeThemeMenu();
   }
 
   @HostListener('document:click', ['$event'])
@@ -189,6 +225,13 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
       const notifications = this.notificationMenuRef?.nativeElement;
       if (notifications && !notifications.contains(target)) {
         this.activityFeedOpen = false;
+      }
+    }
+
+    if (this.themeMenuOpen) {
+      const theme = this.themeMenuRef?.nativeElement;
+      if (theme && !theme.contains(target)) {
+        this.themeMenuOpen = false;
       }
     }
   }
