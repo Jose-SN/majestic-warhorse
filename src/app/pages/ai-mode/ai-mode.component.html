@@ -1,56 +1,381 @@
-<section class="ai-mode" aria-label="AI Mode">
-  <div class="ai-mode__center">
-    <h1 class="ai-mode__greeting">
-      Hi {{ greetingName }}, what's on your mind?
-    </h1>
+<section
+  class="ai-mode"
+  [class.has-history]="historyOpen"
+  [class.has-thread]="!!activeThread"
+  aria-label="AI Mode"
+>
+  <div class="ai-mode__aurora" aria-hidden="true"></div>
+  <div class="ai-mode__glow ai-mode__glow--a" aria-hidden="true"></div>
+  <div class="ai-mode__glow ai-mode__glow--b" aria-hidden="true"></div>
+  <div class="ai-mode__glow ai-mode__glow--c" aria-hidden="true"></div>
 
-    <div class="ai-mode__composer" (click)="focusInput()">
-      <button
-        type="button"
-        class="ai-mode__composer-btn ai-mode__composer-btn--add"
-        aria-label="Add attachment"
-        (click)="$event.stopPropagation()"
-      >
-        <span class="material-symbols-outlined">add</span>
-      </button>
+  <header class="ai-mode__topbar">
+    <button type="button" class="ai-mode__top-btn" (click)="startNewChat()" aria-label="New chat">
+      <span class="material-symbols-outlined" aria-hidden="true">edit_square</span>
+      <span>New chat</span>
+    </button>
+    <button
+      type="button"
+      class="ai-mode__top-btn ai-mode__top-btn--history"
+      [class.is-active]="historyOpen"
+      (click)="toggleHistory()"
+      [attr.aria-expanded]="historyOpen"
+      aria-controls="ai-mode-history"
+    >
+      <span class="material-symbols-outlined" aria-hidden="true">history</span>
+      <span>History</span>
+      @if (threads.length) {
+        <span class="ai-mode__top-count">{{ threads.length }}</span>
+      }
+    </button>
+  </header>
 
-      <label class="ai-mode__input-wrap">
-        <span class="visually-hidden">Ask anything</span>
-        <textarea
-          #promptInput
-          class="ai-mode__input"
-          [(ngModel)]="query"
-          rows="1"
-          placeholder="Ask anything"
-          (keydown)="onPromptKeydown($event)"
-        ></textarea>
-      </label>
+  <div class="ai-mode__workspace">
+    <div class="ai-mode__shell">
+      @if (showHome) {
+        <div class="ai-mode__hero">
+          <p class="ai-mode__pill">
+            <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+            PetaxAI tutor is ready to help
+            <span aria-hidden="true">→</span>
+          </p>
 
-      <button
-        type="button"
-        class="ai-mode__composer-btn ai-mode__composer-btn--mic"
-        aria-label="Voice input"
-        (click)="$event.stopPropagation()"
-      >
-        <span class="material-symbols-outlined">mic</span>
-      </button>
+          <h1 class="ai-mode__greeting">Ready to learn, {{ greetingName }}?</h1>
+
+          <ng-container *ngTemplateOutlet="composerTpl"></ng-container>
+        </div>
+
+        <section class="ai-mode__gallery" aria-label="Prompt gallery">
+          <div class="ai-mode__gallery-bar">
+            <div class="ai-mode__tabs" role="tablist" aria-label="Gallery filters">
+              @for (tab of galleryTabs; track tab.id) {
+                <button
+                  type="button"
+                  class="ai-mode__tab"
+                  role="tab"
+                  [class.is-active]="activeGalleryTab === tab.id"
+                  [attr.aria-selected]="activeGalleryTab === tab.id"
+                  (click)="setGalleryTab(tab.id)"
+                >
+                  {{ tab.label }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="ai-mode__cards">
+            @for (item of galleryItems; track item.id) {
+              <article
+                class="ai-mode__card"
+                [attr.data-tone]="item.tone"
+                (click)="applySuggestion(item)"
+                (keydown.enter)="applySuggestion(item)"
+                tabindex="0"
+                role="button"
+                [attr.aria-label]="'Use prompt: ' + item.title"
+              >
+                <div class="ai-mode__card-preview">
+                  <span class="material-symbols-outlined" aria-hidden="true">{{ item.icon }}</span>
+                  <button
+                    type="button"
+                    class="ai-mode__star"
+                    [class.is-on]="isStarred(item.id)"
+                    [attr.aria-label]="isStarred(item.id) ? 'Unstar' : 'Star'"
+                    (click)="toggleStar(item, $event)"
+                  >
+                    <span class="material-symbols-outlined">{{ isStarred(item.id) ? 'star' : 'star_border' }}</span>
+                  </button>
+                  <span class="ai-mode__badge">{{ item.badge }}</span>
+                </div>
+                <div class="ai-mode__card-body">
+                  <h3 class="ai-mode__card-title">{{ item.title }}</h3>
+                  <p class="ai-mode__card-text">{{ item.text }}</p>
+                </div>
+              </article>
+            } @empty {
+              <p class="ai-mode__gallery-empty">
+                @if (activeGalleryTab === 'recent') {
+                  Ask something to see it here.
+                } @else if (activeGalleryTab === 'starred') {
+                  Star a suggestion to keep it here.
+                } @else {
+                  No suggestions yet.
+                }
+              </p>
+            }
+          </div>
+        </section>
+      } @else {
+        <div class="ai-mode__chat">
+          <div class="ai-mode__chat-scroll" #threadScroll>
+            <div class="ai-mode__chat-title">{{ activeThread?.title }}</div>
+            @for (message of activeThread?.messages ?? []; track message.id) {
+              <article
+                class="ai-mode__msg"
+                [class.ai-mode__msg--user]="message.role === 'user'"
+                [class.ai-mode__msg--assistant]="message.role === 'assistant'"
+              >
+                <div class="ai-mode__msg-avatar" aria-hidden="true">
+                  <span class="material-symbols-outlined">
+                    {{ message.role === 'user' ? 'person' : 'auto_awesome' }}
+                  </span>
+                </div>
+                <div class="ai-mode__msg-body">
+                  <div class="ai-mode__msg-meta">
+                    <span>{{ message.role === 'user' ? 'You' : 'PetaxAI' }}</span>
+                    <time [attr.datetime]="message.createdAt">{{ formatThreadTime(message.createdAt) }}</time>
+                  </div>
+                  <div class="ai-mode__msg-content">{{ formatMessage(message.content) }}</div>
+                  @if (message.attachmentNames?.length) {
+                    <ul class="ai-mode__msg-files">
+                      @for (name of message.attachmentNames; track name) {
+                        <li>
+                          <span class="material-symbols-outlined" aria-hidden="true">attach_file</span>
+                          {{ name }}
+                        </li>
+                      }
+                    </ul>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+          <div class="ai-mode__chat-composer">
+            <ng-container *ngTemplateOutlet="composerTpl"></ng-container>
+          </div>
+        </div>
+      }
     </div>
 
-    <ul class="ai-mode__suggestions" aria-label="Suggested prompts">
-      @for (suggestion of suggestions; track suggestion.id) {
-        <li>
-          <button
-            type="button"
-            class="ai-mode__suggestion"
-            (click)="applySuggestion(suggestion)"
-          >
-            <span class="material-symbols-outlined ai-mode__suggestion-icon" aria-hidden="true">
-              auto_awesome
-            </span>
-            <span class="ai-mode__suggestion-text">{{ suggestion.text }}</span>
+    @if (historyOpen) {
+      <aside class="ai-mode__history" id="ai-mode-history" aria-label="Chat history">
+        <div class="ai-mode__history-head">
+          <div>
+            <h2 class="ai-mode__history-title">History</h2>
+            <p class="ai-mode__history-sub">Questions and answers</p>
+          </div>
+          <button type="button" class="ai-mode__icon-btn" aria-label="Close history" (click)="historyOpen = false">
+            <span class="material-symbols-outlined">close</span>
           </button>
-        </li>
-      }
-    </ul>
+        </div>
+
+        <label class="ai-mode__history-search">
+          <span class="material-symbols-outlined" aria-hidden="true">search</span>
+          <input
+            type="search"
+            [(ngModel)]="historySearch"
+            placeholder="Search chats…"
+            aria-label="Search chat history"
+          />
+        </label>
+
+        <ul class="ai-mode__history-list">
+          @for (thread of filteredThreads; track thread.id) {
+            <li>
+              <button
+                type="button"
+                class="ai-mode__history-item"
+                [class.is-active]="thread.id === activeThreadId"
+                (click)="openThread(thread.id)"
+              >
+                <span class="material-symbols-outlined ai-mode__history-icon" aria-hidden="true">chat_bubble</span>
+                <span class="ai-mode__history-copy">
+                  <span class="ai-mode__history-item-title">{{ thread.title }}</span>
+                  <span class="ai-mode__history-item-preview">{{ threadPreview(thread) }}</span>
+                </span>
+                <span class="ai-mode__history-time">{{ formatThreadTime(thread.updatedAt) }}</span>
+              </button>
+              <button
+                type="button"
+                class="ai-mode__history-delete"
+                [attr.aria-label]="'Delete ' + thread.title"
+                (click)="deleteThread(thread.id, $event)"
+              >
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </li>
+          } @empty {
+            <li class="ai-mode__history-empty">
+              No chats yet. Ask a question to start your history.
+            </li>
+          }
+        </ul>
+      </aside>
+    }
   </div>
 </section>
+
+<ng-template #composerTpl>
+  <div
+    class="ai-mode__composer"
+    #composerRoot
+    [class.is-listening]="isListening"
+    (click)="focusInput()"
+  >
+    @if (attachments.length) {
+      <div class="ai-mode__chips" aria-label="Attached files" (click)="$event.stopPropagation()">
+        @for (item of attachments; track item.id) {
+          <span class="ai-mode__chip">
+            <span class="material-symbols-outlined" aria-hidden="true">attach_file</span>
+            <span>{{ item.name }}</span>
+            <button
+              type="button"
+              class="ai-mode__chip-remove"
+              [attr.aria-label]="'Remove ' + item.name"
+              (click)="removeAttachment(item.id, $event)"
+            >
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </span>
+        }
+      </div>
+    }
+
+    <label class="ai-mode__input-wrap">
+      <span class="visually-hidden">Ask anything</span>
+      <textarea
+        #promptInput
+        class="ai-mode__input"
+        [(ngModel)]="query"
+        rows="2"
+        placeholder="Ask anything about your courses, study plan, or next steps…"
+        (keydown)="onPromptKeydown($event)"
+      ></textarea>
+    </label>
+
+    @if (isListening || interimTranscript || voiceError) {
+      <div class="ai-mode__live" aria-live="polite">
+        <span
+          class="ai-mode__live-meter"
+          [style.--level]="audioLevel"
+          aria-hidden="true"
+        ></span>
+        <span class="ai-mode__live-text">
+          {{ voiceError || interimTranscript || voiceStatusLabel || 'Listening…' }}
+        </span>
+      </div>
+    }
+
+    <div class="ai-mode__toolbar" (click)="$event.stopPropagation()">
+      <div class="ai-mode__toolbar-left">
+        <button
+          type="button"
+          class="ai-mode__icon-btn"
+          [class.is-open]="menuOpen"
+          aria-label="Open command menu"
+          [attr.aria-expanded]="menuOpen"
+          (click)="toggleMenu($event)"
+        >
+          <span class="material-symbols-outlined">{{ menuOpen ? 'close' : 'add' }}</span>
+        </button>
+
+        @if (query.trim()) {
+          <button
+            type="button"
+            class="ai-mode__icon-btn"
+            aria-label="Clear prompt"
+            (click)="clearPrompt($event)"
+          >
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        }
+      </div>
+
+      <div class="ai-mode__toolbar-right">
+        <button
+          type="button"
+          class="ai-mode__icon-btn ai-mode__icon-btn--mic"
+          [class.is-listening]="isListening"
+          [disabled]="!speechSupported && !isListening"
+          (click)="toggleListening($event)"
+          [attr.aria-pressed]="isListening"
+          [attr.aria-label]="isListening ? 'Stop listening' : 'Start voice input'"
+        >
+          <span class="material-symbols-outlined">{{ isListening ? 'stop_circle' : 'mic' }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="ai-mode__send"
+          aria-label="Send prompt"
+          (click)="submitPrompt()"
+        >
+          <span class="material-symbols-outlined">arrow_upward</span>
+        </button>
+      </div>
+    </div>
+
+    @if (menuOpen) {
+      <div class="ai-mode__menu" role="dialog" aria-label="Commands" (click)="$event.stopPropagation()">
+        <label class="ai-mode__menu-search">
+          <span class="material-symbols-outlined" aria-hidden="true">search</span>
+          <input
+            type="search"
+            [(ngModel)]="commandSearch"
+            placeholder="Search…"
+            aria-label="Search commands"
+          />
+        </label>
+        <ul class="ai-mode__menu-list">
+          @for (item of filteredCommands; track item.id) {
+            <li>
+              <button type="button" class="ai-mode__menu-item" (click)="onCommand(item, $event)">
+                <span class="material-symbols-outlined" aria-hidden="true">{{ item.icon }}</span>
+                <span>{{ item.label }}</span>
+                <span class="material-symbols-outlined ai-mode__menu-chevron" aria-hidden="true">chevron_right</span>
+              </button>
+            </li>
+          } @empty {
+            <li class="ai-mode__menu-empty">No matches</li>
+          }
+        </ul>
+      </div>
+    }
+
+    @if (attachPanelOpen) {
+      <div class="ai-mode__attach-panel" role="dialog" aria-label="Add files" (click)="$event.stopPropagation()">
+        <div class="ai-mode__attach-head">
+          <p class="ai-mode__attach-title">Attach files</p>
+          <button type="button" class="ai-mode__icon-btn" aria-label="Close" (click)="attachPanelOpen = false">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <p class="ai-mode__attach-hint">Add documents, images, or notes to your prompt.</p>
+        <button type="button" class="ai-mode__attach-upload" (click)="openFilePicker($event)">
+          <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>
+          <span>Choose files</span>
+        </button>
+        @if (attachments.length) {
+          <ul class="ai-mode__attach-list">
+            @for (item of attachments; track item.id) {
+              <li class="ai-mode__attach-item">
+                <span class="material-symbols-outlined" aria-hidden="true">description</span>
+                <div class="ai-mode__attach-meta">
+                  <span class="ai-mode__attach-name">{{ item.name }}</span>
+                  <span class="ai-mode__attach-size">{{ item.sizeLabel }}</span>
+                </div>
+                <button
+                  type="button"
+                  class="ai-mode__chip-remove"
+                  [attr.aria-label]="'Remove ' + item.name"
+                  (click)="removeAttachment(item.id, $event)"
+                >
+                  <span class="material-symbols-outlined">close</span>
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    }
+
+    <input
+      #fileInput
+      type="file"
+      class="ai-mode__file-input"
+      multiple
+      accept=".pdf,.doc,.docx,.txt,.md,.png,.jpg,.jpeg,.webp,.gif,.csv,.xlsx,.pptx"
+      (change)="onFilesSelected($event)"
+    />
+  </div>
+</ng-template>
