@@ -223,7 +223,6 @@
 
     &--colors {
       flex: 1;
-      min-height: 0;
     }
   }
 
@@ -309,7 +308,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 48px;
+    height: 100px;
     padding: var(--ds-space-2, 8px);
     border-radius: var(--radius-md, 12px);
     border: 1px dashed var(--ds-border, var(--mc-outline));
@@ -317,7 +316,7 @@
     cursor: pointer;
 
     img {
-      max-height: 32px;
+      // max-height: 32px;
       max-width: 100%;
       object-fit: contain;
     }
@@ -330,8 +329,8 @@
     }
 
     &--favicon img {
-      max-height: 28px;
-      max-width: 28px;
+      max-height: 100%;
+      max-width: 100%;
     }
   }
 
