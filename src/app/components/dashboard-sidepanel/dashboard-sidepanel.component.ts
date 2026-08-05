@@ -255,6 +255,6 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
   }
 
   onUpgradeToPro(): void {
-    void this.router.navigate([DASHBOARD_NAV_ROUTES.account]);
+    void this.router.navigate([DASHBOARD_NAV_ROUTES.pricing]);
   }
 }

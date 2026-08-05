@@ -9,6 +9,7 @@ export const DASHBOARD_NAV_ROUTES = {
   settings: '/settings',
   account: '/settings/account',
   customizeApp: '/settings/customize',
+  pricing: '/pricing',
   directory: '/directory',
   teachers: '/directory/teachers',
   students: '/directory/students',
@@ -34,6 +35,7 @@ export const DASHBOARD_TECHNICAL_BACKDROP_SEGMENTS = [
   'settings',
   'ai-mode',
   'courses',
+  'pricing',
 ] as const;
 
 /** Path segments that should highlight a nav item. */
@@ -43,6 +45,7 @@ export const DASHBOARD_NAV_ACTIVE_SEGMENTS = {
   settings: ['settings'],
   account: ['settings'],
   customizeApp: ['settings'],
+  pricing: ['pricing'],
   courses: ['courses', 'course-details', 'course-upload'],
   directory: ['directory'],
   approval: ['approval'],

@@ -24,6 +24,7 @@ import { CourseUploadComponent } from './pages/course-upload/course-upload.compo
 import { ViewAssignedStudentsComponent } from './components/view-assigned-students/view-assigned-students.component';
 import { ViewAssignedTeachersComponent } from './components/view-assigned-teachers/view-assigned-teachers.component';
 import { SettingsPageComponent } from './pages/settings-page/settings-page.component';
+import { PricingPageComponent } from './pages/pricing-page/pricing-page.component';
 
 /**
  * App shell (DashboardComponent) wraps authenticated pages at the root.
@@ -52,6 +53,7 @@ const routes: Routes = [
       { path: 'settings/:tab', component: SettingsPageComponent },
       { path: 'account', redirectTo: 'settings/account', pathMatch: 'full' },
       { path: 'customize-app', redirectTo: 'settings/customize', pathMatch: 'full' },
+      { path: 'pricing', component: PricingPageComponent },
       { path: 'directory/teachers/:id/manage', component: ViewAssignedStudentsComponent },
       { path: 'directory/students/:id/manage', component: ViewAssignedTeachersComponent },
       { path: 'directory', component: DirectoryPageComponent },

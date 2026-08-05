@@ -1,0 +1,115 @@
+<section class="pricing-page" aria-label="Pricing">
+  <div class="pricing-page__backdrop" aria-hidden="true">
+    <div class="pricing-page__glow pricing-page__glow--a"></div>
+    <div class="pricing-page__glow pricing-page__glow--b"></div>
+  </div>
+
+  <div class="pricing-page__content">
+    <header class="pricing-page__header">
+      <p class="pricing-page__eyebrow">
+        <span class="material-symbols-outlined" aria-hidden="true">payments</span>
+        Pricing
+      </p>
+      <h1 class="pricing-page__title">Choose the plan that fits your learning</h1>
+      <p class="pricing-page__subtitle">
+        Monthly or annual billing. Start with a free trial — upgrade when you're ready.
+      </p>
+
+      <div class="pricing-page__billing" role="tablist" aria-label="Billing cycle">
+        <button
+          type="button"
+          class="pricing-page__billing-btn"
+          role="tab"
+          [class.is-active]="billingCycle === 'monthly'"
+          [attr.aria-selected]="billingCycle === 'monthly'"
+          (click)="setBillingCycle('monthly')"
+        >
+          Monthly
+        </button>
+        <button
+          type="button"
+          class="pricing-page__billing-btn"
+          role="tab"
+          [class.is-active]="billingCycle === 'annually'"
+          [attr.aria-selected]="billingCycle === 'annually'"
+          (click)="setBillingCycle('annually')"
+        >
+          Annually
+          <span class="pricing-page__billing-save">Save up to 17%</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="pricing-page__plans">
+      @for (plan of plans; track plan.id) {
+        <article
+          class="pricing-card"
+          [class.is-featured]="plan.featured"
+          [attr.data-plan]="plan.id"
+        >
+          @if (plan.badge) {
+            <span class="pricing-card__badge">{{ plan.badge }}</span>
+          }
+
+          <div class="pricing-card__head">
+            <h2 class="pricing-card__name">{{ plan.name }}</h2>
+            <p class="pricing-card__tagline">{{ plan.tagline }}</p>
+          </div>
+
+          <div class="pricing-card__price">
+            <span class="pricing-card__amount">{{ priceLabel(plan) }}</span>
+            <span class="pricing-card__period">{{ periodLabel(plan) }}</span>
+            @if (annualSavingsLabel(plan); as save) {
+              <span class="pricing-card__save">{{ save }}</span>
+            }
+          </div>
+
+          <ul class="pricing-card__features">
+            @for (feature of plan.features; track feature) {
+              <li>
+                <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+                <span>{{ feature }}</span>
+              </li>
+            }
+          </ul>
+
+          <button
+            type="button"
+            class="pricing-card__cta"
+            [class.pricing-card__cta--primary]="plan.ctaTone === 'primary'"
+            [class.pricing-card__cta--secondary]="plan.ctaTone === 'secondary'"
+            [class.pricing-card__cta--ghost]="plan.ctaTone === 'ghost'"
+            (click)="onSelectPlan(plan)"
+          >
+            {{ plan.ctaLabel }}
+          </button>
+        </article>
+      }
+    </div>
+
+    <section class="pricing-trial" aria-labelledby="pricing-trial-title">
+      <div class="pricing-trial__icon" aria-hidden="true">
+        <span class="material-symbols-outlined">timer</span>
+      </div>
+      <div class="pricing-trial__copy">
+        <p class="pricing-trial__eyebrow">{{ trial.days }}-day free trial</p>
+        <h2 id="pricing-trial-title" class="pricing-trial__title">{{ trial.title }}</h2>
+        <p class="pricing-trial__desc">{{ trial.description }}</p>
+        <ul class="pricing-trial__notes">
+          @for (note of trial.notes; track note) {
+            <li>
+              <span class="material-symbols-outlined" aria-hidden="true">verified</span>
+              {{ note }}
+            </li>
+          }
+        </ul>
+      </div>
+      <div class="pricing-trial__actions">
+        <button type="button" class="pricing-trial__cta" (click)="startTrial()">
+          {{ trial.ctaLabel }}
+        </button>
+        <p class="pricing-trial__fine">No charge today · Cancel anytime</p>
+      </div>
+    </section>
+  </div>
+</section>
