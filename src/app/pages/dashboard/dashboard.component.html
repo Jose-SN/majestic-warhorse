@@ -1,6 +1,13 @@
 <section class="dashboard-container">
-  <div class="dashboard-left" [ngClass]="{ active: isMobileNav }">
-    <app-dashboard-sidepanel [navDisabled]="isApprovalPendingRoute"></app-dashboard-sidepanel>
+  <div
+    class="dashboard-left"
+    [ngClass]="{ active: isMobileNav, 'is-collapsed': sidebarCollapsed }"
+  >
+    <app-dashboard-sidepanel
+      [navDisabled]="isApprovalPendingRoute"
+      [collapsed]="sidebarCollapsed"
+      (collapsedChange)="sidebarCollapsed = $event"
+    ></app-dashboard-sidepanel>
   </div>
 
   <div class="dashboard-right" [class.has-technical-backdrop]="showTechnicalBackdrop">

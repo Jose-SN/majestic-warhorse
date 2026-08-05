@@ -29,6 +29,7 @@ import { BannerComponent } from 'src/app/shared/banner/banner.component';
 export class DashboardComponent implements OnInit, OnDestroy {
   public isMobileNav = false;
   public infoMessage: string = '';
+  public sidebarCollapsed = false;
   private destroy$ = new Subject<void>();
 
   constructor(

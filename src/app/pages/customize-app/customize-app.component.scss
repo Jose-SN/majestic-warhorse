@@ -224,7 +224,7 @@
   }
 
   &__card {
-    background: var(--ds-surface, var(--mc-surface));
+    // background: var(--ds-surface, var(--mc-surface));
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--ds-radius-card, 16px);
     padding: var(--ds-space-5, 24px);
@@ -520,7 +520,7 @@
     border-radius: var(--ds-radius-card, 16px);
     overflow: hidden;
     border: 1px solid var(--preview-border, var(--ds-border));
-    background: var(--preview-bg, var(--ds-background));
+    // background: var(--preview-bg, var(--ds-background));
     color: var(--preview-text, var(--ds-text));
     box-shadow: 0 0 32px color-mix(in srgb, var(--ds-primary, #ff6b2c) 12%, transparent);
   }
@@ -556,7 +556,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: var(--preview-surface, var(--ds-surface));
+    // background: var(--preview-surface, var(--ds-surface));
 
     h3 {
       margin: var(--ds-space-1, 4px) 0 var(--ds-space-2, 8px);

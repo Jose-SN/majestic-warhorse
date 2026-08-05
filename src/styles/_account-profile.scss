@@ -187,7 +187,7 @@
     width: 25rem;
     flex-shrink: 0;
     padding: 2rem;
-    background: color-mix(in srgb, var(--mc-surface-container) 70%, transparent);
+    // background: color-mix(in srgb, var(--mc-surface-container) 70%, transparent);
     border-right: 1px solid var(--mc-outline-variant);
     overflow-y: auto;
 
@@ -456,7 +456,7 @@
     min-width: 0;
     padding: 3rem;
     overflow-y: auto;
-    background: color-mix(in srgb, var(--mc-surface) 92%, transparent);
+    // background: color-mix(in srgb, var(--mc-surface) 92%, transparent);
 
     @media (max-width: 1024px) {
       flex: none;

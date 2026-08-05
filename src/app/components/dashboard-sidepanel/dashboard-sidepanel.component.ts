@@ -1,5 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormControl, FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -15,6 +26,8 @@ import { IModelInfo } from '../common-dialog/model/popupmodel';
 import { AuthService } from 'src/app/services/api-service/auth.service';
 import { BrandingService } from 'src/app/core/branding/branding.service';
 
+const SIDEBAR_COLLAPSED_KEY = 'mw-sidebar-collapsed';
+
 @Component({
   selector: 'app-dashboard-sidepanel',
   standalone: true,
@@ -24,6 +37,8 @@ import { BrandingService } from 'src/app/core/branding/branding.service';
 })
 export class DashboardSidepanelComponent implements OnInit, OnDestroy {
   @Input() navDisabled = false;
+  @Input() collapsed = false;
+  @Output() collapsedChange = new EventEmitter<boolean>();
   public mobMenu: boolean = false;
   public loginedUserPrivilege: string = '';
   public loginedUserInfo: UserModel = {} as UserModel;
@@ -63,6 +78,15 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
       this.brandLogo = branding.logoUrl;
       this.appName = branding.appName;
     });
+
+    try {
+      const stored = localStorage.getItem(SIDEBAR_COLLAPSED_KEY);
+      if (stored === 'true' || stored === 'false') {
+        this.setCollapsed(stored === 'true', false);
+      }
+    } catch {
+      // ignore
+    }
   }
 
   ngOnDestroy(): void {
@@ -95,6 +119,29 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
   @HostBinding('class.sidepanel--nav-disabled')
   get isNavLocked(): boolean {
     return this.disableListItems();
+  }
+
+  @HostBinding('class.sidepanel--collapsed')
+  get isCollapsedHost(): boolean {
+    return this.collapsed;
+  }
+
+  toggleCollapsed(event?: Event): void {
+    event?.stopPropagation();
+    this.setCollapsed(!this.collapsed);
+  }
+
+  private setCollapsed(value: boolean, persist = true): void {
+    this.collapsed = value;
+    this.collapsedChange.emit(value);
+    if (!persist) {
+      return;
+    }
+    try {
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(value));
+    } catch {
+      // ignore
+    }
   }
 
   get isOrganizationAccount(): boolean {

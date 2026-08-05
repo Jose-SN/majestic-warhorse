@@ -170,7 +170,7 @@ html[data-theme='light'] {
   .ap-page,
   [class*='glass'],
   [class*='__card']:not([class*='preview']) {
-    background: var(--ds-surface, #ffffff) !important;
+    // background: var(--ds-surface, #ffffff) !important;
     color: var(--ds-text, #0f172a) !important;
     border-color: var(--ds-border, #e2e8f0) !important;
     box-shadow: var(--shadow-card) !important;

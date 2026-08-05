@@ -1,7 +1,19 @@
-<header (click)="navigateToHome()">
-  <figure class="logo-main">
+<header>
+  <figure class="logo-main" (click)="navigateToHome()" [attr.title]="appName">
     <img class="logo-main__mark" [src]="brandLogo" [alt]="appName" />
   </figure>
+  <button
+    type="button"
+    class="sidebar-collapse-btn"
+    [attr.aria-expanded]="!collapsed"
+    [attr.aria-label]="collapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+    [attr.title]="collapsed ? 'Expand' : 'Collapse'"
+    (click)="toggleCollapsed($event)"
+  >
+    <span class="material-symbols-outlined" aria-hidden="true">
+      {{ collapsed ? 'chevron_right' : 'chevron_left' }}
+    </span>
+  </button>
 </header>
 <div class="left-navigation">
   <ul>
@@ -9,6 +21,7 @@
       <a
         [routerLink]="navRoutes.overview"
         [class.active]="isNavActive(navActiveSegments.overview)"
+        [attr.title]="collapsed ? 'Dashboard' : null"
         (click)="onNavClick($event)"
       >
         <figure>
@@ -25,6 +38,7 @@
       <a
         [routerLink]="navRoutes.aiMode"
         [class.active]="isNavActive(navActiveSegments.aiMode)"
+        [attr.title]="collapsed ? 'AI Mode' : null"
         (click)="onNavClick($event)"
       >
         <figure>
@@ -80,6 +94,7 @@
       <a
         [routerLink]="navRoutes.settings"
         [class.active]="isNavActive(navActiveSegments.settings)"
+        [attr.title]="collapsed ? 'Settings' : null"
         (click)="onNavClick($event)"
       >
         <figure>
@@ -97,6 +112,7 @@
       <a
         [routerLink]="navRoutes.courses"
         [class.active]="isNavActive(navActiveSegments.courses)"
+        [attr.title]="collapsed ? 'Courses' : null"
         (click)="onNavClick($event)"
       >
         <figure>
@@ -112,6 +128,7 @@
       <a
         [routerLink]="loginedUserPrivilege === 'organization' ? navRoutes.teachers : navRoutes.students"
         [class.active]="isNavActive(navActiveSegments.directory)"
+        [attr.title]="collapsed ? 'Directory' : null"
       >
         <figure>
           <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -129,6 +146,7 @@
         [queryParams]="{ switch: true }"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: false }"
+        [attr.title]="collapsed ? 'Switch Organization' : null"
         (click)="onNavClick($event)"
       >
         <figure>
@@ -143,6 +161,7 @@
       <a
         [routerLink]="navRoutes.teacherApproval"
         [class.active]="isNavActive(navActiveSegments.approval)"
+        [attr.title]="collapsed ? 'Approvals' : null"
       >
         <figure>
           <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -228,8 +247,14 @@
     <div class="sidebar-upgrade-pro__content">
       <p class="sidebar-upgrade-pro__eyebrow">Pro Account</p>
       <p class="sidebar-upgrade-pro__message">Upgrade to unlock advanced neural labs.</p>
-      <button type="button" class="sidebar-upgrade-pro__cta" (click)="onUpgradeToPro()">
-        Upgrade to Pro
+      <button
+        type="button"
+        class="sidebar-upgrade-pro__cta"
+        [attr.title]="collapsed ? 'Upgrade to Pro' : null"
+        (click)="onUpgradeToPro()"
+      >
+        <span class="material-symbols-outlined sidebar-upgrade-pro__cta-icon" aria-hidden="true">workspace_premium</span>
+        <span class="sidebar-upgrade-pro__cta-label">Upgrade to Pro</span>
       </button>
     </div>
   </section>
@@ -309,6 +334,7 @@
     class="sidenav-user__trigger"
     [attr.aria-expanded]="userMenuOpen"
     aria-haspopup="menu"
+    [attr.title]="collapsed ? (userDisplayName || 'Account') : null"
     (click)="toggleUserMenu($event)"
   >
     <div class="hologram-ring hologram-ring--compact">

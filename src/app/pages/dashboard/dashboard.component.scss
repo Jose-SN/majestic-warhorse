@@ -63,6 +63,13 @@
   @include flex(flex, column, null, null);
   min-height: 0;
   overflow: hidden;
+  transition: width 0.22s ease, max-width 0.22s ease, padding 0.22s ease;
+
+  &.is-collapsed {
+    width: 84px;
+    max-width: 84px;
+    padding: 16px 10px;
+  }
 }
 
 .dashboard-right {
