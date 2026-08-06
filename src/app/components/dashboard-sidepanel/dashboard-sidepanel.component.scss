@@ -568,7 +568,7 @@ ul {
 }
 
 footer {
-  color: var(--mc-outline);
+  color: var(--ds-text-muted, var(--mc-on-surface-variant));
   line-height: 1.4;
   padding-top: 10px;
   margin-top: 8px;
@@ -576,6 +576,7 @@ footer {
 
   span {
     font-size: 0.75rem;
+    color: inherit;
   }
 }
 

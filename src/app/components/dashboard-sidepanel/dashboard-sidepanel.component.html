@@ -142,6 +142,24 @@
         <span>Courses</span>
       </a>
     </li>
+    <li [ngClass]="{ disabled: disableListItems() }">
+      <a
+        [routerLink]="navRoutes.library"
+        [class.active]="isNavActive(navActiveSegments.library)"
+        [attr.title]="collapsed ? 'Library' : null"
+        (click)="onNavClick($event)"
+      >
+        <figure>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z"
+              fill="currentColor"
+            />
+          </svg>
+        </figure>
+        <span>Library</span>
+      </a>
+    </li>
     <li *ngIf="['organization', 'teacher'].includes(loginedUserPrivilege)">
       <a
         [routerLink]="loginedUserPrivilege === 'organization' ? navRoutes.teachers : navRoutes.students"

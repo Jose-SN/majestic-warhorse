@@ -25,6 +25,7 @@ import { ViewAssignedStudentsComponent } from './components/view-assigned-studen
 import { ViewAssignedTeachersComponent } from './components/view-assigned-teachers/view-assigned-teachers.component';
 import { SettingsPageComponent } from './pages/settings-page/settings-page.component';
 import { PricingPageComponent } from './pages/pricing-page/pricing-page.component';
+import { LibraryPageComponent } from './pages/library-page/library-page.component';
 
 /**
  * App shell (DashboardComponent) wraps authenticated pages at the root.
@@ -54,6 +55,7 @@ const routes: Routes = [
       { path: 'account', redirectTo: 'settings/account', pathMatch: 'full' },
       { path: 'customize-app', redirectTo: 'settings/customize', pathMatch: 'full' },
       { path: 'pricing', component: PricingPageComponent },
+      { path: 'library', component: LibraryPageComponent },
       { path: 'directory/teachers/:id/manage', component: ViewAssignedStudentsComponent },
       { path: 'directory/students/:id/manage', component: ViewAssignedTeachersComponent },
       { path: 'directory', component: DirectoryPageComponent },

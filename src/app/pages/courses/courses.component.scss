@@ -78,22 +78,27 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 10px 24px;
-  border: 1px solid var(--mc-primary);
-  @include border-radius(2px);
-  background: transparent;
-  color: var(--mc-primary);
-  font-family: var(--mc-font-label);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  gap: var(--ds-space-2, 8px);
+  min-height: var(--ds-btn-height, var(--button-height, 48px));
+  padding: 0 var(--ds-space-5, 24px);
+  border: none;
+  border-radius: var(--ds-radius-full, var(--radius-button, 999px));
+  background: var(--mc-brand-gradient);
+  color: #fff;
+  font-family: var(--mc-font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
-  @include transition(background 0.2s ease, box-shadow 0.2s ease);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--ds-primary) 35%, transparent);
+  transition:
+    transform var(--ds-motion-fast, 150ms) ease,
+    box-shadow var(--ds-motion-fast, 150ms) ease,
+    filter var(--ds-motion-fast, 150ms) ease;
 
   .material-symbols-outlined {
-    font-size: 18px;
+    font-size: 1.2rem;
   }
 
   &__icon {
@@ -102,11 +107,21 @@
     flex-shrink: 0;
     object-fit: contain;
     display: block;
+    filter: brightness(0) invert(1);
   }
 
   &:hover {
-    background: rgba(255, 181, 154, 0.08);
-    box-shadow: 0 0 20px -8px rgba(255, 107, 44, 0.45);
+    filter: brightness(1.05);
+    box-shadow: var(--shadow-orange);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ds-primary, var(--mc-primary-container));
+    outline-offset: 2px;
   }
 }
 

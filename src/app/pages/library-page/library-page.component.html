@@ -1,0 +1,417 @@
+<section class="library-page" aria-label="Library">
+  <div class="library-page__backdrop" aria-hidden="true">
+    <div class="library-page__glow library-page__glow--a"></div>
+    <div class="library-page__glow library-page__glow--b"></div>
+  </div>
+
+  <div class="library-page__content">
+    <header class="library-page__header">
+      <div class="library-page__header-text">
+        <nav class="library-page__crumb" aria-label="Breadcrumb">
+          <a [routerLink]="homeRoute">Home</a>
+          <span aria-hidden="true">/</span>
+          <span>Library</span>
+        </nav>
+        <h1 class="library-page__title">Library</h1>
+        <p class="library-page__subtitle">
+          Upload, preview, and manage learning files · {{ roleLabel(role) }} view
+        </p>
+      </div>
+      <button type="button" class="library-page__upload-btn" (click)="openFilePicker()">
+        <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>
+        Upload files
+      </button>
+    </header>
+
+    <section class="library-stats" aria-label="Storage analytics">
+      @if (loadingStats || !stats) {
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+      <div class="library-stats__card is-skeleton" aria-hidden="true"></div>
+      }
+      } @else {
+      <article class="library-stats__card library-stats__card--wide">
+        <p class="library-stats__label">Total storage used</p>
+        <p class="library-stats__value">
+          {{ stats.usedGb }} GB <span>/ {{ stats.quotaGb }} GB</span>
+        </p>
+        <div class="library-stats__bar" role="progressbar" [attr.aria-valuenow]="stats.percentUsed" aria-valuemin="0"
+          aria-valuemax="100">
+          <span [style.width.%]="stats.percentUsed"></span>
+        </div>
+        <p class="library-stats__meta">{{ stats.percentUsed }}% used</p>
+      </article>
+
+      <article class="library-stats__card">
+        <p class="library-stats__label">Remaining storage</p>
+        <p class="library-stats__value">{{ stats.remainingGb }} GB</p>
+        <p class="library-stats__meta">{{ percentRemaining }}% free</p>
+      </article>
+
+      <article class="library-stats__card">
+        <p class="library-stats__label">Videos</p>
+        <p class="library-stats__value">{{ stats.videos.count }}</p>
+        <p class="library-stats__meta">{{ stats.videos.sizeGb }} GB</p>
+      </article>
+
+      <article class="library-stats__card">
+        <p class="library-stats__label">Documents</p>
+        <p class="library-stats__value">{{ stats.documents.count }}</p>
+        <p class="library-stats__meta">{{ stats.documents.sizeGb }} GB</p>
+      </article>
+
+      <article class="library-stats__card">
+        <p class="library-stats__label">Images</p>
+        <p class="library-stats__value">{{ stats.images.count }}</p>
+        <p class="library-stats__meta">{{ stats.images.sizeGb }} GB</p>
+      </article>
+
+      <article class="library-stats__card">
+        <p class="library-stats__label">Audio / others</p>
+        <p class="library-stats__value">{{ stats.others.count }}</p>
+        <p class="library-stats__meta">{{ stats.others.sizeGb }} GB</p>
+      </article>
+      }
+    </section>
+
+    <!-- User storage section + library-usage__detail removed from view; filter lives in toolbar popup. -->
+
+    <section class="library-dropzone" [class.is-dragover]="dragOver" [class.is-uploading]="uploading"
+      (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)"
+      aria-label="Upload dropzone">
+      <span class="material-symbols-outlined library-dropzone__icon" aria-hidden="true">cloud_upload</span>
+      <div class="library-dropzone__copy">
+        <p class="library-dropzone__title">Drag & drop files here</p>
+        <p class="library-dropzone__hint">
+          Max {{ maxSizeLabel }} · PDF, Office, images, MP4/MOV/AVI, MP3
+        </p>
+      </div>
+      <button type="button" class="library-page__btn-secondary" (click)="openFilePicker()">
+        Browse files
+      </button>
+      <input #fileInput type="file" class="library-dropzone__input" multiple [attr.accept]="acceptAttr"
+        (change)="onFilesPicked($event)" />
+      @if (uploading) {
+      <div class="library-dropzone__progress" role="progressbar" [attr.aria-valuenow]="uploadProgress" aria-valuemin="0"
+        aria-valuemax="100">
+        <span [style.width.%]="uploadProgress"></span>
+      </div>
+      }
+    </section>
+
+    <section class="library-files" aria-label="File library">
+      <div class="library-files__toolbar">
+        <ul class="library-tabs" role="tablist" aria-label="Library filters">
+          @for (tab of tabs; track tab.id) {
+          <li role="tab" [attr.aria-selected]="activeTab === tab.id" [class.is-active]="activeTab === tab.id"
+            (click)="setTab(tab.id)">
+            {{ tab.label }}
+          </li>
+          }
+        </ul>
+
+        <div class="library-files__tools">
+          @if (role === 'organization') {
+            <p class="library-usage__summary">{{ usageFilterSummary }}</p>
+
+            <div class="library-user-filter" [class.is-open]="usageFilterOpen">
+              <button
+                type="button"
+                class="library-user-filter__trigger"
+                [attr.aria-expanded]="usageFilterOpen"
+                aria-haspopup="dialog"
+                (click)="toggleUsageFilterPopup()"
+              >
+                <span class="material-symbols-outlined" aria-hidden="true">filter_list</span>
+                <span class="library-user-filter__selected">{{ usageFilterSelectedLabel }}</span>
+                <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+              </button>
+
+              @if (usageFilterOpen) {
+                <button
+                  type="button"
+                  class="library-user-filter__scrim"
+                  aria-label="Close user filter"
+                  (click)="closeUsageFilterPopup()"
+                ></button>
+                <div class="library-user-filter__popup" role="dialog" aria-label="Filter by teacher or student">
+                  <p class="library-user-filter__popup-title">Filter by user</p>
+                  <ul class="library-user-filter__types" role="listbox" aria-label="User type">
+                    @for (option of usageFilterOptions; track option.id) {
+                      <li>
+                        <button
+                          type="button"
+                          role="option"
+                          [attr.aria-selected]="usageFilter === option.id && !selectedUsage"
+                          [class.is-active]="usageFilter === option.id && !selectedUsage"
+                          (click)="setUsageFilter(option.id)"
+                        >
+                          <span>{{ option.label }}</span>
+                          @if (option.id === 'teacher') {
+                            <span class="is-mono">{{ usageTeacherCount }}</span>
+                          } @else if (option.id === 'student') {
+                            <span class="is-mono">{{ usageStudentCount }}</span>
+                          } @else {
+                            <span class="is-mono">{{ usageRows.length }}</span>
+                          }
+                        </button>
+                      </li>
+                    }
+                  </ul>
+
+                  @if (usageFilter !== 'all') {
+                    <div class="library-user-filter__users">
+                      <p class="library-user-filter__users-label">
+                        {{ usageFilter === 'teacher' ? 'Teachers' : 'Students' }}
+                      </p>
+                      @if (!filteredUsageRows.length) {
+                        <p class="library-user-filter__empty">No {{ usageFilter === 'teacher' ? 'teachers' : 'students' }} found.</p>
+                      } @else {
+                        <ul role="listbox" [attr.aria-label]="usageFilter === 'teacher' ? 'Teachers' : 'Students'">
+                          @for (row of filteredUsageRows; track row.userId) {
+                            <li>
+                              <button
+                                type="button"
+                                role="option"
+                                [attr.aria-selected]="selectedUsage?.userId === row.userId"
+                                [class.is-active]="selectedUsage?.userId === row.userId"
+                                (click)="applyUsageUserFilter(row)"
+                              >
+                                <span class="library-usage__avatar library-usage__avatar--sm" aria-hidden="true">
+                                  {{ row.userName.charAt(0) }}
+                                </span>
+                                <span class="library-user-filter__user-copy">
+                                  <strong>{{ row.userName }}</strong>
+                                  <small>{{ row.files }} files · {{ row.usedGb }} GB used</small>
+                                </span>
+                              </button>
+                            </li>
+                          }
+                        </ul>
+                      }
+                    </div>
+                  }
+
+                  @if (usageFilter !== 'all' || selectedUsage) {
+                    <button type="button" class="library-user-filter__clear" (click)="clearUsageFilter()">
+                      Clear filter
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          <label class="library-search">
+            <span class="material-symbols-outlined" aria-hidden="true">search</span>
+            <input type="search" [ngModel]="search" (ngModelChange)="onSearchInput($event)"
+              placeholder="Search files, uploader, type…" aria-label="Search library" />
+            @if (search) {
+            <button type="button" class="library-search__clear" aria-label="Clear search" (click)="clearSearch()">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+            }
+          </label>
+        </div>
+      </div>
+
+      @if (canBulkDelete) {
+      <div class="library-files__bulk">
+        <span>{{ selectedCount }} selected</span>
+        <button type="button" class="library-page__btn-danger" (click)="bulkDelete()">
+          Delete selected
+        </button>
+      </div>
+      }
+
+      @if (loadingFiles || isDemoTransitionLoading) {
+      <div class="library-files__loading" aria-busy="true">
+        @for (i of [1, 2, 3, 4]; track i) {
+        <div class="library-files__skeleton"></div>
+        }
+      </div>
+      } @else if (!files.length) {
+      <div class="library-empty">
+        <span class="material-symbols-outlined" aria-hidden="true">folder_off</span>
+        <h2>{{ emptyTitle }}</h2>
+        <p>{{ emptyMessage }}</p>
+      </div>
+      } @else {
+      <div class="library-table-wrap library-table-wrap--files">
+        <table class="library-table">
+          <thead>
+            <tr>
+              @if (role === 'organization') {
+              <th class="is-check">
+                <input type="checkbox" [checked]="allSelectedOnPage"
+                  (change)="toggleSelectAll(($any($event.target)).checked)" aria-label="Select all on page" />
+              </th>
+              }
+              <th>File</th>
+              <th>Type</th>
+              <th>Uploaded by</th>
+              <th>Role</th>
+              <th>Size</th>
+              <th>Uploaded on</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (file of files; track file.id) {
+            <tr>
+              @if (role === 'organization') {
+              <td class="is-check">
+                <input type="checkbox" [checked]="isSelected(file.id)"
+                  (change)="toggleSelect(file.id, ($any($event.target)).checked)"
+                  [attr.aria-label]="'Select ' + file.name" />
+              </td>
+              }
+              <td>
+                <div class="library-file">
+                  @if (file.thumbnailUrl) {
+                  <img [src]="file.thumbnailUrl" [alt]="''" class="library-file__thumb" />
+                  } @else {
+                  <span class="library-file__icon" aria-hidden="true">
+                    <span class="material-symbols-outlined">{{ fileIcon(file) }}</span>
+                  </span>
+                  }
+                  <span class="library-file__name">{{ file.name }}.{{ file.extension }}</span>
+                </div>
+              </td>
+              <td>
+                <span class="library-type">{{ file.extension | uppercase }}</span>
+              </td>
+              <td>{{ file.uploadedByName }}</td>
+              <td>{{ roleLabel(file.uploadedByRole) }}</td>
+              <td class="is-mono">{{ formatBytes(file.sizeBytes) }}</td>
+              <td class="is-mono">{{ formatDate(file.uploadedAt) }}</td>
+              <td>
+                <div class="library-actions">
+                  <button type="button" class="library-icon-btn" aria-label="Preview" (click)="openPreview(file)">
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                  <button type="button" class="library-icon-btn" aria-label="Download" (click)="downloadFile(file)">
+                    <span class="material-symbols-outlined">download</span>
+                  </button>
+                  @if (canDelete(file)) {
+                  <button type="button" class="library-icon-btn is-danger" aria-label="Delete"
+                    (click)="deleteFile(file)">
+                    <span class="material-symbols-outlined">delete</span>
+                  </button>
+                  }
+                </div>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="library-cards" aria-label="Files list">
+        @for (file of files; track file.id) {
+        <article class="library-card">
+          <div class="library-card__top">
+            <span class="library-file__icon" aria-hidden="true">
+              <span class="material-symbols-outlined">{{ fileIcon(file) }}</span>
+            </span>
+            <div>
+              <h3>{{ file.name }}.{{ file.extension }}</h3>
+              <p>{{ file.uploadedByName }} · {{ formatBytes(file.sizeBytes) }}</p>
+            </div>
+          </div>
+          <div class="library-actions">
+            <button type="button" class="library-icon-btn" aria-label="Preview" (click)="openPreview(file)">
+              <span class="material-symbols-outlined">visibility</span>
+            </button>
+            <button type="button" class="library-icon-btn" aria-label="Download" (click)="downloadFile(file)">
+              <span class="material-symbols-outlined">download</span>
+            </button>
+            @if (canDelete(file)) {
+            <button type="button" class="library-icon-btn is-danger" aria-label="Delete" (click)="deleteFile(file)">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+            }
+          </div>
+        </article>
+        }
+      </div>
+
+      <div class="library-pagination">
+        <p>{{ totalItems }} files</p>
+        <div class="library-pagination__controls">
+          <button type="button" class="library-page__btn-secondary" [disabled]="page <= 1" (click)="goToPage(page - 1)">
+            Previous
+          </button>
+          <span>Page {{ page }} / {{ totalPages }}</span>
+          <button type="button" class="library-page__btn-secondary" [disabled]="page >= totalPages"
+            (click)="goToPage(page + 1)">
+            Next
+          </button>
+        </div>
+      </div>
+      }
+    </section>
+  </div>
+
+  @if (previewOpen && previewFile) {
+  <div class="library-preview" role="dialog" aria-modal="true" [attr.aria-label]="'Preview ' + previewFile.name">
+    <button type="button" class="library-preview__scrim" aria-label="Close preview" (click)="closePreview()"></button>
+    <aside class="library-preview__panel">
+      <header class="library-preview__head">
+        <div>
+          <h2>{{ previewFile.name }}.{{ previewFile.extension }}</h2>
+          <p>{{ previewFile.uploadedByName }} · {{ formatBytes(previewFile.sizeBytes) }}</p>
+        </div>
+        <button type="button" class="library-icon-btn" aria-label="Close" (click)="closePreview()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </header>
+
+      <div class="library-preview__body">
+        @switch (previewKind(previewFile)) {
+        @case ('pdf') {
+        @if (safePreviewUrl(previewFile); as url) {
+        <iframe [src]="url" title="PDF preview"></iframe>
+        }
+        }
+        @case ('image') {
+        <img [src]="previewFile.previewUrl || previewFile.thumbnailUrl" [alt]="previewFile.name" />
+        }
+        @case ('video') {
+        <video controls [src]="previewFile.previewUrl"></video>
+        }
+        @case ('audio') {
+        <audio controls [src]="previewFile.previewUrl"></audio>
+        }
+        @case ('text') {
+        @if (safePreviewUrl(previewFile); as url) {
+        <iframe [src]="url" title="Text preview"></iframe>
+        }
+        }
+        @default {
+        <div class="library-preview__fallback">
+          <span class="material-symbols-outlined" aria-hidden="true">draft</span>
+          <p>Preview is not available for this format. Download to open locally.</p>
+        </div>
+        }
+        }
+      </div>
+
+      <footer class="library-preview__foot">
+        <button type="button" class="library-page__btn-secondary" (click)="downloadFile(previewFile)">
+          Download
+        </button>
+        @if (previewFile.previewUrl) {
+        <a class="library-page__btn-secondary" [href]="previewFile.previewUrl" target="_blank" rel="noopener">
+          Open in new tab
+        </a>
+        }
+        @if (canDelete(previewFile)) {
+        <button type="button" class="library-page__btn-danger" (click)="deleteFile(previewFile)">
+          Delete
+        </button>
+        }
+      </footer>
+    </aside>
+  </div>
+  }
+</section>
