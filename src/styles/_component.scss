@@ -102,4 +102,13 @@ app-under-construction {
     min-height: min-content;
     flex-grow: 0;
   }
+
+  app-ai-mode:has(.ai-mode.has-thread) {
+    display: flex;
+    flex-direction: column;
+    height: calc(100dvh - 180px);
+    max-height: calc(100dvh - 180px);
+    min-height: 0;
+    overflow: hidden;
+  }
 }

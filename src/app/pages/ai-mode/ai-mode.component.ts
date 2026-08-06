@@ -602,10 +602,20 @@ export class AiModeComponent implements OnInit, OnDestroy {
   }
 
   private scrollThreadToBottom(): void {
-    const el = this.threadScroll?.nativeElement;
-    if (!el) {
-      return;
-    }
-    el.scrollTop = el.scrollHeight;
+    const attempt = (remaining: number) => {
+      const scroller = this.threadScroll?.nativeElement;
+      if (scroller) {
+        scroller.scrollTop = scroller.scrollHeight;
+        if (remaining > 0) {
+          requestAnimationFrame(() => attempt(remaining - 1));
+        }
+        return;
+      }
+      if (remaining > 0) {
+        setTimeout(() => attempt(remaining - 1), 32);
+      }
+    };
+
+    queueMicrotask(() => attempt(8));
   }
 }
