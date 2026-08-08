@@ -1,105 +1,18 @@
 @if (isTeacher || isOrganization) {
   <div class="qf-forge">
-    <!-- LEFT: Question Payload Editor -->
-    <section class="qf-editor">
-      <div class="qf-editor__title">
-        <span class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</span>
-        <h2>Question Payload</h2>
-      </div>
-
-      <div class="qf-editor__body">
-        <!-- Prompt -->
-        <div class="qf-field">
-          <label class="qf-label" for="qf-prompt">Prompt Configuration</label>
-          <div class="qf-prompt">
-            <span class="material-symbols-outlined qf-prompt__icon" aria-hidden="true">code</span>
-            <textarea
-              id="qf-prompt"
-              [(ngModel)]="newQuestion.question"
-              placeholder="Initialize challenge parameters..."
-              rows="8"
-            ></textarea>
-          </div>
-        </div>
-
-        <!-- Engagement Vector (question type) -->
-        <div class="qf-field">
-          <span class="qf-label">Engagement Vector</span>
-          <div class="qf-vectors" role="radiogroup" aria-label="Question type">
-            @for (vector of questionVectors; track vector.value) {
-              <label class="qf-vector">
-                <input
-                  type="radio"
-                  name="qf-vector"
-                  class="qf-vector__input"
-                  [value]="vector.value"
-                  [(ngModel)]="newQuestion.type"
-                />
-                <span class="qf-vector__card">
-                  <span class="material-symbols-outlined" aria-hidden="true">{{ vector.icon }}</span>
-                  <span>{{ vector.label }}</span>
-                </span>
-              </label>
-            }
-          </div>
-        </div>
-
-        <!-- Options as tags -->
-        @if (needsOptions) {
-          <div class="qf-field">
-            <label class="qf-label" for="qf-option">Response Options</label>
-            <div class="qf-tags">
-              @for (option of newQuestion.options; track $index) {
-                <span class="qf-tag">
-                  {{ option.label }}
-                  <button
-                    type="button"
-                    class="qf-tag__remove"
-                    (click)="removeOption($index)"
-                    [attr.aria-label]="'Remove option ' + option.label"
-                  >
-                    <span class="material-symbols-outlined" aria-hidden="true">close</span>
-                  </button>
-                </span>
-              }
-              <div class="qf-tags__add">
-                <input
-                  id="qf-option"
-                  type="text"
-                  [(ngModel)]="newOption"
-                  placeholder="Add option…"
-                  (keydown.enter)="$event.preventDefault(); addOption()"
-                />
-                <button type="button" class="qf-tags__add-btn" (click)="addOption()">+ Add</button>
-              </div>
-            </div>
-          </div>
-        }
-
-        <div class="qf-editor__actions">
-          <button type="button" class="qf-btn qf-btn--primary" (click)="createQuestion()">
-            {{ editingQuestionId ? 'Update Challenge' : 'Add to Assessment' }}
-          </button>
-          @if (editingQuestionId) {
-            <button type="button" class="qf-btn qf-btn--ghost" (click)="cancelEditQuestion()">Cancel</button>
-          }
-        </div>
-      </div>
-    </section>
-
-    <!-- RIGHT: Assessment Roster -->
+    <!-- LEFT: Question list -->
     <section class="qf-roster">
       <header class="qf-roster__header">
         <div>
           <div class="qf-roster__title">
             <span class="material-symbols-outlined" aria-hidden="true">list_alt</span>
-            <h2>Assessment Roster</h2>
+            <h2>Course Questions</h2>
           </div>
           <p class="qf-roster__meta">
             @if (questionsLoading) {
-              Syncing course questions…
+              Loading course questions…
             } @else {
-              Active Stack: {{ questionsList.length | number: '2.0-0' }} Challenges
+              {{ questionsList.length }} question{{ questionsList.length === 1 ? '' : 's' }} in this course
             }
           </p>
         </div>
@@ -123,8 +36,8 @@
           </div>
         } @else if (questionsList.length === 0) {
           <div class="qf-roster__empty">
-            <span class="material-symbols-outlined" aria-hidden="true">terminal</span>
-            <p>No questions found for this course yet. Configure a payload and add it to the assessment roster.</p>
+            <span class="material-symbols-outlined" aria-hidden="true">quiz</span>
+            <p>No questions yet. Write a question on the right and add it to this course.</p>
           </div>
         } @else {
           @for (question of questionsList; track question.id || $index) {
@@ -132,7 +45,7 @@
               <div class="qf-card__body">
                 <div class="qf-card__main">
                   <span class="qf-card__eyebrow">
-                    {{ getQuestionTypeLabel(question.type) }} // {{ shortQuestionId(question, $index) }}
+                    {{ getQuestionTypeLabel(question.type) }} · Question {{ $index + 1 }}
                   </span>
                   <p class="qf-card__prompt">{{ question.question }}</p>
                   @if (question.options?.length) {
@@ -164,7 +77,7 @@
                     <span class="qf-card__stat-value">{{ question.options?.length || 0 }}</span>
                   </div>
                   <div class="qf-card__stat">
-                    <span class="qf-card__stat-label">Index</span>
+                    <span class="qf-card__stat-label">Order</span>
                     <span class="qf-card__stat-value">{{ $index + 1 | number: '2.0-0' }}</span>
                   </div>
                 </div>
@@ -185,7 +98,7 @@
 
       <footer class="qf-roster__footer">
         <div>
-          <p class="qf-roster__footer-label">Total Challenges</p>
+          <p class="qf-roster__footer-label">Total questions</p>
           <p class="qf-roster__footer-value">
             {{ questionsList.length }}
             <span>READY</span>
@@ -193,12 +106,100 @@
         </div>
       </footer>
 
-      <span class="qf-roster__watermark material-symbols-outlined" aria-hidden="true">database</span>
+      <span class="qf-roster__watermark material-symbols-outlined" aria-hidden="true">quiz</span>
+    </section>
+
+    <!-- RIGHT: Question editor -->
+
+    <section class="qf-editor">
+      <div class="qf-editor__title">
+        <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
+        <h2>Question Editor</h2>
+      </div>
+
+      <div class="qf-editor__body">
+        <!-- Prompt -->
+        <div class="qf-field">
+          <label class="qf-label" for="qf-prompt">Question text</label>
+          <div class="qf-prompt">
+            <span class="material-symbols-outlined qf-prompt__icon" aria-hidden="true">help</span>
+            <textarea
+              id="qf-prompt"
+              [(ngModel)]="newQuestion.question"
+              placeholder="Write the question students will answer…"
+              rows="8"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Question type -->
+        <div class="qf-field">
+          <span class="qf-label">Question type</span>
+          <div class="qf-vectors" role="radiogroup" aria-label="Question type">
+            @for (vector of questionVectors; track vector.value) {
+              <label class="qf-vector">
+                <input
+                  type="radio"
+                  name="qf-vector"
+                  class="qf-vector__input"
+                  [value]="vector.value"
+                  [(ngModel)]="newQuestion.type"
+                />
+                <span class="qf-vector__card">
+                  <span class="material-symbols-outlined" aria-hidden="true">{{ vector.icon }}</span>
+                  <span>{{ vector.label }}</span>
+                </span>
+              </label>
+            }
+          </div>
+        </div>
+
+        <!-- Options as tags -->
+        @if (needsOptions) {
+          <div class="qf-field">
+            <label class="qf-label" for="qf-option">Answer options</label>
+            <div class="qf-tags">
+              @for (option of newQuestion.options; track $index) {
+                <span class="qf-tag">
+                  {{ option.label }}
+                  <button
+                    type="button"
+                    class="qf-tag__remove"
+                    (click)="removeOption($index)"
+                    [attr.aria-label]="'Remove option ' + option.label"
+                  >
+                    <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                  </button>
+                </span>
+              }
+              <div class="qf-tags__add">
+                <input
+                  id="qf-option"
+                  type="text"
+                  [(ngModel)]="newOption"
+                  placeholder="Add option…"
+                  (keydown.enter)="$event.preventDefault(); addOption()"
+                />
+                <button type="button" class="qf-tags__add-btn" (click)="addOption()">+ Add</button>
+              </div>
+            </div>
+          </div>
+        }
+
+        <div class="qf-editor__actions">
+          <button type="button" class="qf-btn qf-btn--primary" (click)="createQuestion()">
+            {{ editingQuestionId ? 'Update question' : 'Add question' }}
+          </button>
+          @if (editingQuestionId) {
+            <button type="button" class="qf-btn qf-btn--ghost" (click)="cancelEditQuestion()">Cancel</button>
+          }
+        </div>
+      </div>
     </section>
   </div>
 } @else {
   <div class="qf-denied">
     <span class="material-symbols-outlined" aria-hidden="true">lock</span>
-    <p>You do not have permission to forge assessment questions.</p>
+    <p>You do not have permission to create assessment questions.</p>
   </div>
 }

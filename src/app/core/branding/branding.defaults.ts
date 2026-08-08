@@ -17,7 +17,7 @@ const baseSurfaces = {
 } as const;
 
 /**
- * Default theme — True Void surfaces + Majestic Cyber brand gradient.
+ * Default theme — dark surfaces + PetaxAI Learning brand gradient.
  * BrandingService applies --mc-brand-gradient from gradientStart/Mid/End.
  */
 export const DEFAULT_THEME_COLORS: BrandingThemeColors = {
@@ -55,7 +55,7 @@ function preset(
 
 /** Org customize presets — each has a distinct gradient + accent set. */
 export const BRANDING_PRESETS: BrandingPreset[] = [
-  preset('majestic-cyber', 'Majestic Cyber', {}),
+  preset('majestic-cyber', 'Petax Signature', {}),
   preset('ember-academy', 'Ember Academy', {
     primary: '#ffc9a8',
     primaryContainer: '#e85d04',

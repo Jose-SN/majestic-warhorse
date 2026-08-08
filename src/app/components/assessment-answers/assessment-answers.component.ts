@@ -128,12 +128,12 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
     return String(submission.userId ?? submission.id ?? '');
   }
 
-  shortCadetId(submission: AnswerSubmission): string {
+  shortStudentId(submission: AnswerSubmission): string {
     const raw = this.submissionKey(submission) || '0000';
-    return `CADET_${raw.slice(-4).toUpperCase()}`;
+    return `STU_${raw.slice(-4).toUpperCase()}`;
   }
 
-  cadetInitials(submission: AnswerSubmission): string {
+  studentInitials(submission: AnswerSubmission): string {
     const name = (submission.userName || '').trim();
     if (!name) {
       return '??';

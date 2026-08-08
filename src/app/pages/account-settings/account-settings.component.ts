@@ -226,8 +226,8 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
 
   get roleSubtitle(): string {
     const subtitles: Record<string, string> = {
-      student: 'Learning Node',
-      teacher: 'Senior Neural Instructor',
+      student: 'Student',
+      teacher: 'Teacher',
       organization: 'Organization Administrator',
     };
     return subtitles[this.currentRole] || roleLabelFallback(this.currentRole);

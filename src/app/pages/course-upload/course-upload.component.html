@@ -14,13 +14,13 @@
           </div>
         </div>
         <h1 class="course-forge-editor__title">
-          {{ isEditMode ? 'Edit Course' : 'Course Architecture' }}
+          {{ isEditMode ? 'Edit Course' : 'Create Course' }}
         </h1>
         <p class="course-forge-editor__subtitle">
           @if (isEditMode) {
             Update this course’s content, then save — or delete it if it is no longer needed.
           } @else {
-            Define the narrative and technical depth of your next masterclass. Preview your changes in real-time on the right.
+            Add the course title, description, and chapters. Preview your changes on the right.
           }
         </p>
       </header>
@@ -82,7 +82,7 @@
 
         <!-- Cover image -->
         <div class="forge-section">
-          <h2 class="forge-section__title">Primary Brand Asset</h2>
+          <h2 class="forge-section__title">Cover Image</h2>
           <label for="cover-image" class="forge-dropzone">
             @if (mainCourseInfo.courseCoverImage?.trim()) {
               <img [src]="mainCourseInfo.courseCoverImage" alt="Course cover preview" class="forge-dropzone__preview" />

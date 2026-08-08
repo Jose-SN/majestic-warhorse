@@ -17,7 +17,10 @@ export class ApprovalPendingComponent implements OnInit, OnDestroy {
   isPolling = false;
   isRefreshing = false;
   readonly defaultMessage =
-    'Please wait for an Administrator to grant access to the Majestic Cyber Academy. You will receive a secure notification once your credentials have been verified and access is authorized.';
+    'Please wait for an administrator to approve your access to PetaxAI Learning. You will be notified once your account is ready.';
+
+  readonly currentYear = new Date().getFullYear();
+  readonly pollIntervalSeconds = 15;
 
   private destroy$ = new Subject<void>();
   private pollIntervalMs = 15000;
@@ -54,48 +57,39 @@ export class ApprovalPendingComponent implements OnInit, OnDestroy {
 
   get headlineStatus(): string {
     if (this.infoMessage.toLowerCase().includes('suspended')) {
-      return 'SUSPENDED';
+      return 'Suspended';
     }
     if (this.infoMessage.toLowerCase().includes('assigned')) {
-      return 'ASSIGNMENT_PENDING';
+      return 'Assignment pending';
     }
-    return 'PENDING_APPROVAL';
+    return 'Pending approval';
   }
 
   get ticketId(): string {
     const userId = (this.commonService.loginedUserInfo?.id || '').replace(/-/g, '');
     if (!userId) {
-      return 'MC-0000-00X';
+      return 'REQ-0000';
     }
     const compact = userId.toUpperCase();
-    return `MC-${compact.slice(0, 4)}-${compact.slice(4, 7)}X`;
+    return `REQ-${compact.slice(0, 4)}-${compact.slice(4, 7)}`;
   }
 
-  get nodeName(): string {
+  get organizationLabel(): string {
     const orgName = sessionStorage.getItem('organization_name') || '';
     if (orgName) {
-      return orgName.toUpperCase().replace(/\s+/g, '_').slice(0, 24);
+      return orgName.slice(0, 40);
     }
-    return 'SYD_SECURE_GATEWAY';
+    return 'Your organization';
   }
 
   get queueStatusLabel(): string {
     if (this.isRefreshing) {
-      return 'RE-VERIFYING';
+      return 'Checking…';
     }
     if (this.isPolling) {
-      return 'AWAITING_ADMIN';
+      return 'Waiting for admin';
     }
-    return 'MANUAL_REVIEW';
-  }
-
-  get sysLogCode(): string {
-    const seed = this.ticketId.replace(/[^A-Z0-9]/g, '');
-    return `0x${seed.slice(-3).padStart(3, '0')}`;
-  }
-
-  get latencyMs(): number {
-    return 12;
+    return 'Under review';
   }
 
   refreshStatus(): void {

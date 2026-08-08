@@ -92,13 +92,13 @@ export class ApprovalNotificationService {
     return [
       `Hello ${greetingName},`,
       '',
-      `Good news! ${organizationName} has approved your Majestic Academy account.`,
+      `Good news! ${organizationName} has approved your PetaxAI Learning account.`,
       '',
       'You can now sign in and access your organization courses and resources.',
       '',
       'If you have any questions, please contact your organization administrator.',
       '',
-      '— Majestic Academy',
+      '— PetaxAI Learning',
     ].join('\n');
   }
 }

@@ -9,23 +9,23 @@
     <div class="aa-portal__glow aa-portal__glow--accent" aria-hidden="true"></div>
 
     <div class="aa-portal__grid">
-      <!-- Left: Cadet roster / selected cadet -->
+      <!-- Left: Student list / selected student -->
       <aside class="aa-cadets">
         <div class="aa-panel glass-panel">
-          @if (selectedSubmission; as cadet) {
+          @if (selectedSubmission; as student) {
             <div class="aa-cadet-id">
               <div class="aa-cadet-id__avatar">
-                <span>{{ cadetInitials(cadet) }}</span>
+                <span>{{ studentInitials(student) }}</span>
               </div>
               <div class="aa-cadet-id__meta">
-                <p class="aa-label">Cadet Identification</p>
-                <h2>{{ cadet.userName || 'Unknown Cadet' }}</h2>
-                <p class="aa-mono">{{ cadet.userEmail || shortCadetId(cadet) }}</p>
+                <p class="aa-label">Student</p>
+                <h2>{{ student.userName || 'Unknown student' }}</h2>
+                <p class="aa-mono">{{ student.userEmail || shortStudentId(student) }}</p>
               </div>
               <div class="aa-cadet-id__stats">
                 <div class="aa-metric">
                   <span class="aa-label">Answers</span>
-                  <strong>{{ answeredCount(cadet) }}</strong>
+                  <strong>{{ answeredCount(student) }}</strong>
                 </div>
                 <div class="aa-metric">
                   <span class="aa-label">Questions</span>
@@ -43,14 +43,14 @@
               } @else if (!loading && !submissions.length) {
                 <p>No answers submitted for this course yet.</p>
               } @else {
-                <p>Select a cadet submission to begin review.</p>
+                <p>Select a student submission to begin review.</p>
               }
             </div>
           }
         </div>
 
         <div class="aa-panel glass-panel aa-cadets__list-panel">
-          <h3 class="aa-panel__title">Submission Queue</h3>
+          <h3 class="aa-panel__title">Submissions</h3>
           <div class="aa-cadets__list">
             @if (!courseId) {
               <p class="aa-state">No course selected.</p>
@@ -68,10 +68,10 @@
                   [class.active]="isSelected(submission)"
                   (click)="selectSubmission(submission)"
                 >
-                  <span class="aa-cadet-row__avatar">{{ cadetInitials(submission) }}</span>
+                  <span class="aa-cadet-row__avatar">{{ studentInitials(submission) }}</span>
                   <span class="aa-cadet-row__text">
-                    <strong>{{ submission.userName || 'Unknown Cadet' }}</strong>
-                    <small>{{ submission.userEmail || shortCadetId(submission) }}</small>
+                    <strong>{{ submission.userName || 'Unknown student' }}</strong>
+                    <small>{{ submission.userEmail || shortStudentId(submission) }}</small>
                   </span>
                   <span class="aa-cadet-row__count">{{ answeredCount(submission) }}</span>
                 </button>
@@ -87,10 +87,10 @@
           <div>
             <h1>Submitted Answers</h1>
             <p>
-              @if (selectedSubmission; as cadet) {
-                Reviewing assessment block for {{ cadet.userName || 'selected cadet' }}
+              @if (selectedSubmission; as student) {
+                Reviewing answers from {{ student.userName || 'selected student' }}
               } @else {
-                Select a submission from the queue to review answers
+                Select a submission to review answers
               }
             </p>
           </div>
@@ -135,7 +135,7 @@
           } @else if (!selectedSubmission) {
             <div class="aa-state aa-state--panel">
               <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
-              <p>Select a submission from the queue to inspect responses.</p>
+              <p>Select a submission to review responses.</p>
             </div>
           } @else {
             @for (question of questionsList; track question.id || $index) {
@@ -143,7 +143,7 @@
               @let answer = selectedSubmission.answers[qId];
               <article class="aa-answer glass-panel" [class.aa-answer--text]="isTextAnswer(question)">
                 <div class="aa-answer__top">
-                  <span class="aa-mono aa-answer__index"># Question {{ $index + 1 | number: '2.0-0' }}</span>
+                  <span class="aa-mono aa-answer__index">Question {{ $index + 1 | number: '2.0-0' }}</span>
                   <span class="aa-answer__type">{{ getQuestionTypeLabel(question.type) }}</span>
                 </div>
                 <h4>{{ question.question }}</h4>
@@ -164,26 +164,23 @@
         <div class="aa-panel glass-panel aa-review__panel">
           <h3 class="aa-panel__title">
             <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
-            Instructor Feedback
+            Teacher Feedback
           </h3>
 
           <div class="aa-review__body">
-            <label class="aa-label" for="aa-feedback">Technical Analysis</label>
+            <label class="aa-label" for="aa-feedback">Feedback notes</label>
             <div class="aa-feedback">
               <textarea
                 id="aa-feedback"
                 [(ngModel)]="activeFeedback"
                 [disabled]="!selectedSubmission"
-                placeholder="Add feedback or comments for the student..."
+                placeholder="Add feedback or comments for the student…"
               ></textarea>
-              <div class="aa-feedback__meta" aria-hidden="true">
-                <span>UTF-8</span>
-              </div>
             </div>
 
             <div class="aa-grade">
-              <p class="aa-label">Evaluation Grade</p>
-              <div class="aa-grade__options" role="group" aria-label="Evaluation grade">
+              <p class="aa-label">Grade</p>
+              <div class="aa-grade__options" role="group" aria-label="Grade">
                 @for (grade of gradeOptions; track grade) {
                   <button
                     type="button"
@@ -211,9 +208,9 @@
             </button>
             <p class="aa-review__hint">
               @if (selectedSubmission) {
-                Review target: {{ shortCadetId(selectedSubmission) }}
+                Reviewing: {{ selectedSubmission.userName || shortStudentId(selectedSubmission) }}
               } @else {
-                Awaiting cadet selection
+                Select a student to continue
               }
             </p>
           </div>
@@ -222,23 +219,23 @@
         <div class="aa-panel glass-panel aa-logs">
           <div class="aa-logs__head">
             <span class="aa-logs__dot" aria-hidden="true"></span>
-            <span class="aa-label">Live System Logs</span>
+            <span class="aa-label">Review status</span>
           </div>
             <div class="aa-logs__body">
-            <p>&gt;&gt; Course: {{ courseId ? 'bound' : 'missing' }}</p>
-            <p class="aa-logs__ok">&gt;&gt; Questions: {{ questionsLoading ? 'loading…' : questionsList.length }}</p>
-            <p>&gt;&gt; Answers: {{ loading ? 'loading…' : submissions.length }}</p>
+            <p>Course: {{ courseId ? 'selected' : 'not selected' }}</p>
+            <p class="aa-logs__ok">Questions: {{ questionsLoading ? 'loading…' : questionsList.length }}</p>
+            <p>Answers: {{ loading ? 'loading…' : submissions.length }}</p>
             @if (questionsLoadError || submissionsLoadError) {
-              <p class="aa-logs__accent">&gt;&gt; Fetch error — refresh to retry.</p>
+              <p class="aa-logs__accent">Load error — refresh to retry.</p>
             } @else if (selectedSubmission) {
-              <p>&gt;&gt; Reviewing: {{ shortCadetId(selectedSubmission) }}</p>
-              <p class="aa-logs__accent">&gt;&gt; Buffer ready for manual override.</p>
+              <p>Reviewing: {{ selectedSubmission.userName || shortStudentId(selectedSubmission) }}</p>
+              <p class="aa-logs__accent">Ready for teacher feedback.</p>
             } @else if (!questionsList.length) {
-              <p>&gt;&gt; No course questions available.</p>
+              <p>No course questions available.</p>
             } @else if (!submissions.length) {
-              <p>&gt;&gt; No submitted answers yet.</p>
+              <p>No submitted answers yet.</p>
             } @else {
-              <p>&gt;&gt; Waiting for review target…</p>
+              <p>Waiting for a student selection…</p>
             }
           </div>
         </div>

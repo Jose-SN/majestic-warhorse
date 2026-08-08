@@ -91,8 +91,8 @@
 }
 
 .qf-label {
-  font-family: var(--mc-font-label);
-  font-size: 0.625rem;
+  // font-family: var(--mc-font-label);
+  font-size: 0.725rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--mc-on-surface-variant);
@@ -363,8 +363,8 @@
 // ─── Right roster ────────────────────────────────────────────
 .qf-roster {
   position: relative;
-  width: 45%;
-  flex: 0 0 45%;
+  width: 60%;
+  flex: 0 0 60%;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
   min-height: 0;
@@ -409,7 +409,7 @@
   &__meta {
     margin: 0;
     font-family: var(--mc-font-label);
-    font-size: 0.625rem;
+    font-size: 0.725rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--mc-on-surface-variant);
@@ -554,7 +554,7 @@
   &__prompt {
     margin: 0;
     font-family: var(--mc-font-body);
-    font-size: 0.9375rem;
+    font-size: 1rem;
     font-weight: 500;
     line-height: 1.45;
     color: var(--mc-on-surface);
@@ -641,7 +641,7 @@
 
   &__stat-value {
     font-family: var(--mc-font-label);
-    font-size: 0.6875rem;
+    font-size: 0.8875rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;

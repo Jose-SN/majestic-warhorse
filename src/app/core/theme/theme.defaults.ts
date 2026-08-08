@@ -24,7 +24,7 @@ export const THEME_OPTIONS: ThemeOption[] = [
   {
     id: 'default',
     label: 'Default',
-    description: 'Majestic Cyber',
+    description: 'Petax Signature',
     icon: 'auto_awesome',
   },
   {

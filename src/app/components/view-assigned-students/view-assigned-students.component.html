@@ -15,7 +15,7 @@
     @if (isLoading) {
       <div class="approval-grid-page__empty approval-grid-page__empty--loading" role="status" aria-live="polite">
         <div class="approval-grid-page__spinner" aria-hidden="true"></div>
-        <h3>Loading Subscription Roster</h3>
+        <h3>Loading assigned students</h3>
         <p>Fetching student nodes for this instructor…</p>
       </div>
     } @else {
@@ -171,7 +171,7 @@
             <span></span>
             <span>Name</span>
             <span>Email</span>
-            <span>Node ID</span>
+            <span>Member ID</span>
             <span>Status</span>
             <span>Action</span>
           </div>
@@ -217,7 +217,7 @@
                   <h3>{{ getStudentName(student) }}</h3>
                   <p class="approval-grid-page__role">
                     <span class="material-symbols-outlined" aria-hidden="true">memory</span>
-                    Neural Student
+                    Student
                   </p>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-/** Particle accents follow Majestic Cyber brand (#ff6b2c / #ab0063) */
+/** Particle accents follow PetaxAI Learning brand (#ff6b2c / #ab0063) */
 export const PARTICLES_JSON = {
   particles: {
     number: {
