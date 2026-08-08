@@ -376,31 +376,23 @@ export class PostLoginWorkflowService {
   ): Promise<void> {
     const roles = overview?.roles ?? [];
 
-    // No course user roles yet — teachers/students can browse public courses with a banner
+    // No course user roles yet — still enter the dashboard with the selected organization.
+    // Limited/public access is handled in-app instead of blocking at org picker.
     if (!roles.length) {
-      if (user.role === 'teacher' || user.role === 'student') {
-        if (user.role === 'student') {
-          const studentId = user.id ?? '';
-          try {
-            const res: any = await firstValueFrom(
-              this.assignTeacherService.getAssignedTeachers(studentId, organizationId)
-            );
-            const data = res?.data ?? res;
-            const list = Array.isArray(data) ? data : [];
-            this.commonService.hasAssignedTeachers = list.length > 0;
-          } catch {
-            this.commonService.hasAssignedTeachers = false;
-          }
+      if (user.role === 'student') {
+        const studentId = user.id ?? '';
+        try {
+          const res: any = await firstValueFrom(
+            this.assignTeacherService.getAssignedTeachers(studentId, organizationId)
+          );
+          const data = res?.data ?? res;
+          const list = Array.isArray(data) ? data : [];
+          this.commonService.hasAssignedTeachers = list.length > 0;
+        } catch {
+          this.commonService.hasAssignedTeachers = false;
         }
-        this.router.navigate(['/dashboard']);
-        return;
       }
-      this.router.navigate(['/approval-pending'], {
-        state: {
-          infoMessage:
-            'Your request is pending approval from your organization. Please reach out to your organization for assistance.',
-        },
-      });
+      this.router.navigate(['/dashboard']);
       return;
     }
 

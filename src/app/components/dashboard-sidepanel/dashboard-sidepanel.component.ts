@@ -75,9 +75,24 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
       (this.loginedUserInfo.profileImage || this.loginedUserInfo.profile_image) ?? ''
     );
     this.brandingService.branding$.pipe(takeUntil(this.destroy$)).subscribe((branding) => {
-      this.brandLogo = branding.logoUrl;
+      this.brandLogo = this.withCacheBust(branding.logoUrl, branding.updatedAt);
       this.appName = branding.appName;
     });
+
+    this.commonService
+      .getUserProfile$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user) => {
+        if (!user) {
+          return;
+        }
+        this.loginedUserInfo = {
+          ...user,
+          profileImage: this.commonService.decodeUrl(
+            (user.profileImage || user.profile_image) ?? ''
+          ),
+        };
+      });
 
     try {
       const stored = localStorage.getItem(SIDEBAR_COLLAPSED_KEY);
@@ -256,5 +271,20 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
 
   onUpgradeToPro(): void {
     void this.router.navigate([DASHBOARD_NAV_ROUTES.pricing]);
+  }
+
+  private withCacheBust(url: string, version?: string): string {
+    if (!url || url.startsWith('data:') || url.startsWith('blob:') || url.startsWith('assets/')) {
+      return url;
+    }
+    const stamp = version || String(Date.now());
+    try {
+      const parsed = new URL(url, window.location.origin);
+      parsed.searchParams.set('v', stamp);
+      return parsed.toString();
+    } catch {
+      const sep = url.includes('?') ? '&' : '?';
+      return `${url}${sep}v=${encodeURIComponent(stamp)}`;
+    }
   }
 }

@@ -95,15 +95,25 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     const files = target.files;
     if (!files?.length) return;
 
-    const successData: { [key: string]: string | boolean } =
-      await this.registrationService.onFileSelected(this.destroy$, files[0]);
+    const file = files[0];
+    const previousUrl = this.profileUrl;
+    const localPreview = URL.createObjectURL(file);
+    this.profileUrl = localPreview;
 
-    if (successData['success']) {
+    const successData: { [key: string]: string | boolean } =
+      await this.registrationService.onFileSelected(this.destroy$, file);
+
+    if (successData['success'] && successData['url']) {
+      URL.revokeObjectURL(localPreview);
       this.profileUrl = successData['url'] as string;
     } else {
+      URL.revokeObjectURL(localPreview);
+      this.profileUrl = previousUrl;
       this.accountForm.get('profileImage')?.setValue('');
       this.commonService.openToaster({
-        message: 'Error while uploading image, please re-upload',
+        message:
+          (successData['message'] as string) ||
+          'Error while uploading image, please re-upload',
         messageType: TOASTER_MESSAGE_TYPE.ERROR,
       });
     }
@@ -135,16 +145,25 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.commonService.loginedUserInfo = {
+      const profileImage =
+        this.registrationService.imageUrl || this.profileUrl || '';
+      this.profileUrl = profileImage || this.profileUrl;
+
+      const updatedUser: UserModel = {
         ...this.commonService.loginedUserInfo,
         first_name: this.accountForm.get('firstName')?.value,
         last_name: this.accountForm.get('lastName')?.value,
+        firstName: this.accountForm.get('firstName')?.value,
+        lastName: this.accountForm.get('lastName')?.value,
+        name: this.accountForm.get('name')?.value || this.commonService.loginedUserInfo?.name,
         contact: {
           email: this.accountForm.get('email')?.value,
           phone: this.accountForm.get('phone')?.value,
         },
-        profile_image: this.registrationService.imageUrl,
+        profile_image: profileImage,
+        profileImage,
       };
+      this.commonService.notifyUserProfileUpdated(updatedUser);
 
       this.accountForm.patchValue({ password: '', confirmPassword: '' });
       this.captureFormSnapshot();

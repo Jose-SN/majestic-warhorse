@@ -90,9 +90,24 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
       });
 
     this.brandingService.branding$.pipe(takeUntil(this.destroy$)).subscribe((branding) => {
-      this.brandLogo = branding.logoUrl;
+      this.brandLogo = this.withCacheBust(branding.logoUrl, branding.updatedAt);
       this.appName = branding.appName;
     });
+
+    this.commonService
+      .getUserProfile$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user) => {
+        if (!user) {
+          return;
+        }
+        this.loginedUserInfo = {
+          ...user,
+          profileImage: this.commonService.decodeUrl(
+            (user.profileImage || user.profile_image) ?? ''
+          ),
+        };
+      });
 
     this.themeOptions = this.themeService.options;
     this.activeTheme = this.themeService.mode;
@@ -144,11 +159,14 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
   }
 
   get hasProfileImage(): boolean {
-    return !!(this.loginedUserInfo.profileImage || this.loginedUserInfo.profile_image)?.trim();
+    const info = this.commonService.loginedUserInfo || this.loginedUserInfo;
+    return !!(info?.profileImage || info?.profile_image)?.trim();
   }
 
   get profileImageUrl(): string {
-    return this.loginedUserInfo.profileImage || this.loginedUserInfo.profile_image || this.brandLogo;
+    const info = this.commonService.loginedUserInfo || this.loginedUserInfo;
+    const url = info?.profileImage || info?.profile_image || '';
+    return url?.trim() ? this.commonService.decodeUrl(url) : this.brandLogo;
   }
 
   get organizationName(): string {
@@ -270,5 +288,20 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
 
   toggleDemoMode(): void {
     this.demoModeService.toggleDemoMode();
+  }
+
+  private withCacheBust(url: string, version?: string): string {
+    if (!url || url.startsWith('data:') || url.startsWith('blob:') || url.startsWith('assets/')) {
+      return url;
+    }
+    const stamp = version || String(Date.now());
+    try {
+      const parsed = new URL(url, window.location.origin);
+      parsed.searchParams.set('v', stamp);
+      return parsed.toString();
+    } catch {
+      const sep = url.includes('?') ? '&' : '?';
+      return `${url}${sep}v=${encodeURIComponent(stamp)}`;
+    }
   }
 }

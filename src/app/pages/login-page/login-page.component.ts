@@ -59,10 +59,26 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
   private applyBrand(branding: AppBranding): void {
-    this.brandLogo = branding.logoUrl;
+    this.brandLogo = this.withCacheBust(branding.logoUrl, branding.updatedAt);
     this.appName = branding.appName;
     this.tagline = branding.tagline;
   }
+
+  private withCacheBust(url: string, version?: string): string {
+    if (!url || url.startsWith('data:') || url.startsWith('blob:') || url.startsWith('assets/')) {
+      return url;
+    }
+    const stamp = version || String(Date.now());
+    try {
+      const parsed = new URL(url, window.location.origin);
+      parsed.searchParams.set('v', stamp);
+      return parsed.toString();
+    } catch {
+      const sep = url.includes('?') ? '&' : '?';
+      return `${url}${sep}v=${encodeURIComponent(stamp)}`;
+    }
+  }
+
   onSubmit(): void {
     this.loginForm.markAllAsTouched();
     if (this.loginForm.valid) {

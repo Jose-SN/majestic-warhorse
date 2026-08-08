@@ -507,8 +507,16 @@ export class CourseDetailsComponent {
   }
 
   openCourseAccordian(chapterDetails: ChapterDetail, index: number) {
+    const key = this.chapterKey(chapterDetails, index);
+    const wasExpanded = this.expandedChapterIds.has(key);
     this.activeChapter = chapterDetails;
     this.toggleChapterExpanded(chapterDetails, index);
+    if (!wasExpanded) {
+      const firstVideo = chapterDetails.fileDetails?.[0];
+      if (firstVideo && firstVideo.id !== this.activeVideoInfo?.id) {
+        this.changeVideoUrl(firstVideo);
+      }
+    }
   }
 
   isChapterExpanded(chapterDetails: ChapterDetail, index: number): boolean {

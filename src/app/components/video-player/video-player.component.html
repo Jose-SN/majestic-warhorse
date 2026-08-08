@@ -10,15 +10,17 @@
   ></video>
 } @else if ((mode === 'youtube' || mode === 'vimeo') && embedUrl) {
   <div class="vp-embed">
-    <iframe
-      #apiFrame
-      [id]="iframePlayerId"
-      [src]="embedUrl"
-      title="{{ providerLabel }} player"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen
-      referrerpolicy="strict-origin-when-cross-origin"
-    ></iframe>
+    @for (frameId of [iframePlayerId]; track frameId) {
+      <iframe
+        #apiFrame
+        [id]="frameId"
+        [src]="embedUrl"
+        title="{{ providerLabel }} player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        referrerpolicy="strict-origin-when-cross-origin"
+      ></iframe>
+    }
     <a
       class="vp-embed__open"
       [href]="rawUrl"
@@ -31,13 +33,16 @@
   </div>
 } @else if (mode === 'embed' && embedUrl) {
   <div class="vp-embed">
-    <iframe
-      [src]="embedUrl"
-      title="{{ providerLabel }} player"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen
-      referrerpolicy="strict-origin-when-cross-origin"
-    ></iframe>
+    @for (frameId of [iframePlayerId]; track frameId) {
+      <iframe
+        [id]="frameId"
+        [src]="embedUrl"
+        title="{{ providerLabel }} player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        referrerpolicy="strict-origin-when-cross-origin"
+      ></iframe>
+    }
     <a
       class="vp-embed__open"
       [href]="rawUrl"

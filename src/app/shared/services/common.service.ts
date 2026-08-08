@@ -24,9 +24,23 @@ export class CommonService {
   private closePopupModel$: Subject<any> = new Subject<any>();
   private commonSearchText: Subject<string> = new BehaviorSubject('');
   private activityFeed$ = new BehaviorSubject<ActivityFeedItem[]>([]);
+  private userProfile$ = new BehaviorSubject<UserModel | null>(null);
   public onlineStatusChanged = new EventEmitter<boolean>();
   constructor(private toastrService: ToastrService) {
     this.initializeStatus();
+  }
+
+  /** Emit when the logged-in user's profile fields change (e.g. avatar update). */
+  notifyUserProfileUpdated(user?: UserModel): void {
+    const next = user ?? this.loginedUserInfo;
+    if (next) {
+      this.loginedUserInfo = next;
+      this.userProfile$.next(next);
+    }
+  }
+
+  getUserProfile$() {
+    return this.userProfile$.asObservable();
   }
   get allUsersList(): UserModel[] {
     return this._allUsersList;

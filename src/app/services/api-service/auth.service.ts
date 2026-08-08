@@ -116,8 +116,17 @@ export class AuthService {
     this.isAuthenticated = false;
     this.commonService.allUsersList = [];
     this.commonService.hasAssignedTeachers = null;
+    // Keep app context so login/signup still send the correct app_id header.
+    const appId = sessionStorage.getItem('app_id');
+    const application = sessionStorage.getItem('application');
     sessionStorage.clear();
     localStorage.clear();
+    if (appId) {
+      sessionStorage.setItem('app_id', appId);
+    }
+    if (application) {
+      sessionStorage.setItem('application', application);
+    }
     this.router.navigate(['/login']);
   }
   validateOtp(updatePassword: IPassWordUpdate) {

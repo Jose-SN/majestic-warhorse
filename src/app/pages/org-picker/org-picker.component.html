@@ -37,7 +37,7 @@
         @if (isSwitchMode) {
           Select the organization you want to continue learning with.
         } @else {
-          Pick your school or academy, then choose whether you are joining as a teacher or a student.
+          Pick your school or academy to continue to your dashboard.
         }
       </p>
 
@@ -123,45 +123,12 @@
           </div>
         </div>
 
-        @if (!isSwitchMode) {
-          <div class="org-picker-section">
-            <label class="org-picker-section__label">Join as</label>
-            <div class="org-picker-roles">
-              <button
-                type="button"
-                class="org-picker-role"
-                [class.is-selected]="selectedRole === 'teacher'"
-                [disabled]="submitting"
-                (click)="pickRole('teacher')"
-              >
-                <span class="org-picker-role__lead">
-                  <span class="org-picker-role__icon" aria-hidden="true">
-                    <span class="material-symbols-outlined">school</span>
-                  </span>
-                  <strong>Teacher</strong>
-                </span>
-                <p>Create courses and guide students after your organization approves you.</p>
-              </button>
-
-              <button
-                type="button"
-                class="org-picker-role"
-                [class.is-selected]="selectedRole === 'student'"
-                [disabled]="submitting"
-                (click)="pickRole('student')"
-              >
-                <span class="org-picker-role__lead">
-                  <span class="org-picker-role__icon org-picker-role__icon--student" aria-hidden="true">
-                    <span class="material-symbols-outlined">menu_book</span>
-                  </span>
-                  <strong>Student</strong>
-                </span>
-                <p>Access courses from your teachers and track your learning progress.</p>
-              </button>
-            </div>
-          </div>
-
-          <div class="login-form__actions org-picker-actions">
+        <div class="login-form__actions org-picker-actions">
+          @if (isSwitchMode) {
+            <button type="button" class="org-picker-back" (click)="cancelSwitch()" [disabled]="submitting">
+              Back to dashboard
+            </button>
+          } @else {
             <a
               href="/login"
               class="org-picker-back-link"
@@ -169,32 +136,21 @@
             >
               Back to login
             </a>
-            <button
-              type="button"
-              class="btn-primary"
-              [disabled]="!canContinue"
-              [attr.aria-disabled]="!canContinue"
-              (click)="continueToDashboard()"
-            >
-              @if (submitting) {
-                Joining…
-              } @else {
-                Continue
-              }
-            </button>
-            <p class="org-picker-footnote">
-              Your organization will review your request before you get full access to courses.
-            </p>
-          </div>
-        }
-
-        @if (isSwitchMode) {
-          <div class="org-picker-actions">
-            <button type="button" class="org-picker-back" (click)="cancelSwitch()" [disabled]="submitting">
-              Back to dashboard
-            </button>
-          </div>
-        }
+          }
+          <button
+            type="button"
+            class="btn-primary"
+            [disabled]="!canContinue"
+            [attr.aria-disabled]="!canContinue"
+            (click)="continueToDashboard()"
+          >
+            @if (submitting) {
+              Continuing…
+            } @else {
+              Continue
+            }
+          </button>
+        </div>
       }
     </div>
   </section>

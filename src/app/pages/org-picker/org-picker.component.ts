@@ -2,10 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import {
-  PostLoginWorkflowService,
-  RoleIntent,
-} from 'src/app/core/auth/post-login-workflow.service';
+import { PostLoginWorkflowService } from 'src/app/core/auth/post-login-workflow.service';
 import { UserOrganizationEntry } from 'src/app/models/organization-picker.model';
 import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
 import { AuthService } from 'src/app/services/api-service/auth.service';
@@ -27,7 +24,6 @@ export class OrgPickerComponent implements OnInit {
   isSwitchMode = false;
   activeOrgId = '';
   selectedOrgId: string | null = null;
-  selectedRole: RoleIntent | null = null;
   orgDropdownOpen = false;
 
   constructor(
@@ -48,8 +44,7 @@ export class OrgPickerComponent implements OnInit {
 
     this.isSwitchMode = this.route.snapshot.queryParamMap.get('switch') === 'true';
     this.activeOrgId = sessionStorage.getItem('organization_id') || '';
-    this.selectedOrgId = null;
-    this.selectedRole = null;
+    this.selectedOrgId = this.activeOrgId || null;
     this.loadOrganizations();
   }
 
@@ -63,6 +58,10 @@ export class OrgPickerComponent implements OnInit {
   get loggedInEmail(): string {
     const user = this.commonService.loginedUserInfo ?? this.readUserFromSession();
     return (user?.email || user?.contact?.email || '').trim();
+  }
+
+  get canContinue(): boolean {
+    return !!this.selectedOrgId && !this.submitting;
   }
 
   @HostListener('document:click', ['$event'])
@@ -86,11 +85,7 @@ export class OrgPickerComponent implements OnInit {
   private async loadOrganizations(): Promise<void> {
     this.loading = true;
     try {
-      if (this.isSwitchMode) {
-        await this.loadUserOrganizations();
-      } else {
-        await this.loadAllOrganizations();
-      }
+      await this.loadUserOrganizations();
 
       if (!this.organizations.length) {
         sessionStorage.removeItem('needsOrgPicker');
@@ -103,6 +98,14 @@ export class OrgPickerComponent implements OnInit {
             infoMessage: 'No organizations are available yet. Please contact your administrator.',
           },
         });
+        return;
+      }
+
+      // Prefer the user's current org, otherwise the first membership.
+      if (!this.selectedOrgId || !this.organizations.some((o) => o.id === this.selectedOrgId)) {
+        this.selectedOrgId = this.activeOrgId && this.organizations.some((o) => o.id === this.activeOrgId)
+          ? this.activeOrgId
+          : this.organizations[0].id;
       }
     } catch {
       this.commonService.openToaster({
@@ -114,27 +117,19 @@ export class OrgPickerComponent implements OnInit {
     }
   }
 
-  /** Full organization catalog for join flow — pick any one. */
-  private async loadAllOrganizations(): Promise<void> {
-    const res: any = await firstValueFrom(this.organizationApi.getOrganizations());
-    const data = res?.data ?? res ?? [];
-    const list = Array.isArray(data) ? data : [];
-    this.organizations = list
-      .map((entry: any) => ({
-        id: entry.id ?? '',
-        name: entry.name ?? 'Unnamed organization',
-        email: entry.contact?.email ?? entry.email,
-      }))
-      .filter((o: UserOrganizationEntry) => !!o.id)
-      .sort((a, b) => this.displayName(a.name).localeCompare(this.displayName(b.name)));
-  }
-
-  /** Orgs the user already belongs to (switch mode). */
+  /** Orgs the user already belongs to (login picker + switch mode). */
   private async loadUserOrganizations(): Promise<void> {
     const cached = sessionStorage.getItem('pendingUserOrganizations');
     if (cached) {
-      this.organizations = JSON.parse(cached) as UserOrganizationEntry[];
-      return;
+      try {
+        const parsed = JSON.parse(cached) as UserOrganizationEntry[];
+        if (Array.isArray(parsed) && parsed.length) {
+          this.organizations = parsed;
+          return;
+        }
+      } catch {
+        // fall through to API
+      }
     }
 
     const user = this.commonService.loginedUserInfo ?? this.readUserFromSession();
@@ -151,7 +146,7 @@ export class OrgPickerComponent implements OnInit {
         id: entry.organization?.id ?? entry.id ?? '',
         name: entry.organization?.name ?? entry.name ?? 'Unnamed organization',
         email: entry.organization?.contact?.email ?? entry.contact?.email,
-        membershipRole: entry.membership?.role ?? entry.role,
+        membershipRole: entry.membership?.role ?? entry.role ?? entry.title,
       }))
       .filter((o: UserOrganizationEntry) => !!o.id);
   }
@@ -162,70 +157,43 @@ export class OrgPickerComponent implements OnInit {
 
   pickOrganization(orgId: string): void {
     if (this.submitting) return;
-
-    if (this.isSwitchMode) {
-      this.orgDropdownOpen = false;
-      this.switchOrganization(orgId);
-      return;
-    }
-
-    if (this.selectedOrgId !== orgId) {
-      this.selectedRole = null;
-    }
     this.selectedOrgId = orgId;
     this.orgDropdownOpen = false;
-  }
 
-  pickRole(role: RoleIntent): void {
-    if (this.submitting || this.isSwitchMode) return;
-    this.selectedRole = role;
-  }
-
-  get canContinue(): boolean {
-    return !!this.selectedOrgId && !!this.selectedRole && !this.submitting;
+    // Switch mode still applies immediately on pick.
+    if (this.isSwitchMode) {
+      void this.continueToDashboard();
+    }
   }
 
   async continueToDashboard(): Promise<void> {
-    if (!this.canContinue || !this.selectedOrgId || !this.selectedRole) return;
-    await this.completeSelection(this.selectedOrgId, this.selectedRole);
-  }
+    if (!this.canContinue || !this.selectedOrgId) return;
 
-  private async switchOrganization(orgId: string): Promise<void> {
-    if (this.submitting) return;
     this.submitting = true;
     try {
-      const org = this.organizations.find((o) => o.id === orgId);
+      const org = this.organizations.find((o) => o.id === this.selectedOrgId);
       if (org?.name) {
         sessionStorage.setItem('activeOrganizationName', org.name);
       }
       sessionStorage.removeItem('pendingUserOrganizations');
-      await this.postLoginWorkflow.selectOrganization(orgId, { skipRouting: true });
-      this.commonService.openToaster({
-        message: 'Organization switched successfully.',
-        messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+      sessionStorage.removeItem('needsOrgPicker');
+      sessionStorage.removeItem('pendingRoleIntent');
+
+      await this.postLoginWorkflow.selectOrganization(this.selectedOrgId, {
+        skipRouting: true,
       });
+
+      if (this.isSwitchMode) {
+        this.commonService.openToaster({
+          message: 'Organization switched successfully.',
+          messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+        });
+      }
+
       await this.postLoginWorkflow.continueRoutingForCurrentUser();
     } catch (error: any) {
       this.commonService.openToaster({
         message: error?.message || 'Unable to select organization.',
-        messageType: TOASTER_MESSAGE_TYPE.ERROR,
-      });
-    } finally {
-      this.submitting = false;
-    }
-  }
-
-  private async completeSelection(orgId: string, role: RoleIntent): Promise<void> {
-    this.submitting = true;
-    try {
-      const org = this.organizations.find((o) => o.id === orgId);
-      if (org?.name) {
-        sessionStorage.setItem('activeOrganizationName', org.name);
-      }
-      await this.postLoginWorkflow.selectOrganization(orgId, { roleIntent: role });
-    } catch (error: any) {
-      this.commonService.openToaster({
-        message: error?.message || 'Unable to join organization. Please try again.',
         messageType: TOASTER_MESSAGE_TYPE.ERROR,
       });
     } finally {

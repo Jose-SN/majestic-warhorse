@@ -144,7 +144,11 @@ export class BrandingService {
     const saved = await firstValueFrom(
       this.brandingApi.saveBranding(this.brandingApi.toSavePayload(organizationId, next))
     );
-    const merged = this.mergeWithDefaults(this.brandingApi.toAppBranding(saved));
+    const merged = this.mergeWithDefaults({
+      ...this.brandingApi.toAppBranding(saved),
+      // Prefer server stamp; fall back so logo/favicon cache-bust always changes after save.
+      updatedAt: saved.updated_at || next.updatedAt || new Date().toISOString(),
+    });
     this.persistCache(organizationId, merged);
     this.applyLocal(merged);
     return merged;
@@ -368,44 +372,80 @@ export class BrandingService {
     set('--dashboard-accent-magenta', c.gradientMid);
 
     document.title = branding.appName || DEFAULT_APP_BRANDING.appName;
-    this.updateFavicon(branding.faviconUrl || DEFAULT_BRAND_FAVICON);
-    this.updateAppleTouchIcon(branding.logoUrl || DEFAULT_BRAND_LOGO);
+    const version = branding.updatedAt || String(Date.now());
+    this.updateFavicon(branding.faviconUrl || DEFAULT_BRAND_FAVICON, version);
+    this.updateAppleTouchIcon(branding.logoUrl || DEFAULT_BRAND_LOGO, version);
     this.updateThemeColor(c.surfaceContainerLow);
   }
 
-  private updateFavicon(href: string): void {
-    const head = document.head;
-    let link = head.querySelector<HTMLLinkElement>("link[rel='icon'][data-branding='true']");
-    if (!link) {
-      link = document.createElement('link');
-      link.rel = 'icon';
-      link.setAttribute('data-branding', 'true');
-      head.appendChild(link);
+  private updateFavicon(href: string, version?: string): void {
+    if (typeof document === 'undefined') {
+      return;
     }
-    link.type = href.startsWith('data:image/svg')
-      ? 'image/svg+xml'
-      : href.startsWith('data:image/png')
-        ? 'image/png'
-        : 'image/png';
-    link.href = href;
 
-    const primary = head.querySelector<HTMLLinkElement>("link[rel='icon']:not([data-branding])");
-    if (primary) {
-      primary.href = href;
-    }
+    const busted = this.withCacheBust(href, version);
+    const head = document.head;
+    const type = busted.startsWith('data:image/svg')
+      ? 'image/svg+xml'
+      : busted.startsWith('data:image/png') || busted.includes('.png')
+        ? 'image/png'
+        : busted.includes('.ico')
+          ? 'image/x-icon'
+          : 'image/png';
+
+    // Browsers cache favicons aggressively — remove existing icons and recreate.
+    head
+      .querySelectorAll<HTMLLinkElement>(
+        "link[rel='icon'], link[rel='shortcut icon'], link[data-branding='true']"
+      )
+      .forEach((link) => link.remove());
+
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = type;
+    link.setAttribute('data-branding', 'true');
+    link.href = busted;
+    head.appendChild(link);
+
+    // Keep a shortcut icon for older browsers
+    const shortcut = document.createElement('link');
+    shortcut.rel = 'shortcut icon';
+    shortcut.type = type;
+    shortcut.setAttribute('data-branding', 'true');
+    shortcut.href = busted;
+    head.appendChild(shortcut);
   }
 
-  private updateAppleTouchIcon(href: string): void {
-    const apple = document.head.querySelector<HTMLLinkElement>("link[rel='apple-touch-icon']");
-    if (apple) {
-      apple.href = href;
+  private updateAppleTouchIcon(href: string, version?: string): void {
+    const busted = this.withCacheBust(href, version);
+    let apple = document.head.querySelector<HTMLLinkElement>("link[rel='apple-touch-icon']");
+    if (!apple) {
+      apple = document.createElement('link');
+      apple.rel = 'apple-touch-icon';
+      document.head.appendChild(apple);
     }
+    apple.href = busted;
   }
 
   private updateThemeColor(color: string): void {
     const meta = document.head.querySelector<HTMLMetaElement>("meta[name='theme-color']");
     if (meta) {
       meta.content = color;
+    }
+  }
+
+  private withCacheBust(url: string, version?: string): string {
+    if (!url || url.startsWith('data:') || url.startsWith('blob:')) {
+      return url;
+    }
+    const stamp = version || String(Date.now());
+    try {
+      const parsed = new URL(url, typeof window !== 'undefined' ? window.location.origin : 'http://localhost');
+      parsed.searchParams.set('v', stamp);
+      return parsed.toString();
+    } catch {
+      const sep = url.includes('?') ? '&' : '?';
+      return `${url}${sep}v=${encodeURIComponent(stamp)}`;
     }
   }
 }

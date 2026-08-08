@@ -31,6 +31,7 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
   loading = true;
   activePresetId: string | null = null;
   private destroy$ = new Subject<void>();
+  private localPreviewUrls: string[] = [];
 
   constructor(
     private brandingService: BrandingService,
@@ -67,8 +68,11 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
     }
 
     this.brandingService.branding$.pipe(takeUntil(this.destroy$)).subscribe((branding) => {
-      this.draft = this.clone(branding);
-      this.syncActivePreset();
+      // Avoid wiping in-progress logo/favicon selection with remote emissions.
+      if (this.loading || this.saving || !this.draft) {
+        this.draft = this.clone(branding);
+        this.syncActivePreset();
+      }
     });
 
     this.loading = true;
@@ -82,6 +86,7 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.revokeLocalPreviews();
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -96,7 +101,8 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
   }
 
   async onLogoSelected(event: Event): Promise<void> {
-    const file = (event.target as HTMLInputElement).files?.[0];
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) {
       this.toast('Please choose an image file for the logo.', TOASTER_MESSAGE_TYPE.ERROR);
@@ -107,14 +113,23 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
       return;
     }
     try {
-      this.draft.logoUrl = await this.brandingService.readFileAsDataUrl(file);
+      const objectUrl = URL.createObjectURL(file);
+      this.trackLocalPreview(objectUrl);
+      this.draft = { ...this.draft, logoUrl: objectUrl };
+      // Persist as data URL for save payload
+      const dataUrl = await this.brandingService.readFileAsDataUrl(file);
+      this.draft = { ...this.draft, logoUrl: dataUrl };
+      this.revokeLocalPreviews();
     } catch {
       this.toast('Could not read logo file.', TOASTER_MESSAGE_TYPE.ERROR);
+    } finally {
+      input.value = '';
     }
   }
 
   async onFaviconSelected(event: Event): Promise<void> {
-    const file = (event.target as HTMLInputElement).files?.[0];
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) {
       this.toast('Please choose an image file for the favicon.', TOASTER_MESSAGE_TYPE.ERROR);
@@ -125,9 +140,16 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
       return;
     }
     try {
-      this.draft.faviconUrl = await this.brandingService.readFileAsDataUrl(file);
+      const objectUrl = URL.createObjectURL(file);
+      this.trackLocalPreview(objectUrl);
+      this.draft = { ...this.draft, faviconUrl: objectUrl };
+      const dataUrl = await this.brandingService.readFileAsDataUrl(file);
+      this.draft = { ...this.draft, faviconUrl: dataUrl };
+      this.revokeLocalPreviews();
     } catch {
       this.toast('Could not read favicon file.', TOASTER_MESSAGE_TYPE.ERROR);
+    } finally {
+      input.value = '';
     }
   }
 
@@ -143,13 +165,15 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
 
     this.saving = true;
     try {
-      await this.brandingService.save({
+      const saved = await this.brandingService.save({
         appName: this.draft.appName.trim(),
         tagline: this.draft.tagline?.trim() || '',
         logoUrl: this.draft.logoUrl,
         faviconUrl: this.draft.faviconUrl,
         colors: { ...this.draft.colors },
       });
+      this.draft = this.clone(saved);
+      this.syncActivePreset();
       this.toast('Branding saved for your organisation.', TOASTER_MESSAGE_TYPE.SUCCESS);
     } catch (err: unknown) {
       const message =
@@ -255,6 +279,21 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
       ...branding,
       colors: { ...branding.colors },
     };
+  }
+
+  private trackLocalPreview(url: string): void {
+    this.localPreviewUrls.push(url);
+  }
+
+  private revokeLocalPreviews(): void {
+    this.localPreviewUrls.forEach((url) => {
+      try {
+        URL.revokeObjectURL(url);
+      } catch {
+        // ignore
+      }
+    });
+    this.localPreviewUrls = [];
   }
 
   private toast(message: string, messageType: string): void {

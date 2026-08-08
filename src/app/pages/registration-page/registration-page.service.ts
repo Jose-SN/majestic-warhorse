@@ -37,15 +37,17 @@ export class RegistrationPageService {
     return new Promise((resolve) => {
       if (!this.ALLOWED_FILE_TYPES.includes(selectedFile.type)) {
         resolve({
-          success: true,
+          success: false,
           message: 'Only PNG and JPEG files are allowed!',
         });
+        return;
       }
       if (selectedFile.size > this.MAX_FILE_SIZE) {
         resolve({
-          success: true,
+          success: false,
           message: 'File size should not exceed 5MB!',
         });
+        return;
       }
       this.commonApiService
         .uploadImage(formData)
@@ -53,8 +55,7 @@ export class RegistrationPageService {
         .subscribe({
           next: (event: any) => {
             if (event.type === HttpEventType.UploadProgress && event.total) {
-              const uploadedCourse = Math.round((100 * event.loaded) / event.total);
-              console.log(uploadedCourse);
+              // progress handled by caller if needed
             } else if (event.type === HttpEventType.Response) {
               this.imageUrl = event?.body?.['url'];
               resolve({

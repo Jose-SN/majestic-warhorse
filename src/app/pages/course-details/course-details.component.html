@@ -53,11 +53,13 @@
               {{ courseStatusLevel }}
             </span>
             <img class="cd-video-block__logo" src="../../../assets/images/logo-majestic-hourse.svg" alt="" />
-            <app-video-player
-              [videoUrl]="activeVideoInfo.fileURL"
-              (videoDuration)="videoDurationHandler($event)"
-              (videoStatusUpdate)="videoStatusUpdateHandler($event)">
-            </app-video-player>
+            @for (video of [activeVideoInfo]; track video.id || video.fileURL) {
+              <app-video-player
+                [videoUrl]="video.fileURL"
+                (videoDuration)="videoDurationHandler($event)"
+                (videoStatusUpdate)="videoStatusUpdateHandler($event)">
+              </app-video-player>
+            }
           </div>
 
           <div class="cd-course-header">
