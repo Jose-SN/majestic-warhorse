@@ -85,6 +85,14 @@
           Max {{ maxSizeLabel }} · PDF, Office, images, MP4/MOV/AVI, MP3
         </p>
       </div>
+      <label class="library-dropzone__visibility">
+        <span>Visibility</span>
+        <select [(ngModel)]="uploadVisibility" [disabled]="uploading" aria-label="Upload visibility">
+          @for (option of visibilityOptions; track option.id) {
+            <option [ngValue]="option.id">{{ option.label }}</option>
+          }
+        </select>
+      </label>
       <button type="button" class="library-page__btn-secondary" (click)="openFilePicker()">
         Browse files
       </button>
@@ -249,7 +257,8 @@
               <th>File</th>
               <th>Type</th>
               <th>Uploaded by</th>
-              <th>Role</th>
+              <th>Visibility</th>
+              <th>Status</th>
               <th>Size</th>
               <th>Uploaded on</th>
               <th>Actions</th>
@@ -281,7 +290,12 @@
                 <span class="library-type">{{ file.extension | uppercase }}</span>
               </td>
               <td>{{ file.uploadedByName }}</td>
-              <td>{{ roleLabel(file.uploadedByRole) }}</td>
+              <td>{{ visibilityLabel(file.visibility) }}</td>
+              <td>
+                <span class="library-status" [attr.data-status]="file.status || 'unknown'">
+                  {{ statusLabel(file.status) }}
+                </span>
+              </td>
               <td class="is-mono">{{ formatBytes(file.sizeBytes) }}</td>
               <td class="is-mono">{{ formatDate(file.uploadedAt) }}</td>
               <td>
@@ -315,7 +329,11 @@
             </span>
             <div>
               <h3>{{ file.name }}.{{ file.extension }}</h3>
-              <p>{{ file.uploadedByName }} · {{ formatBytes(file.sizeBytes) }}</p>
+              <p>
+                {{ file.uploadedByName }} · {{ formatBytes(file.sizeBytes) }}
+                · {{ visibilityLabel(file.visibility) }}
+                · {{ statusLabel(file.status) }}
+              </p>
             </div>
           </div>
           <div class="library-actions">

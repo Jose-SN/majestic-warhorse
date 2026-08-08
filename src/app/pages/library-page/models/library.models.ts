@@ -2,6 +2,10 @@ export type LibraryUserRole = 'organization' | 'teacher' | 'student';
 
 export type LibraryFileCategory = 'video' | 'document' | 'image' | 'audio' | 'other';
 
+export type LibraryVisibility = 'organization' | 'teacher' | 'student' | 'private';
+
+export type LibraryIngestStatus = 'pending' | 'processing' | 'ready' | 'failed';
+
 export type LibraryTabId =
   | 'all'
   | 'organizations'
@@ -22,11 +26,16 @@ export type LibraryFileItem = {
   sizeBytes: number;
   uploadedById: string;
   uploadedByName: string;
-  uploadedByRole: LibraryUserRole;
+  /** Present in demo data; live library files use `visibility` instead of uploader role. */
+  uploadedByRole?: LibraryUserRole;
   uploadedAt: string;
   previewUrl?: string;
   downloadUrl?: string;
   thumbnailUrl?: string;
+  visibility?: LibraryVisibility;
+  status?: LibraryIngestStatus;
+  storageKey?: string;
+  description?: string;
 };
 
 export type LibraryCategoryStats = {
@@ -77,4 +86,9 @@ export type LibraryFilesResponse = {
 
 export type LibraryUploadResult = {
   item: LibraryFileItem;
+};
+
+export type LibraryUploadOptions = {
+  visibility?: LibraryVisibility;
+  description?: string;
 };

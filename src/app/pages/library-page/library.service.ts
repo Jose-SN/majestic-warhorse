@@ -1,7 +1,7 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, delay, map, switchMap } from 'rxjs/operators';
+import { catchError, delay, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import {
   LIBRARY_ALLOWED_EXTENSIONS,
@@ -15,18 +15,59 @@ import {
   LibraryFileItem,
   LibraryFilesQuery,
   LibraryFilesResponse,
+  LibraryIngestStatus,
   LibraryStats,
+  LibraryUploadOptions,
   LibraryUploadResult,
   LibraryUserRole,
   LibraryUserUsage,
+  LibraryVisibility,
 } from './models/library.models';
 
-type BackendStorageFile = {
+/** Logic Service library file row (camelCase + snake_case tolerant). */
+type BackendLibraryFile = {
+  id?: string;
+  description?: string;
+  fileURL?: string;
+  fileUrl?: string;
+  file_url?: string;
+  fileName?: string;
+  file_name?: string;
+  createdBy?: string;
+  created_by?: string;
+  libraryFiles?: boolean;
+  library_files?: boolean;
+  organizationId?: string;
+  organization_id?: string;
+  uploadedBy?: string;
+  uploaded_by?: string;
+  uploadedByName?: string;
+  uploaded_by_name?: string;
+  mimeType?: string;
+  mime_type?: string;
+  sizeBytes?: number;
+  size_bytes?: number;
+  storageKey?: string;
+  storage_key?: string;
+  visibility?: LibraryVisibility | string;
+  status?: LibraryIngestStatus | string;
+  creation_date?: string;
+  modification_date?: string;
+  created_at?: string;
+  updated_at?: string;
   key?: string;
-  objectKey?: string;
-  lastModified?: string | Date;
-  size?: number;
   url?: string;
+};
+
+type LibraryListResponse =
+  | { success?: boolean; data?: BackendLibraryFile[] }
+  | BackendLibraryFile[];
+
+type LibraryUploadResponse = {
+  message?: string;
+  key?: string;
+  url?: string;
+  data?: BackendLibraryFile;
 };
 
 const DEFAULT_QUOTA_GB = 100;
@@ -53,7 +94,7 @@ export class LibraryService {
       return of({ ...this.demoStats }).pipe(delay(280));
     }
 
-    return this.fetchBackendFiles().pipe(
+    return this.fetchLibraryFiles().pipe(
       map((files) => this.computeStats(files)),
       catchError(() => of(this.emptyStats()))
     );
@@ -80,7 +121,7 @@ export class LibraryService {
       );
     }
 
-    return this.fetchBackendFiles().pipe(
+    return this.fetchLibraryFiles().pipe(
       map((files) => this.filterFiles(files, query, role, currentUserId)),
       catchError(() =>
         of({
@@ -98,12 +139,15 @@ export class LibraryService {
     role: LibraryUserRole,
     userId: string,
     userName: string,
-    isDemoMode: boolean
+    isDemoMode: boolean,
+    options: LibraryUploadOptions = {}
   ): Observable<LibraryUploadResult> {
     const validationError = this.validateFile(file);
     if (validationError) {
       return throwError(() => new Error(validationError));
     }
+
+    const visibility: LibraryVisibility = options.visibility || 'private';
 
     if (isDemoMode) {
       const extension = this.extensionOf(file.name);
@@ -122,6 +166,9 @@ export class LibraryService {
         previewUrl: category === 'image' ? URL.createObjectURL(file) : undefined,
         downloadUrl: URL.createObjectURL(file),
         thumbnailUrl: category === 'image' ? URL.createObjectURL(file) : undefined,
+        visibility,
+        status: 'processing',
+        description: options.description,
       };
 
       this.demoFiles = [item, ...this.demoFiles];
@@ -130,13 +177,25 @@ export class LibraryService {
     }
 
     const formData = new FormData();
-    formData.append('bucket_name', 'library');
     formData.append('file', file);
+    formData.append('bucket_name', 'library');
+    formData.append('library_files', 'true');
+    formData.append('visibility', visibility);
+    if (options.description?.trim()) {
+      formData.append('description', options.description.trim());
+    }
 
     return this.http
-      .post<{ message?: string; key?: string; url?: string }>(`${this.apiUrl}file/upload`, formData)
+      .post<LibraryUploadResponse>(`${this.apiUrl}file/upload`, formData)
       .pipe(
         map((res) => {
+          const mapped = res.data
+            ? this.mapLibraryFile(res.data)
+            : null;
+          if (mapped) {
+            return { item: mapped };
+          }
+
           const extension = this.extensionOf(file.name);
           const category = this.categoryOf(extension);
           const url = res.url || '';
@@ -154,6 +213,10 @@ export class LibraryService {
             previewUrl: category === 'image' ? url : undefined,
             downloadUrl: url,
             thumbnailUrl: category === 'image' ? url : undefined,
+            visibility,
+            status: 'processing',
+            storageKey: res.key,
+            description: options.description,
           };
           return { item };
         })
@@ -171,11 +234,8 @@ export class LibraryService {
       return of(void 0).pipe(delay(250));
     }
 
-    const params = new HttpParams().set('key', id);
     return this.http
-      .delete(`${this.apiUrl}file/delete/${encodeURIComponent(id.split('/').pop() || id)}`, {
-        params,
-      })
+      .delete(`${this.apiUrl}file/library/${encodeURIComponent(id)}`)
       .pipe(map(() => void 0));
   }
 
@@ -183,7 +243,6 @@ export class LibraryService {
     if (role === 'organization') {
       return true;
     }
-    // Live R2 objects often lack uploader metadata — teachers can manage those; students only own files.
     if (!file.uploadedById || file.uploadedById === 'unknown') {
       return role === 'teacher';
     }
@@ -214,72 +273,122 @@ export class LibraryService {
     return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
   }
 
-  private fetchBackendFiles(): Observable<LibraryFileItem[]> {
-    const params = new HttpParams().set('bucket_name', 'library');
-    return this.http.get<BackendStorageFile[] | null>(`${this.apiUrl}file/get`, { params }).pipe(
-      switchMap((libraryFiles) => {
-        const libraryMapped = this.mapBackendFiles(libraryFiles);
-        // Also include default uploads folder so older uploads still appear.
-        return this.http.get<BackendStorageFile[] | null>(`${this.apiUrl}file/get`).pipe(
-          map((uploadFiles) => {
-            const uploadsMapped = this.mapBackendFiles(uploadFiles);
-            const byId = new Map<string, LibraryFileItem>();
-            [...libraryMapped, ...uploadsMapped].forEach((f) => byId.set(f.id, f));
-            return [...byId.values()].sort(
-              (a, b) => +new Date(b.uploadedAt) - +new Date(a.uploadedAt)
-            );
-          }),
-          catchError(() => of(libraryMapped))
-        );
-      }),
-      catchError(() =>
-        this.http.get<BackendStorageFile[] | null>(`${this.apiUrl}file/get`).pipe(
-          map((files) => this.mapBackendFiles(files)),
-          catchError(() => of([]))
-        )
-      )
+  statusLabel(status?: LibraryIngestStatus): string {
+    switch (status) {
+      case 'pending':
+        return 'Pending';
+      case 'processing':
+        return 'Processing';
+      case 'ready':
+        return 'Ready';
+      case 'failed':
+        return 'Failed';
+      default:
+        return '—';
+    }
+  }
+
+  visibilityLabel(visibility?: LibraryVisibility): string {
+    switch (visibility) {
+      case 'organization':
+        return 'Organization';
+      case 'teacher':
+        return 'Teachers';
+      case 'student':
+        return 'Students';
+      case 'private':
+        return 'Private';
+      default:
+        return '—';
+    }
+  }
+
+  private fetchLibraryFiles(): Observable<LibraryFileItem[]> {
+    return this.http.get<LibraryListResponse>(`${this.apiUrl}file/library`).pipe(
+      map((res) => {
+        const rows = Array.isArray(res)
+          ? res
+          : Array.isArray(res?.data)
+            ? res.data
+            : [];
+        return rows
+          .map((row) => this.mapLibraryFile(row))
+          .filter((f): f is LibraryFileItem => !!f)
+          .sort((a, b) => +new Date(b.uploadedAt) - +new Date(a.uploadedAt));
+      })
     );
   }
 
-  private mapBackendFiles(raw: BackendStorageFile[] | null | undefined): LibraryFileItem[] {
-    if (!Array.isArray(raw)) {
-      return [];
+  private mapLibraryFile(row: BackendLibraryFile | null | undefined): LibraryFileItem | null {
+    if (!row) {
+      return null;
     }
 
-    return raw
-      .filter((row) => !!(row.key || row.objectKey || row.url))
-      .filter((row) => {
-        const key = row.key || row.objectKey || '';
-        // Skip folder placeholders
-        return !key.endsWith('/');
-      })
-      .map((row) => {
-        const key = (row.key || row.objectKey || row.url || '').toString();
-        const fileName = key.split('/').pop() || key;
-        const extension = this.extensionOf(fileName);
-        const category = this.categoryOf(extension);
-        const name = fileName.replace(/\.[^.]+$/, '') || fileName;
-        const url = row.url || '';
-        const uploadedAt = row.lastModified
-          ? new Date(row.lastModified).toISOString()
-          : new Date().toISOString();
+    const id = (row.id || '').toString();
+    const storageKey = (row.storageKey || row.storage_key || row.key || '').toString();
+    const url = (row.fileURL || row.fileUrl || row.file_url || row.url || '').toString();
+    const fileNameRaw =
+      (row.fileName || row.file_name || storageKey.split('/').pop() || url.split('/').pop() || '').toString();
+    if (!id && !storageKey && !fileNameRaw) {
+      return null;
+    }
 
-        return {
-          id: key,
-          name,
-          extension,
-          category,
-          mimeType: this.mimeOf(extension),
-          sizeBytes: Number(row.size) || 0,
-          uploadedById: 'unknown',
-          uploadedByName: 'Storage',
-          uploadedByRole: 'organization' as LibraryUserRole,
-          uploadedAt,
-          previewUrl: url || undefined,
-          downloadUrl: url || undefined,
-          thumbnailUrl: category === 'image' ? url || undefined : undefined,
-        };
-      });
+    const fileName = fileNameRaw || 'file';
+    const extension = this.extensionOf(fileName);
+    const category = this.categoryOf(extension);
+    const name = fileName.replace(/\.[^.]+$/, '') || fileName;
+    const uploadedAt =
+      row.creation_date ||
+      row.created_at ||
+      row.modification_date ||
+      row.updated_at ||
+      new Date().toISOString();
+    const mimeType = (row.mimeType || row.mime_type || this.mimeOf(extension)).toString();
+    const sizeBytes = Number(row.sizeBytes ?? row.size_bytes) || 0;
+    const uploadedById = (row.uploadedBy || row.uploaded_by || row.createdBy || row.created_by || 'unknown').toString();
+    const visibility = this.normalizeVisibility(row.visibility);
+    const status = this.normalizeStatus(row.status);
+
+    return {
+      id: id || storageKey || fileName,
+      name,
+      extension,
+      category,
+      mimeType,
+      sizeBytes,
+      uploadedById,
+      uploadedByName: (row.uploadedByName || row.uploaded_by_name || 'Library').toString(),
+      uploadedAt: new Date(uploadedAt).toISOString(),
+      previewUrl: url || undefined,
+      downloadUrl: url || undefined,
+      thumbnailUrl: category === 'image' ? url || undefined : undefined,
+      visibility,
+      status,
+      storageKey: storageKey || undefined,
+      description: row.description || undefined,
+    };
+  }
+
+  private normalizeVisibility(value?: string): LibraryVisibility | undefined {
+    if (!value) {
+      return undefined;
+    }
+    const v = value.toLowerCase();
+    if (v === 'organization' || v === 'teacher' || v === 'student' || v === 'private') {
+      return v;
+    }
+    return undefined;
+  }
+
+  private normalizeStatus(value?: string): LibraryIngestStatus | undefined {
+    if (!value) {
+      return undefined;
+    }
+    const v = value.toLowerCase();
+    if (v === 'pending' || v === 'processing' || v === 'ready' || v === 'failed') {
+      return v;
+    }
+    return undefined;
   }
 
   private filterFiles(
@@ -290,16 +399,24 @@ export class LibraryService {
   ): LibraryFilesResponse {
     let items = [...source];
 
+    // Live library list is already visibility-scoped by Logic; keep light client filters for demo/tabs.
     if (role === 'student') {
       items = items.filter(
-        (f) => f.uploadedById === currentUserId || f.uploadedById === 'unknown'
+        (f) =>
+          f.uploadedById === currentUserId ||
+          f.uploadedById === 'unknown' ||
+          f.visibility === 'student' ||
+          f.visibility === 'organization'
       );
     } else if (role === 'teacher') {
       items = items.filter(
         (f) =>
           f.uploadedById === currentUserId ||
+          f.uploadedById === 'unknown' ||
           f.uploadedByRole === 'student' ||
-          f.uploadedById === 'unknown'
+          f.visibility === 'teacher' ||
+          f.visibility === 'organization' ||
+          f.visibility === 'student'
       );
     }
 
@@ -311,17 +428,23 @@ export class LibraryService {
     } else if (tab === 'images' || query.type === 'image') {
       items = items.filter((f) => f.category === 'image');
     } else if (tab === 'organizations') {
-      items = items.filter((f) => f.uploadedByRole === 'organization');
+      items = items.filter(
+        (f) => f.uploadedByRole === 'organization' || f.visibility === 'organization'
+      );
     } else if (tab === 'teachers' || tab === 'my') {
       if (tab === 'my') {
         items = items.filter(
-          (f) => f.uploadedById === currentUserId || f.uploadedById === 'unknown'
+          (f) => f.uploadedById === currentUserId || f.visibility === 'private'
         );
       } else {
-        items = items.filter((f) => f.uploadedByRole === 'teacher');
+        items = items.filter(
+          (f) => f.uploadedByRole === 'teacher' || f.visibility === 'teacher'
+        );
       }
     } else if (tab === 'students' || tab === 'my-students') {
-      items = items.filter((f) => f.uploadedByRole === 'student');
+      items = items.filter(
+        (f) => f.uploadedByRole === 'student' || f.visibility === 'student'
+      );
     }
 
     if (query.type && query.type !== 'all') {
@@ -333,7 +456,9 @@ export class LibraryService {
     }
 
     if (query.role && query.role !== 'all') {
-      items = items.filter((f) => f.uploadedByRole === query.role);
+      items = items.filter(
+        (f) => f.uploadedByRole === query.role || f.visibility === query.role
+      );
     }
 
     const search = query.search?.trim().toLowerCase();
@@ -343,7 +468,10 @@ export class LibraryService {
           f.name.toLowerCase().includes(search) ||
           f.uploadedByName.toLowerCase().includes(search) ||
           f.extension.toLowerCase().includes(search) ||
-          f.category.toLowerCase().includes(search)
+          f.category.toLowerCase().includes(search) ||
+          (f.status || '').toLowerCase().includes(search) ||
+          (f.visibility || '').toLowerCase().includes(search) ||
+          (f.storageKey || '').toLowerCase().includes(search)
       );
     }
 

@@ -512,6 +512,42 @@
   }
 }
 
+.ai-mode__msg-citations {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(251, 191, 36, 0.28);
+    background: rgba(251, 191, 36, 0.08);
+    font-size: 0.75rem;
+    color: rgba(253, 230, 138, 0.95);
+  }
+
+  .material-symbols-outlined {
+    font-size: 0.9rem;
+  }
+}
+
+.ai-mode__msg-content--pending {
+  color: var(--ai-muted);
+  font-style: italic;
+}
+
+.ai-mode__chat-loading {
+  margin: 0.75rem 0;
+  color: var(--ai-muted);
+  font-size: 0.875rem;
+}
+
 .ai-mode__chat-composer {
   position: sticky;
   bottom: 0;
@@ -807,6 +843,13 @@
   &:hover {
     transform: translateY(-1px) scale(1.03);
     filter: brightness(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    filter: none;
   }
 
   &:active {

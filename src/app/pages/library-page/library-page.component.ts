@@ -13,11 +13,13 @@ import { LIBRARY_ALLOWED_EXTENSIONS } from './data/library.mock';
 import { LibraryService } from './library.service';
 import {
   LibraryFileItem,
+  LibraryIngestStatus,
   LibraryStats,
   LibraryTabId,
   LibraryUsageFilter,
   LibraryUserRole,
   LibraryUserUsage,
+  LibraryVisibility,
 } from './models/library.models';
 
 type LibraryTab = { id: LibraryTabId; label: string };
@@ -65,6 +67,13 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   loadingFiles = true;
   uploading = false;
   uploadProgress = 0;
+  uploadVisibility: LibraryVisibility = 'private';
+  readonly visibilityOptions: { id: LibraryVisibility; label: string }[] = [
+    { id: 'private', label: 'Private' },
+    { id: 'teacher', label: 'Teachers' },
+    { id: 'student', label: 'Students' },
+    { id: 'organization', label: 'Organization' },
+  ];
   dragOver = false;
 
   previewOpen = false;
@@ -316,7 +325,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
               this.role,
               this.currentUserId,
               this.currentUserName,
-              this.isDemoMode
+              this.isDemoMode,
+              { visibility: this.uploadVisibility }
             )
             .pipe(takeUntil(this.destroy$))
             .subscribe({
@@ -484,6 +494,14 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   roleLabel(role: string): string {
     return this.commonService.transformText(role);
+  }
+
+  visibilityLabel(visibility?: LibraryVisibility): string {
+    return this.libraryService.visibilityLabel(visibility);
+  }
+
+  statusLabel(status?: LibraryIngestStatus): string {
+    return this.libraryService.statusLabel(status);
   }
 
   toggleUsageFilterPopup(): void {

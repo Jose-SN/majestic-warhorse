@@ -109,11 +109,15 @@
         <div class="ai-mode__chat">
           <div class="ai-mode__chat-scroll" #threadScroll>
             <div class="ai-mode__chat-title">{{ activeThread?.title }}</div>
-            @for (message of activeThread?.messages ?? []; track message.id) {
+            @if (loadingThread) {
+              <p class="ai-mode__chat-loading">Loading conversation…</p>
+            }
+            @for (message of visibleMessages; track message.id) {
               <article
                 class="ai-mode__msg"
                 [class.ai-mode__msg--user]="message.role === 'user'"
                 [class.ai-mode__msg--assistant]="message.role === 'assistant'"
+                [class.is-pending]="message.pending"
               >
                 <div class="ai-mode__msg-avatar" aria-hidden="true">
                   <span class="material-symbols-outlined">
@@ -125,13 +129,27 @@
                     <span>{{ message.role === 'user' ? 'You' : 'PetaxAI' }}</span>
                     <time [attr.datetime]="message.createdAt">{{ formatThreadTime(message.createdAt) }}</time>
                   </div>
-                  <div class="ai-mode__msg-content">{{ formatMessage(message.content) }}</div>
+                  @if (message.pending) {
+                    <div class="ai-mode__msg-content ai-mode__msg-content--pending">Thinking…</div>
+                  } @else {
+                    <div class="ai-mode__msg-content">{{ formatMessage(message.content) }}</div>
+                  }
                   @if (message.attachmentNames?.length) {
                     <ul class="ai-mode__msg-files">
                       @for (name of message.attachmentNames; track name) {
                         <li>
                           <span class="material-symbols-outlined" aria-hidden="true">attach_file</span>
                           {{ name }}
+                        </li>
+                      }
+                    </ul>
+                  }
+                  @if (message.citations?.length) {
+                    <ul class="ai-mode__msg-citations" aria-label="Citations">
+                      @for (citation of message.citations; track citation.file + (citation.page ?? '') + $index) {
+                        <li>
+                          <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
+                          {{ formatCitationLabel(citation) }}
                         </li>
                       }
                     </ul>
@@ -197,7 +215,11 @@
             </li>
           } @empty {
             <li class="ai-mode__history-empty">
-              No chats yet. Ask a question to start your history.
+              @if (loadingHistory) {
+                Loading chats…
+              } @else {
+                No chats yet. Ask a question to start your history.
+              }
             </li>
           }
         </ul>
@@ -299,9 +321,10 @@
           type="button"
           class="ai-mode__send"
           aria-label="Send prompt"
+          [disabled]="isSending"
           (click)="submitPrompt()"
         >
-          <span class="material-symbols-outlined">arrow_upward</span>
+          <span class="material-symbols-outlined">{{ isSending ? 'hourglass_top' : 'arrow_upward' }}</span>
         </button>
       </div>
     </div>

@@ -8,8 +8,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { UserModel } from '../login-page/model/user-model';
+import {
+  ChatApiService,
+  ChatCitation,
+  ChatConversation,
+  ChatMessage,
+} from 'src/app/services/api-service/chat-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
+import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import {
   AI_MODE_COMMANDS,
   AI_MODE_SUGGESTIONS,
@@ -18,12 +26,11 @@ import {
   AiModeSuggestion,
 } from './data/ai-mode.data';
 import {
-  AI_MODE_HISTORY_KEY,
+  AiChatCitation,
   AiChatMessage,
   AiChatThread,
-  buildPlaceholderReply,
   createMessageId,
-  createThreadId,
+  formatCitationLabel,
   titleFromPrompt,
 } from './data/ai-mode-history';
 
@@ -70,6 +77,7 @@ export class AiModeComponent implements OnInit, OnDestroy {
     { id: 'recent', label: 'Recently asked' },
     { id: 'starred', label: 'Starred' },
   ];
+  readonly formatCitationLabel = formatCitationLabel;
 
   query = '';
   commandSearch = '';
@@ -84,6 +92,9 @@ export class AiModeComponent implements OnInit, OnDestroy {
   recentIds: string[] = [];
   threads: AiChatThread[] = [];
   activeThreadId: string | null = null;
+  isSending = false;
+  loadingHistory = false;
+  loadingThread = false;
 
   isListening = false;
   speechSupported = false;
@@ -102,16 +113,22 @@ export class AiModeComponent implements OnInit, OnDestroy {
   private audioContext: AudioContext | null = null;
   private analyser: AnalyserNode | null = null;
   private levelRaf = 0;
+  private readonly destroy$ = new Subject<void>();
 
-  constructor(public commonService: CommonService) {}
+  constructor(
+    public commonService: CommonService,
+    private chatApi: ChatApiService
+  ) {}
 
   ngOnInit(): void {
     this.loginedUserInfo = this.commonService.loginedUserInfo ?? {};
     this.speechSupported = this.createRecognition() != null;
-    this.threads = this.loadHistory();
+    this.loadConversations();
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.stopListening(true);
   }
 
@@ -196,6 +213,10 @@ export class AiModeComponent implements OnInit, OnDestroy {
 
   get showHome(): boolean {
     return !this.activeThread;
+  }
+
+  get visibleMessages(): AiChatMessage[] {
+    return (this.activeThread?.messages ?? []).filter((msg) => msg.role !== 'system');
   }
 
   @HostListener('document:click', ['$event'])
@@ -298,6 +319,9 @@ export class AiModeComponent implements OnInit, OnDestroy {
 
   toggleHistory(): void {
     this.historyOpen = !this.historyOpen;
+    if (this.historyOpen && !this.threads.length && !this.loadingHistory) {
+      this.loadConversations();
+    }
   }
 
   startNewChat(): void {
@@ -311,16 +335,28 @@ export class AiModeComponent implements OnInit, OnDestroy {
     this.activeThreadId = threadId;
     this.query = '';
     this.attachments = [];
-    queueMicrotask(() => this.scrollThreadToBottom());
+    const thread = this.threads.find((item) => item.id === threadId);
+    if (thread && !thread.messagesLoaded) {
+      this.loadConversationDetail(threadId);
+    } else {
+      queueMicrotask(() => this.scrollThreadToBottom());
+    }
   }
 
   deleteThread(threadId: string, event: Event): void {
     event.stopPropagation();
-    this.threads = this.threads.filter((thread) => thread.id !== threadId);
-    if (this.activeThreadId === threadId) {
-      this.activeThreadId = null;
-    }
-    this.persistHistory();
+    this.chatApi
+      .deleteConversation(threadId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.threads = this.threads.filter((thread) => thread.id !== threadId);
+          if (this.activeThreadId === threadId) {
+            this.activeThreadId = null;
+          }
+        },
+        error: (err) => this.toastError(err, 'Could not delete conversation'),
+      });
   }
 
   threadPreview(thread: AiChatThread): string {
@@ -351,7 +387,7 @@ export class AiModeComponent implements OnInit, OnDestroy {
   submitPrompt(): void {
     const trimmed = this.query.trim();
     const fileNames = this.attachments.map((item) => item.name);
-    if (!trimmed && !fileNames.length) {
+    if ((!trimmed && !fileNames.length) || this.isSending) {
       this.focusInput();
       return;
     }
@@ -365,37 +401,85 @@ export class AiModeComponent implements OnInit, OnDestroy {
       createdAt: now,
       attachmentNames: fileNames.length ? fileNames : undefined,
     };
-    const assistantMessage: AiChatMessage = {
+    const pendingAssistant: AiChatMessage = {
       id: createMessageId(),
       role: 'assistant',
-      content: buildPlaceholderReply(promptText, fileNames),
+      content: '',
       createdAt: now,
+      pending: true,
     };
 
     let thread = this.activeThread;
     if (!thread) {
       thread = {
-        id: createThreadId(),
+        id: `pending-${Date.now()}`,
         title: titleFromPrompt(promptText),
         updatedAt: now,
         messages: [],
+        messagesLoaded: true,
       };
       this.threads = [thread, ...this.threads];
       this.activeThreadId = thread.id;
     }
 
-    thread.messages = [...thread.messages, userMessage, assistantMessage];
+    thread.messages = [...thread.messages, userMessage, pendingAssistant];
     thread.updatedAt = now;
     if (thread.messages.filter((msg) => msg.role === 'user').length === 1) {
       thread.title = titleFromPrompt(promptText);
     }
-
     this.threads = this.threads.map((item) => (item.id === thread!.id ? { ...thread! } : item));
-    this.persistHistory();
+
     this.query = '';
     this.attachments = [];
     this.historyOpen = true;
+    this.isSending = true;
     queueMicrotask(() => this.scrollThreadToBottom());
+
+    const conversationId = thread.id.startsWith('pending-') ? undefined : thread.id;
+    this.chatApi
+      .ask({
+        question: promptText,
+        conversation_id: conversationId,
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (result) => {
+          this.isSending = false;
+          const assistantMessage: AiChatMessage = result.message
+            ? this.mapApiMessage(result.message)
+            : {
+                id: createMessageId(),
+                role: 'assistant',
+                content: result.answer || 'No answer returned.',
+                createdAt: new Date().toISOString(),
+                citations: this.mapCitations(result.citations),
+              };
+
+          const previousId = thread!.id;
+          const nextId = result.conversation_id || previousId;
+          thread!.id = nextId;
+          thread!.messagesLoaded = true;
+          thread!.updatedAt = assistantMessage.createdAt || new Date().toISOString();
+          thread!.messages = thread!.messages
+            .filter((msg) => !msg.pending)
+            .concat(assistantMessage);
+          if (!thread!.title || thread!.title === 'New chat') {
+            thread!.title = titleFromPrompt(promptText);
+          }
+
+          this.threads = this.threads.map((item) =>
+            item.id === previousId || item.id === nextId ? { ...thread! } : item
+          );
+          this.activeThreadId = nextId;
+          queueMicrotask(() => this.scrollThreadToBottom());
+        },
+        error: (err) => {
+          this.isSending = false;
+          thread!.messages = thread!.messages.filter((msg) => !msg.pending);
+          this.threads = this.threads.map((item) => (item.id === thread!.id ? { ...thread! } : item));
+          this.toastError(err, 'Could not get an answer');
+        },
+      });
   }
 
   onPromptKeydown(event: KeyboardEvent): void {
@@ -416,6 +500,120 @@ export class AiModeComponent implements OnInit, OnDestroy {
       return;
     }
     await this.startListening();
+  }
+
+  private loadConversations(): void {
+    this.loadingHistory = true;
+    this.chatApi
+      .listConversations()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (rows) => {
+          this.loadingHistory = false;
+          const mapped = rows.map((row) => this.mapConversationSummary(row));
+          const active = this.activeThread;
+          if (active?.id.startsWith('pending-')) {
+            this.threads = [active, ...mapped.filter((item) => item.id !== active.id)];
+          } else {
+            this.threads = mapped.map((item) => {
+              const existing = this.threads.find((t) => t.id === item.id);
+              return existing?.messagesLoaded
+                ? { ...item, messages: existing.messages, messagesLoaded: true }
+                : item;
+            });
+          }
+        },
+        error: (err) => {
+          this.loadingHistory = false;
+          this.toastError(err, 'Could not load chat history');
+        },
+      });
+  }
+
+  private loadConversationDetail(threadId: string): void {
+    this.loadingThread = true;
+    this.chatApi
+      .getConversation(threadId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (detail) => {
+          this.loadingThread = false;
+          const messages = detail.messages
+            .map((msg) => this.mapApiMessage(msg))
+            .filter((msg) => msg.role !== 'system');
+          const updatedAt =
+            detail.conversation.updated_at ||
+            detail.conversation.created_at ||
+            messages[messages.length - 1]?.createdAt ||
+            new Date().toISOString();
+          const title =
+            detail.conversation.title ||
+            titleFromPrompt(messages.find((m) => m.role === 'user')?.content || 'Conversation');
+
+          this.threads = this.threads.map((thread) =>
+            thread.id === threadId
+              ? {
+                  ...thread,
+                  title,
+                  updatedAt,
+                  messages,
+                  messagesLoaded: true,
+                }
+              : thread
+          );
+          queueMicrotask(() => this.scrollThreadToBottom());
+        },
+        error: (err) => {
+          this.loadingThread = false;
+          this.toastError(err, 'Could not load conversation');
+        },
+      });
+  }
+
+  private mapConversationSummary(row: ChatConversation): AiChatThread {
+    const updatedAt = row.updated_at || row.created_at || new Date().toISOString();
+    return {
+      id: row.id,
+      title: row.title || 'Conversation',
+      updatedAt,
+      messages: [],
+      messagesLoaded: false,
+    };
+  }
+
+  private mapApiMessage(msg: ChatMessage): AiChatMessage {
+    return {
+      id: msg.id || createMessageId(),
+      role:
+        msg.role === 'user' || msg.role === 'assistant' || msg.role === 'system'
+          ? msg.role
+          : 'assistant',
+      content: msg.content || '',
+      createdAt: msg.created_at || new Date().toISOString(),
+      citations: this.mapCitations(msg.citations),
+    };
+  }
+
+  private mapCitations(citations?: ChatCitation[] | null): AiChatCitation[] | undefined {
+    if (!Array.isArray(citations) || !citations.length) {
+      return undefined;
+    }
+    return citations.map((c) => ({
+      file: c.file,
+      page: c.page,
+      fileId: c.file_id,
+    }));
+  }
+
+  private toastError(err: unknown, fallback: string): void {
+    const message =
+      (err as { message?: string; msg?: string })?.message ||
+      (err as { msg?: string })?.msg ||
+      fallback;
+    this.commonService.openToaster({
+      message: typeof message === 'string' ? message : fallback,
+      messageType: TOASTER_MESSAGE_TYPE.ERROR,
+    });
   }
 
   private async startListening(): Promise<void> {
@@ -578,27 +776,6 @@ export class AiModeComponent implements OnInit, OnDestroy {
       return `${(bytes / 1024).toFixed(1)} KB`;
     }
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  }
-
-  private loadHistory(): AiChatThread[] {
-    try {
-      const raw = localStorage.getItem(AI_MODE_HISTORY_KEY);
-      if (!raw) {
-        return [];
-      }
-      const parsed = JSON.parse(raw) as AiChatThread[];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  }
-
-  private persistHistory(): void {
-    try {
-      localStorage.setItem(AI_MODE_HISTORY_KEY, JSON.stringify(this.threads.slice(0, 50)));
-    } catch {
-      // ignore quota / private mode
-    }
   }
 
   private scrollThreadToBottom(): void {
