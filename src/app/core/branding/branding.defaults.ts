@@ -34,7 +34,7 @@ export const DEFAULT_THEME_COLORS: BrandingThemeColors = {
 };
 
 export const DEFAULT_APP_BRANDING: AppBranding = {
-  appName: 'Majestic Warhorse',
+  appName: 'PetaxAI Learning',
   tagline: 'Learning platform for communities, schools, and instruction',
   logoUrl: DEFAULT_BRAND_LOGO,
   faviconUrl: DEFAULT_BRAND_FAVICON,

@@ -93,7 +93,7 @@ spacing:
 
 ## Brand & Style
 
-The design system evolves into a high-energy, technical aesthetic that bridges the gap between raw power and digital precision. Inspired by the "Majestic Warhorse," the brand personality is aggressive yet controlled, combining the kinetic energy of fire and motion with the disciplined structure of high-end software.
+The design system evolves into a high-energy, technical aesthetic that bridges the gap between raw power and digital precision. Inspired by the "PetaxAI Learning," the brand personality is aggressive yet controlled, combining the kinetic energy of fire and motion with the disciplined structure of high-end software.
 
 The visual style is **Cyber-Minimalism with Glassmorphism**. We utilize a deep, near-black foundation to allow the vibrant gradients of the brand to act as light sources within the UI. Elements feel like illuminated glass panels floating in a digital void. The emotional response is one of "High-Octane Professionalism"—it feels fast, sophisticated, and technologically superior.
 
@@ -104,7 +104,7 @@ Key stylistic pillars include:
 
 ## Colors
 
-The palette is extracted directly from the "Majestic Warhorse" spectrum. We transition from the cool cyans of previous iterations to a "Heat-Map" logic where warmth indicates activity and importance.
+The palette is extracted directly from the "PetaxAI Learning" spectrum. We transition from the cool cyans of previous iterations to a "Heat-Map" logic where warmth indicates activity and importance.
 
 - **Primary (Vivid Orange):** Used for primary actions, critical alerts, and active indicators. It represents the "Fire" of the horse.
 - **Secondary (Deep Pink):** Used for secondary interactions, iconography, and mid-level accents.

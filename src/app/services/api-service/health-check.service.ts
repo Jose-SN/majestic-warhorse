@@ -63,7 +63,7 @@ export class HealthCheckService {
   }
 
   /**
-   * Run health checks for IAM (`iamApi`) and Majestic Warhorse (`majesticWarhorseApi`).
+   * Run health checks for IAM (`iamApi`) and PetaxAI Learning (`majesticWarhorseApi`).
    * Without `force`, skips if an initial check already ran or one is in flight.
    */
   checkAll(
@@ -124,7 +124,7 @@ export class HealthCheckService {
         `${iamBase}/health`,
         `${iamBase}/application/get`,
       ]),
-      this.checkService('majestic', 'Majestic Warhorse API', majesticBase, [
+      this.checkService('majestic', 'PetaxAI Learning API', majesticBase, [
         `${majesticBase}/health`,
         majesticBase,
       ]),
@@ -208,7 +208,7 @@ export class HealthCheckService {
     this.commonService.openToaster({
       message:
         downLabels.length === 2
-          ? 'IAM and Majestic Warhorse services are unavailable right now.'
+          ? 'IAM and PetaxAI Learning services are unavailable right now.'
           : `${downLabels[0]} is unavailable right now.`,
       messageType: TOASTER_MESSAGE_TYPE.ERROR,
     });
@@ -239,7 +239,7 @@ export class HealthCheckService {
       iam: { key: 'iam', label: 'IAM service', status: 'unknown', url: iamBase },
       majestic: {
         key: 'majestic',
-        label: 'Majestic Warhorse API',
+        label: 'PetaxAI Learning API',
         status: 'unknown',
         url: majesticBase,
       },

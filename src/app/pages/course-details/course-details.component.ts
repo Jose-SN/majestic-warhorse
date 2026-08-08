@@ -714,7 +714,7 @@ export class CourseDetailsComponent {
   }
 
   get heroTitle(): string {
-    return (this.selectedCourseInfo?.courseTitle || 'MAJESTIC WARHORSE').toUpperCase();
+    return (this.selectedCourseInfo?.courseTitle || 'PetaxAI Learning').toUpperCase();
   }
 
   get courseAccess(): 'public' | 'private' {
@@ -745,7 +745,7 @@ export class CourseDetailsComponent {
       'topology',
       'rendering',
       'presented render',
-      'Majestic Warhorse',
+      'PetaxAI Learning',
       'sculpting process',
       'Warhorse',
     ];

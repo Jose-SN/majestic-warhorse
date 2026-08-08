@@ -47,7 +47,7 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   public showAssigningPopup: boolean = false;
   brandLogo = 'assets/images/logo-majestic-hourse.svg';
-  appName = 'Majestic Warhorse';
+  appName = 'PetaxAI Learning';
   readonly navRoutes = DASHBOARD_NAV_ROUTES;
   readonly navActiveSegments = DASHBOARD_NAV_ACTIVE_SEGMENTS;
 

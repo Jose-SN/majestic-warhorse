@@ -1,7 +1,7 @@
 {
-  "name": "Majestic Warhorse",
-  "short_name": "Majestic",
-  "description": "Making of Majestic Warhorse learning platform",
+  "name": "PetaxAI Learning",
+  "short_name": "PetaxAI",
+  "description": "PetaxAI Learning platform",
   "theme_color": "#131316",
   "background_color": "#131316",
   "display": "standalone",

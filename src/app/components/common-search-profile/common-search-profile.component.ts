@@ -38,7 +38,7 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
   public mobMenu: boolean = false;
   public loginedUserInfo: UserModel = {} as UserModel;
   brandLogo = 'assets/images/logo-majestic-hourse.svg';
-  appName = 'Majestic Warhorse';
+  appName = 'PetaxAI Learning';
   private destroy$ = new Subject<void>();
 
   @ViewChild('userMenu') userMenuRef?: ElementRef<HTMLElement>;
