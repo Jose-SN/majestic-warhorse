@@ -1,10 +1,18 @@
 import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { QuestionnaireApiService } from 'src/app/services/api-service/questionnaire-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { ConfirmationPopupService } from 'src/app/shared/confirmation-popup/confirmation-popup.service';
+import {
+  AnswerFeedbackPayload,
+  FeedbackGradeCode,
+  FeedbackItemPayload,
+  FeedbackItemStatus,
+  GRADE_TO_OUTCOME,
+  OUTCOME_TO_GRADE,
+} from 'src/app/pages/questionnaire/model/answer-feedback.model';
 
 export interface AnswerSubmission {
   id?: string;
@@ -13,8 +21,15 @@ export interface AnswerSubmission {
   userEmail?: string;
   submittedAt?: string;
   answers: { [key: string]: string | string[] };
+  /** question_id → answer row id from Logic DB */
+  answerIds?: { [questionId: string]: string };
   questions?: any[];
   feedback?: string;
+  outcome?: string;
+  gradeCode?: FeedbackGradeCode | string;
+  /** Latest published feedback version for optimistic locking */
+  feedbackVersion?: number;
+  feedbackId?: string;
   correctedAnswers?: { [key: string]: string | string[] };
 }
 
@@ -37,8 +52,9 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
   public feedbackMap: { [submissionId: string]: string } = {};
   public canAccess = false;
   public selectedSubmission: AnswerSubmission | null = null;
-  public selectedGrade: 'FAIL' | 'PASS' | 'DIST' = 'PASS';
-  readonly gradeOptions: Array<'FAIL' | 'PASS' | 'DIST'> = ['FAIL', 'PASS', 'DIST'];
+  public selectedGrade: FeedbackGradeCode = 'PASS';
+  public savingFeedback = false;
+  readonly gradeOptions: FeedbackGradeCode[] = ['FAIL', 'PASS', 'DIST'];
 
   get isContentLoading(): boolean {
     return this.loading || this.questionsLoading;
@@ -86,12 +102,18 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
     this.selectedSubmission = submission;
     const key = this.submissionKey(submission);
     const stored = submission.feedback ?? this.feedbackMap[key] ?? '';
-    const gradeMatch = stored.match(/^\s*\[(FAIL|PASS|DIST)\]\s*/i);
-    if (gradeMatch) {
-      this.selectedGrade = gradeMatch[1].toUpperCase() as 'FAIL' | 'PASS' | 'DIST';
+
+    if (submission.gradeCode && this.gradeOptions.includes(submission.gradeCode as FeedbackGradeCode)) {
+      this.selectedGrade = submission.gradeCode as FeedbackGradeCode;
+    } else if (submission.outcome && OUTCOME_TO_GRADE[submission.outcome as keyof typeof OUTCOME_TO_GRADE]) {
+      this.selectedGrade = OUTCOME_TO_GRADE[submission.outcome as keyof typeof OUTCOME_TO_GRADE]!;
     } else {
-      this.selectedGrade = 'PASS';
+      const gradeMatch = stored.match(/^\s*\[(FAIL|PASS|DIST)\]\s*/i);
+      this.selectedGrade = gradeMatch
+        ? (gradeMatch[1].toUpperCase() as FeedbackGradeCode)
+        : 'PASS';
     }
+
     this.feedbackMap[key] = stored.replace(/^\s*\[(FAIL|PASS|DIST)\]\s*/i, '');
   }
 
@@ -103,7 +125,7 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
     if (!submission) {
       return '';
     }
-    return String(submission.id ?? submission.userId ?? '');
+    return String(submission.userId ?? submission.id ?? '');
   }
 
   shortCadetId(submission: AnswerSubmission): string {
@@ -228,20 +250,48 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
   private transformAnswerRowsToSubmissions(rows: any[]): AnswerSubmission[] {
     const byUser = new Map<
       string,
-      { answers: { [questionId: string]: string | string[] }; submittedAt?: string; feedback?: string }
+      {
+        answers: { [questionId: string]: string | string[] };
+        answerIds: { [questionId: string]: string };
+        submittedAt?: string;
+        feedback?: string;
+        outcome?: string;
+        gradeCode?: string;
+        submissionId?: string;
+        feedbackVersion?: number;
+        feedbackId?: string;
+      }
     >();
+
     rows.forEach((row: any) => {
       const userId = String(row.submitted_by ?? row.submittedBy ?? '');
       const qId = String(row.question_id ?? row.questionId ?? '');
       const answerStr = row.answer ?? '';
+      const answerId = String(row.id ?? row.answer_id ?? row.answerId ?? '');
       if (!userId || !qId) return;
+
       if (!byUser.has(userId)) {
         byUser.set(userId, {
           answers: {},
+          answerIds: {},
           submittedAt: row.submitted_at ?? row.submittedAt ?? row.creation_date ?? row.created_at,
-          feedback: row.feedback,
+          feedback:
+            row.review?.summary ??
+            row.feedback_summary ??
+            row.feedback,
+          outcome: row.review?.outcome ?? row.outcome,
+          gradeCode: row.review?.grade_code ?? row.grade_code,
+          submissionId: row.submission_id ?? row.submissionId,
+          feedbackVersion:
+            typeof row.feedback_version === 'number'
+              ? row.feedback_version
+              : typeof row.version === 'number'
+                ? row.version
+                : undefined,
+          feedbackId: row.feedback_id ?? row.feedbackId,
         });
       }
+
       const entry = byUser.get(userId)!;
       try {
         const parsed = JSON.parse(answerStr);
@@ -249,22 +299,39 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
       } catch {
         entry.answers[qId] = answerStr;
       }
-      if (!entry.feedback && row.feedback) {
-        entry.feedback = row.feedback;
+      if (answerId) {
+        entry.answerIds[qId] = answerId;
+      }
+      if (!entry.feedback && (row.review?.summary || row.feedback)) {
+        entry.feedback = row.review?.summary ?? row.feedback;
+      }
+      if (!entry.outcome && (row.review?.outcome || row.outcome)) {
+        entry.outcome = row.review?.outcome ?? row.outcome;
+      }
+      if (!entry.gradeCode && (row.review?.grade_code || row.grade_code)) {
+        entry.gradeCode = row.review?.grade_code ?? row.grade_code;
+      }
+      if (!entry.submissionId && (row.submission_id || row.submissionId)) {
+        entry.submissionId = row.submission_id ?? row.submissionId;
       }
     });
+
     const allUsers = this.commonService.allUsersList ?? [];
     return Array.from(byUser.entries()).map(([userId, entry]) => {
       const user = allUsers.find((u) => (u.id ?? '') === userId);
-      const userName = this.getUserDisplayName(user);
-      const userEmail = this.getUserEmail(user);
       return {
+        id: entry.submissionId || userId,
         userId,
-        userName,
-        userEmail,
+        userName: this.getUserDisplayName(user),
+        userEmail: this.getUserEmail(user),
         answers: entry.answers,
+        answerIds: entry.answerIds,
         submittedAt: entry.submittedAt,
         feedback: entry.feedback,
+        outcome: entry.outcome,
+        gradeCode: entry.gradeCode,
+        feedbackVersion: entry.feedbackVersion,
+        feedbackId: entry.feedbackId,
       };
     });
   }
@@ -288,24 +355,170 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   saveFeedback(submission: AnswerSubmission): void {
-    const id = this.submissionKey(submission);
-    const note = (this.feedbackMap[id] ?? '').replace(/^\s*\[(FAIL|PASS|DIST)\]\s*/i, '').trim();
-    const feedback = `[${this.selectedGrade}] ${note}`.trim();
+    const studentUserId = String(submission.userId || '').trim();
+    if (!studentUserId) {
+      this.confirmationPopupService.showAlert(
+        'Missing student id for this submission.',
+        'Error'
+      );
+      return;
+    }
 
+    const courseId = this.courseId?.trim();
+    if (!courseId) {
+      this.confirmationPopupService.showAlert('Course id is required.', 'Error');
+      return;
+    }
+
+    const key = this.submissionKey(submission);
+    const summary = (this.feedbackMap[key] ?? '')
+      .replace(/^\s*\[(FAIL|PASS|DIST)\]\s*/i, '')
+      .trim();
+    if (!summary) {
+      this.confirmationPopupService.showAlert(
+        'Please enter feedback summary before saving.',
+        'Error'
+      );
+      return;
+    }
+
+    const organizationId =
+      sessionStorage.getItem('organization_id') ||
+      this.commonService.loginedUserInfo?.organization_id ||
+      '';
+
+    const payload = this.buildCorporateFeedbackPayload(submission, {
+      organizationId: organizationId || undefined,
+      courseId,
+      summary,
+      grade: this.selectedGrade,
+    });
+
+    this.savingFeedback = true;
     this.questionnaireApiService
-      .updateAnswerFeedback(id, { feedback, correctedAnswers: submission.answers })
+      .publishAnswerFeedback(studentUserId, payload)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: () => {
-          submission.feedback = feedback;
-          this.feedbackMap[id] = note;
-          this.confirmationPopupService.showAlert('Feedback saved successfully.', 'Success');
+        next: (res) => {
+          this.savingFeedback = false;
+          const review = res?.data?.review;
+          submission.feedback = review?.summary || summary;
+          submission.outcome = review?.outcome || GRADE_TO_OUTCOME[this.selectedGrade];
+          submission.gradeCode = review?.grade_code || this.selectedGrade;
+          if (res?.data?.submission_id) {
+            submission.id = res.data.submission_id;
+          }
+          if (typeof res?.data?.version === 'number') {
+            submission.feedbackVersion = res.data.version;
+          }
+          if (res?.data?.feedback_id) {
+            submission.feedbackId = res.data.feedback_id;
+          }
+          this.feedbackMap[key] = submission.feedback;
+
+          const emailed = res?.data?.notification?.emailed === true;
+          this.confirmationPopupService.showAlert(
+            emailed
+              ? 'Feedback published and student notified by email.'
+              : 'Feedback published successfully.',
+            'Success'
+          );
         },
         error: (err) => {
+          this.savingFeedback = false;
           console.error('Error saving feedback:', err);
-          this.confirmationPopupService.showAlert('Error saving feedback. Please try again.', 'Error');
+          const status = err?.status ?? err?.statusCode;
+          const message =
+            status === 409
+              ? 'Feedback was updated elsewhere. Refresh and try again.'
+              : err?.message ||
+                err?.msg ||
+                (Array.isArray(err?.errors) ? err.errors[0]?.msg : null) ||
+                'Error saving feedback. Please try again.';
+          this.confirmationPopupService.showAlert(String(message), 'Error');
         },
       });
+  }
+
+  private buildCorporateFeedbackPayload(
+    submission: AnswerSubmission,
+    opts: {
+      organizationId?: string;
+      courseId: string;
+      summary: string;
+      grade: FeedbackGradeCode;
+    }
+  ): AnswerFeedbackPayload {
+    const outcome = GRADE_TO_OUTCOME[opts.grade];
+    const itemFeedback: FeedbackItemPayload[] = Object.entries(submission.answers || {}).map(
+      ([questionId, value]) => {
+        const question = this.getQuestionById(questionId);
+        const type = String(question?.type || '').toLowerCase();
+        const correctedType =
+          type === 'checkbox' || Array.isArray(value)
+            ? 'multi_choice'
+            : type === 'radio' || type === 'dropdown'
+              ? 'single_choice'
+              : 'text';
+
+        return {
+          question_id: questionId,
+          answer_id: submission.answerIds?.[questionId] || null,
+          status: this.defaultItemStatus(opts.grade),
+          teacher_comment: opts.summary,
+          corrected_answer: {
+            type: correctedType,
+            value,
+          },
+          tags: [],
+        };
+      }
+    );
+
+    const payload: AnswerFeedbackPayload = {
+      course_id: opts.courseId,
+      submission_id:
+        submission.id && submission.id !== submission.userId ? submission.id : null,
+      assessment: {
+        attempt_number: 1,
+        submitted_at: submission.submittedAt,
+        locale: navigator.language || 'en-GB',
+      },
+      review: {
+        outcome,
+        grade_code: opts.grade,
+        summary: opts.summary,
+        visibility: 'student_visible',
+        requires_resubmission: opts.grade === 'FAIL',
+        resubmission_due_at: null,
+      },
+      item_feedback: itemFeedback,
+      notifications: {
+        notify_student: true,
+        channels: ['in_app', 'email'],
+      },
+      metadata: {
+        source: 'web.teacher_review',
+        client_request_id: `req-${Date.now().toString(36)}`,
+        reviewed_at: new Date().toISOString(),
+        ...(typeof submission.feedbackVersion === 'number'
+          ? { expected_version: submission.feedbackVersion }
+          : {}),
+      },
+    };
+
+    // Optional — JWT is source of truth; send only when known (must match JWT org).
+    if (opts.organizationId) {
+      payload.organization_id = opts.organizationId;
+    }
+
+    return payload;
+  }
+
+  private defaultItemStatus(grade: FeedbackGradeCode): FeedbackItemStatus {
+    if (grade === 'FAIL') return 'incorrect';
+    if (grade === 'DIST') return 'correct';
+    return 'partial';
   }
 
   ngOnDestroy(): void {

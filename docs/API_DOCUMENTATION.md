@@ -41,6 +41,8 @@ Complete reference for the **course backend** HTTP API (rosters, RBAC, assignmen
 | [Dashboard](#dashboard--dashboard) | `/dashboard` |
 | [Questions](#questions--question) | `/question` |
 | [Answers](#answers--answer) | `/answer` |
+| [Publish teacher feedback](#publish-teacher-feedback--answers) | `/answers` |
+| [Chat (AI Mode)](#chat-ai-mode--chat) | `/chat` |
 | [Favorites](#favorites--favorites) | `/favorites` |
 | [Teachers roster](#teachers-roster--teachers) | `/teachers` |
 | [Students roster](#students-roster--students) | `/students` |
@@ -989,6 +991,136 @@ PostgreSQL-backed. Supports single-choice (string) and checkbox (JSON string) an
   "message": "Successfully deleted"
 }
 ```
+
+---
+
+## Publish teacher feedback — `/answers`
+
+Corporate assessment feedback for a learner. Path `studentUserId` is the **IAM user id**. JWT required (`teacher` or `organization`). Prefer org/user from JWT; never trust body org alone.
+
+Schema: `scripts/create_answer_feedback_table.sql` — one `answer_feedback` row with JSONB `review` / `item_feedback` (and optional `assessment`, `notifications`, `metadata`).
+
+### Publish feedback
+`PUT /answers/:studentUserId/feedback`
+
+**Auth:** `Authorization: Bearer` — role must be `teacher` or `organization`.
+
+**Request body:**
+```json
+{
+  "organization_id": "org-uuid",
+  "course_id": "course-uuid",
+  "submission_id": null,
+  "assessment": {
+    "attempt_number": 1,
+    "submitted_at": "2026-08-08T14:22:10.000Z",
+    "locale": "en-GB"
+  },
+  "review": {
+    "outcome": "pass",
+    "grade_code": "PASS",
+    "score": { "earned": 18, "max": 20, "percent": 90, "scale": "points" },
+    "summary": "Strong overall performance.",
+    "private_notes": "Optional teacher-only note",
+    "visibility": "student_visible",
+    "requires_resubmission": false,
+    "resubmission_due_at": null
+  },
+  "item_feedback": [
+    {
+      "question_id": "question-uuid",
+      "answer_id": "answer-uuid",
+      "status": "correct",
+      "earned_score": 5,
+      "max_score": 5,
+      "teacher_comment": "Good work.",
+      "corrected_answer": { "type": "single_choice", "value": "Option A" },
+      "tags": []
+    }
+  ],
+  "notifications": {
+    "notify_student": true,
+    "channels": ["in_app"]
+  },
+  "metadata": {
+    "source": "web.teacher_review",
+    "client_request_id": "req-abc123",
+    "reviewed_at": "2026-08-08T15:49:56.781Z",
+    "expected_version": 1
+  }
+}
+```
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| `organization_id` | No* | Prefer JWT; if sent must match JWT org |
+| `course_id` | Yes | Course scope; must belong to JWT org |
+| `submission_id` | No | Optional; omit/`null` until attempts exist — scopes one feedback stream per student+course |
+| `review.outcome` | Yes | `pass` \| `fail` \| `distinction` \| `incomplete` \| `needs_resubmission` |
+| `review.summary` | Yes | Student-facing overall comment |
+| `review.visibility` | Yes | `student_visible` \| `internal_only` |
+| `item_feedback[]` | Yes | Array (one entry per answered question when available) |
+| `metadata.expected_version` | No | Optimistic lock; mismatch → `409` |
+
+`reviewed_by.role` / `user_id` / `display_name` come from JWT (not the body).
+
+When `notifications.notify_student` is `true` and visibility is `student_visible`, Logic looks up the learner email in IAM and sends Gmail. Email failure is reported in `data.notification` but does **not** roll back publish.
+
+**Response `200`:**
+```json
+{
+  "success": true,
+  "message": "Feedback published",
+  "data": {
+    "feedback_id": "uuid",
+    "student_user_id": "uuid",
+    "organization_id": "uuid",
+    "course_id": "uuid",
+    "submission_id": null,
+    "status": "published",
+    "review": {},
+    "item_feedback_count": 3,
+    "reviewed_by": {
+      "user_id": "uuid",
+      "role": "teacher",
+      "display_name": "Sara Khan"
+    },
+    "published_at": "2026-08-08T15:50:01.120Z",
+    "version": 1,
+    "notification": { "emailed": true }
+  }
+}
+```
+
+**Errors:** `400` validation, `401` auth, `403` not allowed / org mismatch, `404` course or student answers missing, `409` version conflict.
+
+---
+
+## Chat (AI Mode) — `/chat`
+
+JWT required on all routes. Org/user from JWT. Proxies questions to the FastAPI AI service when `AI_ENABLED=true`. Details: [ai-architecture/AI-MVP-SHARED-CONTRACT.md](./ai-architecture/AI-MVP-SHARED-CONTRACT.md).
+
+### Ask
+`POST /chat`
+
+**Body:**
+```json
+{
+  "question": "What is covered in module 1?",
+  "conversation_id": "optional-uuid"
+}
+```
+
+**Response `200`:** Assistant message, `citations`, and conversation/message ids.
+
+### List conversations
+`GET /chat/conversations`
+
+### Get conversation (+ messages)
+`GET /chat/conversations/:id`
+
+### Delete conversation
+`DELETE /chat/conversations/:id`
 
 ---
 

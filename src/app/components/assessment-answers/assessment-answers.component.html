@@ -203,11 +203,11 @@
             <button
               type="button"
               class="aa-btn aa-btn--primary"
-              [disabled]="!selectedSubmission"
+              [disabled]="!selectedSubmission || savingFeedback"
               (click)="selectedSubmission && saveFeedback(selectedSubmission)"
             >
               <span class="material-symbols-outlined" aria-hidden="true">send_and_archive</span>
-              Submit Review
+              {{ savingFeedback ? 'Publishing…' : 'Submit Review' }}
             </button>
             <p class="aa-review__hint">
               @if (selectedSubmission) {

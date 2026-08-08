@@ -568,7 +568,7 @@ Other scripts: `npm run build`, `npm test`, `npm run lint`, `npm run prettier`.
 | UnderConstruction catch-all | **Scaffold** | Image placeholder for unknown dashboard paths |
 | Spinner interceptor | **Scaffolded but unused** | Commented out in `app.module.ts` L42 |
 | Assign/Invite sidenav | **Dead nav** | Routes exist; links commented at `dashboard-sidepanel.component.html` L160–201 |
-| Teacher answer feedback IDs | **Partial** | Feedback PUT may lack real answer-row ids |
+| Teacher answer feedback IDs | **Working** | Corporate `PUT /answers/{studentUserId}/feedback` with structured review + item_feedback |
 | Course upload Promise on validation fail | **Fragile** | May not resolve |
 | Demo mode | **Partial mock** | Replaces view models; does not stub HTTP globally |
 | Auth guard | **Partial** | Flag-only; no token expiry check |
@@ -643,7 +643,7 @@ Bases:
 | DELETE | `question/delete/{questionId}` | `questionnaire-api.service.ts` |
 | POST | `answer/save` | `questionnaire-api.service.ts` |
 | GET | `answer/get` | `questionnaire-api.service.ts` |
-| PUT | `question/answers/{submissionId}/feedback` | `questionnaire-api.service.ts` |
+| PUT | `answers/{studentUserId}/feedback` | `questionnaire-api.service.ts` |
 | GET | `favorites/get?userId=` | `favorites-api.service.ts` |
 | POST | `favorites/save` | `favorites-api.service.ts` |
 | DELETE | `favorites/delete/{favoriteId}` | `favorites-api.service.ts` |
@@ -683,7 +683,7 @@ Bases:
 2. What is the IAM JWT TTL, and is a refresh endpoint planned (none exists in this client)?
 3. Is `SpinnerInterceptor` intentionally disabled, or an accidental leftover?
 4. Should `/dashboard/assign-teacher` and invite routes be linked in the sidenav again, or removed?
-5. Answer feedback: what identifier does `PUT question/answers/{id}/feedback` expect (submission id vs user id)?
+5. Answer feedback: `PUT /answers/{studentUserId}/feedback` uses student IAM user id in the path; `course_id` + optional `submission_id` are in the corporate body.
 6. Are password rules on IAM identical to `form-validators.ts`?
 7. White-label: will branding be per `organization_id`, per `client_id`/application, or both?
 8. Demo mode: should it short-circuit HTTP, or remain presentation-only?

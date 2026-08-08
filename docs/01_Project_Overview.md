@@ -323,7 +323,7 @@ sequenceDiagram
   S->>App: Open courses + submit answers
   App->>MW: course/student/*, answer/save
   T->>App: Review + feedback
-  App->>MW: question/answers/{id}/feedback
+  App->>MW: answers/{studentUserId}/feedback
 ```
 
 ---

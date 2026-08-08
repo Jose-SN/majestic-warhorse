@@ -4,6 +4,10 @@ import { catchError, map, Observable } from 'rxjs';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { environment } from 'src/environments/environment';
 import { IQuestion, IQuestionCreate } from 'src/app/pages/questionnaire/model/question.model';
+import {
+  AnswerFeedbackApiResponse,
+  AnswerFeedbackPayload,
+} from 'src/app/pages/questionnaire/model/answer-feedback.model';
 
 @Injectable({
   providedIn: 'root',
@@ -101,10 +105,16 @@ export class QuestionnaireApiService {
       );
   }
 
-  /** Update feedback or corrected answer for a submission (teachers/admins) */
-  updateAnswerFeedback(submissionId: string, payload: { feedback?: string; correctedAnswers?: Record<string, unknown> }) {
+  /**
+   * Publish corporate teacher feedback for a student's submission.
+   * PUT /answers/:studentUserId/feedback
+   */
+  publishAnswerFeedback(studentUserId: string, payload: AnswerFeedbackPayload) {
     return this.http
-      .put<any>(`${this._apiUrl}question/answers/${submissionId}/feedback`, payload)
+      .put<AnswerFeedbackApiResponse>(
+        `${this._apiUrl}answers/${encodeURIComponent(studentUserId)}/feedback`,
+        payload
+      )
       .pipe(catchError(this.commonService.handleError));
   }
 }
