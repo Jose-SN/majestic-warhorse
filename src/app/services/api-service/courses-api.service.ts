@@ -90,6 +90,12 @@ export class CoursesApiService {
       .pipe(catchError(this.commonService.handleError));
   }
 
+  deleteCourse(courseId: string) {
+    return this.http
+      .delete<any>(`${this._apiUrl}course/delete/${encodeURIComponent(courseId)}`)
+      .pipe(catchError(this.commonService.handleError));
+  }
+
   fetchUploadedCourses(params: CourseListParams = {}) {
     return lastValueFrom(this.getCourses(params));
   }

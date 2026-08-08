@@ -125,6 +125,39 @@ export class CourseUploadService {
       });
     }
   }
+
+  deleteCourse(courseId: string, _destroy$: Subject<void>): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.courseApi
+        .deleteCourse(courseId)
+        .pipe(takeUntil(_destroy$))
+        .subscribe({
+          next: (res: { success?: boolean; message?: string }) => {
+            if (res?.success !== false) {
+              this.commonService.openToaster({
+                message: res?.message || 'Course deleted successfully',
+                messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+              });
+              resolve(true);
+              return;
+            }
+            this.commonService.openToaster({
+              message: 'Error while deleting the course',
+              messageType: TOASTER_MESSAGE_TYPE.ERROR,
+            });
+            resolve(false);
+          },
+          error: () => {
+            this.commonService.openToaster({
+              message: 'Error while deleting the course',
+              messageType: TOASTER_MESSAGE_TYPE.ERROR,
+            });
+            resolve(false);
+          },
+        });
+    });
+  }
+
   public onFileUpload(
     _destroy$: Subject<void>,
     selectedFile: File,

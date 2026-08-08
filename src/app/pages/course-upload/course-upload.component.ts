@@ -44,6 +44,7 @@ export class CourseUploadComponent implements OnChanges, OnInit, OnDestroy {
   public rightPaneTab: RightPaneTab = 'preview';
   public coverImageUpload = { completedPercentage: '' };
   public isPublishing = false;
+  public isDeleting = false;
   @Input() courseData: ICourseList | null = null;
   @Output() courseSaved = new EventEmitter<void>();
 
@@ -56,6 +57,10 @@ export class CourseUploadComponent implements OnChanges, OnInit, OnDestroy {
   ) {
     this.mainCourseInfo = { ...this.courseUploadService.MAIN_COURSE_INFO };
     this.addNewChapter();
+  }
+
+  get isEditMode(): boolean {
+    return !!this.mainCourseInfo?.id;
   }
 
   async ngOnInit(): Promise<void> {
@@ -256,7 +261,7 @@ export class CourseUploadComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   async saveButtonClick() {
-    if (this.isPublishing) {
+    if (this.isPublishing || this.isDeleting) {
       return;
     }
 
@@ -279,6 +284,38 @@ export class CourseUploadComponent implements OnChanges, OnInit, OnDestroy {
       }
     } finally {
       this.isPublishing = false;
+      void this.spinner.hide();
+    }
+  }
+
+  async deleteCourseClick(): Promise<void> {
+    if (!this.isEditMode || this.isDeleting || this.isPublishing) {
+      return;
+    }
+
+    const title = this.mainCourseInfo.courseTitle?.trim() || 'this course';
+    const confirmed = window.confirm(
+      `Delete “${title}”? This permanently removes the course and cannot be undone.`
+    );
+    if (!confirmed || !this.mainCourseInfo.id) {
+      return;
+    }
+
+    this.isDeleting = true;
+    void this.spinner.show();
+
+    try {
+      const deleted = await this.courseUploadService.deleteCourse(
+        this.mainCourseInfo.id,
+        this.destroy$
+      );
+      if (deleted) {
+        this.clearPage();
+        this.courseSaved.emit();
+        void this.router.navigate([DASHBOARD_NAV_ROUTES.courses]);
+      }
+    } finally {
+      this.isDeleting = false;
       void this.spinner.hide();
     }
   }

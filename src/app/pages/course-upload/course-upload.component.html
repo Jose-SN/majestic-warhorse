@@ -9,13 +9,19 @@
             Back to Courses
           </button>
           <div class="course-forge-editor__eyebrow">
-            <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
-            Creator Mode
+            <span class="material-symbols-outlined" aria-hidden="true">{{ isEditMode ? 'edit' : 'edit_note' }}</span>
+            {{ isEditMode ? 'Edit Mode' : 'Creator Mode' }}
           </div>
         </div>
-        <h1 class="course-forge-editor__title">Course Architecture</h1>
+        <h1 class="course-forge-editor__title">
+          {{ isEditMode ? 'Edit Course' : 'Course Architecture' }}
+        </h1>
         <p class="course-forge-editor__subtitle">
-          Define the narrative and technical depth of your next masterclass. Preview your changes in real-time on the right.
+          @if (isEditMode) {
+            Update this course’s content, then save — or delete it if it is no longer needed.
+          } @else {
+            Define the narrative and technical depth of your next masterclass. Preview your changes in real-time on the right.
+          }
         </p>
       </header>
 
@@ -418,20 +424,42 @@
           <span class="preview-sync__dot" aria-hidden="true"></span>
           <span>Live Sync Active</span>
         </div>
-        <button
-          type="button"
-          class="publish-btn"
-          [disabled]="!isFormValid() || isPublishing"
-          [attr.aria-busy]="isPublishing"
-          (click)="saveButtonClick()">
-          @if (isPublishing) {
-            <span class="publish-btn__spinner" aria-hidden="true"></span>
-            Publishing...
-          } @else {
-            Publish to Academy
-            <span class="material-symbols-outlined" aria-hidden="true">rocket_launch</span>
+        <div class="preview-pane__actions">
+          @if (isEditMode) {
+            <button
+              type="button"
+              class="delete-course-btn"
+              [disabled]="isDeleting || isPublishing"
+              [attr.aria-busy]="isDeleting"
+              (click)="deleteCourseClick()"
+            >
+              @if (isDeleting) {
+                <span class="delete-course-btn__spinner" aria-hidden="true"></span>
+                Deleting...
+              } @else {
+                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                Delete Course
+              }
+            </button>
           }
-        </button>
+          <button
+            type="button"
+            class="publish-btn"
+            [disabled]="!isFormValid() || isPublishing || isDeleting"
+            [attr.aria-busy]="isPublishing"
+            (click)="saveButtonClick()">
+            @if (isPublishing) {
+              <span class="publish-btn__spinner" aria-hidden="true"></span>
+              {{ isEditMode ? 'Saving...' : 'Publishing...' }}
+            } @else if (isEditMode) {
+              Save Changes
+              <span class="material-symbols-outlined" aria-hidden="true">save</span>
+            } @else {
+              Publish to Academy
+              <span class="material-symbols-outlined" aria-hidden="true">rocket_launch</span>
+            }
+          </button>
+        </div>
       </div>
     </aside>
   </main>
