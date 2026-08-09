@@ -5,6 +5,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { authGuard } from './auth.guard/guards/auth.guard';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { RegistrationPageComponent } from './pages/registration-page/registration-page.component';
+import { HowItWorksPageComponent } from './pages/how-it-works-page/how-it-works-page.component';
+import { WebsitePageComponent } from './pages/website-page/website-page.component';
 import { DashboardOverviewComponent } from './components/dashboard-overview/dashboard-overview.component';
 import { CourseOverviewComponent } from './pages/course-overview/course-overview.component';
 import { CoursesComponent } from './pages/courses/courses.component';
@@ -36,6 +38,8 @@ const routes: Routes = [
   { path: 'auth/callback', component: AuthCallbackComponent },
   { path: 'forgetpassword', component: ForgotPasswordComponent },
   { path: 'signup', component: RegistrationPageComponent },
+  { path: 'how-it-works', component: HowItWorksPageComponent },
+  { path: 'website', component: WebsitePageComponent },
   { path: 'org-picker', component: OrgPickerComponent, canActivate: [authGuard] },
   {
     path: '',

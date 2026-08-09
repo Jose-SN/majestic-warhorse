@@ -248,6 +248,16 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
     }
   }
 
+  goToHowItWorks(): void {
+    this.closeUserMenu();
+    void this.router.navigate([DASHBOARD_NAV_ROUTES.howItWorks]);
+  }
+
+  goToWebsite(): void {
+    this.closeUserMenu();
+    void this.router.navigate([DASHBOARD_NAV_ROUTES.website]);
+  }
+
   goToAccount(): void {
     if (!this.hasDashboardPermission) {
       return;

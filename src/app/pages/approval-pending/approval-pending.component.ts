@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { interval, Subject, takeUntil, firstValueFrom } from 'rxjs';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
@@ -8,7 +8,7 @@ import { UserRoleApiService } from 'src/app/services/api-service/user-role-api.s
 @Component({
   selector: 'app-approval-pending',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './approval-pending.component.html',
   styleUrl: './approval-pending.component.scss',
 })

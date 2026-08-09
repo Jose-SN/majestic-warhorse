@@ -1,5 +1,5 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -19,7 +19,7 @@ import { AppBranding } from 'src/app/core/branding/branding.model';
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
 })

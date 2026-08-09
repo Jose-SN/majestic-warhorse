@@ -117,12 +117,12 @@ flowchart TB
 |------|------|--------|
 | [DOCUMENTATION-INDEX.md](./DOCUMENTATION-INDEX.md) | Program charter + master index (this file) | **Current** |
 | [FRONTEND-ARCHITECTURE.md](./FRONTEND-ARCHITECTURE.md) | Architect onboarding: Angular structure, auth, HTTP, gaps | **Current** (2026-07-24) |
-| [01_Project_Overview.md](./01_Project_Overview.md) | Project purpose, users, stack, architecture, build/deploy | **Current** (2026-07-27) |
+| [01_Project_Overview.md](./01_Project_Overview.md) | Project purpose, users, stack; §2.1 Class MVP vs §2.2 Gold destination | **Current** (2026-08-09) |
 | [02_Folder_Structure.md](./02_Folder_Structure.md) | Every folder: purpose, files, deps, relationships, tree | **Current** (2026-07-27) |
 | [03_System_Architecture.md](./03_System_Architecture.md) | End-to-end architecture: FE/BE/DB/auth/storage/infra + C4 diagrams | **Current** (2026-07-27) |
 | [04_UI_Architecture.md](./04_UI_Architecture.md) | UI hierarchy, layouts, nav/routing, components, screens, patterns | **Current** (2026-07-27) |
-| [05_AI_Tutor_Adaptive_Learning_Strategy.md](./05_AI_Tutor_Adaptive_Learning_Strategy.md) | AI Tutor pitch, market, competitors, diagnostic MVP, revenue, GCSE niche, roadmap | **Current** (2026-08-04) |
-| [MAJESTIC_WARHORSE_PRD.md](./MAJESTIC_WARHORSE_PRD.md) | Full product requirements; §35 embeds strategy brief | **Current** |
+| [05_AI_Tutor_Adaptive_Learning_Strategy.md](./05_AI_Tutor_Adaptive_Learning_Strategy.md) | Class MVP = org/teacher/student rails; Gold = solo AI goal path (no org, no teacher); GTM & GCSE niche | **Current** (2026-08-09) |
+| [MAJESTIC_WARHORSE_PRD.md](./MAJESTIC_WARHORSE_PRD.md) | Full PRD; §1 / §3 / §35–37 Class MVP vs Gold horizons | **Current** (2026-08-09) |
 
 **Naming note:** Prompt deliverable `01_Project_Overview.md` supersedes the planned placeholder name `01-SYSTEM-OVERVIEW.md` in §5 for reading-order item 01. Prompt deliverable `02_Folder_Structure.md` supersedes planned `02-REPOSITORY-STRUCTURE.md`. Prompt deliverable `03_System_Architecture.md` covers system/container architecture depth. Prompt deliverable `04_UI_Architecture.md` covers UI/component catalog depth (overlaps planned `09-UI-COMPONENT-CATALOG.md`). Strategy brief `05_AI_Tutor_Adaptive_Learning_Strategy.md` is product vision (not code-truth). Later docs should link to these delivered filenames.
 
@@ -508,11 +508,11 @@ These will be refined as numbered documents are written.
 ## 12. Reading order for a new engineering team
 
 1. This index (`DOCUMENTATION-INDEX.md`)
-2. [05_AI_Tutor_Adaptive_Learning_Strategy.md](./05_AI_Tutor_Adaptive_Learning_Strategy.md) — AI Tutor / adaptive learning GTM & vision
-3. [MAJESTIC_WARHORSE_PRD.md](./MAJESTIC_WARHORSE_PRD.md) — full product requirements
-4. [USER_WORKFLOW.md](../USER_WORKFLOW.md) — product language (school-loop MVP)
+2. [05_AI_Tutor_Adaptive_Learning_Strategy.md](./05_AI_Tutor_Adaptive_Learning_Strategy.md) — Class MVP vs Gold; AI GTM & vision
+3. [MAJESTIC_WARHORSE_PRD.md](./MAJESTIC_WARHORSE_PRD.md) — full product requirements (horizons in §1 / §3 / §35–37)
+4. [USER_WORKFLOW.md](../USER_WORKFLOW.md) — product language (Class MVP school loop)
 5. [UI_WORKFLOW.md](../UI_WORKFLOW.md) — intended screens and APIs
-6. [01_Project_Overview.md](./01_Project_Overview.md) … [04_UI_Architecture.md](./04_UI_Architecture.md) — reverse-engineered system/UI
+6. [01_Project_Overview.md](./01_Project_Overview.md) … [04_UI_Architecture.md](./04_UI_Architecture.md) — reverse-engineered system/UI (§2.1 Class MVP / §2.2 Gold)
 7. [FRONTEND-ARCHITECTURE.md](./FRONTEND-ARCHITECTURE.md) — current code-truth frontend overview
 8. [IAM_DOCUMENTATION.md](../IAM_DOCUMENTATION.md) + [API_DOCUMENTATION.md](../API_DOCUMENTATION.md) — external contracts
 9. [TCM_DOCUMENTATION.md](../TCM_DOCUMENTATION.md) — only when comparing PetaxAI sister patterns
@@ -524,7 +524,7 @@ These will be refined as numbered documents are written.
 | Field | Value |
 |-------|-------|
 | Created | 2026-07-27 |
-| Last updated | 2026-08-04 (registered `05_AI_Tutor_Adaptive_Learning_Strategy.md` + PRD) |
+| Last updated | 2026-08-09 (Class MVP vs Gold product horizons framing) |
 | Owner | PetaxAI successor engineering (documentation program) |
 | Change rule | Any new `/docs` deliverable must update §4.1; any rename must update §5 |
 

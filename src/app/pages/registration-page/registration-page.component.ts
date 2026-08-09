@@ -9,7 +9,7 @@ import {
 import { FormValidators } from 'src/app/shared/form-validators';
 import { RegistrationPageService } from './registration-page.service';
 import { Subject, takeUntil } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { UserModel, isOrganization } from '../login-page/model/user-model';
 import type { Organization } from 'src/app/models/organization.model';
@@ -24,7 +24,7 @@ import { OAuthService } from 'src/app/core/auth/oauth.service';
 @Component({
   selector: 'app-registration-page',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './registration-page.component.html',
   styleUrl: './registration-page.component.scss',
 })

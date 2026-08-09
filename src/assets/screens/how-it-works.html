@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How it works · PetaxAI Learning</title>
+  <meta name="description" content="PetaxAI Learning — toggle Now (Class MVP school loop) or Future (Gold AI goal path)." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --bg: #0a0a0b;
+      --surface: #121214;
+      --surface-2: #1c1c1f;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --border: #27272a;
+      --primary: #ff6b2c;
+      --secondary: #ab0063;
+      --brand: linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #4a0084 100%);
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.6;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      background:
+        radial-gradient(900px 480px at 12% -10%, rgba(255, 107, 44, 0.16), transparent 55%),
+        radial-gradient(700px 420px at 90% 8%, rgba(171, 0, 99, 0.12), transparent 50%),
+        var(--bg);
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.35s ease;
+    }
+    body[data-mode="future"] {
+      background:
+        radial-gradient(900px 480px at 12% -10%, rgba(171, 0, 99, 0.18), transparent 55%),
+        radial-gradient(700px 420px at 90% 8%, rgba(74, 0, 132, 0.16), transparent 50%),
+        var(--bg);
+    }
+
+    a { color: inherit; text-decoration: none; font-weight: 500; }
+    a:hover { text-decoration: underline; }
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      vertical-align: middle;
+    }
+
+    .wrap {
+      width: min(100% - 32px, var(--max));
+      margin-inline: auto;
+    }
+
+    .topnav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .topnav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .brand__mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--brand);
+    }
+    .topnav__links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .topnav__links a:hover { color: var(--text); text-decoration: none; }
+    .topnav__links [data-nav-mode] { display: none; }
+    body[data-mode="now"] .topnav__links [data-nav-mode="now"],
+    body[data-mode="future"] .topnav__links [data-nav-mode="future"] { display: inline; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 0;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+      cursor: pointer;
+    }
+    .btn--primary {
+      background: var(--brand);
+      color: #fff;
+    }
+    .btn--primary:hover { text-decoration: none; filter: brightness(1.05); }
+    .btn--ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn--ghost:hover {
+      text-decoration: none;
+      border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+    }
+
+    /* Mode switch */
+    .mode-switch {
+      display: inline-flex;
+      padding: 4px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      gap: 4px;
+    }
+    .mode-switch__btn {
+      min-height: 40px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .mode-switch__btn:hover { color: var(--text); }
+    .mode-switch__btn.is-active {
+      color: #fff;
+      background: var(--brand);
+    }
+    body[data-mode="future"] .mode-switch__btn.is-active {
+      background: linear-gradient(135deg, #ab0063 0%, #4a0084 100%);
+    }
+    .mode-switch__hint {
+      margin: 12px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .hero {
+      padding: clamp(48px, 8vw, 88px) 0 40px;
+      border-top: 0;
+    }
+    .hero__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--primary);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    body[data-mode="future"] .hero__eyebrow { color: #ffb0cc; }
+    .hero h1 {
+      margin: 0 0 16px;
+      max-width: 18ch;
+      font-size: clamp(36px, 6vw, 48px);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+    .hero__lead {
+      margin: 0 0 28px;
+      max-width: 40rem;
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    .hero__lead strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    .hero__mode {
+      margin-bottom: 40px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .stat {
+      padding: 20px 18px;
+      border-radius: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+    .stat__badge {
+      display: inline-block;
+      margin: 0 0 8px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: color-mix(in srgb, var(--primary) 18%, transparent);
+      color: var(--primary);
+    }
+    body[data-mode="future"] .stat__badge {
+      background: color-mix(in srgb, var(--secondary) 22%, transparent);
+      color: #ffb0cc;
+    }
+    .stat__value {
+      margin: 0 0 4px;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+    .stat__label {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .mode-view[hidden] { display: none !important; }
+
+    section {
+      padding: 64px 0;
+      border-top: 1px solid var(--border);
+    }
+    .section__head {
+      margin-bottom: 32px;
+      max-width: 40rem;
+    }
+    .section__head h2 {
+      margin: 0 0 12px;
+      font-size: clamp(24px, 3vw, 30px);
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+    }
+    .section__head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+    .section__head a { color: var(--primary); }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .card {
+      padding: 24px;
+      border-radius: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+    .card__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--primary) 14%, transparent);
+      color: var(--primary);
+    }
+    body[data-mode="future"] .card__icon {
+      background: color-mix(in srgb, var(--secondary) 16%, transparent);
+      color: #ffb0cc;
+    }
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .card ul {
+      margin: 14px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .card li { margin-bottom: 6px; }
+
+    .role-tag {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      vertical-align: middle;
+      background: color-mix(in srgb, var(--primary) 16%, transparent);
+      color: var(--primary);
+    }
+
+    .flow { display: grid; gap: 12px; }
+    .flow__step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+      align-items: start;
+      padding: 20px 22px;
+      border-radius: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+    .flow__num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: var(--brand);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .flow__step h3 {
+      margin: 0 0 6px;
+      font-size: 17px;
+      font-weight: 600;
+    }
+    .flow__step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .tabs button {
+      min-height: 40px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .tabs button.is-active {
+      color: #fff;
+      border-color: transparent;
+      background: var(--brand);
+    }
+    .panel { display: none; }
+    .panel.is-active { display: block; }
+    .howto-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+    .howto-list li {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 18px 20px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+    .howto-list .dot {
+      width: 10px;
+      height: 10px;
+      margin-top: 7px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+    body[data-mode="future"] .howto-list .dot { background: var(--secondary); }
+    .howto-list strong {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    .howto-list span {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .feature {
+      display: flex;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+    }
+    .feature h3 {
+      margin: 0 0 4px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .feature p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .feature .material-symbols-outlined { color: var(--primary); }
+    body[data-mode="future"] .feature .material-symbols-outlined { color: #ffb0cc; }
+
+    .cta {
+      margin: 24px 0 80px;
+      padding: clamp(32px, 5vw, 48px);
+      border-radius: 24px;
+      border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--border));
+      background:
+        radial-gradient(600px 240px at 20% 0%, rgba(255, 107, 44, 0.2), transparent 60%),
+        var(--surface);
+      text-align: center;
+    }
+    body[data-mode="future"] .cta {
+      border-color: color-mix(in srgb, var(--secondary) 40%, var(--border));
+      background:
+        radial-gradient(600px 240px at 20% 0%, rgba(171, 0, 99, 0.22), transparent 60%),
+        var(--surface);
+    }
+    .cta h2 {
+      margin: 0 0 10px;
+      font-size: clamp(24px, 3vw, 30px);
+      font-weight: 600;
+      letter-spacing: -0.015em;
+    }
+    .cta p {
+      margin: 0 auto 24px;
+      max-width: 36rem;
+      color: var(--muted);
+    }
+    .cta__actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    footer {
+      padding: 28px 0 48px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    footer .wrap {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .stats { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .features { grid-template-columns: 1fr; }
+      .topnav__links { display: none; }
+    }
+    @media (max-width: 560px) {
+      .hero h1 { max-width: none; }
+      .mode-switch { width: 100%; }
+      .mode-switch__btn { flex: 1; padding: 0 12px; }
+    }
+
+    /* Embedded in Angular /how-it-works — hide duplicate chrome */
+    html.is-embed .topnav { display: none; }
+    html.is-embed .hero { padding-top: clamp(32px, 5vw, 56px); }
+  </style>
+</head>
+<body data-mode="now">
+  <header class="topnav">
+    <div class="wrap topnav__inner">
+      <a class="brand" href="#top" aria-label="PetaxAI Learning home">
+        <span class="brand__mark" aria-hidden="true"></span>
+        PetaxAI Learning
+      </a>
+      <nav class="topnav__links" aria-label="Page sections">
+        <a href="/website" target="_parent">Website</a>
+        <a href="#what" data-nav-mode="now">What it does</a>
+        <a href="#who" data-nav-mode="now">Who uses it</a>
+        <a href="#flow" data-nav-mode="now">How it works</a>
+        <a href="#use" data-nav-mode="now">How to use it</a>
+        <a href="#features" data-nav-mode="now">Features</a>
+        <a href="#gold-what" data-nav-mode="future">End goal</a>
+        <a href="#gold-who" data-nav-mode="future">Who it’s for</a>
+        <a href="#gold-flow" data-nav-mode="future">How it works</a>
+        <a href="#gold-use" data-nav-mode="future">How to use it</a>
+        <a href="#gold-features" data-nav-mode="future">Features</a>
+      </nav>
+      <a class="btn btn--primary" href="/login" target="_parent">Open app</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap">
+        <p class="hero__eyebrow" id="hero-eyebrow">
+          <span class="material-symbols-outlined" aria-hidden="true">school</span>
+          <span data-mode-text="eyebrow">Class MVP · how it works now</span>
+        </p>
+        <h1>How PetaxAI Learning works</h1>
+        <p class="hero__lead" data-mode-text="lead">
+          <strong>Now:</strong> Organization, Teacher, and Student run the school loop —
+          approve, assign, courses, assessments, teacher feedback, and AI Mode as study support.
+        </p>
+
+        <div class="hero__mode">
+          <div class="mode-switch" role="tablist" aria-label="Choose product horizon">
+            <button
+              type="button"
+              class="mode-switch__btn is-active"
+              role="tab"
+              id="mode-now"
+              aria-selected="true"
+              aria-controls="view-now"
+              data-mode="now"
+            >How it works now</button>
+            <button
+              type="button"
+              class="mode-switch__btn"
+              role="tab"
+              id="mode-future"
+              aria-selected="false"
+              aria-controls="view-future"
+              data-mode="future"
+            >Future goal</button>
+          </div>
+          <p class="mode-switch__hint" data-mode-text="hint">
+            Showing Class MVP — what ships in the live app today.
+          </p>
+        </div>
+
+        <div class="stats" aria-label="At a glance" data-mode-text="stats">
+          <article class="stat">
+            <p class="stat__badge">Now</p>
+            <p class="stat__value">Org · Teacher · Student</p>
+            <p class="stat__label">Three roles prove the school rails</p>
+          </article>
+          <article class="stat">
+            <p class="stat__badge">Loop</p>
+            <p class="stat__value">Approve → Teach → Learn</p>
+            <p class="stat__label">Courses, questionnaire, teacher feedback</p>
+          </article>
+          <article class="stat">
+            <p class="stat__badge">AI</p>
+            <p class="stat__value">AI Mode support</p>
+            <p class="stat__label">Study help grounded in library &amp; courses</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== NOW (Class MVP) ========== -->
+    <div id="view-now" class="mode-view" role="tabpanel" aria-labelledby="mode-now">
+      <section id="what">
+        <div class="wrap">
+          <div class="section__head">
+            <h2>What the app does now</h2>
+            <p>
+              Class MVP ships the online school loop. Organizations run a tenant;
+              teachers create courses and assessments; students learn and submit work.
+            </p>
+          </div>
+          <div class="grid-3">
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">apartment</span></div>
+              <h3>Run your school</h3>
+              <p>Create an organization, brand the app, approve teachers and students, and manage membership.</p>
+            </article>
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">menu_book</span></div>
+              <h3>Teach &amp; learn with courses</h3>
+              <p>Upload courses with chapters, videos, attachments, and questionnaires — then track progress.</p>
+            </article>
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">psychology</span></div>
+              <h3>AI Mode support</h3>
+              <p>Ask study questions grounded in library and course content. Support chat — not the future diagnostic engine.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="who">
+        <div class="wrap">
+          <div class="section__head">
+            <h2>Who logs in now</h2>
+            <p>Three roles are required for today’s school loop. Switch to <button type="button" class="linkish" data-set-mode="future" style="all:unset;cursor:pointer;color:var(--primary);font-weight:600;text-decoration:underline;">Future goal</button> to see the solo-learner end state.</p>
+          </div>
+          <div class="grid-3">
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">person</span></div>
+              <h3>Student</h3>
+              <p>Join an org, open courses, submit assessments, and use AI Mode for study help.</p>
+              <ul>
+                <li>Browse / open courses</li>
+                <li>Submit answers</li>
+                <li>Read teacher feedback</li>
+              </ul>
+            </article>
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">co_present</span></div>
+              <h3>Teacher</h3>
+              <p>Create content and oversee learning for assigned students.</p>
+              <ul>
+                <li>Upload and edit courses</li>
+                <li>Build questionnaires</li>
+                <li>Review answers &amp; give feedback</li>
+              </ul>
+            </article>
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">admin_panel_settings</span></div>
+              <h3>Organization</h3>
+              <p>Owns the school tenant and membership gates.</p>
+              <ul>
+                <li>Approve members</li>
+                <li>Directory &amp; assignments</li>
+                <li>Customize branding</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow">
+        <div class="wrap">
+          <div class="section__head">
+            <h2>How it works now</h2>
+            <p>The Class MVP school loop from signup to feedback.</p>
+          </div>
+          <div class="flow">
+            <article class="flow__step">
+              <span class="flow__num">1</span>
+              <div>
+                <h3>Sign up or sign in</h3>
+                <p>Create an account (email or Google). Identity is handled through PetaxAI IAM.</p>
+              </div>
+            </article>
+            <article class="flow__step">
+              <span class="flow__num">2</span>
+              <div>
+                <h3>Choose your organization</h3>
+                <p>Join a school space. Teachers and students may wait for admin approval.</p>
+              </div>
+            </article>
+            <article class="flow__step">
+              <span class="flow__num">3</span>
+              <div>
+                <h3>Teach or learn with courses</h3>
+                <p>Teachers upload courses and questionnaires; students open lessons and submit answers.</p>
+              </div>
+            </article>
+            <article class="flow__step">
+              <span class="flow__num">4</span>
+              <div>
+                <h3>Teacher feedback</h3>
+                <p>Teachers review submissions and leave feedback. Assessment is human-led.</p>
+              </div>
+            </article>
+            <article class="flow__step">
+              <span class="flow__num">5</span>
+              <div>
+                <h3>AI Mode support</h3>
+                <p>Ask study questions grounded in library and course content.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="use">
+        <div class="wrap">
+          <div class="section__head">
+            <h2>How can I use it now?</h2>
+            <p>Pick your role for a short starter checklist. Browser only — no desktop install.</p>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Choose a role">
+            <button type="button" class="is-active" role="tab" aria-selected="true" data-tab="student">Student</button>
+            <button type="button" role="tab" aria-selected="false" data-tab="teacher">Teacher</button>
+            <button type="button" role="tab" aria-selected="false" data-tab="org">Organization</button>
+          </div>
+          <div id="panel-student" class="panel is-active" role="tabpanel">
+            <ol class="howto-list">
+              <li>
+                <span class="dot" aria-hidden="true"></span>
+                <div>
+                  <strong>Sign in as a student</strong>
+                  <span>Create an account, join an organization, and open the app.</span>
+                </div>
+              </li>
+              <li>
+                <span class="dot" aria-hidden="true"></span>
+                <div>
+                  <strong>Open courses &amp; assessments</strong>
+                  <span>Learn from teacher-assigned courses and submit answers.</span>
+                </div>
+              </li>
+              <li>
+                <span class="dot" aria-hidden="true"></span>
+                <div>
+                  <strong>Use AI Mode for study help</strong>
+                  <span>Ask questions grounded in library and course content.</span>
+                </div>
+              </li>
+              <li>
+                <span class="dot" aria-hidden="true"></span>
+                <div>
+                  <strong>Read teacher feedback</strong>
+                  <span>Review marks and comments on your submissions.</span>
+                </div>
+              </li>
+            </ol>
+          </div>
+          <div id="panel-teacher" class="panel" role="tabpanel" hidden>
+            <ol class="howto-list">
+              <li>
+                <span class="dot" aria-hidden="true"></span>
+                <div>
+                  <strong>Sign up as Teacher</strong>
+                  <span>Join an organization and wait for approval if needed.</span>
+                </div>
+              </li>
+              <li>
+                <span class="dot" aria-hidden="true"></span>
+                <div>
+                  <strong>Upload a course</strong>
+                  <span>Create a course with chapters, videos, and attachments.</span>
+                </div>
+              </li>
+              <li>
+                <span class="dot" aria-hidden="true"></span>
+                <div>
+                  <strong>Add a questionnaire</strong>
+                  <span>Build questions students will answer for assessment.</span>
+                </div>
+              </li>
+              <li>
+                <span class="dot" aria-hidden="true"></span>
+                <div>
+                  <strong>Review Answers</strong>
+                  <span>Select a submission, leave feedback, and submit a review.</span>
+                </div>
+              </li>
+            </ol>
+          </div>
+          <div id="panel-org" class="panel" role="tabpanel" hidden>
+            <ol class="howto-list">
+              <li>
+                <span class="dot" aria-hidden="true"></span>
+                <div>
+                  <strong>Register as Organization</strong>
+                  <span>Create the school account and land on your dashboard.</span>
+                </div>
+              </li>
+              <li>
+                <span class="dot" aria-hidden="true"></span>
+                <div>
+                  <strong>Open Approvals</strong>
+                  <span>Approve teachers and students waiting to join.</span>
+                </div>
+              </li>
+              <li>
+                <span class="dot" aria-hidden="true"></span>
+                <div>
+                  <strong>Use Directory</strong>
+                  <span>Assign teachers to students.</span>
+                </div>
+              </li>
+              <li>
+                <span class="dot" aria-hidden="true"></span>
+                <div>
+                  <strong>Customize branding</strong>
+                  <span>Set app name, logo, and colors for your org.</span>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="features">
+        <div class="wrap">
+          <div class="section__head">
+            <h2>What you’ll find now</h2>
+            <p>Key areas after you are logged in and approved.</p>
+          </div>
+          <div class="features">
+            <article class="feature">
+              <span class="material-symbols-outlined">dashboard</span>
+              <div>
+                <h3>Dashboard</h3>
+                <p>Home overview of activity, courses, and shortcuts for your role.</p>
+              </div>
+            </article>
+            <article class="feature">
+              <span class="material-symbols-outlined">library_books</span>
+              <div>
+                <h3>Courses</h3>
+                <p>Catalog and course details with chapters, media, and progress.</p>
+              </div>
+            </article>
+            <article class="feature">
+              <span class="material-symbols-outlined">quiz</span>
+              <div>
+                <h3>Questionnaire &amp; Answers</h3>
+                <p>Build assessments and review student submissions with feedback.</p>
+              </div>
+            </article>
+            <article class="feature">
+              <span class="material-symbols-outlined">folder</span>
+              <div>
+                <h3>Library</h3>
+                <p>Shared files your org and AI Mode can use as learning context.</p>
+              </div>
+            </article>
+            <article class="feature">
+              <span class="material-symbols-outlined">group</span>
+              <div>
+                <h3>Directory &amp; Approvals</h3>
+                <p>See members, approve join requests, and manage assignments.</p>
+              </div>
+            </article>
+            <article class="feature">
+              <span class="material-symbols-outlined">smart_toy</span>
+              <div>
+                <h3>AI Mode</h3>
+                <p>Chat with the tutor, keep conversations, and get cited answers.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <div class="wrap">
+        <div class="cta">
+          <h2>Ready to try the school loop?</h2>
+          <p>Open the app and run Class MVP today — or switch to Future goal to preview the Gold end state.</p>
+          <div class="cta__actions">
+            <a class="btn btn--primary" href="/login" target="_parent">Open app</a>
+            <button type="button" class="btn btn--ghost" data-set-mode="future">See future goal</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== FUTURE (Gold) ========== -->
+    <div id="view-future" class="mode-view" role="tabpanel" aria-labelledby="mode-future" hidden>
+      <section id="gold-what">
+        <div class="wrap">
+          <div class="section__head">
+            <h2>What Gold will do</h2>
+            <p>
+              Future end state: a personal AI learning coach.
+              <strong style="color:var(--text);font-weight:600;">No organization. No teacher.</strong>
+              The learner sets a goal; the AI handles the rest until mastery.
+            </p>
+          </div>
+          <div class="grid-3">
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">flag</span></div>
+              <h3>1. Set your end goal</h3>
+              <p>Exam, skill, certification, or course outcome — everything orients around that destination.</p>
+            </article>
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">auto_stories</span></div>
+              <h3>2. AI fetches courses &amp; materials</h3>
+              <p>Aligned courses, lessons, and practice matched to your goal and current level.</p>
+            </article>
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">query_stats</span></div>
+              <h3>3. Assess the learning path</h3>
+              <p>Diagnostics and practice continuously measure what you know — not only completion.</p>
+            </article>
+          </div>
+          <div class="grid-3" style="margin-top: 16px;">
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">insights</span></div>
+              <h3>4. Strengths &amp; weaknesses</h3>
+              <p>Evidence-based skill map: mastered, developing, and stuck.</p>
+            </article>
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">route</span></div>
+              <h3>5. Guide to the goal</h3>
+              <p>Next best lesson, practice, or revision — re-test until mastery.</p>
+            </article>
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">person_off</span></div>
+              <h3>6. No org · No teacher</h3>
+              <p>Core loop has zero dependency on organization or human instructor.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="gold-who">
+        <div class="wrap">
+          <div class="section__head">
+            <h2>Who it’s for (Gold)</h2>
+            <p>The primary user is the solo learner. Org and teacher from Class MVP are not required for this loop.</p>
+          </div>
+          <div class="grid-3">
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">person</span></div>
+              <h3>Solo learner</h3>
+              <p>Primary user. Set a goal, learn with AI-fetched materials, get assessed, follow guidance to mastery.</p>
+              <ul>
+                <li>Declare an end goal</li>
+                <li>Receive aligned courses &amp; materials</li>
+                <li>Follow AI next steps to mastery</li>
+              </ul>
+            </article>
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">smart_toy</span></div>
+              <h3>AI coach</h3>
+              <p>Fetches content, diagnoses gaps, builds the path, and guides until the goal is reached.</p>
+              <ul>
+                <li>Diagnostic &amp; path engine</li>
+                <li>Strength / weakness map</li>
+                <li>Continuous next-best-step</li>
+              </ul>
+            </article>
+            <article class="card">
+              <div class="card__icon"><span class="material-symbols-outlined">block</span></div>
+              <h3>Not required</h3>
+              <p>Organization and Teacher are Class MVP scaffolding — not part of the Gold core loop.</p>
+              <ul>
+                <li>No org gate to start</li>
+                <li>No teacher to assign work</li>
+                <li>No human marking dependency</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="gold-flow">
+        <div class="wrap">
+          <div class="section__head">
+            <h2>How Gold will work</h2>
+            <p>Goal → courses/materials → path → assess → strengths/weaknesses → guide to mastery.</p>
+          </div>
+          <div class="flow">
+            <article class="flow__step">
+              <span class="flow__num">1</span>
+              <div>
+                <h3>Sign in as a learner</h3>
+                <p>No organization required to begin the core learning loop.</p>
+              </div>
+            </article>
+            <article class="flow__step">
+              <span class="flow__num">2</span>
+              <div>
+                <h3>Set your end goal</h3>
+                <p>Tell the AI what you want to achieve — exam, skill, or outcome.</p>
+              </div>
+            </article>
+            <article class="flow__step">
+              <span class="flow__num">3</span>
+              <div>
+                <h3>AI fetches courses &amp; study material</h3>
+                <p>Aligned content is selected for your goal and gaps — not only teacher-assigned courses.</p>
+              </div>
+            </article>
+            <article class="flow__step">
+              <span class="flow__num">4</span>
+              <div>
+                <h3>Assess path · map strengths &amp; weaknesses</h3>
+                <p>Diagnostics and practice update your skill map with evidence.</p>
+              </div>
+            </article>
+            <article class="flow__step">
+              <span class="flow__num">5</span>
+              <div>
+                <h3>Guide to mastery</h3>
+                <p>Next best lesson, practice, or revision until you reach the goal — no teacher gate.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="gold-use">
+        <div class="wrap">
+          <div class="section__head">
+            <h2>How you’ll use Gold</h2>
+            <p>Future solo-learner checklist. Not live in the app yet — this is the destination product.</p>
+          </div>
+          <ol class="howto-list">
+            <li>
+              <span class="dot" aria-hidden="true"></span>
+              <div>
+                <strong>Open the app as a learner</strong>
+                <span>Start without joining an organization.</span>
+              </div>
+            </li>
+            <li>
+              <span class="dot" aria-hidden="true"></span>
+              <div>
+                <strong>Set your goal</strong>
+                <span>Declare the exam, skill, or outcome you want to reach.</span>
+              </div>
+            </li>
+            <li>
+              <span class="dot" aria-hidden="true"></span>
+              <div>
+                <strong>Let AI assemble your path</strong>
+                <span>Receive aligned courses, materials, and practice for your gaps.</span>
+              </div>
+            </li>
+            <li>
+              <span class="dot" aria-hidden="true"></span>
+              <div>
+                <strong>Practice, re-test, and follow guidance</strong>
+                <span>Review strengths and weaknesses; keep going until mastery.</span>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="gold-features">
+        <div class="wrap">
+          <div class="section__head">
+            <h2>Gold product features</h2>
+            <p>End-state capabilities — planned, not shipping in Class MVP.</p>
+          </div>
+          <div class="features">
+            <article class="feature">
+              <span class="material-symbols-outlined">flag</span>
+              <div>
+                <h3>Goal capture</h3>
+                <p>Explicit learner destination that drives everything downstream.</p>
+              </div>
+            </article>
+            <article class="feature">
+              <span class="material-symbols-outlined">auto_stories</span>
+              <div>
+                <h3>Auto course &amp; material fetch</h3>
+                <p>AI selects aligned learning content for the goal and gaps.</p>
+              </div>
+            </article>
+            <article class="feature">
+              <span class="material-symbols-outlined">analytics</span>
+              <div>
+                <h3>Diagnostic &amp; path engine</h3>
+                <p>Adaptive assessment that builds and updates the learning path.</p>
+              </div>
+            </article>
+            <article class="feature">
+              <span class="material-symbols-outlined">insights</span>
+              <div>
+                <h3>Strength &amp; weakness map</h3>
+                <p>Evidence-based view of mastery — not only scores.</p>
+              </div>
+            </article>
+            <article class="feature">
+              <span class="material-symbols-outlined">route</span>
+              <div>
+                <h3>Next-best-step guidance</h3>
+                <p>Continuous prescription until the end goal is reached.</p>
+              </div>
+            </article>
+            <article class="feature">
+              <span class="material-symbols-outlined">person_off</span>
+              <div>
+                <h3>No org / no teacher dependency</h3>
+                <p>Solo progress without school rails as a gate.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <div class="wrap">
+        <div class="cta">
+          <h2>This is the destination</h2>
+          <p>Gold is future product vision. Class MVP is what you can use in the app today.</p>
+          <div class="cta__actions">
+            <button type="button" class="btn btn--primary" data-set-mode="now">Back to how it works now</button>
+            <a class="btn btn--ghost" href="/login" target="_parent">Open Class MVP app</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© PetaxAI Learning · How it works (representational page)</span>
+      <span><a href="/website" target="_parent">Website</a> · Toggle Now / Future goal</span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('embed') === '1') {
+          document.documentElement.classList.add('is-embed');
+        }
+      } catch (e) { /* ignore */ }
+
+      var body = document.body;
+      var viewNow = document.getElementById('view-now');
+      var viewFuture = document.getElementById('view-future');
+      var modeBtns = document.querySelectorAll('.mode-switch__btn');
+      var eyebrowIcon = document.querySelector('#hero-eyebrow .material-symbols-outlined');
+
+      var copy = {
+        now: {
+          eyebrow: 'Class MVP · how it works now',
+          icon: 'school',
+          lead: '<strong>Now:</strong> Organization, Teacher, and Student run the school loop — approve, assign, courses, assessments, teacher feedback, and AI Mode as study support.',
+          hint: 'Showing Class MVP — what ships in the live app today.',
+          stats: [
+            { badge: 'Now', value: 'Org · Teacher · Student', label: 'Three roles prove the school rails' },
+            { badge: 'Loop', value: 'Approve → Teach → Learn', label: 'Courses, questionnaire, teacher feedback' },
+            { badge: 'AI', value: 'AI Mode support', label: 'Study help grounded in library & courses' }
+          ]
+        },
+        future: {
+          eyebrow: 'Gold · future end goal',
+          icon: 'rocket_launch',
+          lead: '<strong>Future:</strong> Solo learner + AI — goal → courses/materials → path → assess → strengths/weaknesses → guide to mastery. <strong>No org. No teacher.</strong>',
+          hint: 'Showing Gold — planned end product, not live yet.',
+          stats: [
+            { badge: 'Gold', value: 'Solo learner + AI', label: 'No organization · no teacher' },
+            { badge: 'Path', value: 'Goal → mastery', label: 'Fetch, assess, map gaps, guide' },
+            { badge: 'Engine', value: 'Diagnostic coach', label: 'Strengths, weaknesses, next best step' }
+          ]
+        }
+      };
+
+      function renderStats(items) {
+        var root = document.querySelector('[data-mode-text="stats"]');
+        if (!root) return;
+        root.innerHTML = items.map(function (s) {
+          return (
+            '<article class="stat">' +
+              '<p class="stat__badge">' + s.badge + '</p>' +
+              '<p class="stat__value">' + s.value + '</p>' +
+              '<p class="stat__label">' + s.label + '</p>' +
+            '</article>'
+          );
+        }).join('');
+      }
+
+      function setMode(mode) {
+        if (mode !== 'now' && mode !== 'future') mode = 'now';
+        body.setAttribute('data-mode', mode);
+
+        viewNow.hidden = mode !== 'now';
+        viewFuture.hidden = mode !== 'future';
+
+        modeBtns.forEach(function (btn) {
+          var on = btn.getAttribute('data-mode') === mode;
+          btn.classList.toggle('is-active', on);
+          btn.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+
+        var c = copy[mode];
+        var eyebrow = document.querySelector('[data-mode-text="eyebrow"]');
+        var lead = document.querySelector('[data-mode-text="lead"]');
+        var hint = document.querySelector('[data-mode-text="hint"]');
+        if (eyebrow) eyebrow.textContent = c.eyebrow;
+        if (eyebrowIcon) eyebrowIcon.textContent = c.icon;
+        if (lead) lead.innerHTML = c.lead;
+        if (hint) hint.textContent = c.hint;
+        renderStats(c.stats);
+
+        try {
+          history.replaceState(null, '', mode === 'future' ? '#future' : '#now');
+        } catch (e) { /* ignore */ }
+      }
+
+      modeBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          setMode(btn.getAttribute('data-mode'));
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+
+      document.querySelectorAll('[data-set-mode]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          setMode(el.getAttribute('data-set-mode'));
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+
+      // Role tabs (now view only)
+      var tabs = document.querySelectorAll('#view-now .tabs button');
+      var panels = {
+        org: document.getElementById('panel-org'),
+        teacher: document.getElementById('panel-teacher'),
+        student: document.getElementById('panel-student')
+      };
+      tabs.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id = btn.getAttribute('data-tab');
+          tabs.forEach(function (b) {
+            b.classList.toggle('is-active', b === btn);
+            b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+          });
+          Object.keys(panels).forEach(function (key) {
+            var on = key === id;
+            panels[key].classList.toggle('is-active', on);
+            panels[key].hidden = !on;
+          });
+        });
+      });
+
+      var hash = (location.hash || '').replace('#', '').toLowerCase();
+      if (hash === 'future' || hash === 'gold') setMode('future');
+      else setMode('now');
+    })();
+  </script>
+</body>
+</html>

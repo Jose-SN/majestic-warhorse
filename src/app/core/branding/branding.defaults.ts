@@ -35,7 +35,7 @@ export const DEFAULT_THEME_COLORS: BrandingThemeColors = {
 
 export const DEFAULT_APP_BRANDING: AppBranding = {
   appName: 'PetaxAI Learning',
-  tagline: 'Learning platform for communities, schools, and instruction',
+  tagline: 'Learning platform for organizations, teachers, and students — AI goal-path coaching is the future direction',
   logoUrl: DEFAULT_BRAND_LOGO,
   faviconUrl: DEFAULT_BRAND_FAVICON,
   colors: { ...DEFAULT_THEME_COLORS },

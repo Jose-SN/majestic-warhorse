@@ -16,9 +16,35 @@ AI Diagnostic MVP timeline):**
 
 ## 1. Product Vision
 
-Majestic Warhorse is an AI-powered Learning Intelligence Platform
-designed to transform education from reactive learning into continuously
-adaptive, personalised, and intelligence-driven learning.
+Majestic Warhorse (PetaxAI Learning) is an **AI-first Learning Intelligence
+Platform**. Delivery is split into two explicit horizons:
+
+### Product horizons
+
+| Horizon | When | Who | What it does |
+|---------|------|-----|--------------|
+| **Class MVP (Fast MVP)** | Now → near versions | Organization, Teacher, Student | Prove the school rails: signup, approve, assign, courses, questionnaire, teacher feedback, AI Mode chat as support |
+| **Gold (future)** | After Class MVP | Solo learner + AI | No organization required, no teacher required. Goal → fetch courses & materials → learning path → assess → strengths/weaknesses → guide to mastery |
+
+```text
+Class MVP:  Org + Teacher + Student prove the school rails.
+Gold:       Solo learner + AI — goal → courses/materials → path →
+            assess → strengths/weaknesses → guide to end goal.
+            No org. No teacher.
+```
+
+**Class MVP is what ships today.** Gold is the destination — not claimed as live behaviour.
+
+### Gold north star (future)
+
+When Gold ships, the AI should:
+
+1. **Fetch and assemble courses** aligned to the learner’s goal.
+2. **Deliver study material** matched to their current level and gaps.
+3. **Assess the learning path** continuously through diagnostics and practice.
+4. **Identify strengths and weaknesses** with evidence, not only scores.
+5. **Guide the learner to their end goal** with the next best activity until
+   mastery.
 
 Traditional platforms answer:
 
@@ -26,15 +52,21 @@ Traditional platforms answer:
 > Did the learner complete it?\
 > What score did the learner receive?
 
-Majestic should answer:
+Majestic (Gold) should answer:
 
 > **What does this learner understand, what do they misunderstand, why
-> are they struggling, and what should happen next?**
+> are they struggling, what should happen next — and how do we get them
+> to their goal without waiting for a teacher?**
+
+> **No organization and no teacher required for the core learning loop.**
+> A solo learner can be diagnosed, taught, assessed, and guided to mastery
+> by the AI alone. Class MVP may still use orgs and teachers as scaffolding.
 
 Majestic is not simply an LMS, AI chatbot, assessment platform, or
 analytics dashboard.
 
-It is an **AI Learning Intelligence Platform**.
+It is an **AI Learning Intelligence Platform** — Class MVP builds the rails;
+Gold runs the coach.
 
 ------------------------------------------------------------------------
 
@@ -63,30 +95,42 @@ learning intervention.
 
 ## 3. Product Goals
 
-### Primary Goals
+### Class MVP goals (Fast MVP — shipping / near versions)
 
-1.  Build an AI tutor that optimises for learning, not merely answer
-    generation.
-2.  Build a dynamic, evidence-based learner intelligence profile.
+1.  Deliver the **Organization / Teacher / Student** school loop.
+2.  Org onboarding, approvals, directory, and teacher–student assignment.
+3.  Course create/consume with chapters, media, and attachments.
+4.  Questionnaire + student answers + teacher feedback.
+5.  AI Mode chat as study support (not full diagnostic engine yet).
+6.  Multi-tenant org scoping and GDPR-minded basics.
+7.  Extensible rails (courses, library, assessments) that Gold can later drive.
+
+### Gold goals (future — not Class MVP scope)
+
+1.  AI tutor that optimises for learning, not merely answer generation.
+2.  Dynamic, evidence-based learner intelligence profile.
 3.  Detect knowledge gaps and recurring misconceptions.
-4.  Personalise learning journeys.
-5.  Provide teachers with actionable class intelligence.
-6.  Detect performance decline early.
-7.  Measure whether interventions improve outcomes.
-8.  Build a GDPR/privacy-by-design foundation.
-9.  Support multi-tenant SaaS deployment.
-10. Create an extensible platform capable of serving schools,
-    universities, training providers, and other learning organisations.
+4.  Personalise journeys toward an explicit **learner end goal**.
+5.  **Automate course and study-material selection** without a teacher
+    assigning every step.
+6.  Continuously assess the path, surface strengths/weaknesses, and
+    prescribe the next best intervention until the goal is reached.
+7.  **No organization required and no teacher required** for the core loop.
+8.  Detect performance decline early; measure whether interventions work.
+9.  Privacy-by-design and multi-tenant SaaS remain foundational.
 
-### Non-Goals for MVP
+### Non-Goals for Class MVP
 
-Do not initially attempt to:
+Do not attempt in the Class MVP release:
 
--   Replace teachers.
+-   Ship Gold (solo AI path with no org/teacher).
+-   Full diagnostic skill map / auto course-fetch engine.
 -   Replace complete university SIS systems.
--   Make autonomous high-impact decisions about learners.
+-   Make autonomous high-impact decisions about learners without safety
+    rails (e.g. permanent academic records, sanctions).
 -   Fully automate career selection.
--   Build AI avatars before core learning intelligence is validated.
+-   Build AI avatars before Class MVP rails and core learning intelligence
+    are validated.
 
 ------------------------------------------------------------------------
 
@@ -1357,16 +1401,40 @@ pricing tables, journey diagrams, and codebase gap mapping.
 
 ### One-line pitch
 
-An AI tutor that automatically discovers each learner’s strengths and
-weaknesses, generates a personalized learning path, and continuously
-adapts recommendations based on performance.
+**Gold (future):** An AI learning coach that fetches aligned courses and study
+material, assesses your path, maps strengths and weaknesses, and guides you
+to your end goal — **without requiring a teacher or organization**.
+
+**Class MVP (now):** Organization + Teacher + Student school loop (approve,
+assign, courses, assessments, teacher feedback) with AI Mode as support.
+
+### Product horizons (summary)
+
+| Horizon | Scope |
+|---------|--------|
+| **Class MVP** | Org / Teacher / Student rails — what the SPA ships |
+| **Gold** | Solo learner + AI; no org; no teacher; goal → path → mastery |
+
+### Gold end state (future — not Class MVP)
+
+**No organization and no teacher needed for the core loop.** The AI:
+
+1. Understands the learner’s goal (exam, skill, course outcome).
+2. Fetches / recommends courses and study material aligned to that goal.
+3. Assesses the learning path with diagnostics and practice.
+4. Identifies strengths and weaknesses with evidence.
+5. Guides the next best step until the goal is reached.
+
+Class MVP may still use orgs and teachers as scaffolding. Gold removes that
+dependency for solo progress.
 
 ### Business problem (summary)
 
-Students receive the same lessons regardless of understanding. Teachers
-and providers struggle to identify gaps early, track individual progress,
-personalize plans, give timely feedback, and scale support — so students
-restudy known material while hidden weaknesses persist.
+Students receive the same lessons regardless of understanding. Human
+tutors do not scale. Providers struggle to identify gaps early, track
+individual progress, personalize plans, give timely feedback, and support
+many learners at once — so students restudy known material while hidden
+weaknesses persist.
 
 ### Target customers
 
@@ -1389,9 +1457,15 @@ without teacher approval.
 
 ### Proposed solution
 
-Mobile + web app with an **AI Diagnostic Engine**: adaptive assessment →
-weak-concept detection → confidence/mastery → personalized plan →
-recommend courses/videos/exercises/revision → re-test until mastery.
+**Gold:** Mobile + web app with an **AI Diagnostic & Path Engine**:
+
+learner goal → adaptive assessment → weak-concept detection →
+confidence/mastery → **AI fetches aligned courses & study material** →
+personalized plan → practice / re-test → guide to end goal until mastery.
+
+**No org. No teacher** for the Gold core loop.
+
+**Class MVP:** school rails (org / teacher / student) that Gold later drives.
 
 ### Example journey (GCSE-style maths illustration)
 
@@ -1471,30 +1545,31 @@ professional certifications.
 | Differentiator | Diagnostic intelligence + adaptive recommendations + automated reporting |
 | Business model | Freemium B2C + school licensing |
 | MVP feasibility | High (≈3 months for AI diagnostic MVP) |
-| Long-term vision | AI learning intelligence layer for schools, tutoring centers, and lifelong learners |
+| Long-term vision (**Gold**) | Solo AI coach: goal → courses/materials → assess → strengths/weaknesses → mastery; **no org, no teacher** |
+| Near-term (**Class MVP**) | Org + Teacher + Student school loop |
 
 ------------------------------------------------------------------------
 
 # 36. Final Product Definition
 
-> **Majestic Warhorse is an AI-powered Learning Intelligence and
-> Education Operating System that continuously builds an evidence-based
-> understanding of each learner's knowledge, performance, behaviour, and
-> learning needs. It combines an adaptive AI tutor, knowledge-gap
-> detection, personalised learning recommendations, intelligent
-> assessment, predictive performance analytics, and educator
-> intelligence to help learners improve and institutions make better
-> educational decisions.**
+> **Class MVP:** Majestic Warhorse ships an Organization / Teacher /
+> Student learning platform (school rails: approvals, courses,
+> assessments, feedback, AI Mode support).
+>
+> **Gold (future):** The same product becomes an AI Learning Intelligence
+> Platform with **no organization and no teacher required**: the AI
+> fetches aligned courses and study material, assesses the learning path,
+> identifies strengths and weaknesses, and guides each learner to their
+> end goal until mastery.
 
 ------------------------------------------------------------------------
 
 # 37. One-Sentence Product Positioning
 
-> **Majestic Warhorse is a GDPR-first AI Learning Intelligence Platform
-> that transforms fragmented educational data into a continuously
-> evolving learner model, enabling personalised AI tutoring, early
-> knowledge-gap detection, adaptive learning recommendations, and
-> measurable intervention outcomes.**
+> **Majestic Warhorse is a GDPR-first learning platform: Class MVP proves
+> the school loop; Gold turns goals into a continuous AI path — courses,
+> materials, assessment, and guidance — so learners reach mastery without
+> requiring an organization or a teacher.**
 
 ------------------------------------------------------------------------
 

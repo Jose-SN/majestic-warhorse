@@ -1,0 +1,23 @@
+<div class="hiw-page">
+  <header class="hiw-page__bar">
+    <div class="hiw-page__bar-inner">
+      <button type="button" class="hiw-page__back" (click)="goBack()">
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+        Back
+      </button>
+      <div class="hiw-page__title">
+        <span class="material-symbols-outlined" aria-hidden="true">route</span>
+        <span>How {{ appName }} works</span>
+      </div>
+      <button type="button" class="hiw-page__cta" (click)="goPrimary()">
+        {{ isLoggedIn ? 'Back to app' : 'Sign in' }}
+      </button>
+    </div>
+  </header>
+
+  <iframe
+    class="hiw-page__frame"
+    [src]="embedUrl"
+    title="How it works — product workflow"
+  ></iframe>
+</div>

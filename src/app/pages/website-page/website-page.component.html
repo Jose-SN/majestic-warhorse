@@ -1,0 +1,28 @@
+<div class="site-page">
+  <header class="site-page__bar">
+    <div class="site-page__bar-inner">
+      <button type="button" class="site-page__back" (click)="goBack()">
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+        Back
+      </button>
+      <div class="site-page__title">
+        <span class="material-symbols-outlined" aria-hidden="true">language</span>
+        <span>{{ appName }} website</span>
+      </div>
+      <div class="site-page__actions">
+        <button type="button" class="site-page__ghost" (click)="goHowItWorks()">
+          How it works
+        </button>
+        <button type="button" class="site-page__cta" (click)="goPrimary()">
+          {{ isLoggedIn ? 'Back to app' : 'Sign in' }}
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <iframe
+    class="site-page__frame"
+    [src]="embedUrl"
+    title="PetaxAI Learning website"
+  ></iframe>
+</div>

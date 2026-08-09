@@ -27,6 +27,8 @@ export const DASHBOARD_NAV_ROUTES = {
   inviteStudent: '/invite-student',
   assessment: '/assessment',
   switchOrg: '/org-picker',
+  howItWorks: '/how-it-works',
+  website: '/website',
 } as const;
 
 /** Route segments that show the grid + scanline backdrop in the main content area. */
@@ -57,6 +59,8 @@ export const DASHBOARD_NAV_ACTIVE_SEGMENTS = {
   inviteTeacher: ['invite-teacher'],
   inviteStudent: ['invite-student'],
   assessment: ['assessment'],
+  howItWorks: ['how-it-works'],
+  website: ['website'],
 } as const;
 
 /** True when the current URL path matches any of the given first-level segments. */

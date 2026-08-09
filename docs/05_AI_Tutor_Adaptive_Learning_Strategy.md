@@ -9,19 +9,20 @@
 
 **Cross-references:**
 - [MAJESTIC_WARHORSE_PRD.md](./MAJESTIC_WARHORSE_PRD.md) — full PRD / requirements depth
-- [01_Project_Overview.md](./01_Project_Overview.md) — what the SPA is today vs gold vision
+- [01_Project_Overview.md](./01_Project_Overview.md) — Class MVP (SPA today) vs Gold destination
 - [03_System_Architecture.md](./03_System_Architecture.md) — current technical topology
-- [04_UI_Architecture.md](./04_UI_Architecture.md) — AI Mode route is a **stub** today
+- [04_UI_Architecture.md](./04_UI_Architecture.md) — UI architecture (AI Mode chat exists; diagnostic engine does not)
 - [FRONTEND-ARCHITECTURE.md](./FRONTEND-ARCHITECTURE.md) — code-truth frontend gaps
-- [UI_WORKFLOW.md](../UI_WORKFLOW.md) / [USER_WORKFLOW.md](../USER_WORKFLOW.md) — MVP school-loop docs
+- [UI_WORKFLOW.md](../UI_WORKFLOW.md) / [USER_WORKFLOW.md](../USER_WORKFLOW.md) — Class MVP school-loop docs
 
-> **Evidence labelling:** Everything in §§1–14 below is **Product strategy / vision** unless marked **Observed**. The current Angular SPA implements the organisation–teacher–student school loop; `/dashboard/ai-mode` is a UI placeholder only (`ai-mode.component.ts` logs prompts — no diagnostic engine).
+> **Evidence labelling:** Everything in §§1–14 below is **Product strategy / vision** unless marked **Observed**. **Observed Class MVP:** organisation–teacher–student school loop + AI Mode chat as support. **Gold** (goal capture, diagnostic/path engine, auto course fetch, no org/teacher) is **not** shipped.
 
 ---
 
 ## Table of contents
 
 1. [One-line pitch](#1-one-line-pitch)
+   - [1.1 Product horizons (Class MVP vs Gold)](#11-product-horizons-class-mvp-vs-gold)
 2. [Business problem](#2-business-problem)
 3. [Target customers](#3-target-customers)
 4. [Existing competitors](#4-existing-competitors)
@@ -46,7 +47,46 @@
 
 ## 1. One-line pitch
 
-An AI tutor that automatically discovers each learner’s strengths and weaknesses, generates a personalized learning path, and continuously adapts recommendations based on performance.
+**Class MVP (now):** Org + Teacher + Student prove the school rails (approve, assign, courses, assessments, teacher feedback; AI Mode as support).
+
+**Gold (future):** Solo learner + AI — goal → courses/materials → path → assess → strengths/weaknesses → guide to end goal. **No org. No teacher.**
+
+---
+
+## 1.1 Product horizons (Class MVP vs Gold)
+
+Document two explicit horizons. Do not conflate “shipping now” with Gold.
+
+| Horizon | When | Dependency | What it is |
+|---------|------|------------|------------|
+| **Class MVP (Fast MVP)** | Now → near versions | Organization, Teacher, Student | School rails: signup, approve, assign, courses, questionnaire, teacher feedback, AI Mode chat as support |
+| **Gold** | Future end state | Solo learner + AI only | No organization required, no teacher required. Goal-driven course/material fetch, learning path, assessment, strength/weakness map, guidance to mastery |
+
+```text
+Class MVP:  Org + Teacher + Student prove the school rails.
+Gold:       Solo learner + AI — goal → courses/materials → path →
+            assess → strengths/weaknesses → guide to end goal.
+            No org. No teacher.
+```
+
+### Class MVP horizon (**Observed** / near-term)
+
+Prove the online school loop. Versions 1–4 white-label / insights increments (see [01_Project_Overview.md](./01_Project_Overview.md) §2) sit **under Class MVP**, not as Gold.
+
+### Gold horizon (future — strategy north star)
+
+| Capability | What the AI does |
+|------------|------------------|
+| Goal | Captures the learner’s end goal (exam, skill, outcome) |
+| Courses | Fetches / recommends courses aligned to that goal |
+| Materials | Serves study material matched to level and gaps |
+| Assessment | Continuously assesses the learning path |
+| Diagnosis | Identifies strengths and weaknesses with evidence |
+| Guidance | Prescribes the next best step until the goal is reached |
+
+**Gold removes org and teacher as dependencies** for the core loop. Class MVP may keep them as scaffolding; Gold does not require them for solo progress.
+
+**Today (Observed):** Class MVP school loop + AI Mode chat support. Gold diagnostic/path engine is **not** built.
 
 ---
 
@@ -119,26 +159,33 @@ This gap is the product’s strategic opening and matches the PRD thesis: *under
 
 ## 6. Proposed solution
 
-A **mobile and web** app with an **AI Diagnostic Engine** that:
+**Gold (future):** a **mobile and web** app with an **AI Diagnostic & Path Engine** that:
 
-1. Assesses knowledge through adaptive quizzes and activities  
-2. Detects weak concepts automatically  
-3. Measures confidence and mastery levels  
-4. Generates a personalized learning plan  
-5. Recommends courses, videos, exercises, and revision schedules  
-6. Re-tests weak areas until mastery is achieved  
+1. Captures the learner’s **end goal**
+2. Assesses knowledge through adaptive quizzes and activities  
+3. Detects weak concepts automatically  
+4. Measures confidence and mastery levels  
+5. **Fetches aligned courses and study material** for the goal and gaps  
+6. Generates a personalized learning plan  
+7. Recommends lessons, videos, exercises, and revision schedules  
+8. Re-tests weak areas and **guides the learner to the end goal** until mastery  
+
+**No org. No teacher** for the Gold core loop. Class MVP school rails (org / teacher / student) are the foundation Gold later drives.
 
 ```mermaid
 flowchart LR
-  A[Adaptive quiz / activity] --> B[AI Diagnostic Engine]
-  B --> C[Mastery + confidence model]
-  C --> D[Personalized learning plan]
-  D --> E[Lessons / videos / exercises]
-  E --> F[Re-test weak areas]
-  F --> B
+  G[Learner end goal] --> A[Adaptive quiz / activity]
+  A --> B[AI Diagnostic Engine]
+  B --> C[Mastery + confidence + strengths/weaknesses]
+  C --> D[Fetch aligned courses & materials]
+  D --> E[Personalized learning plan]
+  E --> F[Lessons / practice / revision]
+  F --> H[Re-test]
+  H --> B
+  C --> Z[Guide to end goal]
 ```
 
-**Platform note:** Current Majestic Warhorse SPA is **web (Angular)**. Mobile (Flutter / React Native) is **proposed** in the feasibility stack — not Observed in this repository.
+**Platform note:** Current Majestic Warhorse SPA is **web (Angular)** Class MVP. Mobile (Flutter / React Native) is **proposed** in the feasibility stack — not Observed in this repository.
 
 ---
 
@@ -167,7 +214,7 @@ Student takes a **15-minute diagnostic test**.
 
 Student improves to **68%** on fractions; AI unlocks the next module.
 
-**No teacher intervention required** for this path (strategy intent). Teacher/parent dashboards remain available for oversight (see core features).
+**No teacher intervention required** for this path (product end goal). Teacher/parent dashboards remain available only when humans choose to oversee — they are not blockers for progress.
 
 ```mermaid
 sequenceDiagram
@@ -292,7 +339,7 @@ flowchart TB
 | Mobile | **Not in this repo** | Flutter/RN still to build |
 | Backend | Majestic API (Railway) + IAM; API docs describe course/roster domain | FastAPI AI services not in this frontend repo |
 | Database | PostgreSQL via Supabase (**Documented** for backends) | Aligns |
-| AI Models | **Not wired** — AI Mode stub only | OpenAI/LLM integration pending |
+| AI Models | **Partial** — AI Mode chat live; **Gold** diagnostic/path engine not built | Class MVP support ≠ Gold coach |
 | Analytics / XGBoost | **Not Observed** | New intelligence services |
 | Hosting | SPA→EC2; APIs→Railway; Supabase | Strategy says AWS — may converge or coexist (**Assumption**) |
 
@@ -408,48 +455,50 @@ Use **this document** for go-to-market sequencing (GCSE-first); use the **PRD** 
 | **Differentiator** | Diagnostic intelligence + adaptive recommendations + automated progress reporting. |
 | **Business model** | Freemium B2C + school licensing (plus coaching/corporate). |
 | **MVP feasibility** | High (≈3 months for AI diagnostic MVP). |
-| **Long-term vision** | Become the AI learning intelligence layer for schools, tutoring centers, and lifelong learners. |
+| Long-term vision (**Gold**) | Solo AI coach: goal → courses/materials → assess → strengths/weaknesses → mastery; **no org, no teacher** |
+| Near-term (**Class MVP**) | Org + Teacher + Student school loop; AI Mode chat as support |
 
 ---
 
 ## 18. Mapping strategy → Majestic Warhorse today
 
-| Strategy capability | Current SPA / platform status | Evidence |
-|---------------------|-------------------------------|----------|
-| Org / teacher / student school loop | **Working** | Courses, approvals, directory, Q&A — [01_Project_Overview.md](./01_Project_Overview.md) |
-| AI Tutor Chat | **Stub** | `/dashboard/ai-mode` — prompt only logs to console |
-| AI Skill Map | **Not built** | No skill-map domain in frontend |
-| Diagnostic test engine | **Not built** as adaptive diagnostic | Questionnaire/answers exist as teacher/student assessment, not adaptive diagnosis |
-| Personalized learning path | **Not built** | Course assignment ≠ AI path |
-| Predictive performance score | **Not built** | — |
-| Automatic revision planner | **Not built** | — |
-| Strength & weakness PDF/email | **Not built** | Mail API exists for invites (`mail/send-gmail`) — not diagnostic reports |
-| Parent dashboard | **Not built** | No parent role in SPA role strings |
-| Teacher dashboard | **Partial** | Org/teacher dashboard overview + approvals; not intervention/alerts intelligence |
-| Mobile app | **Not in repo** | Web SPA only |
-| GCSE Maths content pack | **Unknown / not in repo** | Content would live in backend/CMS |
+Map **Observed SPA → Class MVP**. Map **missing diagnostic / path / goal engine → Gold**.
+
+| Strategy capability | Horizon | Current SPA / platform status | Evidence |
+|---------------------|---------|-------------------------------|----------|
+| Org / teacher / student school loop | **Class MVP** | **Working** | Courses, approvals, directory, Q&A — [01_Project_Overview.md](./01_Project_Overview.md) |
+| AI Mode chat (study support) | **Class MVP** | **Partial / live** | `/dashboard/ai-mode` chat wired; not the Gold diagnostic engine |
+| Learner goal capture (solo, no org) | **Gold** | **Not built** | Org-scoped student flow only |
+| Auto fetch courses & materials from goal | **Gold** | **Not built** | Teacher/org course upload & assignment |
+| AI Skill Map | **Gold** | **Not built** | No skill-map domain in frontend |
+| Diagnostic test engine | **Gold** | **Not built** as adaptive diagnostic | Questionnaire/answers = teacher/student assessment, not adaptive diagnosis |
+| Personalized learning path | **Gold** | **Not built** | Course assignment ≠ AI path |
+| Predictive performance score | **Gold** | **Not built** | — |
+| Automatic revision planner | **Gold** | **Not built** | — |
+| Strength & weakness PDF/email | **Gold** | **Not built** | Mail API for invites — not diagnostic reports |
+| Parent dashboard | **Gold** / later | **Not built** | No parent role in SPA role strings |
+| Teacher dashboard | **Class MVP** | **Partial** | Org/teacher overview + approvals; not intervention intelligence |
+| Mobile app | Later | **Not in repo** | Web SPA only |
+| GCSE Maths content pack | Niche / later | **Unknown / not in repo** | Content would live in backend/CMS |
 
 ```mermaid
 flowchart TB
-  subgraph Now["Shipped school-loop MVP"]
+  subgraph ClassMVP["Class_MVP_Observed"]
     Auth[Auth + org picker]
     Roster[Approvals + directory + assign]
     Content[Courses + upload + details]
     QA[Questions + answers + feedback]
+    Chat[AI Mode chat support]
   end
-  subgraph Next["AI Diagnostic MVP ~3 months"]
-    Diag[Diagnostic engine]
-    Rec[Personalized recommendations]
-    Chat[AI tutor chat]
-    Dash[Dashboards + reports]
+  subgraph Gold["Gold_future"]
+    Goal[Learner_goal]
+    Fetch[Fetch_courses_and_materials]
+    Path[Learning_path]
+    Diag[Diagnostic_engine]
+    Map[Strengths_and_weaknesses]
+    Guide[Guide_to_mastery]
   end
-  subgraph Later["12-month strategy"]
-    Pred[Predictive scoring]
-    Parent[Parent analytics]
-    Multi[Multi-subject]
-    Corp[Corporate version]
-  end
-  Now --> Next --> Later
+  ClassMVP -->|"foundation rails"| Gold
 ```
 
 ---
@@ -480,3 +529,4 @@ If strategy and PRD disagree on sequencing, **update both** and record the decis
 | Date | Change |
 |------|--------|
 | 2026-08-04 | Initial capture of Adaptive Learning Intelligence strategy brief; mapped to current Majestic codebase |
+| 2026-08-09 | §1.1 / §18: explicit Class MVP vs Gold horizons; Observed SPA = Class MVP; diagnostic/path = Gold |

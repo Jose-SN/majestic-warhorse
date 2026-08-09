@@ -209,6 +209,30 @@
         <span>Approvals</span>
       </a>
     </li>
+    <li>
+      <a
+        [routerLink]="navRoutes.howItWorks"
+        [class.active]="isNavActive(navActiveSegments.howItWorks)"
+        [attr.title]="collapsed ? 'How it works' : null"
+      >
+        <figure>
+          <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 24px;">route</span>
+        </figure>
+        <span>How it works</span>
+      </a>
+    </li>
+    <li>
+      <a
+        [routerLink]="navRoutes.website"
+        [class.active]="isNavActive(navActiveSegments.website)"
+        [attr.title]="collapsed ? 'Website' : null"
+      >
+        <figure>
+          <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 24px;">language</span>
+        </figure>
+        <span>Website</span>
+      </a>
+    </li>
     <!-- <li *ngIf="loginedUserPrivilege === 'organization'">
       <a
         [routerLink]="navRoutes.assignTeacher"
@@ -327,6 +351,22 @@
       }
 
       <div class="sidenav-user__actions">
+        <button
+          type="button"
+          class="hologram-profile-btn"
+          role="menuitem"
+          (click)="goToHowItWorks()"
+        >
+          How it works
+        </button>
+        <button
+          type="button"
+          class="hologram-profile-btn"
+          role="menuitem"
+          (click)="goToWebsite()"
+        >
+          Website
+        </button>
         <button
           type="button"
           class="hologram-profile-btn"

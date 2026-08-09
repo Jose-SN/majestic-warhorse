@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PetaxAI Learning · Learning platform by PetaxAI</title>
+  <meta name="description" content="PetaxAI Learning — school platform for organizations, teachers, and students. Built by PetaxAI. AI goal-path coaching is the future direction." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --bg: #070708;
+      --surface: #121214;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --border: #27272a;
+      --primary: #ff6b2c;
+      --secondary: #ab0063;
+      --tertiary: #4a0084;
+      --brand: linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #4a0084 100%);
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.6;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; font-weight: 500; }
+    a:hover { text-decoration: underline; }
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      vertical-align: middle;
+    }
+
+    .wrap {
+      width: min(100% - 32px, var(--max));
+      margin-inline: auto;
+    }
+
+    /* Nav */
+    .topnav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+    }
+    .topnav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      font-size: 15px;
+    }
+    .brand:hover { text-decoration: none; }
+    .brand__mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--brand);
+      animation: markPulse 4s ease-in-out infinite;
+    }
+    .topnav__links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 20px;
+      font-size: 14px;
+      color: color-mix(in srgb, var(--text) 78%, transparent);
+    }
+    .topnav__links a:hover { color: var(--text); text-decoration: none; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 0;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .btn--primary {
+      background: var(--brand);
+      color: #fff;
+    }
+    .btn--primary:hover { text-decoration: none; filter: brightness(1.06); }
+    .btn--ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid color-mix(in srgb, var(--text) 22%, transparent);
+    }
+    .btn--ghost:hover {
+      text-decoration: none;
+      border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+    }
+    .btn--light {
+      background: #fff;
+      color: #111;
+    }
+    .btn--light:hover { text-decoration: none; filter: brightness(0.96); }
+
+    /* Hero — one composition, brand-first, full-bleed */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 0 clamp(48px, 8vw, 88px);
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .hero__plane {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(180deg, transparent 35%, var(--bg) 92%),
+        radial-gradient(1200px 700px at 70% 20%, rgba(255, 107, 44, 0.28), transparent 55%),
+        radial-gradient(900px 600px at 15% 70%, rgba(171, 0, 99, 0.22), transparent 50%),
+        radial-gradient(800px 500px at 90% 80%, rgba(74, 0, 132, 0.2), transparent 45%),
+        #0c0c0e;
+      animation: planeShift 18s ease-in-out infinite alternate;
+    }
+    .hero__grain {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: 0.07;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .hero__content {
+      width: min(100% - 32px, var(--max));
+      margin-inline: auto;
+      padding-top: 110px;
+      animation: riseIn 0.9s ease both;
+    }
+    .hero__brand {
+      margin: 0 0 20px;
+      max-width: 14ch;
+      font-size: clamp(42px, 8vw, 72px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      background: var(--brand);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero__headline {
+      margin: 0 0 14px;
+      max-width: 18ch;
+      font-size: clamp(28px, 4.5vw, 40px);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+    .hero__lead {
+      margin: 0 0 28px;
+      max-width: 34rem;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* Sections */
+    section {
+      padding: clamp(64px, 10vw, 104px) 0;
+      border-top: 1px solid var(--border);
+    }
+    .section__eyebrow {
+      margin: 0 0 12px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--primary);
+    }
+    .section__head {
+      margin-bottom: 40px;
+      max-width: 40rem;
+    }
+    .section__head h2 {
+      margin: 0 0 12px;
+      font-size: clamp(26px, 3.5vw, 34px);
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+    .section__head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: clamp(28px, 5vw, 64px);
+      align-items: start;
+    }
+    .split--reverse { direction: rtl; }
+    .split--reverse > * { direction: ltr; }
+
+    .prose p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose strong { color: var(--text); font-weight: 600; }
+
+    .feature-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 22px;
+    }
+    .feature-list li {
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+    }
+    .feature-list h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .feature-list p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .audience {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0;
+      border-top: 1px solid var(--border);
+    }
+    .audience__item {
+      padding: 28px 24px 28px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .audience__item:nth-child(2),
+    .audience__item:nth-child(3) {
+      padding-left: 24px;
+      border-left: 1px solid var(--border);
+    }
+    .audience__item h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .audience__item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .horizon {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .horizon__col {
+      padding: clamp(24px, 4vw, 36px);
+    }
+    .horizon__col + .horizon__col {
+      border-left: 1px solid var(--border);
+      background:
+        linear-gradient(160deg, color-mix(in srgb, var(--secondary) 12%, transparent), transparent 60%),
+        var(--surface);
+    }
+    .horizon__label {
+      margin: 0 0 10px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--primary);
+    }
+    .horizon__col + .horizon__col .horizon__label { color: #ffb0cc; }
+    .horizon__col h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+    }
+    .horizon__col p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .horizon__col ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .horizon__col li {
+      position: relative;
+      padding: 5px 0 5px 16px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .horizon__col li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+    .horizon__col + .horizon__col li::before { background: var(--secondary); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 28px 48px;
+    }
+    .about-grid h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .about-grid p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 28px;
+      margin-top: 36px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .contact-row a { color: var(--text); }
+
+    .band {
+      border-top: 1px solid var(--border);
+      padding: clamp(48px, 8vw, 80px) 0;
+      background:
+        radial-gradient(700px 280px at 20% 0%, rgba(255, 107, 44, 0.16), transparent 60%),
+        var(--surface);
+      text-align: center;
+    }
+    .band h2 {
+      margin: 0 0 12px;
+      font-size: clamp(26px, 3.5vw, 34px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .band p {
+      margin: 0 auto 28px;
+      max-width: 34rem;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.65;
+    }
+    .band__actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    footer {
+      padding: 36px 0 56px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    footer .wrap {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 16px 28px;
+    }
+    footer nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+    }
+    footer a:hover { color: var(--text); }
+
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes markPulse {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.12); }
+    }
+    @keyframes planeShift {
+      from { transform: scale(1) translate(0, 0); }
+      to { transform: scale(1.04) translate(-1.5%, 1%); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    html.is-embed .topnav { display: none; }
+    html.is-embed .hero { min-height: auto; padding-top: 24px; }
+    html.is-embed .hero__content { padding-top: 24px; }
+
+    @media (max-width: 900px) {
+      .topnav__links { display: none; }
+      .split,
+      .split--reverse,
+      .audience,
+      .horizon,
+      .about-grid {
+        grid-template-columns: 1fr;
+        direction: ltr;
+      }
+      .audience__item:nth-child(2),
+      .audience__item:nth-child(3) {
+        padding-left: 0;
+        border-left: 0;
+      }
+      .horizon__col + .horizon__col { border-left: 0; border-top: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+  <header class="topnav">
+    <div class="wrap topnav__inner">
+      <a class="brand" href="#top">
+        <span class="brand__mark" aria-hidden="true"></span>
+        PetaxAI Learning
+      </a>
+      <nav class="topnav__links" aria-label="Site">
+        <a href="#product">Product</a>
+        <a href="#audience">Who it’s for</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#petaxai">PetaxAI</a>
+        <a href="/how-it-works" target="_parent">How it works</a>
+        <a class="btn btn--ghost" href="/login" target="_parent" style="min-height: 36px; padding: 0 14px;">Sign in</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" style="border-top: 0;">
+      <div class="hero__plane" aria-hidden="true"></div>
+      <div class="hero__grain" aria-hidden="true"></div>
+      <div class="hero__content">
+        <h1 class="hero__brand">PetaxAI Learning</h1>
+        <p class="hero__headline">Run your school. Grow toward AI-guided mastery.</p>
+        <p class="hero__lead">
+          A learning platform for organizations, teachers, and students — with AI study support today,
+          and a solo goal-path coach on the roadmap.
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="/signup" target="_parent">Get started</a>
+          <a class="btn btn--ghost" href="/how-it-works" target="_parent">See how it works</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="product">
+      <div class="wrap split reveal">
+        <div>
+          <p class="section__eyebrow">The product</p>
+          <div class="section__head" style="margin-bottom: 0;">
+            <h2>An online school loop you can run today</h2>
+            <p>
+              PetaxAI Learning helps communities and schools onboard people, deliver courses,
+              assess learning, and support students with AI Mode — under their own organization identity.
+            </p>
+          </div>
+        </div>
+        <ul class="feature-list">
+          <li>
+            <h3>Organizations</h3>
+            <p>Create a tenant, approve members, manage directory and assignments, customize branding.</p>
+          </li>
+          <li>
+            <h3>Teachers</h3>
+            <p>Upload courses with chapters and media, build questionnaires, review answers, give feedback.</p>
+          </li>
+          <li>
+            <h3>Students</h3>
+            <p>Join a school space, open courses, submit assessments, and ask questions in AI Mode.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="audience">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <p class="section__eyebrow">Who it’s for</p>
+          <h2>Built for schools and communities that teach together</h2>
+          <p>
+            Designed for organizations that need a clear school loop — not a content marketplace.
+          </p>
+        </div>
+        <div class="audience reveal">
+          <article class="audience__item">
+            <h3>Schools &amp; academies</h3>
+            <p>Approve teachers and students, assign relationships, and keep courses in one place.</p>
+          </article>
+          <article class="audience__item">
+            <h3>Churches &amp; Sunday schools</h3>
+            <p>Run structured learning for your community with simple membership controls.</p>
+          </article>
+          <article class="audience__item">
+            <h3>Training teams</h3>
+            <p>Deliver internal courses, collect answers, and coach learners with shared library context.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="roadmap">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <p class="section__eyebrow">Product horizons</p>
+          <h2>What ships now vs where we’re going</h2>
+          <p>
+            Class MVP proves the school rails. Gold is the future end state — solo learner + AI,
+            with no organization and no teacher required for the core loop.
+          </p>
+        </div>
+        <div class="horizon reveal">
+          <div class="horizon__col">
+            <p class="horizon__label">Now · Class MVP</p>
+            <h3>Org · Teacher · Student</h3>
+            <p>Prove the online school loop with AI Mode as study support.</p>
+            <ul>
+              <li>Signup, approve, assign</li>
+              <li>Courses &amp; questionnaires</li>
+              <li>Teacher feedback</li>
+              <li>AI Mode chat support</li>
+            </ul>
+          </div>
+          <div class="horizon__col">
+            <p class="horizon__label">Future · Gold</p>
+            <h3>Solo learner + AI</h3>
+            <p>Goal → courses/materials → path → assess → strengths/weaknesses → mastery.</p>
+            <ul>
+              <li>No organization required</li>
+              <li>No teacher required</li>
+              <li>Diagnostic &amp; path engine</li>
+              <li>Guide to the end goal</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="platform">
+      <div class="wrap split split--reverse reveal">
+        <div>
+          <p class="section__eyebrow">Inside the app</p>
+          <div class="section__head" style="margin-bottom: 0;">
+            <h2>Everything you need for the school loop</h2>
+            <p>
+              Dashboard, courses, library, directory, approvals, assessments, settings, and AI Mode —
+              available after sign-in.
+            </p>
+          </div>
+        </div>
+        <ul class="feature-list">
+          <li>
+            <h3>Courses &amp; library</h3>
+            <p>Chapters, video lessons, attachments, and shared files for teaching context.</p>
+          </li>
+          <li>
+            <h3>Assessment &amp; feedback</h3>
+            <p>Questionnaires, student submissions, and teacher review in one flow.</p>
+          </li>
+          <li>
+            <h3>AI Mode</h3>
+            <p>Study help grounded in your library and course content — support today, coach tomorrow.</p>
+          </li>
+          <li>
+            <h3>White-label ready rails</h3>
+            <p>Organization branding for app name, logo, and colors as you grow.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="petaxai">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <p class="section__eyebrow">About PetaxAI</p>
+          <h2>PetaxAI Learning is part of the PetaxAI family</h2>
+          <p>
+            PetaxAI builds product software with a shared identity layer and product-specific
+            domain apps — so each product stays focused while authentication stays consistent.
+          </p>
+        </div>
+        <div class="about-grid reveal">
+          <div>
+            <h3>Company</h3>
+            <p>
+              <strong>PetaxAI</strong> designs and ships application products for organizations.
+              PetaxAI Learning (internally Majestic Warhorse) is the learning-platform product.
+            </p>
+          </div>
+          <div>
+            <h3>Shared identity</h3>
+            <p>
+              Sign-in is powered by <strong>PetaxAI IAM</strong> — a shared identity service used across
+              PetaxAI apps, with each product owning its own school data and roles.
+            </p>
+          </div>
+          <div>
+            <h3>Sister products</h3>
+            <p>
+              PetaxAI also builds related organization software (for example The Church Manager pattern) —
+              same family approach: shared auth, distinct product domains.
+            </p>
+          </div>
+          <div>
+            <h3>Privacy posture</h3>
+            <p>
+              PetaxAI Learning is positioned as a <strong>GDPR-first</strong> learning platform.
+              Organization data stays scoped to your tenant; learners progress inside their school space.
+            </p>
+          </div>
+        </div>
+        <div class="contact-row reveal">
+          <span>Product site: <a href="https://majestic.petaxai.com" target="_blank" rel="noopener">majestic.petaxai.com</a></span>
+          <span>Support: <a href="mailto:support@petaxai.com">support@petaxai.com</a></span>
+          <span><a href="/how-it-works" target="_parent">Workflow guide</a></span>
+        </div>
+      </div>
+    </section>
+
+    <div class="band">
+      <div class="wrap reveal">
+        <h2>Start with your school loop</h2>
+        <p>
+          Create an account, join or form an organization, and see how PetaxAI Learning works —
+          or read the full Now / Future workflow first.
+        </p>
+        <div class="band__actions">
+          <a class="btn btn--primary" href="/signup" target="_parent">Create account</a>
+          <a class="btn btn--ghost" href="/login" target="_parent">Sign in</a>
+          <a class="btn btn--ghost" href="/how-it-works" target="_parent">How it works</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="year">2026</span> PetaxAI · PetaxAI Learning</span>
+      <nav aria-label="Footer">
+        <a href="#product">Product</a>
+        <a href="#petaxai">PetaxAI</a>
+        <a href="/how-it-works" target="_parent">How it works</a>
+        <a href="/login" target="_parent">Sign in</a>
+        <a href="mailto:support@petaxai.com">Support</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('embed') === '1') {
+          document.documentElement.classList.add('is-embed');
+        }
+      } catch (e) { /* ignore */ }
+
+      var year = document.getElementById('year');
+      if (year) year.textContent = String(new Date().getFullYear());
+
+      var nodes = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        nodes.forEach(function (n) { n.classList.add('is-visible'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+      nodes.forEach(function (n) { io.observe(n); });
+    })();
+  </script>
+</body>
+</html>

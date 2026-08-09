@@ -95,9 +95,9 @@ Detailed route and service maps: [FRONTEND-ARCHITECTURE.md](./FRONTEND-ARCHITECT
 
 ## 2. Business goals
 
-### 2.1 Near-term (MVP / Beta) — **Documented (legacy)**, verified against routes/services
+### 2.1 Class MVP (Fast MVP) — **Documented (legacy)**, verified against routes/services
 
-From `UI_WORKFLOW.md` L46–60 and `USER_WORKFLOW.md` §0c, the business goal of the current release is to prove a complete **online school loop** without white-label or deep analytics.
+From `UI_WORKFLOW.md` L46–60 and `USER_WORKFLOW.md` §0c, the business goal of the current release is to prove a complete **online school loop**: Organization + Teacher + Student (approve, assign, courses, questionnaire, teacher feedback, AI Mode chat as support).
 
 | Business goal | How the SPA supports it | Maturity (**Observed**) |
 |---------------|-------------------------|-------------------------|
@@ -108,56 +108,79 @@ From `UI_WORKFLOW.md` L46–60 and `USER_WORKFLOW.md` §0c, the business goal of
 | Learning can be assessed | Questionnaire + student assessment + feedback APIs | Working |
 | Teacher–student linkage | `teacher-students/*` APIs; assign route exists | Working (sidenav Assign/Invite links commented — see FRONTEND-ARCHITECTURE) |
 
-### 2.2 Medium / long-term (gold vision) — **Documented (legacy)** only
+**Near-term increments under Class MVP** (not Gold) from `UI_WORKFLOW.md` L85–91:
 
-These goals appear in product docs; they are **not** fully implemented in the SPA.
+| Stage | Direction |
+|-------|-----------|
+| Version 1 | Stronger org experience, plans/premium basics, smoother invites in nav |
+| Version 2 | White-label (logo, naming), customer DB option or hosted DB |
+| Version 3 | Learner insights, gap detection, improvement suggestions |
+| Version 4 | Church / Sunday-school packaging, deeper analytics, self-serve branding |
 
-| Stage | Direction | Source |
-|-------|-----------|--------|
-| Version 1 | Stronger org experience, plans/premium basics, smoother invites in nav | `UI_WORKFLOW.md` L85–91 |
-| Version 2 | White-label (logo, naming), customer DB option or hosted DB | same |
-| Version 3 | Learner insights, gap detection, improvement suggestions | same |
-| Version 4 | Church / Sunday-school packaging, deeper analytics, self-serve branding | same |
+These are optional Class MVP upgrades. **Gold** (solo AI goal path) is a separate destination — see §2.2.
 
-Gold-vision themes (`USER_WORKFLOW.md` L57–87):
+### 2.2 Gold destination (future) — **Product north star**
+
+**Gold** is the distinct end state — not a white-label version number. It is **not** implemented in the SPA.
+
+| Gold property | Meaning |
+|---------------|---------|
+| No organization required | Solo learner can start without an org gate |
+| No teacher required | Core loop does not depend on a human instructor |
+| Goal-driven | Learner sets an end goal (exam, skill, outcome) |
+| AI fetches courses & materials | Aligned content assembled for the goal and gaps |
+| Path + assessment | Diagnostic/path engine continuous assessment |
+| Strengths & weaknesses | Evidence-based skill map |
+| Guide to mastery | Next best step until the goal is reached |
+
+```text
+Class MVP:  Org + Teacher + Student prove the school rails.
+Gold:       Solo learner + AI — goal → courses/materials → path →
+            assess → strengths/weaknesses → guide to end goal.
+            No org. No teacher.
+```
+
+Gold-vision themes from `USER_WORKFLOW.md` L57–87 that align with Gold (not Class MVP delivery):
 
 - Understand engagement, strengths, and gaps per learner
 - Individually validate progress and suggest improvements
+- AI-orchestrated courses and materials toward an explicit learner goal
+- Solo learning loop that does not depend on org or teacher
 - Responsible monetization / program sustainability later
-- Full white-label while remaining “our software”
 
-**Assumption:** “Majestic Warhorse” is being positioned under PetaxAI (`environment.prod.ts` → `https://majestic.petaxai.com`) as a reusable learning front-end for communities, schools, and music/instruction contexts. Music-instruction positioning appears in prior architecture briefings; product workflow docs emphasize churches/Sunday schools/schools/communities. Treat music as an **Assumption** unless product marketing assets in-repo state it explicitly (none found under `src/` copy beyond generic learning).
+**Assumption:** “Majestic Warhorse” is being positioned under PetaxAI (`environment.prod.ts` → `https://majestic.petaxai.com`) as a reusable learning front-end for communities, schools, and (later, Gold) independent learners. Music-instruction positioning appears in prior architecture briefings; product workflow docs emphasize churches/Sunday schools/schools/communities. Treat music as an **Assumption** unless product marketing assets in-repo state it explicitly (none found under `src/` copy beyond generic learning).
 
-### 2.3 Goals explicitly out of current MVP (**Documented legacy**)
+### 2.3 Goals explicitly out of current Class MVP (**Documented legacy**)
 
-| Not in MVP | Source |
+| Not in Class MVP | Source |
 |------------|--------|
 | Plans / premium checkout | `UI_WORKFLOW.md` L72–79 |
 | Formal org course-approval queue | same |
 | Full white-label theming + customer-owned DB | same |
 | Deep analytics / “where to improve” engine | same |
+| **Gold** (solo AI path: no org, no teacher, diagnostic engine) | PRD §1 / this overview §2.2 |
 
-### 2.4 Adaptive Learning Intelligence strategy (**Product vision**)
+### 2.4 Adaptive Learning Intelligence strategy (**Product vision → Gold**)
 
 Majestic Warhorse is also positioned as an **AI Tutor / Adaptive Learning
-Intelligence Platform**. The canonical strategy brief (pitch, problem,
-competitors, market gap, diagnostic journey, core AI features, stack,
-~3-month AI MVP timeline, B2C/B2B revenue, GCSE Maths UK niche, 12-month
-roadmap) lives in:
+Intelligence Platform**. That positioning is the **Gold** horizon. The
+canonical strategy brief (pitch, problem, competitors, market gap,
+diagnostic journey, core AI features, stack, timeline, B2C/B2B revenue,
+GCSE Maths UK niche, 12-month roadmap) lives in:
 
 → **[05_AI_Tutor_Adaptive_Learning_Strategy.md](./05_AI_Tutor_Adaptive_Learning_Strategy.md)**  
 → Also embedded in [MAJESTIC_WARHORSE_PRD.md](./MAJESTIC_WARHORSE_PRD.md) §35
 
-| Strategy highlight | Status in this SPA (**Observed**) |
-|--------------------|-----------------------------------|
-| One-line pitch: AI discovers strengths/weaknesses and adapts paths | Vision — not implemented as an engine |
-| AI Tutor Chat | `/dashboard/ai-mode` **stub** only |
-| Diagnostic test + Skill Map + revision planner | **Not built** |
-| GCSE Maths (UK) niche entry | **Not in repo** as content pack |
-| Freemium + school licensing (£) | **Not built** (no checkout) |
+| Strategy highlight | Horizon | Status in this SPA (**Observed**) |
+|--------------------|---------|-----------------------------------|
+| Org / Teacher / Student school loop | **Class MVP** | Working |
+| AI Mode chat as study support | **Class MVP** | `/dashboard/ai-mode` live/API-backed (evolving) |
+| Solo goal → AI fetch courses/materials → path → mastery; **no org, no teacher** | **Gold** | Vision — not implemented |
+| Diagnostic test + Skill Map + revision planner | **Gold** | **Not built** |
+| GCSE Maths (UK) niche entry | Niche / later | **Not in repo** as content pack |
+| Freemium + school licensing (£) | Later | **Not built** (no checkout) |
 
-School-loop MVP (§2.1) remains the shipped foundation; the AI Diagnostic
-MVP (~3 months in the strategy) is the next product layer.
+School-loop MVP (§2.1) remains the shipped foundation; the AI Diagnostic / teacher-optional end goal is the product north star (PRD §1, strategy §1.1). The strategy’s ~3-month AI Diagnostic MVP is the next product layer.
 
 ---
 
