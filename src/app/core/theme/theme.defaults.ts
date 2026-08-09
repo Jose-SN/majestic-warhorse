@@ -1,4 +1,4 @@
-import { ThemeOption, ThemeSurfacePalette } from './theme.model';
+import { ThemeOption, ThemeSurfacePalette, AppThemeMode } from './theme.model';
 
 /** Neutral dark — surfaces only; brand gradient stays from BrandingService. */
 export const DARK_THEME_SURFACES: ThemeSurfacePalette = {
@@ -22,12 +22,6 @@ export const LIGHT_THEME_SURFACES: ThemeSurfacePalette = {
 
 export const THEME_OPTIONS: ThemeOption[] = [
   {
-    id: 'default',
-    label: 'Default',
-    description: 'Petax Signature',
-    icon: 'auto_awesome',
-  },
-  {
     id: 'dark',
     label: 'Dark',
     description: 'Neutral dark',
@@ -39,6 +33,15 @@ export const THEME_OPTIONS: ThemeOption[] = [
     description: 'Bright surfaces',
     icon: 'light_mode',
   },
+  {
+    id: 'default',
+    label: 'Signature',
+    description: 'PetaxAI Signature',
+    icon: 'auto_awesome',
+  },
 ];
+
+/** Applied when nothing is stored in localStorage. */
+export const DEFAULT_APP_THEME: AppThemeMode = 'dark';
 
 export const THEME_STORAGE_KEY = 'mw-app-theme';

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BrandingService } from 'src/app/core/branding/branding.service';
 import {
+  DEFAULT_APP_THEME,
   DARK_THEME_SURFACES,
   LIGHT_THEME_SURFACES,
   THEME_OPTIONS,
@@ -41,7 +42,7 @@ export class ThemeService {
 
   setTheme(mode: AppThemeMode): void {
     if (mode !== 'default' && mode !== 'dark' && mode !== 'light') {
-      mode = 'default';
+      mode = DEFAULT_APP_THEME;
     }
     try {
       localStorage.setItem(THEME_STORAGE_KEY, mode);
@@ -179,6 +180,6 @@ export class ThemeService {
     } catch {
       // ignore
     }
-    return 'default';
+    return DEFAULT_APP_THEME;
   }
 }

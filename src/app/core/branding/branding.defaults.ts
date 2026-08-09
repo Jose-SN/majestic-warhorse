@@ -55,7 +55,7 @@ function preset(
 
 /** Org customize presets — each has a distinct gradient + accent set. */
 export const BRANDING_PRESETS: BrandingPreset[] = [
-  preset('majestic-cyber', 'Petax Signature', {}),
+  preset('majestic-cyber', 'PetaxAI Signature', {}),
   preset('ember-academy', 'Ember Academy', {
     primary: '#ffc9a8',
     primaryContainer: '#e85d04',

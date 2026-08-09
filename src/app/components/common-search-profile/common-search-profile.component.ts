@@ -33,7 +33,7 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
   public themeMenuOpen = false;
   public activityFeedItems: ActivityFeedItem[] = [];
   public themeOptions: ThemeOption[] = [];
-  public activeTheme: AppThemeMode = 'default';
+  public activeTheme: AppThemeMode = 'dark';
   @Output() mobNavchild = new EventEmitter<void>();
   public mobMenu: boolean = false;
   public loginedUserInfo: UserModel = {} as UserModel;
