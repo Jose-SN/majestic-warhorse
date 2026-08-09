@@ -31,7 +31,7 @@ html[data-theme='light'] {
   --motion-normal: 0ms;
   --motion-slow: 0ms;
 
-  /* Background grids + scanlines + glows */
+  /* Background grids + scanlines + glows (decorative only — not layout grids) */
   .dashboard-right__backdrop,
   .dashboard-right__backdrop-grid,
   .dashboard-right__backdrop-scanline,
@@ -41,7 +41,7 @@ html[data-theme='light'] {
   .approval-grid-page__glow,
   .ap-page__grid,
   .ap-page__glow,
-  .aa-portal__grid,
+  .aa-portal__glow,
   .signup-pane__grid,
   .signup-pane__scan,
   .login-hero__glow,
