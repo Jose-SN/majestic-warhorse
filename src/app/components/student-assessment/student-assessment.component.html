@@ -1,7 +1,15 @@
-<div class="student-assessment">
+<div class="student-assessment" [class.is-submitted]="hasSubmitted && !isRetrying">
   <div class="course-top">
     <h2>Assessment Test</h2>
-    <span>Please answer all questions before submitting</span>
+    <span>
+      @if (isRetrying) {
+        Retry mode — update your answers and submit again
+      } @else if (hasSubmitted) {
+        Your answers have been submitted
+      } @else {
+        Please answer all questions before submitting
+      }
+    </span>
   </div>
 
   @if (loading) {
@@ -14,7 +22,7 @@
     <p class="help-text">Questions may be added by your teacher or organization.</p>
   </div>
   } @else {
-  <div class="questionnire-form">
+  <div class="questionnire-form" [class.questionnire-form--locked]="inputsLocked">
     @for (question of questionsList; track question.id || $index) {
     @let qId = question.id || $index;
     @let qType = normalizeType(question.type);
@@ -22,13 +30,48 @@
     @case ("Textbox") {
     <div class="input-holder">
       <label class="sub-title">{{ question.question }}</label>
-      <input type="text" [(ngModel)]="answers[qId]" placeholder="Enter your answer" [disabled]="hasSubmitted" />
+      <input type="text" [(ngModel)]="answers[qId]" placeholder="Enter your answer" [disabled]="inputsLocked" />
     </div>
     }
     @case ("Textarea") {
-    <div class="input-holder">
+    <div class="input-holder input-holder--textarea" [class.input-holder--submitted]="inputsLocked">
       <label class="sub-title">{{ question.question }}</label>
-      <textarea rows="5" [(ngModel)]="answers[qId]" placeholder="Enter your answer" [disabled]="hasSubmitted"></textarea>
+      @if (inputsLocked) {
+        <!-- TODO: remove answer-attempts later if not needed
+        @let attempts = getAnswerAttemptsForQuestion(qId);
+        @if (attempts.length > 1) {
+          <div class="answer-attempts">
+            @for (attempt of attempts; track attempt.version + '-' + $index) {
+              <div class="answer-attempts__row" [class.answer-attempts__row--current]="attempt.isCurrent">
+                <div class="answer-attempts__meta">
+                  <span class="answer-attempts__label">{{ attempt.label }}</span>
+                  <span class="answer-attempts__version">v{{ attempt.version }}</span>
+                </div>
+                <p class="answer-attempts__body">{{ attempt.value || '—' }}</p>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="submitted-answer">...</div>
+        }
+        -->
+          <div class="submitted-answer" aria-label="Submitted answer">
+            <p class="submitted-answer__label">
+              Your submitted answer
+              @if (answerVersions[qId]) {
+                <span class="submitted-answer__version">v{{ answerVersions[qId] }}</span>
+              }
+            </p>
+            <p class="submitted-answer__body">{{ formatAnswerDisplay(answers[qId]) || '—' }}</p>
+          </div>
+      } @else {
+        <textarea
+          class="answer-textarea"
+          rows="5"
+          [(ngModel)]="answers[qId]"
+          placeholder="Enter your answer"
+        ></textarea>
+      }
     </div>
     }
     @case ("Radio") {
@@ -42,7 +85,7 @@
           [name]="'question_' + qId"
           [value]="$any(option).value"
           [(ngModel)]="answers[qId]"
-          [disabled]="hasSubmitted" />
+          [disabled]="inputsLocked" />
         <strong>{{ $any(option).label }}</strong>
       </label>
       }
@@ -60,7 +103,7 @@
           [value]="$any(option).value"
           [checked]="isCheckboxChecked(qId, $any(option).value)"
           (change)="handleCheckboxChange(qId, $any(option).value, $event)"
-          [disabled]="hasSubmitted" />
+          [disabled]="inputsLocked" />
         <span class="checkmark"></span>
         <strong>{{ $any(option).label }}</strong>
       </label>
@@ -72,7 +115,7 @@
     <div class="input-holder">
       <label class="sub-title">{{ question.question }}</label>
       @if ((question?.options?.length ?? 0) > 0) {
-      <select [(ngModel)]="answers[qId]" title="Select an option" aria-label="Select an option" [disabled]="hasSubmitted">
+      <select [(ngModel)]="answers[qId]" title="Select an option" aria-label="Select an option" [disabled]="inputsLocked">
         <option value="">Select an option</option>
         @for (option of question.options; track $any(option).value) {
         <option [value]="$any(option).value">{{ $any(option).label }}</option>
@@ -84,20 +127,133 @@
     @default {
     <div class="input-holder">
       <label class="sub-title">{{ question.question }}</label>
-      <input type="text" [(ngModel)]="answers[qId]" placeholder="Enter your answer" [disabled]="hasSubmitted" />
+      <input type="text" [(ngModel)]="answers[qId]" placeholder="Enter your answer" [disabled]="inputsLocked" />
     </div>
     }
     }
   }
   </div>
-  @if (!hasSubmitted) {
+
+  @if (feedbackLoading || (feedbackVisible && teacherFeedback) || (hasSubmitted && (historyLoading || feedbackHistory.length > 0))) {
+  <div class="feedback-layout">
+    <div class="feedback-layout__main">
+      @if (feedbackLoading) {
+        <div class="feedback-panel feedback-panel--loading">
+          <p>Loading teacher feedback…</p>
+        </div>
+      } @else if (feedbackVisible && teacherFeedback) {
+        <section class="feedback-panel" aria-label="Teacher feedback">
+          <header class="feedback-panel__head">
+            <div>
+              <h3>Teacher feedback</h3>
+              <p>
+                @if (feedbackMeta.reviewedBy) {
+                  From {{ feedbackMeta.reviewedBy }}
+                } @else {
+                  Feedback from your teacher
+                }
+              </p>
+            </div>
+            @if (feedbackGradeDisplay) {
+              <span class="feedback-panel__grade">{{ feedbackGradeDisplay }}</span>
+            }
+          </header>
+
+          <div class="feedback-panel__status" [attr.data-status]="awaitingReviewAfterRetry ? 'incomplete' : feedbackStatusKey">
+            <span class="feedback-panel__status-dot" aria-hidden="true"></span>
+            <span class="feedback-panel__status-label">{{ feedbackStatusLabel }}</span>
+            @if (canRetry) {
+              <span class="feedback-panel__status-tag">Resubmission</span>
+            } @else if (awaitingReviewAfterRetry) {
+              <span class="feedback-panel__status-tag">Pending review</span>
+            }
+          </div>
+
+          <div class="feedback-panel__section" [attr.data-status]="feedbackStatusKey">
+            <p class="feedback-panel__section-label">Summary</p>
+            <p class="feedback-panel__summary">{{ teacherFeedback.summary }}</p>
+          </div>
+
+          @if (canRetry && !isRetrying && !awaitingReviewAfterRetry) {
+            <div class="feedback-panel__section" [attr.data-status]="'retry'">
+              <p class="feedback-panel__section-label">Next step</p>
+              <p class="feedback-panel__retry-note">
+                Your teacher requested a retry. You can update your answers and submit again.
+              </p>
+            </div>
+          }
+        </section>
+      }
+    </div>
+
+    @if (hasSubmitted && (historyLoading || feedbackHistory.length > 0)) {
+      <section class="feedback-history" aria-label="Feedback history">
+        <header class="feedback-history__head">
+          <h3>Feedback history</h3>
+          @if (feedbackHistory.length > 0) {
+            <span class="feedback-history__count">{{ feedbackHistory.length }}</span>
+          }
+        </header>
+
+        @if (historyLoading && feedbackHistory.length === 0) {
+          <p class="feedback-history__empty">Loading history…</p>
+        } @else {
+          <ul class="feedback-history__list">
+            @for (item of feedbackHistory; track historyTrackId(item, $index)) {
+              <li class="feedback-history__item" [attr.data-status]="historyStatusKey(item)">
+                <div class="feedback-history__meta">
+                  <span class="feedback-history__who">{{ historyReviewerName(item) }}</span>
+                  @if (historyGradeLabel(item)) {
+                    <span class="feedback-history__grade" [attr.data-status]="historyStatusKey(item)">
+                      {{ historyGradeLabel(item) }}
+                    </span>
+                  }
+                  @if (item.review?.requires_resubmission) {
+                    <span class="feedback-history__retry">Retry</span>
+                  }
+                  @if (item.version) {
+                    <span class="feedback-history__version">v{{ item.version }}</span>
+                  }
+                </div>
+                <p class="feedback-history__summary">{{ historySummary(item) }}</p>
+                @if (historyDate(item)) {
+                  <time class="feedback-history__date">{{ historyDate(item) }}</time>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    }
+  </div>
+  }
+
+  @if (!hasSubmitted || isRetrying) {
   <div class="disclaimer-holder">
-    <p class="disclaimer-text">Please validate everything before submitting, since you can't change answers once you submit.</p>
+    <p class="disclaimer-text">
+      @if (isRetrying) {
+        Review your updates carefully before submitting your retry.
+      } @else {
+        Please validate everything before submitting, since you can't change answers once you submit.
+      }
+    </p>
   </div>
   <div class="data-refreshed-holder">
+    @if (isRetrying) {
+      <button type="button" class="btn-secondary" (click)="cancelRetry()" [disabled]="submitting">Cancel</button>
+    }
     <button type="button" (click)="submitAnswers()" [disabled]="submitting || !canSubmit">
-      {{ submitting ? 'Submitting...' : 'Submit Answers' }}
+      {{ submitting ? 'Submitting...' : (isRetrying ? 'Submit retry' : 'Submit Answers') }}
     </button>
+  </div>
+  } @else if (canRetry) {
+  <div class="data-refreshed-holder">
+    <button type="button" (click)="startRetry()">Retry answers</button>
+  </div>
+  } @else if (hasSubmitted) {
+  <div class="submitted-banner">
+    <span class="material-symbols-outlined" aria-hidden="true">task_alt</span>
+    <p>Submitted. Waiting for teacher feedback{{ feedbackVisible ? ' updates' : '' }}.</p>
   </div>
   }
   }

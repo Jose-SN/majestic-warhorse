@@ -887,12 +887,85 @@ PostgreSQL-backed. Supports single-choice (string) and checkbox (JSON string) an
 | `course_id` | `courseId` | Filter by course |
 | `question_id` | `questionId` | Filter by question |
 
+Each answer row includes a `version` integer (starts at `1` on first save; increments on each successful update / retry).
+
 **Response `200`:**
 ```json
 {
   "success": true,
   "message": "Success",
-  "data": []
+  "data": [
+    {
+      "id": "answer-uuid",
+      "course_id": "course-uuid",
+      "question_id": "question-uuid",
+      "answer": "\"Option A\"",
+      "submitted_by": "user-uuid",
+      "version": 1,
+      "creation_date": "2026-08-09T20:00:00.000Z",
+      "modification_date": "2026-08-09T20:00:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+### Get answer history
+`GET /answer/history`
+
+Returns prior answer versions for a student+course (same idea as feedback history). Prefer this for attempt rows after retries.
+
+**Query params:**
+| Param | Required | Description |
+|-------|----------|-------------|
+| `course_id` | Yes | Course id |
+| `submitted_by` | Yes | Student IAM user id |
+
+**Response `200`:**
+```json
+{
+  "success": true,
+  "message": "Success",
+  "data": [
+    {
+      "id": "answer-uuid",
+      "course_id": "course-uuid",
+      "question_id": "question-uuid",
+      "answer": "\"first attempt\"",
+      "submitted_by": "user-uuid",
+      "version": 1,
+      "creation_date": "2026-08-09T20:00:00.000Z",
+      "modification_date": "2026-08-09T20:00:00.000Z"
+    },
+    {
+      "id": "answer-uuid",
+      "course_id": "course-uuid",
+      "question_id": "question-uuid",
+      "answer": "\"retry attempt\"",
+      "submitted_by": "user-uuid",
+      "version": 2,
+      "creation_date": "2026-08-09T20:00:00.000Z",
+      "modification_date": "2026-08-09T21:30:00.000Z"
+    }
+  ]
+}
+```
+
+Alternate grouped shape also accepted by the client:
+
+```json
+{
+  "success": true,
+  "data": {
+    "attempts": [
+      {
+        "version": 1,
+        "submitted_at": "2026-08-09T20:00:00.000Z",
+        "answers": [{ "id": "…", "question_id": "…", "answer": "\"…\"" }]
+      }
+    ]
+  }
 }
 ```
 
@@ -907,7 +980,8 @@ PostgreSQL-backed. Supports single-choice (string) and checkbox (JSON string) an
   "course_id": "course-uuid",
   "question_id": "question-uuid",
   "answer": "\"Option A\"",
-  "submitted_by": "user-uuid"
+  "submitted_by": "user-uuid",
+  "version": 1
 }
 ```
 
@@ -918,13 +992,15 @@ PostgreSQL-backed. Supports single-choice (string) and checkbox (JSON string) an
     "course_id": "course-uuid",
     "question_id": "question-uuid",
     "answer": "\"Answer 1\"",
-    "submitted_by": "user-uuid"
+    "submitted_by": "user-uuid",
+    "version": 1
   },
   {
     "course_id": "course-uuid",
     "question_id": "question-uuid-2",
     "answer": "[\"Option1\", \"Option2\"]",
-    "submitted_by": "user-uuid"
+    "submitted_by": "user-uuid",
+    "version": 1
   }
 ]
 ```
@@ -932,6 +1008,8 @@ PostgreSQL-backed. Supports single-choice (string) and checkbox (JSON string) an
 **Answer format:**
 - Single choice: JSON-encoded string, e.g. `"\"Option A\""`
 - Checkbox: JSON array string, e.g. `"[\"Option1\", \"Option2\"]"`
+
+`version` is optional on create; backend should default to `1` and snapshot history.
 
 **Response `201` (single):**
 ```json
@@ -959,6 +1037,8 @@ PostgreSQL-backed. Supports single-choice (string) and checkbox (JSON string) an
 ### Update answer
 `PUT /answer/update`
 
+Used for student retry. Each successful update increments `version` and appends a history snapshot.
+
 **Body:**
 ```json
 {
@@ -966,9 +1046,16 @@ PostgreSQL-backed. Supports single-choice (string) and checkbox (JSON string) an
   "course_id": "course-uuid",
   "question_id": "question-uuid",
   "answer": "\"Updated answer\"",
-  "submitted_by": "user-uuid"
+  "submitted_by": "user-uuid",
+  "version": 2,
+  "expected_version": 1
 }
 ```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `version` | No | Next version the client expects to write (typically `current + 1`) |
+| `expected_version` | No | Optimistic lock; mismatch → `409` |
 
 **Response `200`:**
 ```json
@@ -1009,6 +1096,9 @@ Schema: `scripts/create_answer_feedback_table.sql` — one `answer_feedback` row
 ```json
 {
   "organization_id": "org-uuid",
+  "reviewed_by_user_id": "teacher-iam-uuid",
+  "reviewed_by_role": "teacher",
+  "reviewed_by_display_name": "Sara Khan",
   "course_id": "course-uuid",
   "submission_id": null,
   "assessment": {
@@ -1053,7 +1143,10 @@ Schema: `scripts/create_answer_feedback_table.sql` — one `answer_feedback` row
 
 | Field | Required | Notes |
 |-------|----------|-------|
-| `organization_id` | No* | Prefer JWT; if sent must match JWT org |
+| `organization_id` | Yes | Org scope; must match JWT org |
+| `reviewed_by_user_id` | Yes | Reviewer IAM user id (teacher / organization account) |
+| `reviewed_by_role` | Yes | e.g. `teacher` \| `organization` |
+| `reviewed_by_display_name` | Yes | Display name stored for audit / student-facing attribution |
 | `course_id` | Yes | Course scope; must belong to JWT org |
 | `submission_id` | No | Optional; omit/`null` until attempts exist — scopes one feedback stream per student+course |
 | `review.outcome` | Yes | `pass` \| `fail` \| `distinction` \| `incomplete` \| `needs_resubmission` |
@@ -1062,7 +1155,7 @@ Schema: `scripts/create_answer_feedback_table.sql` — one `answer_feedback` row
 | `item_feedback[]` | Yes | Array (one entry per answered question when available) |
 | `metadata.expected_version` | No | Optimistic lock; mismatch → `409` |
 
-`reviewed_by.role` / `user_id` / `display_name` come from JWT (not the body).
+Reviewer fields are sent in the body and should align with the authenticated JWT user.
 
 When `notifications.notify_student` is `true` and visibility is `student_visible`, Logic looks up the learner email in IAM and sends Gmail. Email failure is reported in `data.notification` but does **not** roll back publish.
 

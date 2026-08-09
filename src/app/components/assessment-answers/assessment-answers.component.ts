@@ -5,7 +5,9 @@ import { Subject, takeUntil } from 'rxjs';
 import { QuestionnaireApiService } from 'src/app/services/api-service/questionnaire-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { ConfirmationPopupService } from 'src/app/shared/confirmation-popup/confirmation-popup.service';
+import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import {
+  AnswerFeedbackHistoryItem,
   AnswerFeedbackPayload,
   FeedbackGradeCode,
   FeedbackItemPayload,
@@ -13,6 +15,7 @@ import {
   GRADE_TO_OUTCOME,
   OUTCOME_TO_GRADE,
 } from 'src/app/pages/questionnaire/model/answer-feedback.model';
+import { AnswerHistoryItem } from 'src/app/pages/questionnaire/model/answer.model';
 
 export interface AnswerSubmission {
   id?: string;
@@ -23,6 +26,10 @@ export interface AnswerSubmission {
   answers: { [key: string]: string | string[] };
   /** question_id → answer row id from Logic DB */
   answerIds?: { [questionId: string]: string };
+  /** question_id → current answer version */
+  answerVersions?: { [questionId: string]: number };
+  /** Total answer API rows for this student (includes retries/versions) */
+  answerRecordCount?: number;
   questions?: any[];
   feedback?: string;
   outcome?: string;
@@ -31,6 +38,20 @@ export interface AnswerSubmission {
   feedbackVersion?: number;
   feedbackId?: string;
   correctedAnswers?: { [key: string]: string | string[] };
+}
+
+/** One student answer attempt shown as a row under a question */
+export interface AnswerAttemptRow {
+  attemptNumber: number;
+  label: string;
+  value: string | string[];
+  version?: number;
+  /** Overall review grade label (PASS / FAIL / DIST), same as aa-history__grade */
+  gradeLabel?: string;
+  /** Color key: pass | fail | dist | retry | incomplete | pending */
+  statusKey?: string | null;
+  teacherComment?: string;
+  isCurrent?: boolean;
 }
 
 @Component({
@@ -53,7 +74,13 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
   public canAccess = false;
   public selectedSubmission: AnswerSubmission | null = null;
   public selectedGrade: FeedbackGradeCode = 'PASS';
+  /** When true, student may retry answers after this review is published */
+  public requireRetry = false;
   public savingFeedback = false;
+  public feedbackHistory: AnswerFeedbackHistoryItem[] = [];
+  public answerHistory: AnswerHistoryItem[] = [];
+  public historyLoading = false;
+  public answerHistoryLoading = false;
   readonly gradeOptions: FeedbackGradeCode[] = ['FAIL', 'PASS', 'DIST'];
 
   get isContentLoading(): boolean {
@@ -99,7 +126,13 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   selectSubmission(submission: AnswerSubmission): void {
+    const prevKey = this.submissionKey(this.selectedSubmission);
+    const nextKey = this.submissionKey(submission);
     this.selectedSubmission = submission;
+    if (prevKey !== nextKey) {
+      this.feedbackHistory = [];
+      this.answerHistory = [];
+    }
     const key = this.submissionKey(submission);
     const stored = submission.feedback ?? this.feedbackMap[key] ?? '';
 
@@ -114,7 +147,184 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
         : 'PASS';
     }
 
+    this.requireRetry =
+      this.selectedGrade === 'FAIL' ||
+      submission.outcome === 'needs_resubmission' ||
+      submission.outcome === 'fail';
+
     this.feedbackMap[key] = stored.replace(/^\s*\[(FAIL|PASS|DIST)\]\s*/i, '');
+    this.loadFeedbackHistory(submission);
+    this.loadAnswerHistory(submission);
+  }
+
+  onGradeChange(grade: FeedbackGradeCode): void {
+    this.selectedGrade = grade;
+    if (grade === 'FAIL') {
+      this.requireRetry = true;
+    }
+  }
+
+  loadFeedbackHistory(submission?: AnswerSubmission | null): void {
+    const target = submission ?? this.selectedSubmission;
+    const studentUserId = String(target?.userId || '').trim();
+    const courseId = this.courseId?.trim();
+    if (!studentUserId || !courseId) {
+      this.feedbackHistory = [];
+      this.historyLoading = false;
+      return;
+    }
+
+    this.historyLoading = true;
+    this.questionnaireApiService
+      .getAnswerFeedbackHistory(studentUserId, courseId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (items) => {
+          this.historyLoading = false;
+          if (this.submissionKey(this.selectedSubmission) !== this.submissionKey(target)) {
+            return;
+          }
+          this.feedbackHistory = this.normalizeHistoryItems(items);
+        },
+        error: () => {
+          this.historyLoading = false;
+          if (this.submissionKey(this.selectedSubmission) !== this.submissionKey(target)) {
+            return;
+          }
+          this.feedbackHistory = [];
+        },
+      });
+  }
+
+  loadAnswerHistory(submission?: AnswerSubmission | null): void {
+    const target = submission ?? this.selectedSubmission;
+    const studentUserId = String(target?.userId || '').trim();
+    const courseId = this.courseId?.trim();
+    if (!studentUserId || !courseId) {
+      this.answerHistory = [];
+      this.answerHistoryLoading = false;
+      return;
+    }
+
+    this.answerHistoryLoading = true;
+    this.questionnaireApiService
+      .getAnswerHistory(courseId, studentUserId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (items) => {
+          this.answerHistoryLoading = false;
+          if (this.submissionKey(this.selectedSubmission) !== this.submissionKey(target)) {
+            return;
+          }
+          this.answerHistory = this.normalizeAnswerHistoryItems(items);
+        },
+        error: () => {
+          this.answerHistoryLoading = false;
+          if (this.submissionKey(this.selectedSubmission) !== this.submissionKey(target)) {
+            return;
+          }
+          this.answerHistory = [];
+        },
+      });
+  }
+
+  private normalizeAnswerHistoryItems(items: AnswerHistoryItem[]): AnswerHistoryItem[] {
+    const list = Array.isArray(items) ? [...items] : [];
+    return list.sort((a, b) => {
+      const av = typeof a.version === 'number' ? a.version : 0;
+      const bv = typeof b.version === 'number' ? b.version : 0;
+      if (av !== bv) return av - bv;
+      return this.answerHistorySortTime(a) - this.answerHistorySortTime(b);
+    });
+  }
+
+  private answerHistorySortTime(item: AnswerHistoryItem): number {
+    const raw =
+      item.modification_date ||
+      item.submitted_at ||
+      item.updated_at ||
+      item.creation_date ||
+      item.created_at ||
+      0;
+    return new Date(raw).getTime() || 0;
+  }
+
+  historyReviewerName(item: AnswerFeedbackHistoryItem): string {
+    return (
+      item.reviewed_by?.display_name ||
+      item.reviewed_by_display_name ||
+      'Teacher'
+    );
+  }
+
+  historyGradeLabel(item: AnswerFeedbackHistoryItem): string {
+    const code =
+      item.review?.grade_code ||
+      (item.review?.outcome
+        ? OUTCOME_TO_GRADE[item.review.outcome as keyof typeof OUTCOME_TO_GRADE]
+        : '') ||
+      '';
+    return code ? String(code).toUpperCase() : '';
+  }
+
+  historyStatusKey(item: AnswerFeedbackHistoryItem): string {
+    const grade = this.historyGradeLabel(item);
+    const outcome = item.review?.outcome;
+    if (item.review?.requires_resubmission || outcome === 'needs_resubmission') {
+      if (grade === 'FAIL' || outcome === 'fail') return 'fail';
+      return 'retry';
+    }
+    if (grade === 'FAIL' || outcome === 'fail') return 'fail';
+    if (grade === 'DIST' || outcome === 'distinction') return 'dist';
+    if (grade === 'PASS' || outcome === 'pass') return 'pass';
+    if (outcome === 'incomplete') return 'incomplete';
+    return 'pass';
+  }
+
+  historySummary(item: AnswerFeedbackHistoryItem): string {
+    return (item.review?.summary || '').trim() || '—';
+  }
+
+  historyDate(item: AnswerFeedbackHistoryItem): string {
+    const raw =
+      item.published_at ||
+      item.modification_date ||
+      item.created_at ||
+      item.creation_date ||
+      '';
+    if (!raw) return '';
+    const date = new Date(raw);
+    if (Number.isNaN(date.getTime())) return raw;
+    return date.toLocaleString(undefined, {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    });
+  }
+
+  historyTrackId(item: AnswerFeedbackHistoryItem, index: number): string {
+    return String(item.id || item.feedback_id || item.version || index);
+  }
+
+  private historySortTime(item: AnswerFeedbackHistoryItem): number {
+    const raw =
+      item.published_at ||
+      item.modification_date ||
+      item.created_at ||
+      item.creation_date ||
+      0;
+    return new Date(raw).getTime() || 0;
+  }
+
+  private normalizeHistoryItems(items: AnswerFeedbackHistoryItem[]): AnswerFeedbackHistoryItem[] {
+    const list = Array.isArray(items) ? [...items] : [];
+    const seen = new Set<string>();
+    const unique = list.filter((item, index) => {
+      const key = String(item.id || item.feedback_id || `row-${item.version ?? index}`);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+    return unique.sort((a, b) => this.historySortTime(b) - this.historySortTime(a));
   }
 
   isSelected(submission: AnswerSubmission): boolean {
@@ -146,7 +356,16 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   answeredCount(submission: AnswerSubmission): number {
-    return Object.keys(submission.answers || {}).length;
+    if (typeof submission.answerRecordCount === 'number') {
+      return submission.answerRecordCount;
+    }
+    return Object.values(submission.answers || {}).filter((value) =>
+      this.hasAnswer(value)
+    ).length;
+  }
+
+  answerTotalCount(): number {
+    return this.questionsList.length;
   }
 
   hasAnswer(value: string | string[] | undefined): boolean {
@@ -208,6 +427,8 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
       this.submissionsLoadError = false;
       this.submissions = [];
       this.selectedSubmission = null;
+      this.feedbackHistory = [];
+      this.answerHistory = [];
       return;
     }
     this.loading = true;
@@ -221,6 +442,8 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
           this.loading = false;
           if (!this.submissions.length) {
             this.selectedSubmission = null;
+            this.feedbackHistory = [];
+            this.answerHistory = [];
           } else if (
             !this.selectedSubmission ||
             !this.submissions.some((item) => this.isSelected(item))
@@ -234,6 +457,8 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
           this.submissionsLoadError = true;
           this.submissions = [];
           this.selectedSubmission = null;
+          this.feedbackHistory = [];
+          this.answerHistory = [];
         },
       });
   }
@@ -253,6 +478,8 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
       {
         answers: { [questionId: string]: string | string[] };
         answerIds: { [questionId: string]: string };
+        answerVersions: { [questionId: string]: number };
+        answerRecordCount: number;
         submittedAt?: string;
         feedback?: string;
         outcome?: string;
@@ -274,6 +501,8 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
         byUser.set(userId, {
           answers: {},
           answerIds: {},
+          answerVersions: {},
+          answerRecordCount: 0,
           submittedAt: row.submitted_at ?? row.submittedAt ?? row.creation_date ?? row.created_at,
           feedback:
             row.review?.summary ??
@@ -283,16 +512,13 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
           gradeCode: row.review?.grade_code ?? row.grade_code,
           submissionId: row.submission_id ?? row.submissionId,
           feedbackVersion:
-            typeof row.feedback_version === 'number'
-              ? row.feedback_version
-              : typeof row.version === 'number'
-                ? row.version
-                : undefined,
+            typeof row.feedback_version === 'number' ? row.feedback_version : undefined,
           feedbackId: row.feedback_id ?? row.feedbackId,
         });
       }
 
       const entry = byUser.get(userId)!;
+      entry.answerRecordCount += 1;
       try {
         const parsed = JSON.parse(answerStr);
         entry.answers[qId] = Array.isArray(parsed) ? parsed : String(parsed);
@@ -301,6 +527,9 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
       }
       if (answerId) {
         entry.answerIds[qId] = answerId;
+      }
+      if (typeof row.version === 'number') {
+        entry.answerVersions[qId] = row.version;
       }
       if (!entry.feedback && (row.review?.summary || row.feedback)) {
         entry.feedback = row.review?.summary ?? row.feedback;
@@ -326,6 +555,8 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
         userEmail: this.getUserEmail(user),
         answers: entry.answers,
         answerIds: entry.answerIds,
+        answerVersions: entry.answerVersions,
+        answerRecordCount: entry.answerRecordCount,
         submittedAt: entry.submittedAt,
         feedback: entry.feedback,
         outcome: entry.outcome,
@@ -352,6 +583,120 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
   formatAnswer(value: string | string[]): string {
     if (Array.isArray(value)) return value.join(', ');
     return String(value ?? '');
+  }
+
+  /** One row per feedback history entry for this question (oldest → newest). */
+  getAnswerAttempts(questionId: string | number): AnswerAttemptRow[] {
+    const qId = String(questionId);
+    const current = this.selectedSubmission?.answers?.[qId];
+    const rows: AnswerAttemptRow[] = [];
+
+    const answerVersions = this.answerHistory
+      .filter((row) => String(row.question_id || '') === qId)
+      .sort(
+        (a, b) =>
+          (a.version || 0) - (b.version || 0) ||
+          this.answerHistorySortTime(a) - this.answerHistorySortTime(b)
+      );
+
+    const historyAsc = [...this.feedbackHistory].sort(
+      (a, b) => this.historySortTime(a) - this.historySortTime(b)
+    );
+
+    historyAsc.forEach((item, feedbackIndex) => {
+      const fb = (item.item_feedback || []).find(
+        (entry) => String(entry.question_id) === qId
+      );
+      if (!fb) return;
+
+      const matchedAnswer = this.matchAnswerHistoryForFeedback(
+        fb,
+        item,
+        feedbackIndex,
+        answerVersions
+      );
+
+      rows.push({
+        attemptNumber: rows.length + 1,
+        label: '',
+        value: matchedAnswer
+          ? this.parseStoredAnswer(matchedAnswer.answer)
+          : ((fb.corrected_answer?.value ?? current ?? '') as string | string[]),
+        version:
+          matchedAnswer?.version ??
+          item.assessment?.attempt_number ??
+          item.version,
+        gradeLabel: this.historyGradeLabel(item),
+        statusKey: this.historyStatusKey(item),
+        teacherComment: fb.teacher_comment,
+        isCurrent: false,
+      });
+    });
+
+    if (rows.length === 0 && this.hasAnswer(current)) {
+      rows.push({
+        attemptNumber: 1,
+        label: 'Answer',
+        value: current as string | string[],
+        version: this.selectedSubmission?.answerVersions?.[qId],
+        gradeLabel: '',
+        statusKey: null,
+        isCurrent: true,
+      });
+    } else if (rows.length > 0) {
+      rows[rows.length - 1].isCurrent = true;
+    }
+
+    rows.forEach((row, index) => {
+      row.attemptNumber = index + 1;
+      const ver = row.version ? ` · v${row.version}` : '';
+      row.label =
+        rows.length === 1 ? `Answer${ver}` : `Attempt ${index + 1}${ver}`;
+    });
+
+    return rows;
+  }
+
+  /** Prefer versioned student answers over corrected_answer (often latest snapshot). */
+  private matchAnswerHistoryForFeedback(
+    fb: FeedbackItemPayload,
+    item: AnswerFeedbackHistoryItem,
+    feedbackIndex: number,
+    answerVersions: AnswerHistoryItem[]
+  ): AnswerHistoryItem | null {
+    if (!answerVersions.length) return null;
+
+    // Retries often keep the same answer_id, so version/index beat id matching.
+    const attemptNumber =
+      item.assessment?.attempt_number ??
+      (typeof item.version === 'number' ? item.version : undefined);
+    if (typeof attemptNumber === 'number') {
+      const byVersion = answerVersions.find((row) => row.version === attemptNumber);
+      if (byVersion) return byVersion;
+    }
+
+    if (answerVersions[feedbackIndex]) {
+      return answerVersions[feedbackIndex];
+    }
+
+    if (fb.answer_id) {
+      const byId = answerVersions.find(
+        (row) => String(row.id || '') === String(fb.answer_id)
+      );
+      if (byId) return byId;
+    }
+
+    return null;
+  }
+
+  private parseStoredAnswer(raw: unknown): string | string[] {
+    const text = String(raw ?? '');
+    try {
+      const parsed = JSON.parse(text);
+      return Array.isArray(parsed) ? parsed : String(parsed);
+    } catch {
+      return text;
+    }
   }
 
   saveFeedback(submission: AnswerSubmission): void {
@@ -385,13 +730,37 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
     const organizationId =
       sessionStorage.getItem('organization_id') ||
       this.commonService.loginedUserInfo?.organization_id ||
+      (this.commonService.loginedUserInfo?.role === 'organization'
+        ? this.commonService.loginedUserInfo?.id
+        : '') ||
       '';
 
+    if (!organizationId) {
+      this.confirmationPopupService.showAlert(
+        'Organization id is required to publish feedback.',
+        'Error'
+      );
+      return;
+    }
+
+    const reviewer = this.resolveReviewerIdentity();
+    if (!reviewer.userId) {
+      this.confirmationPopupService.showAlert(
+        'Reviewer identity is missing. Please sign in again.',
+        'Error'
+      );
+      return;
+    }
+
     const payload = this.buildCorporateFeedbackPayload(submission, {
-      organizationId: organizationId || undefined,
+      organizationId,
       courseId,
       summary,
       grade: this.selectedGrade,
+      requireRetry: this.requireRetry,
+      reviewedByUserId: reviewer.userId,
+      reviewedByRole: reviewer.role,
+      reviewedByDisplayName: reviewer.displayName,
     });
 
     this.savingFeedback = true;
@@ -415,14 +784,16 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
             submission.feedbackId = res.data.feedback_id;
           }
           this.feedbackMap[key] = submission.feedback;
+          this.requireRetry = review?.requires_resubmission === true || this.requireRetry;
+          this.loadFeedbackHistory(submission);
 
           const emailed = res?.data?.notification?.emailed === true;
-          this.confirmationPopupService.showAlert(
-            emailed
+          this.commonService.openToaster({
+            message: emailed
               ? 'Feedback published and student notified by email.'
               : 'Feedback published successfully.',
-            'Success'
-          );
+            messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
+          });
         },
         error: (err) => {
           this.savingFeedback = false;
@@ -435,7 +806,10 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
                 err?.msg ||
                 (Array.isArray(err?.errors) ? err.errors[0]?.msg : null) ||
                 'Error saving feedback. Please try again.';
-          this.confirmationPopupService.showAlert(String(message), 'Error');
+          this.commonService.openToaster({
+            message: String(message),
+            messageType: TOASTER_MESSAGE_TYPE.ERROR,
+          });
         },
       });
   }
@@ -443,13 +817,22 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
   private buildCorporateFeedbackPayload(
     submission: AnswerSubmission,
     opts: {
-      organizationId?: string;
+      organizationId: string;
       courseId: string;
       summary: string;
       grade: FeedbackGradeCode;
+      requireRetry: boolean;
+      reviewedByUserId: string;
+      reviewedByRole: string;
+      reviewedByDisplayName: string;
     }
   ): AnswerFeedbackPayload {
-    const outcome = GRADE_TO_OUTCOME[opts.grade];
+    const requiresResubmission = opts.requireRetry || opts.grade === 'FAIL';
+    const outcome = requiresResubmission && opts.grade === 'FAIL'
+      ? GRADE_TO_OUTCOME[opts.grade]
+      : requiresResubmission && opts.grade !== 'FAIL'
+        ? 'needs_resubmission'
+        : GRADE_TO_OUTCOME[opts.grade];
     const itemFeedback: FeedbackItemPayload[] = Object.entries(submission.answers || {}).map(
       ([questionId, value]) => {
         const question = this.getQuestionById(questionId);
@@ -475,12 +858,20 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
       }
     );
 
-    const payload: AnswerFeedbackPayload = {
+    return {
+      organization_id: opts.organizationId,
+      reviewed_by_user_id: opts.reviewedByUserId,
+      reviewed_by_role: opts.reviewedByRole,
+      reviewed_by_display_name: opts.reviewedByDisplayName,
       course_id: opts.courseId,
       submission_id:
         submission.id && submission.id !== submission.userId ? submission.id : null,
       assessment: {
-        attempt_number: 1,
+        attempt_number: Math.max(
+          1,
+          ...Object.values(submission.answerVersions || {}).map((v) => Number(v) || 1),
+          1
+        ),
         submitted_at: submission.submittedAt,
         locale: navigator.language || 'en-GB',
       },
@@ -489,7 +880,7 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
         grade_code: opts.grade,
         summary: opts.summary,
         visibility: 'student_visible',
-        requires_resubmission: opts.grade === 'FAIL',
+        requires_resubmission: requiresResubmission,
         resubmission_due_at: null,
       },
       item_feedback: itemFeedback,
@@ -506,13 +897,35 @@ export class AssessmentAnswersComponent implements OnInit, OnChanges, OnDestroy 
           : {}),
       },
     };
+  }
 
-    // Optional — JWT is source of truth; send only when known (must match JWT org).
-    if (opts.organizationId) {
-      payload.organization_id = opts.organizationId;
+  private resolveReviewerIdentity(): {
+    userId: string;
+    role: string;
+    displayName: string;
+  } {
+    const info = this.commonService.loginedUserInfo;
+    const userId = (info?.id || '').trim();
+    const role = (info?.role || 'teacher').trim() || 'teacher';
+
+    if (role === 'organization') {
+      const displayName =
+        info?.name?.trim() ||
+        sessionStorage.getItem('activeOrganizationName')?.trim() ||
+        'Organization';
+      return { userId, role, displayName };
     }
 
-    return payload;
+    const first = (info?.firstName || info?.first_name || '').trim();
+    const last = (info?.lastName || info?.last_name || '').trim();
+    const displayName =
+      [first, last].filter(Boolean).join(' ') ||
+      info?.name?.trim() ||
+      info?.email?.trim() ||
+      info?.contact?.email?.trim() ||
+      'Teacher';
+
+    return { userId, role, displayName };
   }
 
   private defaultItemStatus(grade: FeedbackGradeCode): FeedbackItemStatus {

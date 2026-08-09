@@ -683,7 +683,7 @@ Bases:
 2. What is the IAM JWT TTL, and is a refresh endpoint planned (none exists in this client)?
 3. Is `SpinnerInterceptor` intentionally disabled, or an accidental leftover?
 4. Should `/dashboard/assign-teacher` and invite routes be linked in the sidenav again, or removed?
-5. Answer feedback: `PUT /answers/{studentUserId}/feedback` uses student IAM user id in the path; `course_id` + optional `submission_id` are in the corporate body.
+5. Answer feedback: `PUT /answers/{studentUserId}/feedback` body includes `organization_id`, `reviewed_by_user_id`, `reviewed_by_role`, `reviewed_by_display_name`, `course_id`, `review`, and `item_feedback`.
 6. Are password rules on IAM identical to `form-validators.ts`?
 7. White-label: will branding be per `organization_id`, per `client_id`/application, or both?
 8. Demo mode: should it short-circuit HTTP, or remain presentation-only?

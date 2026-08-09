@@ -29,7 +29,7 @@
                 </div>
                 <div class="aa-metric">
                   <span class="aa-label">Questions</span>
-                  <strong>{{ questionsList.length }}</strong>
+                  <strong>{{ answerTotalCount() }}</strong>
                 </div>
               </div>
             </div>
@@ -140,17 +140,46 @@
           } @else {
             @for (question of questionsList; track question.id || $index) {
               @let qId = question.id || $index;
-              @let answer = selectedSubmission.answers[qId];
+              @let attempts = getAnswerAttempts(qId);
               <article class="aa-answer glass-panel" [class.aa-answer--text]="isTextAnswer(question)">
                 <div class="aa-answer__top">
                   <span class="aa-mono aa-answer__index">Question {{ $index + 1 | number: '2.0-0' }}</span>
                   <span class="aa-answer__type">{{ getQuestionTypeLabel(question.type) }}</span>
                 </div>
                 <h4>{{ question.question }}</h4>
-                <div class="aa-answer__value" [class.aa-answer__value--muted]="!hasAnswer(answer)">
-                  <p>{{ formatAnswer(answer) || 'No response submitted' }}</p>
-                  @if (hasAnswer(answer)) {
-                    <span class="material-symbols-outlined" aria-hidden="true">verified</span>
+
+                <div class="aa-answer__attempts" [class.aa-answer__attempts--multi]="attempts.length > 1">
+                  @for (attempt of attempts; track attempt.attemptNumber) {
+                    <div
+                      class="aa-attempt"
+                      [attr.data-status]="attempt.statusKey || (attempt.isCurrent && attempts.length > 1 ? 'pending' : null)"
+                    >
+                      <div class="aa-attempt__meta">
+                        <span class="aa-attempt__label">{{ attempt.label }}</span>
+                        <div class="aa-attempt__badges">
+                          @if (attempt.version) {
+                            <span class="aa-attempt__version">v{{ attempt.version }}</span>
+                          }
+                          @if (attempt.gradeLabel) {
+                            <span class="aa-attempt__status" [attr.data-status]="attempt.statusKey">
+                              {{ attempt.gradeLabel }}
+                            </span>
+                          } @else if (attempt.isCurrent && attempts.length > 1) {
+                            <span class="aa-attempt__status" data-status="pending">Pending review</span>
+                          }
+                        </div>
+                      </div>
+                      <div class="aa-attempt__value" [class.aa-attempt__value--muted]="!hasAnswer(attempt.value)">
+                        <p>{{ formatAnswer(attempt.value) || 'No response submitted' }}</p>
+                      </div>
+                      @if (attempt.teacherComment && attempt.gradeLabel) {
+                        <p class="aa-attempt__comment">{{ attempt.teacherComment }}</p>
+                      }
+                    </div>
+                  } @empty {
+                    <div class="aa-attempt__value aa-attempt__value--muted">
+                      <p>No response submitted</p>
+                    </div>
                   }
                 </div>
               </article>
@@ -187,13 +216,22 @@
                     class="aa-grade__btn"
                     [class.active]="selectedGrade === grade"
                     [disabled]="!selectedSubmission"
-                    (click)="selectedGrade = grade"
+                    (click)="onGradeChange(grade)"
                   >
                     {{ grade }}
                   </button>
                 }
               </div>
             </div>
+
+            <label class="aa-retry" [class.aa-retry--disabled]="!selectedSubmission">
+              <input
+                type="checkbox"
+                [(ngModel)]="requireRetry"
+                [disabled]="!selectedSubmission"
+              />
+              <span>Allow student to retry answers</span>
+            </label>
           </div>
 
           <div class="aa-review__footer">
@@ -216,26 +254,49 @@
           </div>
         </div>
 
-        <div class="aa-panel glass-panel aa-logs">
-          <div class="aa-logs__head">
-            <span class="aa-logs__dot" aria-hidden="true"></span>
-            <span class="aa-label">Review status</span>
-          </div>
-            <div class="aa-logs__body">
-            <p>Course: {{ courseId ? 'selected' : 'not selected' }}</p>
-            <p class="aa-logs__ok">Questions: {{ questionsLoading ? 'loading…' : questionsList.length }}</p>
-            <p>Answers: {{ loading ? 'loading…' : submissions.length }}</p>
-            @if (questionsLoadError || submissionsLoadError) {
-              <p class="aa-logs__accent">Load error — refresh to retry.</p>
-            } @else if (selectedSubmission) {
-              <p>Reviewing: {{ selectedSubmission.userName || shortStudentId(selectedSubmission) }}</p>
-              <p class="aa-logs__accent">Ready for teacher feedback.</p>
-            } @else if (!questionsList.length) {
-              <p>No course questions available.</p>
-            } @else if (!submissions.length) {
-              <p>No submitted answers yet.</p>
+        <div class="aa-panel glass-panel aa-history-panel">
+          <header class="aa-history__head">
+            <h3 class="aa-panel__title">
+              <span class="material-symbols-outlined" aria-hidden="true">history</span>
+              Feedback history
+            </h3>
+            @if (feedbackHistory.length > 0) {
+              <span class="aa-history__count">{{ feedbackHistory.length }}</span>
+            }
+          </header>
+
+          <div class="aa-history">
+            @if (!selectedSubmission) {
+              <p class="aa-history__empty">Select a student to view prior reviews.</p>
+            } @else if (historyLoading) {
+              <p class="aa-history__empty">Loading history…</p>
+            } @else if (feedbackHistory.length === 0) {
+              <p class="aa-history__empty">No feedback published yet for this student.</p>
             } @else {
-              <p>Waiting for a student selection…</p>
+              <ul class="aa-history__list">
+                @for (item of feedbackHistory; track historyTrackId(item, $index)) {
+                  <li class="aa-history__item" [attr.data-status]="historyStatusKey(item)">
+                    <div class="aa-history__meta">
+                      <span class="aa-history__who">{{ historyReviewerName(item) }}</span>
+                      @if (historyGradeLabel(item)) {
+                        <span class="aa-history__grade" [attr.data-status]="historyStatusKey(item)">
+                          {{ historyGradeLabel(item) }}
+                        </span>
+                      }
+                      @if (item.review?.requires_resubmission) {
+                        <span class="aa-history__retry">Retry</span>
+                      }
+                      @if (item.version) {
+                        <span class="aa-history__version">v{{ item.version }}</span>
+                      }
+                    </div>
+                    <p class="aa-history__summary">{{ historySummary(item) }}</p>
+                    @if (historyDate(item)) {
+                      <time class="aa-history__date">{{ historyDate(item) }}</time>
+                    }
+                  </li>
+                }
+              </ul>
             }
           </div>
         </div>

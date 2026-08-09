@@ -6,8 +6,17 @@ import { environment } from 'src/environments/environment';
 import { IQuestion, IQuestionCreate } from 'src/app/pages/questionnaire/model/question.model';
 import {
   AnswerFeedbackApiResponse,
+  AnswerFeedbackHistoryApiResponse,
+  AnswerFeedbackHistoryItem,
   AnswerFeedbackPayload,
+  AnswerFeedbackResponseData,
 } from 'src/app/pages/questionnaire/model/answer-feedback.model';
+import {
+  AnswerHistoryApiResponse,
+  AnswerHistoryItem,
+  AnswerSavePayload,
+  AnswerUpdatePayload,
+} from 'src/app/pages/questionnaire/model/answer.model';
 
 @Injectable({
   providedIn: 'root',
@@ -65,8 +74,8 @@ export class QuestionnaireApiService {
       .pipe(catchError(this.commonService.handleError));
   }
 
-  /** Submit assessment answers - payload: { course_id, question_id, answer, submitted_by } per answer */
-  submitAnswers(payload: Array<{ course_id: string; question_id: string; answer: string; submitted_by: string }>) {
+  /** Submit assessment answers - payload includes version (starts at 1) */
+  submitAnswers(payload: AnswerSavePayload[]) {
     return this.http
       .post<any>(`${this._apiUrl}answer/save`, payload)
       .pipe(catchError(this.commonService.handleError));
@@ -106,6 +115,21 @@ export class QuestionnaireApiService {
   }
 
   /**
+   * Get answer history for a student+course (all versions / attempts).
+   * GET /answer/history?course_id=&submitted_by=
+   */
+  getAnswerHistory(courseId: string, submittedBy: string) {
+    return this.http
+      .get<AnswerHistoryApiResponse>(`${this._apiUrl}answer/history`, {
+        params: { course_id: courseId, submitted_by: submittedBy },
+      })
+      .pipe(
+        map((response) => this.asAnswerHistory(response)),
+        catchError(this.commonService.handleError)
+      );
+  }
+
+  /**
    * Publish corporate teacher feedback for a student's submission.
    * PUT /answers/:studentUserId/feedback
    */
@@ -116,5 +140,116 @@ export class QuestionnaireApiService {
         payload
       )
       .pipe(catchError(this.commonService.handleError));
+  }
+
+  /**
+   * Get latest published feedback for a student+course.
+   * GET /answers/:studentUserId/feedback?course_id=
+   */
+  getAnswerFeedback(studentUserId: string, courseId: string) {
+    return this.http
+      .get<AnswerFeedbackApiResponse>(
+        `${this._apiUrl}answers/${encodeURIComponent(studentUserId)}/feedback`,
+        { params: { course_id: courseId } }
+      )
+      .pipe(
+        map((response) => (response?.data ?? null) as AnswerFeedbackResponseData | null),
+        catchError(this.commonService.handleError)
+      );
+  }
+
+  /**
+   * Get feedback history for a student+course (newest first when backend sorts).
+   * GET /answers/:studentUserId/feedback/history?course_id=
+   */
+  getAnswerFeedbackHistory(studentUserId: string, courseId: string) {
+    return this.http
+      .get<AnswerFeedbackHistoryApiResponse>(
+        `${this._apiUrl}answers/${encodeURIComponent(studentUserId)}/feedback/history`,
+        { params: { course_id: courseId } }
+      )
+      .pipe(
+        map((response) => this.asFeedbackHistory(response)),
+        catchError(this.commonService.handleError)
+      );
+  }
+
+  /** Update existing answer row(s) — used for student retry; bumps version */
+  updateAnswers(payload: AnswerUpdatePayload[]) {
+    return this.http
+      .put<any>(`${this._apiUrl}answer/update`, payload)
+      .pipe(catchError(this.commonService.handleError));
+  }
+
+  private asAnswerHistory(response: AnswerHistoryApiResponse | unknown): AnswerHistoryItem[] {
+    if (Array.isArray(response)) {
+      return response as AnswerHistoryItem[];
+    }
+    if (!response || typeof response !== 'object') {
+      return [];
+    }
+    const data = (response as AnswerHistoryApiResponse).data as unknown;
+    if (Array.isArray(data)) {
+      return data as AnswerHistoryItem[];
+    }
+    if (data && typeof data === 'object') {
+      const bag = data as {
+        items?: AnswerHistoryItem[];
+        history?: AnswerHistoryItem[];
+        attempts?: Array<{
+          version?: number;
+          submitted_at?: string;
+          submittedAt?: string;
+          answers?: AnswerHistoryItem[];
+        }>;
+      };
+      if (Array.isArray(bag.items)) return bag.items;
+      if (Array.isArray(bag.history)) return bag.history;
+      if (Array.isArray(bag.attempts)) {
+        const flat: AnswerHistoryItem[] = [];
+        bag.attempts.forEach((attempt) => {
+          const version = attempt.version;
+          const submittedAt = attempt.submitted_at || attempt.submittedAt;
+          (attempt.answers || []).forEach((row) => {
+            flat.push({
+              ...row,
+              version: row.version ?? version,
+              submitted_at: row.submitted_at || submittedAt,
+            });
+          });
+        });
+        return flat;
+      }
+    }
+    return [];
+  }
+
+  private asFeedbackHistory(response: AnswerFeedbackHistoryApiResponse | unknown): AnswerFeedbackHistoryItem[] {
+    if (Array.isArray(response)) {
+      return response as AnswerFeedbackHistoryItem[];
+    }
+    if (!response || typeof response !== 'object') {
+      return [];
+    }
+    const data = (response as AnswerFeedbackHistoryApiResponse).data as unknown;
+    if (Array.isArray(data)) {
+      return data as AnswerFeedbackHistoryItem[];
+    }
+    if (data && typeof data === 'object') {
+      const bag = data as {
+        items?: AnswerFeedbackHistoryItem[];
+        history?: AnswerFeedbackHistoryItem[];
+        review?: unknown;
+        id?: string;
+        feedback_id?: string;
+      };
+      if (Array.isArray(bag.items)) return bag.items;
+      if (Array.isArray(bag.history)) return bag.history;
+      // Some responses return the latest feedback object instead of an array
+      if (bag.review || bag.id || bag.feedback_id) {
+        return [bag as AnswerFeedbackHistoryItem];
+      }
+    }
+    return [];
   }
 }

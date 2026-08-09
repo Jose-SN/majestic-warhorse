@@ -60,8 +60,14 @@ export interface FeedbackReviewPayload {
 }
 
 export interface AnswerFeedbackPayload {
-  /** Optional — prefer JWT org; if sent must match JWT org */
-  organization_id?: string;
+  /** Organization scope (must match JWT org when both are present) */
+  organization_id: string;
+  /** Reviewer IAM user id (teacher / org admin publishing feedback) */
+  reviewed_by_user_id: string;
+  /** Reviewer role, e.g. teacher | organization */
+  reviewed_by_role: string;
+  /** Student-facing / audit display name for the reviewer */
+  reviewed_by_display_name: string;
   course_id: string;
   /** Optional until attempts exist — one feedback stream per student+course */
   submission_id?: string | null;
@@ -93,23 +99,63 @@ export interface AnswerFeedbackResponseData {
   submission_id?: string | null;
   status?: 'draft' | 'published';
   review?: FeedbackReviewPayload;
+  item_feedback?: FeedbackItemPayload[];
   item_feedback_count?: number;
   reviewed_by?: {
     user_id?: string;
     role?: string;
     display_name?: string;
   };
+  reviewed_by_user_id?: string;
+  reviewed_by_role?: string;
+  reviewed_by_display_name?: string;
   published_at?: string;
   version?: number;
   notification?: {
     emailed?: boolean;
   };
+  /** Optional prior published versions when API includes them on GET */
+  history?: AnswerFeedbackHistoryItem[];
+}
+
+export interface AnswerFeedbackHistoryItem {
+  /** Backend history row id */
+  id?: string;
+  feedback_id?: string;
+  version?: number;
+  status?: 'draft' | 'published';
+  published_at?: string;
+  created_at?: string;
+  creation_date?: string;
+  modification_date?: string;
+  assessment?: {
+    attempt_number?: number;
+    submitted_at?: string;
+    locale?: string;
+  };
+  review?: FeedbackReviewPayload;
+  item_feedback?: FeedbackItemPayload[];
+  item_feedback_count?: number;
+  reviewed_by?: {
+    user_id?: string;
+    role?: string;
+    display_name?: string;
+  };
+  reviewed_by_user_id?: string;
+  reviewed_by_role?: string;
+  reviewed_by_display_name?: string;
 }
 
 export interface AnswerFeedbackApiResponse {
   success?: boolean;
   message?: string;
   data?: AnswerFeedbackResponseData;
+}
+
+export interface AnswerFeedbackHistoryApiResponse {
+  success?: boolean;
+  message?: string;
+  data?: AnswerFeedbackHistoryItem[] | { items?: AnswerFeedbackHistoryItem[]; history?: AnswerFeedbackHistoryItem[] };
 }
 
 export const GRADE_TO_OUTCOME: Record<FeedbackGradeCode, FeedbackOutcome> = {
