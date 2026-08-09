@@ -112,7 +112,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.isMobileNav = !this.isMobileNav;
   }
 
-  isMobileNavActive(section: 'overview' | 'courses' | 'network' | 'account' | 'ai-mode'): boolean {
+  isMobileNavActive(section: 'overview' | 'courses' | 'network' | 'more' | 'ai-mode'): boolean {
     const url = this.router.url;
     switch (section) {
       case 'overview':
@@ -125,21 +125,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
         return url.includes(DASHBOARD_NAV_ROUTES.aiMode);
       case 'courses':
         return url.includes(DASHBOARD_NAV_ROUTES.courses) || url.includes(DASHBOARD_NAV_ROUTES.courseDetails);
-      case 'account':
-        return url.includes(DASHBOARD_NAV_ROUTES.settings);
-      case 'network': {
-        const role = this.commonService.loginedUserInfo?.role || '';
-        if (role === 'organization' || role === 'teacher') {
-          return url.includes(DASHBOARD_NAV_ROUTES.directory);
-        }
+      case 'more':
+        return (
+          url.includes(DASHBOARD_NAV_ROUTES.more) ||
+          url.includes(DASHBOARD_NAV_ROUTES.settings) ||
+          url.includes(DASHBOARD_NAV_ROUTES.pricing) ||
+          url.includes(DASHBOARD_NAV_ROUTES.library) ||
+          url.includes(DASHBOARD_NAV_ROUTES.approval)
+        );
+      case 'network':
         return url.includes(DASHBOARD_NAV_ROUTES.directory);
-      }
       default:
         return false;
     }
   }
 
-  navigateMobile(section: 'overview' | 'courses' | 'network' | 'account' | 'ai-mode'): void {
+  navigateMobile(section: 'overview' | 'courses' | 'network' | 'more' | 'ai-mode'): void {
     this.isMobileNav = false;
     const role = this.commonService.loginedUserInfo?.role || '';
 
@@ -147,7 +148,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       overview: DASHBOARD_NAV_ROUTES.overview,
       'ai-mode': DASHBOARD_NAV_ROUTES.aiMode,
       courses: DASHBOARD_NAV_ROUTES.courses,
-      account: DASHBOARD_NAV_ROUTES.settings,
+      more: DASHBOARD_NAV_ROUTES.more,
       network:
         role === 'organization'
           ? DASHBOARD_NAV_ROUTES.teachers

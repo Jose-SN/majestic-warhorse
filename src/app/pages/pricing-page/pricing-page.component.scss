@@ -507,7 +507,11 @@
 
 @media screen and (max-width: 768px) {
   .pricing-page {
-    padding: var(--ds-space-5, 24px) var(--ds-space-4, 16px) var(--ds-space-7, 40px);
+    padding: var(--ds-space-5, 24px) var(--ds-space-4, 16px)
+      calc(
+        var(--ds-space-7, 40px) + var(--mobile-dashboard-nav-height, 72px) +
+          var(--mobile-safe-bottom, env(safe-area-inset-bottom, 0px))
+      );
   }
 
   .pricing-page__header {

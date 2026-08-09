@@ -1,0 +1,114 @@
+@import '../../../styles/mixins';
+@import '../../../styles/typography';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.more-page {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 8px 4px 24px;
+
+  &__header {
+    margin-bottom: 20px;
+  }
+
+  &__crumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    @include type-caption;
+    color: var(--mc-on-surface-variant);
+
+    a {
+      color: inherit;
+      text-decoration: none;
+
+      &:hover {
+        color: var(--mc-primary);
+      }
+    }
+  }
+
+  &__title {
+    margin: 0 0 6px;
+    @include type-h2;
+    color: var(--mc-on-surface);
+  }
+
+  &__subtitle {
+    margin: 0;
+    @include type-body-small;
+    color: var(--mc-on-surface-variant);
+  }
+
+  &__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  &__tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    min-height: 108px;
+    padding: 16px 10px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    @include border-radius(14px);
+    background: color-mix(in srgb, var(--mc-surface-container-high, #2a211e) 88%, transparent);
+    color: var(--mc-on-surface);
+    text-decoration: none;
+    text-align: center;
+    @include transition(border-color 0.2s ease, background 0.2s ease, transform 0.15s ease);
+
+    &:hover,
+    &:focus-visible {
+      border-color: color-mix(in srgb, var(--mc-primary, #ff6b2c) 45%, transparent);
+      background: color-mix(in srgb, var(--mc-primary, #ff6b2c) 8%, transparent);
+      outline: none;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  &__icon {
+    width: 52px;
+    height: 52px;
+    @include border-radius(14px);
+    @include flex(flex, null, center, center);
+    background: var(--mc-brand-gradient, linear-gradient(135deg, #ff6b2c, #ab0063));
+    color: #fff;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--mc-primary, #ff6b2c) 28%, transparent);
+
+    .material-symbols-outlined {
+      font-size: 26px;
+    }
+  }
+
+  &__label {
+    @include type-caption;
+    @include type-weight-semibold;
+    letter-spacing: 0.02em;
+    color: var(--mc-on-surface);
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .more-page {
+    &__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+  }
+}

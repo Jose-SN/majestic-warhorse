@@ -1,0 +1,28 @@
+<section class="more-page" aria-label="More">
+  <header class="more-page__header">
+    <nav class="more-page__crumb" aria-label="Breadcrumb">
+      <a [routerLink]="homeRoute">Home</a>
+      <span aria-hidden="true">/</span>
+      <span>More</span>
+    </nav>
+    <h1 class="more-page__title">More</h1>
+    <p class="more-page__subtitle">Account, customise, and other pages</p>
+  </header>
+
+  <ul class="more-page__grid" role="list">
+    @for (item of items; track item.id) {
+      <li>
+        <a
+          class="more-page__tile"
+          [routerLink]="item.route"
+          [queryParams]="item.queryParams || null"
+        >
+          <span class="more-page__icon" aria-hidden="true">
+            <span class="material-symbols-outlined">{{ item.icon }}</span>
+          </span>
+          <span class="more-page__label">{{ item.label }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</section>

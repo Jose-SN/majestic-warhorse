@@ -31,6 +31,7 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
   public userMenuOpen = false;
   public activityFeedOpen = false;
   public themeMenuOpen = false;
+  public isMobileViewport = false;
   public activityFeedItems: ActivityFeedItem[] = [];
   public themeOptions: ThemeOption[] = [];
   public activeTheme: AppThemeMode = 'dark';
@@ -40,6 +41,8 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
   brandLogo = 'assets/images/logo-majestic-hourse.svg';
   appName = 'PetaxAI Learning';
   private destroy$ = new Subject<void>();
+  private readonly mobileViewportMq =
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 1024px)') : null;
 
   @ViewChild('userMenu') userMenuRef?: ElementRef<HTMLElement>;
   @ViewChild('notificationMenu') notificationMenuRef?: ElementRef<HTMLElement>;
@@ -114,6 +117,9 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
     this.themeService.mode$.pipe(takeUntil(this.destroy$)).subscribe((mode) => {
       this.activeTheme = mode;
     });
+
+    this.syncMobileViewport();
+    this.mobileViewportMq?.addEventListener('change', this.onMobileViewportChange);
   }
 
   get themeTriggerIcon(): string {
@@ -122,8 +128,22 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.mobileViewportMq?.removeEventListener('change', this.onMobileViewportChange);
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private readonly onMobileViewportChange = (): void => {
+    this.syncMobileViewport();
+  };
+
+  private syncMobileViewport(): void {
+    const next = this.mobileViewportMq?.matches ?? false;
+    if (this.isMobileViewport === next) {
+      return;
+    }
+    this.isMobileViewport = next;
+    this.closeThemeMenu();
   }
 
   get isOrganizationAccount(): boolean {

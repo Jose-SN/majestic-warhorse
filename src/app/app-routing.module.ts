@@ -26,6 +26,7 @@ import { CourseUploadComponent } from './pages/course-upload/course-upload.compo
 import { ViewAssignedStudentsComponent } from './components/view-assigned-students/view-assigned-students.component';
 import { ViewAssignedTeachersComponent } from './components/view-assigned-teachers/view-assigned-teachers.component';
 import { SettingsPageComponent } from './pages/settings-page/settings-page.component';
+import { MorePageComponent } from './pages/more-page/more-page.component';
 import { PricingPageComponent } from './pages/pricing-page/pricing-page.component';
 import { LibraryPageComponent } from './pages/library-page/library-page.component';
 
@@ -56,6 +57,7 @@ const routes: Routes = [
       { path: 'course-details', component: CourseDetailsComponent },
       { path: 'settings', component: SettingsPageComponent },
       { path: 'settings/:tab', component: SettingsPageComponent },
+      { path: 'more', component: MorePageComponent },
       { path: 'account', redirectTo: 'settings/account', pathMatch: 'full' },
       { path: 'customize-app', redirectTo: 'settings/customize', pathMatch: 'full' },
       { path: 'pricing', component: PricingPageComponent },

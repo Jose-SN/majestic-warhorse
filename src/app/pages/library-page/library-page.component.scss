@@ -1171,7 +1171,7 @@
   }
 
   .library-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 
   .library-stats__card {
@@ -1186,7 +1186,7 @@
   }
 
   .library-stats__card--wide {
-    grid-column: auto;
+    grid-column: 1 / -1;
   }
 
   .library-tabs {

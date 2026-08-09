@@ -58,11 +58,11 @@
     <button
       type="button"
       class="dashboard-mobile-nav__item"
-      [class.is-active]="isMobileNavActive('account')"
-      (click)="navigateMobile('account')"
+      [class.is-active]="isMobileNavActive('more')"
+      (click)="navigateMobile('more')"
     >
-      <span class="material-symbols-outlined">settings</span>
-      <span>Settings</span>
+      <span class="material-symbols-outlined" [style.font-variation-settings]="isMobileNavActive('more') ? '\'FILL\' 1' : '\'FILL\' 0'">apps</span>
+      <span>More</span>
     </button>
   </nav>
 </section>

@@ -76,26 +76,11 @@
 @media screen and (max-width: 1024px) {
   .settings-page {
     .approval-grid-page__header-actions {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      align-items: stretch;
-      gap: 12px;
+      display: none;
     }
 
-    .settings-page__tabs {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      grid-column: 1 / -1;
-      width: 100%;
-
-      &--single {
-        grid-template-columns: 1fr;
-      }
-
-      li {
-        padding: 0 12px;
-        text-align: center;
-      }
+    .approval-grid-page__header-meta .material-symbols-outlined {
+      display: none;
     }
 
     .settings-page__panel {
