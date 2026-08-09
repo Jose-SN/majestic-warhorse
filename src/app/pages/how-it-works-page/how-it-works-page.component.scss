@@ -3,7 +3,7 @@
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
-  background: #0a0a0b;
+  background: var(--mc-surface-container-low, #0a0a0b);
 }
 
 .hiw-page {
@@ -14,8 +14,8 @@
 
 .hiw-page__bar {
   flex: 0 0 auto;
-  border-bottom: 1px solid #27272a;
-  background: color-mix(in srgb, #0a0a0b 88%, transparent);
+  border-bottom: 1px solid var(--mc-outline, #27272a);
+  background: color-mix(in srgb, var(--mc-surface-container-low, #0a0a0b) 88%, transparent);
   backdrop-filter: blur(12px);
 }
 
@@ -31,6 +31,7 @@
 }
 
 .hiw-page__back,
+.hiw-page__ghost,
 .hiw-page__cta {
   display: inline-flex;
   align-items: center;
@@ -39,9 +40,9 @@
   min-height: 40px;
   padding: 0 14px;
   border-radius: 999px;
-  border: 1px solid #27272a;
+  border: 1px solid var(--mc-outline, #27272a);
   background: transparent;
-  color: #f4f4f5;
+  color: var(--mc-on-surface, #f4f4f5);
   font: inherit;
   font-size: 14px;
   font-weight: 500;
@@ -49,14 +50,20 @@
 }
 
 .hiw-page__back:hover,
-.hiw-page__cta:hover {
-  border-color: color-mix(in srgb, #ff6b2c 45%, #27272a);
+.hiw-page__ghost:hover {
+  border-color: color-mix(in srgb, var(--mc-primary-container, #ff6b2c) 45%, var(--mc-outline, #27272a));
 }
 
 .hiw-page__cta {
   border: 0;
-  background: linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #4a0084 100%);
+  background: var(--mc-brand-gradient, linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #4a0084 100%));
   color: #fff;
+}
+
+.hiw-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .hiw-page__title {
@@ -65,12 +72,12 @@
   gap: 8px;
   font-size: 14px;
   font-weight: 600;
-  color: #a1a1aa;
+  color: var(--mc-on-surface-variant, #a1a1aa);
   text-align: center;
 }
 
 .hiw-page__title .material-symbols-outlined {
-  color: #ff6b2c;
+  color: var(--mc-primary-container, #ff6b2c);
   font-size: 20px;
 }
 
@@ -78,15 +85,12 @@
   flex: 1 1 auto;
   width: 100%;
   border: 0;
-  background: #0a0a0b;
+  background: var(--mc-surface-container-low, #0a0a0b);
 }
 
-@media (max-width: 640px) {
-  .hiw-page__title span:last-child {
+@media (max-width: 720px) {
+  .hiw-page__title span:last-child,
+  .hiw-page__ghost {
     display: none;
-  }
-
-  .hiw-page__back {
-    padding: 0 10px;
   }
 }

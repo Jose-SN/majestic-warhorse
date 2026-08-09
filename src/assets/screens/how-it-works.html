@@ -85,6 +85,14 @@
       height: 28px;
       border-radius: 8px;
       background: var(--brand);
+      flex: 0 0 auto;
+    }
+    .brand__logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex: 0 0 auto;
     }
     .topnav__links {
       display: flex;
@@ -514,9 +522,10 @@
 <body data-mode="now">
   <header class="topnav">
     <div class="wrap topnav__inner">
-      <a class="brand" href="#top" aria-label="PetaxAI Learning home">
-        <span class="brand__mark" aria-hidden="true"></span>
-        PetaxAI Learning
+      <a class="brand" href="#top" aria-label="Home">
+        <img class="brand__logo" data-brand="logo" hidden alt="" />
+        <span class="brand__mark" data-brand="logo-fallback" aria-hidden="true"></span>
+        <span data-brand="appName">PetaxAI Learning</span>
       </a>
       <nav class="topnav__links" aria-label="Page sections">
         <a href="/website" target="_parent">Website</a>
@@ -542,7 +551,9 @@
           <span class="material-symbols-outlined" aria-hidden="true">school</span>
           <span data-mode-text="eyebrow">Class MVP · how it works now</span>
         </p>
-        <h1>How PetaxAI Learning works</h1>
+        <h1>
+          <span data-brand="appName-in" data-brand-template="How {name} works">How PetaxAI Learning works</span>
+        </h1>
         <p class="hero__lead" data-mode-text="lead">
           <strong>Now:</strong> Organization, Teacher, and Student run the school loop —
           approve, assign, courses, assessments, teacher feedback, and AI Mode as study support.
@@ -659,7 +670,7 @@
               <ul>
                 <li>Approve members</li>
                 <li>Directory &amp; assignments</li>
-                <li>Customize branding</li>
+                <li>Customize branding — make this app yours</li>
               </ul>
             </article>
           </div>
@@ -677,7 +688,7 @@
               <span class="flow__num">1</span>
               <div>
                 <h3>Sign up or sign in</h3>
-                <p>Create an account (email or Google). Identity is handled through PetaxAI IAM.</p>
+                <p>Create an account (email or Google) and sign in to your school space.</p>
               </div>
             </article>
             <article class="flow__step">
@@ -813,8 +824,8 @@
               <li>
                 <span class="dot" aria-hidden="true"></span>
                 <div>
-                  <strong>Customize branding</strong>
-                  <span>Set app name, logo, and colors for your org.</span>
+                <strong>Customize branding</strong>
+                <span>In Settings → Customize, set app name, logo, and colors. Website and How it works match your brand.</span>
                 </div>
               </li>
             </ol>
@@ -862,6 +873,13 @@
               <div>
                 <h3>Directory &amp; Approvals</h3>
                 <p>See members, approve join requests, and manage assignments.</p>
+              </div>
+            </article>
+            <article class="feature">
+              <span class="material-symbols-outlined">palette</span>
+              <div>
+                <h3>Customize</h3>
+                <p>Organizations set app name, logo, and colors — this page follows your brand.</p>
               </div>
             </article>
             <article class="feature">
@@ -1130,8 +1148,8 @@
 
   <footer>
     <div class="wrap">
-      <span>© PetaxAI Learning · How it works (representational page)</span>
-      <span><a href="/website" target="_parent">Website</a> · Toggle Now / Future goal</span>
+      <span>© <span data-brand="appName">PetaxAI Learning</span> · How it works</span>
+      <span><a href="/website" target="_parent">Website</a> · <a href="/settings/customize" target="_parent">Customize</a> · Toggle Now / Future</span>
     </div>
   </footer>
 
@@ -1258,5 +1276,6 @@
       else setMode('now');
     })();
   </script>
+  <script src="branding-embed.js"></script>
 </body>
 </html>

@@ -77,6 +77,14 @@
       border-radius: 8px;
       background: var(--brand);
       animation: markPulse 4s ease-in-out infinite;
+      flex: 0 0 auto;
+    }
+    .brand__logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex: 0 0 auto;
     }
     .topnav__links {
       display: flex;
@@ -478,13 +486,15 @@
   <header class="topnav">
     <div class="wrap topnav__inner">
       <a class="brand" href="#top">
-        <span class="brand__mark" aria-hidden="true"></span>
-        PetaxAI Learning
+        <img class="brand__logo" data-brand="logo" hidden alt="" />
+        <span class="brand__mark" data-brand="logo-fallback" aria-hidden="true"></span>
+        <span data-brand="appName">PetaxAI Learning</span>
       </a>
       <nav class="topnav__links" aria-label="Site">
         <a href="#product">Product</a>
         <a href="#audience">Who it’s for</a>
         <a href="#roadmap">Roadmap</a>
+        <a href="#customize">Customize</a>
         <a href="#petaxai">PetaxAI</a>
         <a href="/how-it-works" target="_parent">How it works</a>
         <a class="btn btn--ghost" href="/login" target="_parent" style="min-height: 36px; padding: 0 14px;">Sign in</a>
@@ -497,9 +507,9 @@
       <div class="hero__plane" aria-hidden="true"></div>
       <div class="hero__grain" aria-hidden="true"></div>
       <div class="hero__content">
-        <h1 class="hero__brand">PetaxAI Learning</h1>
+        <h1 class="hero__brand" data-brand="appName">PetaxAI Learning</h1>
         <p class="hero__headline">Run your school. Grow toward AI-guided mastery.</p>
-        <p class="hero__lead">
+        <p class="hero__lead" data-brand="tagline">
           A learning platform for organizations, teachers, and students — with AI study support today,
           and a solo goal-path coach on the roadmap.
         </p>
@@ -517,7 +527,7 @@
           <div class="section__head" style="margin-bottom: 0;">
             <h2>An online school loop you can run today</h2>
             <p>
-              PetaxAI Learning helps communities and schools onboard people, deliver courses,
+              <span data-brand="appName">PetaxAI Learning</span> helps communities and schools onboard people, deliver courses,
               assess learning, and support students with AI Mode — under their own organization identity.
             </p>
           </div>
@@ -635,14 +645,48 @@
       </div>
     </section>
 
+    <section id="customize">
+      <div class="wrap split reveal">
+        <div>
+          <p class="section__eyebrow">Make it yours</p>
+          <div class="section__head" style="margin-bottom: 0;">
+            <h2>Use this app as your own app</h2>
+            <p>
+              Organizations can customize name, logo, favicon, and brand colors.
+              This website and How it works update to match — so learners see
+              <strong style="color:var(--text)">your</strong> school, not a generic product skin.
+            </p>
+          </div>
+        </div>
+        <ul class="feature-list">
+          <li>
+            <h3>App name &amp; tagline</h3>
+            <p>Replace the product name with your academy, church, or training brand.</p>
+          </li>
+          <li>
+            <h3>Logo &amp; colors</h3>
+            <p>Upload your mark and set the brand gradient used across the app and marketing pages.</p>
+          </li>
+          <li>
+            <h3>Where to set it</h3>
+            <p>
+              Organization accounts open
+              <a href="/settings/customize" target="_parent" style="color:var(--primary)">Settings → Customize</a>
+              after sign-in.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
     <section id="petaxai">
       <div class="wrap">
         <div class="section__head reveal">
           <p class="section__eyebrow">About PetaxAI</p>
           <h2>PetaxAI Learning is part of the PetaxAI family</h2>
           <p>
-            PetaxAI builds product software with a shared identity layer and product-specific
-            domain apps — so each product stays focused while authentication stays consistent.
+            PetaxAI designs and ships focused application products for organizations —
+            each product built around a clear domain, with PetaxAI Learning as the learning platform.
           </p>
         </div>
         <div class="about-grid reveal">
@@ -654,17 +698,10 @@
             </p>
           </div>
           <div>
-            <h3>Shared identity</h3>
-            <p>
-              Sign-in is powered by <strong>PetaxAI IAM</strong> — a shared identity service used across
-              PetaxAI apps, with each product owning its own school data and roles.
-            </p>
-          </div>
-          <div>
             <h3>Sister products</h3>
             <p>
               PetaxAI also builds related organization software (for example The Church Manager pattern) —
-              same family approach: shared auth, distinct product domains.
+              distinct product domains under the same company family.
             </p>
           </div>
           <div>
@@ -687,7 +724,8 @@
       <div class="wrap reveal">
         <h2>Start with your school loop</h2>
         <p>
-          Create an account, join or form an organization, and see how PetaxAI Learning works —
+          Create an account, join or form an organization, and see how
+          <span data-brand="appName">PetaxAI Learning</span> works —
           or read the full Now / Future workflow first.
         </p>
         <div class="band__actions">
@@ -701,9 +739,10 @@
 
   <footer>
     <div class="wrap">
-      <span>© <span id="year">2026</span> PetaxAI · PetaxAI Learning</span>
+      <span>© <span id="year">2026</span> PetaxAI · <span data-brand="appName">PetaxAI Learning</span></span>
       <nav aria-label="Footer">
         <a href="#product">Product</a>
+        <a href="#customize">Customize</a>
         <a href="#petaxai">PetaxAI</a>
         <a href="/how-it-works" target="_parent">How it works</a>
         <a href="/login" target="_parent">Sign in</a>
@@ -740,5 +779,6 @@
       nodes.forEach(function (n) { io.observe(n); });
     })();
   </script>
+  <script src="branding-embed.js"></script>
 </body>
 </html>

@@ -9,15 +9,27 @@
         <span class="material-symbols-outlined" aria-hidden="true">route</span>
         <span>How {{ appName }} works</span>
       </div>
-      <button type="button" class="hiw-page__cta" (click)="goPrimary()">
-        {{ isLoggedIn ? 'Back to app' : 'Sign in' }}
-      </button>
+      <div class="hiw-page__actions">
+        @if (canCustomize) {
+          <button type="button" class="hiw-page__ghost" (click)="goCustomize()">
+            Customize
+          </button>
+        }
+        <button type="button" class="hiw-page__ghost" (click)="goWebsite()">
+          Website
+        </button>
+        <button type="button" class="hiw-page__cta" (click)="goPrimary()">
+          {{ isLoggedIn ? 'Back to app' : 'Sign in' }}
+        </button>
+      </div>
     </div>
   </header>
 
   <iframe
+    #embedFrame
     class="hiw-page__frame"
     [src]="embedUrl"
     title="How it works — product workflow"
+    (load)="onFrameLoad()"
   ></iframe>
 </div>

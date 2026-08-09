@@ -7,9 +7,14 @@
       </button>
       <div class="site-page__title">
         <span class="material-symbols-outlined" aria-hidden="true">language</span>
-        <span>{{ appName }} website</span>
+        <span>{{ appName }}</span>
       </div>
       <div class="site-page__actions">
+        @if (canCustomize) {
+          <button type="button" class="site-page__ghost" (click)="goCustomize()">
+            Customize
+          </button>
+        }
         <button type="button" class="site-page__ghost" (click)="goHowItWorks()">
           How it works
         </button>
@@ -21,8 +26,10 @@
   </header>
 
   <iframe
+    #embedFrame
     class="site-page__frame"
     [src]="embedUrl"
-    title="PetaxAI Learning website"
+    title="App website"
+    (load)="onFrameLoad()"
   ></iframe>
 </div>
