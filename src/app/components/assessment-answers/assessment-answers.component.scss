@@ -29,8 +29,7 @@
 
   p {
     margin: 0;
-    font-family: var(--mc-font-body);
-    font-size: 0.9375rem;
+    @include type-body;
   }
 }
 
@@ -83,9 +82,8 @@
     margin: 0 0 16px;
     padding-bottom: 12px;
     border-bottom: 1px solid var(--mc-outline-variant);
-    font-family: var(--mc-font-label);
-    font-size: 0.625rem;
-    font-weight: 700;
+    @include type-caption;
+    @include type-weight-bold;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--mc-on-surface-variant);
@@ -99,22 +97,21 @@
 
 .aa-label {
   margin: 0;
-  font-family: var(--mc-font-label);
-  font-size: 0.625rem;
+  @include type-caption;
+  @include type-weight-medium;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--mc-on-surface-variant);
 }
 
 .aa-mono {
-  font-family: var(--mc-font-label);
+  @include type-weight-medium;
   letter-spacing: 0.04em;
 }
 
 .aa-state {
   margin: 0;
-  font-family: var(--mc-font-body);
-  font-size: 0.875rem;
+  @include type-body-small;
   color: var(--mc-on-surface-variant);
   text-align: center;
 
@@ -188,9 +185,8 @@
     @include flex(flex, null, center, center);
 
     span {
-      font-family: var(--mc-font-display);
-      font-size: 2.25rem;
-      font-weight: 700;
+      @include type-h1;
+      @include type-weight-bold;
       color: var(--mc-primary);
       letter-spacing: 0.08em;
     }
@@ -199,16 +195,14 @@
   &__meta {
     h2 {
       margin: 6px 0 4px;
-      font-family: var(--mc-font-display);
-      font-size: 1.25rem;
-      font-weight: 600;
+      @include type-h4;
       color: var(--mc-on-surface);
       @include text-ellipsis($lines: 1);
     }
 
     .aa-mono {
       margin: 0;
-      font-size: 0.75rem;
+      @include type-caption;
       color: var(--mc-on-surface-variant);
       @include text-ellipsis($lines: 1);
     }
@@ -236,8 +230,7 @@
 
     p {
       margin: 0;
-      font-size: 0.875rem;
-      line-height: 1.5;
+      @include type-body-small;
     }
   }
 }
@@ -254,8 +247,8 @@
   }
 
   strong {
-    font-family: var(--mc-font-label);
-    font-size: 1.125rem;
+    @include type-h5;
+    @include type-weight-medium;
     color: var(--mc-on-surface);
   }
 }
@@ -292,9 +285,8 @@
     @include border-radius(50%);
     @include flex(flex, null, center, center);
     background: var(--mc-brand-gradient);
-    font-family: var(--mc-font-label);
-    font-size: 0.6875rem;
-    font-weight: 700;
+    @include type-caption;
+    @include type-weight-bold;
     color: var(--white);
   }
 
@@ -306,15 +298,14 @@
     gap: 2px;
 
     strong {
-      font-family: var(--mc-font-body);
-      font-size: 0.875rem;
+      @include type-body-small;
       color: var(--mc-on-surface);
       @include text-ellipsis($lines: 1);
     }
 
     small {
-      font-family: var(--mc-font-label);
-      font-size: 0.6875rem;
+      @include type-caption;
+      @include type-weight-medium;
       color: var(--mc-on-surface-variant);
       @include text-ellipsis($lines: 1);
     }
@@ -328,9 +319,8 @@
     @include flex(flex, null, center, center);
     border: 1px solid rgba(255, 181, 154, 0.3);
     background: rgba(255, 107, 44, 0.08);
-    font-family: var(--mc-font-label);
-    font-size: 0.6875rem;
-    font-weight: 700;
+    @include type-caption;
+    @include type-weight-bold;
     color: var(--mc-primary);
   }
 }
@@ -353,16 +343,13 @@
 
     h1 {
       margin: 0 0 6px;
-      font-family: var(--mc-font-display);
-      font-size: clamp(1.5rem, 2vw, 2rem);
-      font-weight: 600;
+      @include type-h2;
       color: var(--mc-on-surface);
     }
 
     p {
       margin: 0;
-      font-family: var(--mc-font-body);
-      font-size: 0.9375rem;
+      @include type-body;
       color: var(--mc-on-surface-variant);
     }
   }
@@ -401,7 +388,7 @@
   }
 
   &__index {
-    font-size: 0.6875rem;
+    @include type-caption;
     color: var(--mc-primary);
     text-transform: uppercase;
   }
@@ -411,8 +398,8 @@
     @include border-radius(6px);
     border: 1px solid rgba(255, 181, 154, 0.3);
     background: rgba(255, 107, 44, 0.08);
-    font-family: var(--mc-font-label);
-    font-size: 0.625rem;
+    @include type-caption;
+  @include type-weight-medium;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--mc-primary);
@@ -420,10 +407,7 @@
 
   h4 {
     margin: 0 0 14px;
-    font-family: var(--mc-font-body);
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.45;
+    @include type-quiz-question;
     color: var(--mc-on-surface);
   }
 
@@ -437,11 +421,12 @@
     p {
       margin: 0;
       padding-right: 28px;
-      font-family: var(--mc-font-label);
-      font-size: 0.875rem;
-      line-height: 1.55;
+      @include type-quiz-option;
       color: var(--mc-primary);
       word-break: break-word;
+      line-height: 2 !important;
+      font-weight: normal !important;
+      font-size: 18px !important;
     }
 
     .material-symbols-outlined {
@@ -458,7 +443,7 @@
 
       p {
         color: var(--mc-on-surface-variant);
-        font-family: var(--mc-font-body);
+        @include type-weight-regular;
         font-style: italic;
       }
     }
@@ -470,9 +455,7 @@
 
     p {
       color: var(--mc-on-surface);
-      font-family: var(--mc-font-body);
-      font-weight: 400;
-    }
+          }
 
     .material-symbols-outlined {
       color: var(--mc-primary);
@@ -512,8 +495,8 @@
   &__hint {
     margin: 12px 0 0;
     text-align: center;
-    font-family: var(--mc-font-label);
-    font-size: 0.625rem;
+    @include type-caption;
+  @include type-weight-medium;
     letter-spacing: 0.08em;
     color: var(--mc-on-surface-variant);
     font-style: italic;
@@ -544,9 +527,7 @@
     border: 0;
     border-radius: 0;
     background: transparent;
-    font-family: var(--mc-font-body);
-    font-size: 0.9375rem;
-    line-height: 1.55;
+    @include type-form-input;
     color: var(--mc-on-surface);
     outline: none;
 
@@ -570,8 +551,8 @@
     opacity: 0.45;
 
     span {
-      font-family: var(--mc-font-label);
-      font-size: 0.625rem;
+      @include type-caption;
+  @include type-weight-medium;
       color: var(--mc-on-surface-variant);
     }
   }
@@ -591,11 +572,10 @@
     border: 1px solid var(--mc-outline-variant);
     @include border-radius(8px);
     background: var(--mc-surface-container-low);
-    font-family: var(--mc-font-label);
-    font-size: 0.6875rem;
+    @include type-button;
+    @include type-weight-semibold;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    font-weight: 600;
     color: var(--mc-on-surface-variant);
     cursor: pointer;
     @include transition(all 0.2s ease);
@@ -628,9 +608,8 @@
   min-height: 44px;
   padding: 12px 18px;
   border: 0;
-  font-family: var(--mc-font-label);
-  font-size: 0.75rem;
-  font-weight: 800;
+  @include type-button;
+  @include type-weight-bold;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
@@ -700,8 +679,8 @@
 
     p {
       margin: 0;
-      font-family: var(--mc-font-label);
-      font-size: 0.625rem;
+      @include type-caption;
+  @include type-weight-medium;
       letter-spacing: 0.04em;
       color: var(--mc-on-surface-variant);
     }

@@ -1,5 +1,6 @@
 @import './mixins';
 @import './variables';
+@import './typography';
 
 @mixin account-btn-primary {
   display: inline-flex;
@@ -11,9 +12,8 @@
   border-radius: var(--radius-button, 999px);
   background: var(--mc-brand-gradient);
   color: var(--mc-on-primary, #fff);
-  font-family: var(--mc-font-body);
-  font-size: 0.875rem;
-  font-weight: 600;
+  @include type-button;
+  @include type-weight-semibold;
   cursor: pointer;
   box-shadow: 0 0 20px color-mix(in srgb, var(--mc-primary-container) 40%, transparent);
   transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, opacity 0.15s ease-out, filter 0.15s ease-out;
@@ -49,9 +49,8 @@
   border-radius: var(--radius-button, 999px);
   background: var(--mc-surface);
   color: var(--mc-on-surface);
-  font-family: var(--mc-font-body);
-  font-size: 0.875rem;
-  font-weight: 600;
+  @include type-button;
+  @include type-weight-semibold;
   cursor: pointer;
   transition: background 0.15s ease-out, border-color 0.15s ease-out, color 0.15s ease-out;
 
@@ -99,7 +98,7 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  font-family: var(--mc-font-body);
+  @include type-weight-regular;
   color: var(--mc-on-surface);
 
   &--split {
@@ -279,16 +278,14 @@
 
     h3 {
       margin: 0;
-      font-family: var(--mc-font-display);
-      font-size: 1.5rem;
-      font-weight: 600;
+      @include type-h3;
       color: var(--mc-on-surface);
     }
 
     p {
       margin: 0.25rem 0 0;
-      font-family: var(--mc-font-label);
-      font-size: 0.625rem;
+      @include type-caption;
+      @include type-weight-medium;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--mc-primary);
@@ -306,8 +303,7 @@
     label {
       display: block;
       margin-bottom: 0.35rem;
-      font-family: var(--mc-font-label);
-      font-size: 0.625rem;
+      @include type-form-label;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--mc-on-surface-variant);
@@ -317,8 +313,7 @@
       width: 100%;
       min-height: var(--input-height, 48px);
       padding: 0 16px;
-      font-family: var(--mc-font-body);
-      font-size: 0.875rem;
+      @include type-form-input;
       color: var(--mc-on-surface-variant);
       background: var(--mc-surface-container);
       border: 1px solid #334155;
@@ -330,8 +325,8 @@
   &__identity-hint {
     display: block;
     margin-top: 0.35rem;
-    font-family: var(--mc-font-label);
-    font-size: 0.625rem;
+    @include type-form-helper;
+    @include type-weight-medium;
     font-style: italic;
     color: var(--mc-on-surface-variant);
   }
@@ -392,8 +387,8 @@
 
     p {
       margin: 0;
-      font-family: var(--mc-font-label);
-      font-size: 0.625rem;
+      @include type-caption;
+      @include type-weight-medium;
       color: var(--mc-on-surface-variant);
     }
   }
@@ -421,21 +416,19 @@
 
   &__stat-label {
     margin: 0 0 0.25rem;
-    font-family: var(--mc-font-label);
-    font-size: 0.625rem;
+    @include type-form-label;
     color: var(--mc-on-surface-variant);
   }
 
   &__stat-value {
     margin: 0;
-    font-family: var(--mc-font-label);
-    font-size: 0.75rem;
+    @include type-caption;
+    @include type-weight-medium;
     color: var(--mc-on-surface);
 
     &--lg {
-      font-family: var(--mc-font-display);
-      font-size: 1.15rem;
-      font-weight: 600;
+      @include type-body-large;
+      @include type-weight-semibold;
     }
 
     &--success {
@@ -491,7 +484,7 @@
     p {
       margin: 0.5rem 0 0;
       max-width: 36rem;
-      font-size: 1rem;
+      @include type-body;
       line-height: 1.6;
       color: var(--mc-on-surface-variant);
     }
@@ -509,9 +502,7 @@
 
     h2 {
       margin: 0;
-      font-family: var(--mc-font-display);
-      font-size: clamp(1.75rem, 3vw, 2.5rem);
-      font-weight: 600;
+      @include type-h1;
       letter-spacing: -0.02em;
       color: var(--mc-on-surface);
     }
@@ -529,9 +520,7 @@
 
     h3 {
       margin: 0;
-      font-family: var(--mc-font-display);
-      font-size: 1.25rem;
-      font-weight: 600;
+      @include type-h4;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--mc-on-surface-variant);
@@ -544,9 +533,8 @@
     justify-content: center;
     width: 2rem;
     height: 2rem;
-    font-family: var(--mc-font-label);
-    font-size: 0.75rem;
-    font-weight: 700;
+    @include type-caption;
+    @include type-weight-bold;
     @include border-radius(50%);
 
     &--primary {
@@ -595,9 +583,7 @@
       align-items: center;
       gap: 0.5rem;
       margin-bottom: 0.5rem;
-      font-family: var(--mc-font-label);
-      font-size: 0.625rem;
-      font-weight: 500;
+      @include type-form-label;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--mc-primary);
@@ -610,8 +596,8 @@
     &-error {
       display: block;
       margin-top: 0.35rem;
-      font-family: var(--mc-font-label);
-      font-size: 0.625rem;
+      @include type-form-helper;
+      @include type-weight-medium;
       color: var(--mc-error);
     }
 
@@ -619,8 +605,7 @@
       width: 100%;
       min-height: var(--input-height, 48px);
       padding: 0 16px;
-      font-family: var(--mc-font-body);
-      font-size: 1rem;
+      @include type-form-input;
       color: var(--mc-on-surface);
       background: var(--mc-surface-container);
       border: 1px solid #334155;
@@ -681,8 +666,8 @@
     .suggestion-holder span {
       display: block;
       margin-top: 0.35rem;
-      font-family: var(--mc-font-label);
-      font-size: 0.625rem;
+      @include type-caption;
+      @include type-weight-medium;
       color: var(--mc-on-surface-variant);
     }
   }
@@ -715,8 +700,7 @@
 
   &__reset {
     @include account-btn-secondary;
-    font-family: var(--mc-font-label);
-    font-size: 0.75rem;
+    @include type-button;
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
@@ -724,9 +708,8 @@
   &__submit {
     @include account-btn-primary;
     gap: 0.75rem;
-    font-family: var(--mc-font-label);
-    font-size: 0.875rem;
-    font-weight: 700;
+    @include type-button;
+    @include type-weight-bold;
     letter-spacing: 0.12em;
     text-transform: uppercase;
 
@@ -759,8 +742,7 @@
   @include account-btn-secondary;
   width: 100%;
   gap: 0.5rem;
-  font-family: var(--mc-font-label);
-  font-size: 0.625rem;
+  @include type-button;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   background: transparent;
@@ -777,3 +759,5 @@
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
 }
+
+

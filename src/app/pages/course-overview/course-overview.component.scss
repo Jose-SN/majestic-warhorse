@@ -34,7 +34,7 @@
         }
         
         h3 {
-          font-family: $poppins-bold;
+          @include type-weight-bold;
           font-size: 1.75rem;
           color: var(--white);
           margin: 0 0 20px 0;
@@ -42,7 +42,7 @@
         }
         
         p {
-          font-family: $archivo-regular;
+          @include type-weight-regular;
           font-size: 1rem;
           color: var(--bg-light-grey);
           margin: 0 0 15px 0;
@@ -58,7 +58,7 @@
           max-width: 550px;
           
           li {
-            font-family: $archivo-regular;
+            @include type-weight-regular;
             font-size: 0.938rem;
             color: var(--bg-light-grey);
             margin: 10px 0;
@@ -68,7 +68,7 @@
             line-height: 1.5;
             
             &::before {
-              content: '•';
+              content: 'â€¢';
               position: absolute;
               left: 10px;
               color: var(--bg-mit1);
@@ -79,7 +79,7 @@
         }
         
         .help-text {
-          font-family: $archivo-medium;
+          @include type-weight-medium;
           font-size: 0.875rem;
           color: var(--bg-light-grey);
           margin-top: 20px;
@@ -158,7 +158,7 @@
               flex-shrink: 0;
             }
             h2 {
-              font-family: $league-spartan-regular;
+              @include type-weight-regular;
               font-size: 1.375rem;
               font-weight: normal;
               color: var(--light-blue);
@@ -169,7 +169,7 @@
               white-space: nowrap;
             }
             span {
-              font-family: $league-spartan-light;
+              @include type-weight-regular;
               font-size: 1rem;
               color: var(--bg-light-grey);
               @include text-ellipsis($lines: 1);
@@ -181,7 +181,7 @@
             position: relative;
             z-index: 1;
             span {
-              font-family: $league-spartan-light;
+              @include type-weight-regular;
               font-size: 1rem;
               color: var(--bg-light-grey);
               margin-bottom: 10px;
@@ -199,18 +199,18 @@
                   }
                   strong,
                   small {
-                    font-family: $league-spartan-light;
+                    @include type-weight-regular;
                     color: var(--white);
                     font-weight: normal;
                     display: block;
                   }
                   strong {
-                    font-family: $league-spartan-regular;
+                    @include type-weight-regular;
                     font-size: 1.563rem;
                     line-height: 1.313rem;
                   }
                   small {
-                    font-family: $league-spartan-light;
+                    @include type-weight-regular;
                     font-size: 0.75rem;
                     margin-top: 10px;
                   }
@@ -220,7 +220,7 @@
             .type {
               flex: 1;
               strong {
-                font-family: $league-spartan-regular;
+                @include type-weight-regular;
                 font-size: 1rem;
                 font-weight: normal;
                 color: var(--white);
@@ -288,7 +288,7 @@
           @include flex(flex, null, space-between, null);
           margin-bottom: 20px;
           h2 {
-            font-family: $poppins-bold;
+            @include type-weight-bold;
             font-size: 1.875rem;
             font-weight: normal;
             color: var(--white);
@@ -327,7 +327,7 @@
             @include border-radius(15px);
             @include flex(flex, null, null, center);
             li {
-              font-family: $archivo-light;
+              @include type-weight-regular;
               font-size: 0.875rem;
               font-weight: normal;
               @include border-radius(15px);
@@ -383,12 +383,12 @@
                 }
                 padding: 20px;
                 span {
-                  font-family: $league-spartan-light;
+                  @include type-weight-regular;
                   font-size: 0.75rem;
                   color: var(--bg-light-grey);
                 }
                 h3 {
-                  font-family: $league-spartan-regular;
+                  @include type-weight-regular;
                   font-size: 1.125rem;
                   color: var(--light-blue);
                   line-height: 1.25rem;
@@ -459,7 +459,7 @@
           }
         }
         > span {
-          font-family: $archivo-bold;
+          @include type-weight-bold;
           font-size: 1.5rem;
           color: var(--light-blue);
           text-align: center;
@@ -471,7 +471,7 @@
         }
         strong {
           font-size: 0.813rem;
-          font-family: $archivo-semi-bold;
+          @include type-weight-semibold;
           background: var(--bg-notification-red);
           padding: 5px 10px;
           margin: 10px auto 0;
@@ -487,7 +487,7 @@
             margin-bottom: 5px;
             display: block;
             a {
-              font-family: $archivo-regular;
+              @include type-weight-regular;
               font-size: 0.875rem;
               color: var(--bg-blue);
               position: relative;
@@ -524,7 +524,7 @@
           .status-holder {
             @include flex(flex, column, null, center);
             .status {
-              font-family: $poppins-bold;
+              @include type-weight-bold;
               font-size: 1.5rem;
               width: 55px;
               height: 55px;
@@ -540,14 +540,14 @@
               }
             }
             span {
-              font-family: $poppins-regular;
+              @include type-weight-regular;
               font-size: 0.875rem;
               color: var(--white);
             }
           }
         }
         h3 {
-          font-family: $poppins-medium;
+          @include type-weight-medium;
           font-size: 1.25rem;
           font-weight: normal;
           color: var(--light-blue);
@@ -577,7 +577,7 @@
               margin-bottom: 10px;
             }
             h4 {
-              font-family: $poppins-regular;
+              @include type-weight-regular;
               font-size: 0.938rem;
               color: var(--light-blue);
               font-weight: normal;
@@ -597,7 +597,7 @@
               }
             }
             span {
-              font-family: $league-spartan-light;
+              @include type-weight-regular;
               font-size: 1rem;
               color: var(--bg-light-grey);
               display: block;

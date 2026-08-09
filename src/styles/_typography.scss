@@ -1,0 +1,545 @@
+/**
+ * Learning Web App Typography System
+ * Source: docs/design_v1/learning-web-app-typography.md
+ *
+ * Mixins only — safe to `@import` from any component SCSS.
+ * Tokens live in `_variables.scss`. Base + utility classes are applied in `styles.scss`.
+ */
+
+$font-family-primary: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-family-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+$typo-mobile-breakpoint: 768px;
+
+/* ─── Core mixin ─── */
+@mixin type(
+  $size,
+  $weight: var(--font-weight-regular),
+  $line-height: var(--line-height-body),
+  $letter-spacing: var(--letter-spacing-body),
+  $family: var(--font-family-primary)
+) {
+  font-family: $family;
+  font-size: $size;
+  font-weight: $weight;
+  line-height: $line-height;
+  letter-spacing: $letter-spacing;
+}
+
+@mixin type-mobile($size, $weight: null, $line-height: null, $letter-spacing: null) {
+  @media (max-width: $typo-mobile-breakpoint) {
+    font-size: $size;
+    @if $weight != null {
+      font-weight: $weight;
+    }
+    @if $line-height != null {
+      line-height: $line-height;
+    }
+    @if $letter-spacing != null {
+      letter-spacing: $letter-spacing;
+    }
+  }
+}
+
+/* ─── Scale mixins (desktop → mobile) ─── */
+@mixin type-display {
+  @include type(
+    var(--font-size-5xl),
+    var(--font-weight-semibold),
+    var(--line-height-tight),
+    var(--letter-spacing-display)
+  );
+  @include type-mobile(36px);
+}
+
+@mixin type-h1 {
+  @include type(
+    var(--font-size-4xl),
+    var(--font-weight-semibold),
+    1.2,
+    var(--letter-spacing-h1)
+  );
+  @include type-mobile(30px);
+}
+
+@mixin type-h2 {
+  @include type(
+    var(--font-size-3xl),
+    var(--font-weight-semibold),
+    1.25,
+    var(--letter-spacing-h2)
+  );
+  @include type-mobile(24px);
+}
+
+@mixin type-h3 {
+  @include type(
+    var(--font-size-2xl),
+    var(--font-weight-semibold),
+    var(--line-height-heading),
+    var(--letter-spacing-h3)
+  );
+  @include type-mobile(20px);
+}
+
+@mixin type-h4 {
+  @include type(
+    var(--font-size-xl),
+    var(--font-weight-semibold),
+    1.35,
+    var(--letter-spacing-h3)
+  );
+  @include type-mobile(18px);
+}
+
+@mixin type-h5 {
+  @include type(
+    var(--font-size-lg),
+    var(--font-weight-semibold),
+    1.4,
+    var(--letter-spacing-none)
+  );
+  @include type-mobile(17px);
+}
+
+@mixin type-body-large {
+  @include type(
+    var(--font-size-lg),
+    var(--font-weight-regular),
+    var(--line-height-body),
+    var(--letter-spacing-body)
+  );
+  @include type-mobile(17px);
+}
+
+@mixin type-body {
+  @include type(
+    var(--font-size-md),
+    var(--font-weight-regular),
+    var(--line-height-body),
+    var(--letter-spacing-body)
+  );
+}
+
+@mixin type-body-small {
+  @include type(
+    var(--font-size-sm),
+    var(--font-weight-regular),
+    1.5,
+    var(--letter-spacing-none)
+  );
+}
+
+@mixin type-metadata {
+  @include type(
+    var(--font-size-metadata),
+    var(--font-weight-regular),
+    1.4,
+    var(--letter-spacing-none)
+  );
+}
+
+@mixin type-caption {
+  @include type(
+    var(--font-size-xs),
+    var(--font-weight-regular),
+    1.4,
+    var(--letter-spacing-none)
+  );
+}
+
+@mixin type-learning-content {
+  @include type(
+    var(--font-size-learning),
+    var(--font-weight-regular),
+    var(--line-height-reading),
+    var(--letter-spacing-body)
+  );
+  max-width: var(--learning-content-max);
+
+  p {
+    margin: 0 0 var(--space-4);
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.25;
+    letter-spacing: var(--letter-spacing-h1);
+    margin: var(--space-8) 0 var(--space-4);
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.35;
+    letter-spacing: var(--letter-spacing-h2);
+    margin: 28px 0 var(--space-3);
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.4;
+    letter-spacing: var(--letter-spacing-h3);
+    margin: var(--space-6) 0 10px;
+  }
+
+  ul,
+  ol {
+    padding-left: var(--space-6);
+    margin: 0 0 var(--space-4);
+  }
+
+  li {
+    margin-bottom: var(--space-2);
+  }
+}
+
+@mixin type-learning-content-wide {
+  @include type-learning-content;
+  max-width: var(--learning-content-max-wide);
+}
+
+@mixin type-chat-message {
+  @include type(
+    var(--font-size-md),
+    var(--font-weight-regular),
+    var(--line-height-body),
+    var(--letter-spacing-body)
+  );
+
+  p {
+    margin: 0 0 var(--space-4);
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.3;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.35;
+  }
+
+  h3 {
+    font-size: 17px;
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.4;
+  }
+}
+
+@mixin type-course-title {
+  @include type(
+    var(--font-size-course-title),
+    var(--font-weight-semibold),
+    1.2,
+    var(--letter-spacing-display)
+  );
+  @include type-mobile(28px);
+}
+
+@mixin type-lesson-title {
+  @include type(
+    var(--font-size-lesson-title),
+    var(--font-weight-semibold),
+    1.25,
+    var(--letter-spacing-display)
+  );
+  @include type-mobile(24px);
+}
+
+@mixin type-quiz-question {
+  @include type(
+    var(--font-size-lg),
+    var(--font-weight-medium),
+    1.5,
+    var(--letter-spacing-body)
+  );
+  @include type-mobile(17px);
+}
+
+@mixin type-quiz-option {
+  @include type(
+    var(--font-size-md),
+    var(--font-weight-regular),
+    1.5,
+    var(--letter-spacing-body)
+  );
+}
+
+@mixin type-quiz-explanation {
+  @include type(
+    var(--font-size-sm),
+    var(--font-weight-regular),
+    1.5,
+    var(--letter-spacing-none)
+  );
+}
+
+@mixin type-button {
+  @include type(
+    var(--font-size-sm),
+    var(--font-weight-medium),
+    1.4,
+    var(--letter-spacing-none)
+  );
+}
+
+@mixin type-navigation {
+  @include type(
+    var(--font-size-sm),
+    var(--font-weight-medium),
+    1.4,
+    var(--letter-spacing-none)
+  );
+}
+
+@mixin type-form-label {
+  @include type(
+    var(--font-size-sm),
+    var(--font-weight-medium),
+    1.4,
+    var(--letter-spacing-none)
+  );
+}
+
+@mixin type-form-input {
+  @include type(
+    var(--font-size-md),
+    var(--font-weight-regular),
+    1.5,
+    var(--letter-spacing-body)
+  );
+}
+
+@mixin type-form-helper {
+  @include type(
+    var(--font-size-metadata),
+    var(--font-weight-regular),
+    1.4,
+    var(--letter-spacing-none)
+  );
+}
+
+@mixin type-code {
+  @include type(
+    var(--font-size-sm),
+    var(--font-weight-regular),
+    var(--line-height-body),
+    var(--letter-spacing-none),
+    var(--font-family-mono)
+  );
+  @include type-mobile(13px);
+}
+
+@mixin type-link {
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Weight bridges — replace Archivo/Poppins family-only usage */
+@mixin type-weight-regular {
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-regular);
+}
+
+@mixin type-weight-medium {
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+@mixin type-weight-semibold {
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+@mixin type-weight-bold {
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* ─── Base document + element styles (call once from styles.scss) ─── */
+@mixin typography-base {
+  html {
+    font-size: var(--font-size-base);
+  }
+
+  body {
+    @include type-body;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1 {
+    @include type-h1;
+  }
+
+  h2 {
+    @include type-h2;
+  }
+
+  h3 {
+    @include type-h3;
+  }
+
+  h4 {
+    @include type-h4;
+  }
+
+  h5 {
+    @include type-h5;
+  }
+
+  h6 {
+    @include type-body-small;
+    font-weight: var(--font-weight-semibold);
+  }
+
+  p {
+    @include type-body;
+  }
+
+  small {
+    @include type-body-small;
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    @include type-code;
+  }
+
+  button,
+  .btn,
+  [type='button'],
+  [type='submit'],
+  [type='reset'] {
+    @include type-button;
+  }
+
+  label {
+    @include type-form-label;
+  }
+
+  input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']),
+  select,
+  textarea {
+    @include type-form-input;
+  }
+
+  a:not(.material-symbols-outlined):not([class*='fa-']) {
+    @include type-link;
+  }
+}
+
+/* ─── Utility classes (emit once from styles.scss) ─── */
+@mixin typography-utilities {
+  .type-display {
+    @include type-display;
+  }
+
+  .type-h1 {
+    @include type-h1;
+  }
+
+  .type-h2 {
+    @include type-h2;
+  }
+
+  .type-h3 {
+    @include type-h3;
+  }
+
+  .type-h4 {
+    @include type-h4;
+  }
+
+  .type-h5 {
+    @include type-h5;
+  }
+
+  .type-body-large {
+    @include type-body-large;
+  }
+
+  .type-body {
+    @include type-body;
+  }
+
+  .type-body-small {
+    @include type-body-small;
+  }
+
+  .type-metadata {
+    @include type-metadata;
+  }
+
+  .type-caption {
+    @include type-caption;
+  }
+
+  .type-learning-content {
+    @include type-learning-content;
+  }
+
+  .type-learning-content-wide {
+    @include type-learning-content-wide;
+  }
+
+  .type-chat-message {
+    @include type-chat-message;
+  }
+
+  .type-course-title {
+    @include type-course-title;
+  }
+
+  .type-lesson-title {
+    @include type-lesson-title;
+  }
+
+  .type-quiz-question {
+    @include type-quiz-question;
+  }
+
+  .type-quiz-option {
+    @include type-quiz-option;
+  }
+
+  .type-quiz-explanation {
+    @include type-quiz-explanation;
+  }
+
+  .type-button {
+    @include type-button;
+  }
+
+  .type-navigation {
+    @include type-navigation;
+  }
+
+  .type-form-label {
+    @include type-form-label;
+  }
+
+  .type-form-input {
+    @include type-form-input;
+  }
+
+  .type-form-helper {
+    @include type-form-helper;
+  }
+
+  .type-code {
+    @include type-code;
+  }
+}

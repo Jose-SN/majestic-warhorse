@@ -1,3 +1,5 @@
+@import '../../../styles/typography';
+
 :host {
   display: flex;
   flex-direction: column;
@@ -61,8 +63,7 @@
   background: rgba(12, 12, 16, 0.55);
   backdrop-filter: blur(12px);
   color: rgba(255, 255, 255, 0.88);
-  font-family: var(--mc-font-body, 'Geist', sans-serif);
-  font-size: 0.8125rem;
+  @include type-button;
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 
@@ -92,8 +93,8 @@
   padding: 0 0.35rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.12);
-  font-size: 0.7rem;
-  font-weight: 600;
+  @include type-caption;
+  font-weight: var(--font-weight-semibold);
 }
 
 .ai-mode__workspace {
@@ -216,15 +217,13 @@
 
 .ai-mode__history-title {
   margin: 0;
-  font-family: var(--mc-font-display, 'Space Grotesk', sans-serif);
-  font-size: 1.1rem;
-  font-weight: 600;
+  @include type-h4;
   color: #fff;
 }
 
 .ai-mode__history-sub {
   margin: 0.2rem 0 0;
-  font-size: 0.75rem;
+  @include type-caption;
   color: var(--ai-muted);
 }
 
@@ -249,7 +248,7 @@
     outline: none;
     background: transparent;
     color: #fff;
-    font-size: 0.875rem;
+    @include type-body-small;
 
     &::placeholder {
       color: rgba(255, 255, 255, 0.4);
@@ -313,8 +312,8 @@
 }
 
 .ai-mode__history-item-title {
-  font-size: 0.875rem;
-  font-weight: 600;
+  @include type-body-small;
+  font-weight: var(--font-weight-semibold);
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
@@ -322,7 +321,7 @@
 }
 
 .ai-mode__history-item-preview {
-  font-size: 0.75rem;
+  @include type-caption;
   color: var(--ai-muted);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -331,7 +330,7 @@
 }
 
 .ai-mode__history-time {
-  font-size: 0.65rem;
+  @include type-caption;
   color: rgba(255, 255, 255, 0.4);
   white-space: nowrap;
   margin-top: 0.15rem;
@@ -373,8 +372,7 @@
   padding: 1.5rem 0.75rem;
   text-align: center;
   color: var(--ai-muted);
-  font-size: 0.85rem;
-  line-height: 1.45;
+  @include type-body-small;
 }
 
 .ai-mode__chat {
@@ -411,9 +409,7 @@
 
 .ai-mode__chat-title {
   margin: 0 0 0.5rem;
-  font-family: var(--mc-font-display, 'Space Grotesk', sans-serif);
-  font-size: 1.15rem;
-  font-weight: 600;
+  @include type-h4;
   color: #fff;
 }
 
@@ -471,19 +467,18 @@
   justify-content: space-between;
   gap: 0.75rem;
   margin-bottom: 0.4rem;
-  font-size: 0.75rem;
+  @include type-caption;
   color: var(--ai-muted);
 
   span:first-child {
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
     color: rgba(255, 255, 255, 0.85);
   }
 }
 
 .ai-mode__msg-content {
+  @include type-chat-message;
   white-space: pre-wrap;
-  font-size: 0.95rem;
-  line-height: 1.55;
   color: rgba(255, 255, 255, 0.92);
 }
 
@@ -503,7 +498,7 @@
     border-radius: 999px;
     border: 1px solid var(--ai-line);
     background: rgba(255, 255, 255, 0.04);
-    font-size: 0.75rem;
+    @include type-caption;
     color: var(--ai-muted);
   }
 
@@ -528,7 +523,7 @@
     border-radius: 999px;
     border: 1px solid rgba(251, 191, 36, 0.28);
     background: rgba(251, 191, 36, 0.08);
-    font-size: 0.75rem;
+    @include type-caption;
     color: rgba(253, 230, 138, 0.95);
   }
 
@@ -545,7 +540,7 @@
 .ai-mode__chat-loading {
   margin: 0.75rem 0;
   color: var(--ai-muted);
-  font-size: 0.875rem;
+  @include type-body-small;
 }
 
 .ai-mode__chat-composer {
@@ -598,9 +593,7 @@
   background: rgba(15, 23, 42, 0.55);
   backdrop-filter: blur(12px);
   color: rgba(255, 255, 255, 0.88);
-  font-family: var(--mc-font-body, 'Geist', sans-serif);
-  font-size: 0.8125rem;
-  line-height: 1.2;
+  @include type-metadata;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 
   .material-symbols-outlined {
@@ -612,11 +605,7 @@
 .ai-mode__greeting {
   margin: 0;
   text-align: center;
-  font-family: var(--mc-font-display, 'Space Grotesk', sans-serif);
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
+  @include type-display;
   color: #fff;
   text-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
 }
@@ -665,7 +654,7 @@
   border: 1px solid var(--ai-line);
   background: var(--ai-soft);
   color: var(--ai-ink);
-  font-size: 0.75rem;
+  @include type-caption;
 
   > span:nth-child(2) {
     overflow: hidden;
@@ -723,9 +712,7 @@
   resize: none;
   background: transparent;
   color: #fff;
-  font-family: var(--mc-font-body, 'Geist', sans-serif);
-  font-size: 1.05rem;
-  line-height: 1.55;
+  @include type-form-input;
 
   &::placeholder {
     color: rgba(244, 244, 245, 0.42);
@@ -754,7 +741,7 @@
 }
 
 .ai-mode__live-text {
-  font-size: 0.8125rem;
+  @include type-metadata;
   color: rgba(255, 255, 255, 0.82);
   white-space: nowrap;
   overflow: hidden;
@@ -897,7 +884,7 @@
     outline: none;
     background: transparent;
     color: #fff;
-    font-size: 0.9rem;
+    @include type-form-input;
 
     &::placeholder {
       color: rgba(255, 255, 255, 0.4);
@@ -921,7 +908,7 @@
   border-radius: 0.75rem;
   background: transparent;
   color: rgba(255, 255, 255, 0.9);
-  font-size: 0.95rem;
+  @include type-body-small;
   text-align: left;
   cursor: pointer;
   transition: background 0.15s ease;
@@ -945,7 +932,7 @@
 .ai-mode__menu-empty {
   padding: 0.85rem 0.65rem;
   color: var(--ai-muted);
-  font-size: 0.875rem;
+  @include type-body-small;
 }
 
 .ai-mode__attach-panel {
@@ -961,15 +948,12 @@
 
 .ai-mode__attach-title {
   margin: 0;
-  font-family: var(--mc-font-display, 'Space Grotesk', sans-serif);
-  font-size: 1rem;
-  font-weight: 600;
+  @include type-h5;
 }
 
 .ai-mode__attach-hint {
   margin: 0.35rem 0 0.85rem;
-  font-size: 0.8125rem;
-  line-height: 1.4;
+  @include type-metadata;
   color: var(--ai-muted);
 }
 
@@ -984,7 +968,7 @@
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.04);
   color: #fff;
-  font-size: 0.875rem;
+  @include type-button;
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease;
 
@@ -1036,14 +1020,14 @@
 }
 
 .ai-mode__attach-name {
-  font-size: 0.8rem;
+  @include type-caption;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .ai-mode__attach-size {
-  font-size: 0.65rem;
+  @include type-caption;
   color: var(--ai-muted);
 }
 
@@ -1088,8 +1072,7 @@
   padding: 0.55rem 0.95rem;
   background: transparent;
   color: rgba(255, 255, 255, 0.65);
-  font-family: var(--mc-font-body, 'Geist', sans-serif);
-  font-size: 0.875rem;
+  @include type-navigation;
   white-space: nowrap;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
@@ -1101,7 +1084,7 @@
   &.is-active {
     background: #fff;
     color: #111;
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
   }
 }
 
@@ -1204,7 +1187,7 @@
   background: rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #fff;
-  font-size: 0.68rem;
+  @include type-caption;
   letter-spacing: 0.02em;
 }
 
@@ -1217,16 +1200,14 @@
 
 .ai-mode__card-title {
   margin: 0;
-  font-family: var(--mc-font-display, 'Space Grotesk', sans-serif);
-  font-size: 0.95rem;
-  font-weight: 600;
+  @include type-body-small;
+  font-weight: var(--font-weight-semibold);
   color: #fff;
 }
 
 .ai-mode__card-text {
   margin: 0;
-  font-size: 0.78rem;
-  line-height: 1.4;
+  @include type-caption;
   color: var(--ai-muted);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -1240,7 +1221,7 @@
   padding: 2rem 1rem;
   text-align: center;
   color: var(--ai-muted);
-  font-size: 0.9rem;
+  @include type-body-small;
 }
 
 .visually-hidden {
@@ -1358,7 +1339,6 @@
 
   .ai-mode__greeting {
     text-align: left;
-    font-size: 1.85rem;
   }
 
   .ai-mode__pill {

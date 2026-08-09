@@ -12,7 +12,7 @@
   border-radius: 10px;
 }
 .accordion {
-  font-family: $archivo-regular;
+  @include type-weight-regular;
   font-size: 0.875rem;
   font-weight: normal;
   background: var(--bg-input);

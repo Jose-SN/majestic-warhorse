@@ -1,3 +1,5 @@
+@import '../../../styles/typography';
+
 :host {
   display: flex;
   flex-direction: column;
@@ -22,8 +24,7 @@
   margin: 0;
   padding: var(--ds-space-5, 24px) var(--ds-space-6, 32px);
   color: var(--ds-text, var(--mc-on-surface));
-  font-family: var(--mc-font-body);
-  font-size: 16px;
+  @include type-body;
   line-height: 1.5;
   overflow: hidden;
   background:
@@ -68,8 +69,8 @@
 
   &__eyebrow {
     margin: 0;
-    font-family: var(--mc-font-label);
-    font-size: 12px;
+    @include type-caption;
+    @include type-weight-medium;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--ds-text-muted, var(--mc-on-surface-variant));
@@ -77,10 +78,9 @@
 
   &__title {
     margin: var(--ds-space-2, 8px) 0 0;
-    font-family: var(--mc-font-display);
-    font-size: 32px;
+    @include type-h1;
+    @include type-weight-bold;
     line-height: 1.2;
-    font-weight: 700;
     background: var(--mc-brand-text-gradient, var(--mc-brand-gradient));
     -webkit-background-clip: text;
     background-clip: text;
@@ -90,7 +90,7 @@
   &__lead {
     margin: var(--ds-space-2, 8px) 0 0;
     max-width: 42rem;
-    font-size: 14px;
+    @include type-body-small;
     color: var(--ds-text-muted, var(--mc-on-surface-variant));
   }
 
@@ -128,9 +128,8 @@
     padding: 0 24px;
     border: 1px solid transparent;
     border-radius: 999px;
-    font-family: var(--mc-font-body);
-    font-size: 14px;
-    font-weight: 600;
+    @include type-button;
+    @include type-weight-semibold;
     line-height: 1;
     cursor: pointer;
     transition:
@@ -255,9 +254,7 @@
 
   &__card-title {
     margin: 0 0 var(--ds-space-2, 8px);
-    font-family: var(--mc-font-display);
-    font-size: 20px;
-    font-weight: 600;
+    @include type-h4;
     color: var(--ds-text, var(--mc-on-surface));
   }
 
@@ -268,7 +265,7 @@
 
   &__card-desc {
     margin: 0 0 var(--ds-space-5, 24px);
-    font-size: 14px;
+    @include type-body-small;
     color: var(--ds-text-muted, var(--mc-on-surface-variant));
   }
 
@@ -298,8 +295,8 @@
     }
 
     > span {
-      font-size: 14px;
-      font-weight: 500;
+      @include type-body-small;
+      @include type-weight-medium;
       color: var(--ds-text-muted, var(--mc-on-surface-variant));
     }
 
@@ -312,7 +309,7 @@
       background: var(--ds-surface-alt, var(--mc-surface-container));
       color: var(--ds-text, var(--mc-on-surface));
       font: inherit;
-      font-size: 16px;
+      @include type-form-input;
 
       &:focus {
         outline: 2px solid var(--ds-primary, #ff6b2c);
@@ -417,16 +414,16 @@
   }
 
   &__preset-label {
-    font-size: 14px;
-    font-weight: 600;
+    @include type-form-label;
+    @include type-weight-semibold;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   &__preset-stops {
-    font-family: var(--mc-font-label);
-    font-size: 10px;
+    @include type-caption;
+    @include type-weight-medium;
     color: var(--ds-text-muted, var(--mc-on-surface-variant));
     white-space: nowrap;
     overflow: hidden;
@@ -435,11 +432,11 @@
 
   &__hint {
     margin: var(--ds-space-1, 4px) 0 0;
-    font-size: 12px;
+    @include type-caption;
     color: var(--ds-text-muted, var(--mc-on-surface-variant));
 
     code {
-      font-family: var(--mc-font-label);
+      @include type-weight-medium;
       font-size: 0.9em;
     }
   }
@@ -453,9 +450,8 @@
   &__color-group {
     h3 {
       margin: 0 0 var(--ds-space-2, 8px);
-      font-family: var(--mc-font-label);
-      font-size: 12px;
-      font-weight: 500;
+      @include type-caption;
+      @include type-weight-medium;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--ds-text-muted, var(--mc-on-surface-variant));
@@ -493,7 +489,7 @@
     }
 
     span {
-      font-size: 12px;
+      @include type-caption;
       line-height: 1.2;
       color: var(--ds-text-muted, var(--mc-on-surface-variant));
       white-space: nowrap;
@@ -506,8 +502,8 @@
       background: transparent;
       color: var(--ds-text, var(--mc-on-surface));
       padding: 0;
-      font-family: var(--mc-font-label);
-      font-size: 12px;
+      @include type-form-input;
+      @include type-weight-medium;
       width: 100%;
       min-width: 0;
     }
@@ -541,9 +537,8 @@
     }
 
     span {
-      font-family: var(--mc-font-display);
-      font-weight: 700;
-      font-size: 16px;
+      @include type-navigation;
+      @include type-weight-bold;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -560,23 +555,21 @@
 
     h3 {
       margin: var(--ds-space-1, 4px) 0 var(--ds-space-2, 8px);
-      font-family: var(--mc-font-display);
-      font-size: 24px;
+      @include type-h3;
       line-height: 1.25;
     }
 
     > p {
       margin: 0 0 var(--ds-space-5, 24px);
       color: var(--preview-muted, var(--ds-text-muted));
-      font-size: 14px;
+      @include type-body-small;
       line-height: 1.5;
     }
   }
 
   &__preview-eyebrow {
     margin: 0 !important;
-    font-family: var(--mc-font-label);
-    font-size: 12px;
+    @include type-form-label;
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }
@@ -598,8 +591,8 @@
     background: var(--preview-gradient, var(--mc-brand-gradient));
     color: #ffffff;
     font: inherit;
-    font-size: 14px;
-    font-weight: 600;
+    @include type-button;
+    @include type-weight-semibold;
     cursor: default;
     box-shadow: 0 0 20px color-mix(in srgb, var(--ds-primary, #ff6b2c) 35%, transparent);
 
@@ -613,7 +606,7 @@
 
   &__note {
     margin: 0;
-    font-size: 12px;
+    @include type-caption;
     line-height: 1.5;
     color: var(--ds-text-muted, var(--mc-on-surface-variant));
   }
@@ -663,7 +656,7 @@
     }
 
     &__title {
-      font-size: 24px;
+      @include type-h3;
     }
 
     &__editor {
@@ -736,3 +729,5 @@
     }
   }
 }
+
+

@@ -1,21 +1,24 @@
-$archivo-regular: 'Archivo-Regular';
-$archivo-light: 'Archivo-Light';
-$archivo-medium: 'Archivo-Medium';
-$archivo-bold: 'Archivo-Bold';
-$archivo-semi-bold: 'League-spartan-Bold';
-$league-spartan-regular: 'League-spartan-Regular';
-$league-spartan-light: 'League-spartan-Light';
-$league-spartan-medium: 'League-spartan-Medium';
-$league-spartan-bold: 'League-spartan-Bold';
-$league-spartan-semi-bold: 'League-spartan-SemiBold';
-$poppins-bold: 'Poppins-Bold';
-$poppins-medium: 'Poppins-Medium';
-$poppins-regular: 'Poppins-Regular';
-$poppins-light: 'Poppins-Regular';
-$titilliumWeb-bold: 'TitilliumWeb-Bold';
-$titilliumWeb-semibold: 'TitilliumWeb-SemiBold';
-$titilliumWeb-light: 'TitilliumWeb-Light';
-$titilliumWeb-regular: 'TitilliumWeb-Regular';
+/* Legacy font vars → Inter (docs/design_v1/learning-web-app-typography.md).
+   Prefer @include type-* / type-weight-* mixins from _typography.scss. */
+$font-family-primary: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$archivo-regular: $font-family-primary;
+$archivo-light: $font-family-primary;
+$archivo-medium: $font-family-primary;
+$archivo-bold: $font-family-primary;
+$archivo-semi-bold: $font-family-primary;
+$league-spartan-regular: $font-family-primary;
+$league-spartan-light: $font-family-primary;
+$league-spartan-medium: $font-family-primary;
+$league-spartan-bold: $font-family-primary;
+$league-spartan-semi-bold: $font-family-primary;
+$poppins-bold: $font-family-primary;
+$poppins-medium: $font-family-primary;
+$poppins-regular: $font-family-primary;
+$poppins-light: $font-family-primary;
+$titilliumWeb-bold: $font-family-primary;
+$titilliumWeb-semibold: $font-family-primary;
+$titilliumWeb-light: $font-family-primary;
+$titilliumWeb-regular: $font-family-primary;
 
 /**
  * Design tokens V1 — True Void surfaces + Majestic Cyber brand gradient
@@ -49,6 +52,65 @@ $titilliumWeb-regular: 'TitilliumWeb-Regular';
   --spacing-xl: 32px;
   --spacing-2xl: 48px;
   --spacing-3xl: 64px;
+
+  /* ─── Typography (learning-web-app-typography.md) ─── */
+  --font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  --font-family-primary: var(--font-family);
+  --font-family-mono:
+    'SFMono-Regular',
+    Consolas,
+    'Liberation Mono',
+    monospace;
+
+  --font-size-base: 16px;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+  --font-size-5xl: 48px;
+  --font-size-learning: 17px;
+  --font-size-metadata: 13px;
+  --font-size-course-title: 32px;
+  --font-size-lesson-title: 28px;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-base: 1.6;
+  --line-height-tight: 1.15;
+  --line-height-heading: 1.3;
+  --line-height-body: 1.6;
+  --line-height-reading: 1.7;
+
+  --letter-spacing-display: -0.02em;
+  --letter-spacing-h1: -0.02em;
+  --letter-spacing-h2: -0.015em;
+  --letter-spacing-h3: -0.01em;
+  --letter-spacing-body: -0.01em;
+  --letter-spacing-none: 0;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  --learning-content-max: 720px;
+  --learning-content-max-wide: 800px;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -139,10 +201,10 @@ $titilliumWeb-regular: 'TitilliumWeb-Regular';
   --mc-error: #ef4444;
   --mc-brand-gradient: linear-gradient(135deg, #ff6b2c 0%, #ab0063 50%, #4a0084 100%);
   --mc-brand-text-gradient: linear-gradient(135deg, #ff6b2c 0%, #ab0063 100%);
-  --mc-font-display: 'Space Grotesk', 'Poppins-Bold', sans-serif;
-  --mc-font-body: 'Inter', 'Geist', 'Archivo-Regular', sans-serif;
-  --mc-font-label: 'JetBrains Mono', 'Archivo-Regular', monospace;
-  --mc-font-headline: 'Space Grotesk', 'Poppins-Bold', sans-serif;
+  --mc-font-display: var(--font-family-primary);
+  --mc-font-body: var(--font-family-primary);
+  --mc-font-label: var(--font-family-primary);
+  --mc-font-headline: var(--font-family-primary);
 
   /* ─── Legacy aliases → design_v1 (keep older SCSS working) ─── */
   --bg-main: #030304;

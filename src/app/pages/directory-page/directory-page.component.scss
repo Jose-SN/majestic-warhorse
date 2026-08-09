@@ -34,8 +34,7 @@
       border: 0;
       border-bottom: 2px solid transparent;
       margin-bottom: -1px;
-      font-family: var(--mc-font-label);
-      font-size: 0.75rem;
+      @include type-navigation;
       letter-spacing: 0.05em;
       text-transform: uppercase;
       color: var(--mc-on-surface-variant);
@@ -49,7 +48,7 @@
 
       &.is-active {
         color: var(--mc-primary-container);
-        font-weight: 700;
+        font-weight: var(--font-weight-bold);
         border-bottom-color: var(--mc-primary-container);
       }
     }

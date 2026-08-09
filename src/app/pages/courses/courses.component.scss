@@ -45,19 +45,14 @@
 
   &__title {
     margin: 0 0 8px;
-    font-family: var(--mc-font-display);
-    font-size: clamp(1.5rem, 2.4vw, 2rem);
-    font-weight: 600;
-    line-height: 1.2;
+    @include type-h2;
     color: var(--mc-on-surface);
   }
 
   &__subtitle {
     margin: 0;
     max-width: 32rem;
-    font-family: var(--mc-font-body);
-    font-size: 1rem;
-    line-height: 1.6;
+    @include type-body;
     color: var(--mc-on-surface-variant);
   }
 
@@ -85,9 +80,8 @@
   border-radius: var(--ds-radius-full, var(--radius-button, 999px));
   background: var(--mc-brand-gradient);
   color: #fff;
-  font-family: var(--mc-font-body);
-  font-size: 0.875rem;
-  font-weight: 600;
+  @include type-button;
+  @include type-weight-semibold;
   letter-spacing: 0;
   text-transform: none;
   cursor: pointer;
@@ -139,8 +133,7 @@
   li {
     padding: 8px 24px;
     @include border-radius(2px);
-    font-family: var(--mc-font-label);
-    font-size: 0.75rem;
+    @include type-navigation;
     letter-spacing: 0.05em;
     color: var(--mc-on-surface-variant);
     cursor: pointer;
@@ -152,7 +145,7 @@
 
     &.active {
       color: var(--mc-on-surface);
-      font-weight: 700;
+      @include type-weight-bold;
       background: var(--mc-surface-container-high);
       border: 1px solid var(--mc-outline-variant);
     }
@@ -230,8 +223,8 @@
     background: rgba(3, 3, 4, 0.6);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
-    font-family: var(--mc-font-label);
-    font-size: 0.625rem;
+    @include type-caption;
+    @include type-weight-medium;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--mc-on-surface);
@@ -247,8 +240,8 @@
     background: rgba(6, 78, 59, 0.55);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
-    font-family: var(--mc-font-label);
-    font-size: 0.625rem;
+    @include type-caption;
+    @include type-weight-medium;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: #a7f3d0;
@@ -278,10 +271,7 @@
       margin: 0;
       flex: 1;
       min-width: 0;
-      font-family: var(--mc-font-display);
-      font-size: 1.25rem;
-      font-weight: 600;
-      line-height: 1.25;
+      @include type-h4;
       color: var(--mc-on-surface);
       cursor: pointer;
       @include transition(color 0.2s ease);
@@ -299,8 +289,8 @@
     gap: 4px;
     flex-shrink: 0;
     color: var(--mc-primary);
-    font-family: var(--mc-font-label);
-    font-size: 0.875rem;
+    @include type-body-small;
+    @include type-weight-medium;
 
     .material-symbols-outlined {
       font-size: 18px;
@@ -319,8 +309,8 @@
     margin: 0;
     flex: 1;
     min-width: 0;
-    font-family: var(--mc-font-label);
-    font-size: 0.6875rem;
+    @include type-caption;
+    @include type-weight-medium;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: #94a3b8;
@@ -332,8 +322,8 @@
     @include border-radius(2px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(3, 3, 4, 0.55);
-    font-family: var(--mc-font-label);
-    font-size: 0.625rem;
+    @include type-caption;
+    @include type-weight-medium;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--mc-on-surface);
@@ -365,8 +355,8 @@
     display: flex;
     justify-content: space-between;
     gap: 8px;
-    font-family: var(--mc-font-label);
-    font-size: 0.6875rem;
+    @include type-caption;
+    @include type-weight-medium;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--mc-on-surface-variant);
@@ -393,8 +383,7 @@
 
   &__lessons {
     margin: 0;
-    font-family: var(--mc-font-body);
-    font-size: 0.75rem;
+    @include type-caption;
     color: #94a3b8;
   }
 
@@ -412,9 +401,8 @@
     @include border-radius(2px);
     background: var(--mc-brand-gradient);
     color: var(--mc-on-surface);
-    font-family: var(--mc-font-label);
-    font-size: 0.6875rem;
-    font-weight: 700;
+    @include type-button;
+    @include type-weight-bold;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     cursor: pointer;
@@ -477,17 +465,13 @@
 
   h3 {
     margin: 0 0 12px;
-    font-family: var(--mc-font-display);
-    font-size: 1.5rem;
-    font-weight: 600;
+    @include type-h3;
     color: var(--mc-on-surface);
   }
 
   p {
     margin: 0 0 16px;
-    font-family: var(--mc-font-body);
-    font-size: 0.9375rem;
-    line-height: 1.6;
+    @include type-body;
     color: #94a3b8;
   }
 
@@ -502,10 +486,8 @@
       position: relative;
       padding-left: 1.25rem;
       margin: 8px 0;
-      font-family: var(--mc-font-body);
-      font-size: 0.875rem;
+      @include type-body-small;
       color: #94a3b8;
-      line-height: 1.5;
 
       &::before {
         content: '';

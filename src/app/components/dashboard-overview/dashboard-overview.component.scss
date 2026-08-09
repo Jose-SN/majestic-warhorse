@@ -80,16 +80,13 @@
         }
         
         h3 {
-          font-family: $poppins-bold;
-          font-size: 1.75rem;
+          @include type-h2;
           color: var(--white);
           margin: 0 0 20px 0;
-          font-weight: 600;
         }
         
         p {
-          font-family: $archivo-regular;
-          font-size: 1rem;
+          @include type-body;
           color: var(--bg-light-grey);
           margin: 0 0 15px 0;
           opacity: 0.9;
@@ -104,8 +101,7 @@
           max-width: 550px;
           
           li {
-            font-family: $archivo-regular;
-            font-size: 0.938rem;
+            @include type-body;
             color: var(--bg-light-grey);
             margin: 10px 0;
             padding-left: 25px;
@@ -114,19 +110,19 @@
             line-height: 1.5;
             
             &::before {
-              content: '•';
+              content: 'â€¢';
               position: absolute;
               left: 10px;
               color: var(--bg-mit1);
-              font-size: 1.2rem;
-              font-weight: bold;
+              @include type-h4;
+              @include type-weight-bold;
             }
           }
         }
         
         .help-text {
-          font-family: $archivo-medium;
-          font-size: 0.875rem;
+          @include type-form-input;
+          @include type-weight-medium;
           color: var(--bg-light-grey);
           margin-top: 20px;
           padding-top: 20px;
@@ -182,9 +178,8 @@
             flex-shrink: 0;
           }
           h2 {
-            font-family: $league-spartan-regular;
-            font-size: 1.375rem;
-            font-weight: normal;
+            @include type-h3;
+            @include type-weight-regular;
             color: var(--light-blue);
             margin-bottom: 10px;
             max-width: 196px;
@@ -193,8 +188,7 @@
             white-space: nowrap;
           }
           span {
-            font-family: $league-spartan-light;
-            font-size: 1rem;
+            @include type-body;
             color: var(--bg-light-grey);
           }
         }
@@ -204,8 +198,7 @@
           position: relative;
           z-index: 1;
           span {
-            font-family: $league-spartan-light;
-            font-size: 1rem;
+            @include type-body;
             color: var(--bg-light-grey);
             margin-bottom: 10px;
             display: block;
@@ -222,19 +215,16 @@
                 }
                 strong,
                 small {
-                  font-family: $league-spartan-light;
+                  @include type-weight-regular;
                   color: var(--white);
-                  font-weight: normal;
                   display: block;
                 }
                 strong {
-                  font-family: $league-spartan-regular;
-                  font-size: 1.563rem;
+                  @include type-h3;
                   line-height: 1.313rem;
                 }
                 small {
-                  font-family: $league-spartan-light;
-                  font-size: 0.75rem;
+                  @include type-caption;
                   margin-top: 10px;
                 }
               }
@@ -243,9 +233,7 @@
           .type {
             flex: 1;
             strong {
-              font-family: $league-spartan-regular;
-              font-size: 1rem;
-              font-weight: normal;
+              @include type-body;
               color: var(--white);
               line-height: 1.5rem;
             }
@@ -307,7 +295,7 @@
 
       .recommendations-header h2 {
         @include dashboard-cyan-glow;
-        font-size: 1.625rem;
+        @include type-h3;
       }
       .content-holder {
         flex: 1;
@@ -352,21 +340,19 @@
         @include flex(flex, null, space-between, null);
         margin-bottom: 20px;
         h2 {
-          font-family: $poppins-bold;
-          font-size: 1.875rem;
-          font-weight: normal;
+          @include type-h2;
+          @include type-weight-regular;
           color: var(--light-blue);
           letter-spacing: 1.5px;
         }
         h3 {
-          font-family: $poppins-bold;
-          font-size: 1.25rem;
-          font-weight: normal;
+          @include type-h4;
+          @include type-weight-regular;
           color: var(--light-blue);
           letter-spacing: 1.5px;
         }
         a {
-          font-size: 1.25rem;
+          @include type-h4;
           color: var(--bg-text-orange);
           height: 26px;
           position: relative;
@@ -398,9 +384,7 @@
           @include border-radius(15px);
           @include flex(flex, null, null, center);
           li {
-            font-family: $archivo-light;
-            font-size: 0.875rem;
-            font-weight: normal;
+            @include type-body-small;
             @include border-radius(15px);
             color: var(--white);
             padding: 15px 24px;
@@ -460,16 +444,14 @@
               }
               padding: 20px;
               span {
-                font-family: $league-spartan-light;
-                font-size: 0.75rem;
+                @include type-caption;
                 color: var(--bg-light-grey);
               }
               h3 {
-                font-family: $league-spartan-regular;
-                font-size: 1.125rem;
+                @include type-h5;
+                @include type-weight-regular;
                 color: var(--light-blue);
                 line-height: 1.25rem;
-                font-weight: normal;
                 min-height: 45px;
                 max-height: 45px;
                 margin: 10px 0 0;
@@ -535,11 +517,10 @@
     }
 
     .insight-title {
-      font-family: var(--mc-font-label);
-      font-size: insight-text(0.75rem);
+      @include type-caption;
+      @include type-weight-semibold;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      font-weight: 600;
       color: var(--insight-title-color);
       margin: 0 0 8px;
       flex-shrink: 0;
@@ -571,7 +552,7 @@
       }
 
       .panel-state__icon {
-        font-size: insight-text(1.625rem);
+        @include type-h3;
         line-height: 1;
         color: rgba(255, 107, 44, 0.75);
         filter: drop-shadow(0 0 8px rgba(255, 107, 44, 0.35));
@@ -579,8 +560,8 @@
 
       .panel-state__eyebrow {
         margin: 0;
-        font-family: var(--mc-font-label);
-        font-size: insight-text(0.625rem);
+        @include type-caption;
+        @include type-weight-medium;
         letter-spacing: 0.14em;
         text-transform: uppercase;
         color: #ff6b2c;
@@ -588,9 +569,8 @@
 
       .panel-state__message {
         margin: 0;
-        font-family: var(--mc-font-display);
-        font-size: insight-text(0.875rem);
-        font-weight: 600;
+        @include type-body-small;
+        @include type-weight-semibold;
         color: var(--white);
         line-height: 1.35;
       }
@@ -598,8 +578,7 @@
       .panel-state__hint {
         margin: 0;
         max-width: 16rem;
-        font-family: $archivo-regular;
-        font-size: insight-text(0.75rem);
+        @include type-caption;
         line-height: 1.45;
         color: var(--insight-muted);
       }
@@ -627,8 +606,7 @@
       }
 
       .insight-link {
-        font-family: $archivo-regular;
-        font-size: insight-text(0.75rem);
+        @include type-caption;
         color: var(--mc-primary);
       }
     }
@@ -663,8 +641,8 @@
       bottom: -2px;
       right: -2px;
       z-index: 2;
-      font-family: var(--mc-font-label);
-      font-size: insight-text(0.5625rem);
+      @include type-caption;
+      @include type-weight-medium;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--white);
@@ -702,25 +680,23 @@
 
     .hologram-name {
       margin: 0;
-      font-family: var(--mc-font-headline);
-      font-size: insight-text(0.875rem);
-      font-weight: 600;
+      @include type-body-small;
+      @include type-weight-semibold;
       color: var(--mc-on-surface);
       line-height: 1.3;
     }
 
     .hologram-email {
       margin: 0;
-      font-family: var(--mc-font-body);
-      font-size: insight-text(0.8125rem);
+      @include type-metadata;
       color: var(--insight-muted);
       word-break: break-all;
     }
 
     .hologram-account-type {
       display: inline-block;
-      font-family: var(--mc-font-label);
-      font-size: insight-text(0.625rem);
+      @include type-caption;
+      @include type-weight-medium;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--mc-on-surface);
@@ -732,15 +708,14 @@
 
     .hologram-label {
       margin: 0;
-      font-family: var(--mc-font-label);
-      font-size: insight-text(0.6875rem);
+      @include type-form-label;
+      @include type-weight-semibold;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       background: var(--mc-brand-text-gradient);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      font-weight: 600;
     }
 
     .hologram-profile-btn {
@@ -751,8 +726,7 @@
       @include border-radius(8px);
       background: rgba(31, 31, 34, 0.75);
       color: var(--mc-on-surface);
-      font-family: $archivo-regular;
-      font-size: insight-text(0.75rem);
+      @include type-button;
       cursor: pointer;
       @include transition(all 0.2s ease);
 
@@ -803,17 +777,15 @@
 
         strong {
           display: block;
-          font-family: $archivo-regular;
-          font-size: insight-text(0.8125rem);
+          @include type-metadata;
+          @include type-weight-medium;
           color: var(--white);
-          font-weight: 500;
           line-height: 1.35;
         }
 
         small {
           display: block;
-          font-family: $archivo-regular;
-          font-size: insight-text(0.6875rem);
+          @include type-caption;
           color: var(--insight-muted);
           margin-top: 2px;
         }
@@ -876,14 +848,13 @@
 
         strong {
           display: block;
-          font-family: $archivo-regular;
-          font-size: insight-text(1rem);
+          @include type-body;
+          @include type-weight-medium;
           color: var(--white);
-          font-weight: 500;
           margin-bottom: 15px;
 
           &.is-empty {
-            font-size: insight-text(1rem);
+            @include type-body;
             color: rgba(255, 255, 255, 0.62);
           }
         }
@@ -952,16 +923,14 @@
 
         strong {
           display: block;
-          font-family: $archivo-regular;
-          font-size: insight-text(0.8125rem);
+          @include type-metadata;
+          @include type-weight-medium;
           color: var(--white);
-          font-weight: 500;
         }
 
         small {
           display: block;
-          font-family: $archivo-regular;
-          font-size: insight-text(0.6875rem);
+          @include type-caption;
           color: var(--insight-muted);
           margin-top: 2px;
         }
@@ -983,8 +952,8 @@
       }
 
       .goal-percent {
-        font-family: $archivo-medium;
-        font-size: insight-text(0.875rem);
+        @include type-body-small;
+        @include type-weight-medium;
         color: var(--mc-primary);
         flex-shrink: 0;
       }
@@ -995,8 +964,7 @@
 
       .analytics-subtitle {
         margin: -4px 0 6px;
-        font-family: $archivo-regular;
-        font-size: insight-text(0.75rem);
+        @include type-caption;
         color: var(--insight-muted);
         flex-shrink: 0;
       }
@@ -1019,8 +987,7 @@
         gap: 18px;
         margin-top: 6px;
         flex-shrink: 0;
-        font-family: $archivo-regular;
-        font-size: insight-text(0.6875rem);
+        @include type-caption;
         color: var(--insight-muted);
 
         span {
@@ -1097,7 +1064,7 @@
       gap: 11;
     }
     h2 {
-      font-size: 18px;
+      @include type-h5;
       width: 99%;
     }
     .icons {
@@ -1106,17 +1073,17 @@
     }
     .detail-bottom {
       span {
-        font-size: 16px;
+        @include type-body;
       }
       .rate-content {
         strong {
-          font-size: 20px;
+          @include type-h4;
           line-height: 18px;
         }
       }
       .type {
         strong {
-          font-size: 13px;
+          @include type-metadata;
           line-height: 16px;
         }
       }
@@ -1132,7 +1099,7 @@
   }
   .content-area {
     span {
-      font-size: 20px;
+      @include type-h4;
     }
     .content-right.right-insights-panel {
       max-width: calc(280px * var(--insight-scale, 1.25));
@@ -1146,7 +1113,7 @@
         .course-top {
           flex-direction: column;
           h2 {
-            font-size: 1.375rem;
+            @include type-h3;
             text-align: center;
           }
           ul {
@@ -1288,7 +1255,7 @@
       .courses-wrapper {
         .course-top {
           h2 {
-            font-size: 1.25rem;
+            @include type-h4;
             margin: 0 auto;
             display: block;
           }

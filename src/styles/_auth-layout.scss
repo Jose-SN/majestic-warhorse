@@ -1,5 +1,6 @@
 @import './mixins';
 @import './variables';
+@import './typography';
 
 /**
  * Auth pages layout — docs/design_v1/15_AUTH_LAYOUTS.md
@@ -20,7 +21,7 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   z-index: 1;
   background: var(--ds-background, var(--mc-surface-container-lowest));
   color: var(--ds-text, var(--mc-on-surface));
-  font-family: var(--mc-font-body);
+  @include type-body;
 }
 
 .login-hero {
@@ -94,11 +95,7 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   }
 
   &__title {
-    font-family: var(--mc-font-display);
-    font-size: clamp(2.5rem, 4vw, 4rem);
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    @include type-display;
     color: var(--ds-text, var(--mc-on-surface));
     margin: 0;
   }
@@ -112,8 +109,7 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
 
   &__subtitle {
     margin: var(--ds-space-4, 16px) 0 0;
-    font-size: 1rem;
-    line-height: 1.6;
+    @include type-body;
     color: var(--ds-text-muted, var(--mc-on-surface-variant));
     max-width: 24rem;
   }
@@ -262,9 +258,8 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
 
   &__eyebrow {
     margin: 0;
-    font-family: var(--mc-font-label);
-    font-size: 0.75rem;
-    font-weight: 500;
+    @include type-caption;
+    font-weight: var(--font-weight-medium);
     letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--ds-primary, var(--mc-primary-container));
@@ -272,17 +267,13 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
 
   &__heading {
     margin: var(--ds-space-2, 8px) 0 0;
-    font-family: var(--mc-font-display);
-    font-size: 2rem;
-    font-weight: 600;
-    line-height: 1.2;
+    @include type-h2;
     color: var(--ds-text, var(--mc-on-surface));
   }
 
   &__description {
     margin: var(--ds-space-3, 12px) 0 0;
-    font-size: 0.875rem;
-    line-height: 1.5;
+    @include type-body-small;
     color: var(--ds-text-muted, var(--mc-on-surface-variant));
     max-width: 20rem;
   }
@@ -293,8 +284,8 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
 
     p {
       margin: 0;
-      font-family: var(--mc-font-label);
-      font-size: 0.75rem;
+      @include type-caption;
+      font-weight: var(--font-weight-medium);
       letter-spacing: 0.05em;
       color: var(--ds-text-muted, var(--mc-on-surface-variant));
     }
@@ -302,15 +293,11 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
 
   &__signup,
   &__link {
+    @include type-link;
     color: var(--ds-primary, var(--mc-primary-container));
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     cursor: pointer;
-    text-decoration: none;
     transition: opacity var(--ds-motion-fast, 150ms) ease;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 }
 
@@ -335,16 +322,11 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   }
 
   &__recover {
-    font-family: var(--mc-font-label);
-    font-size: 0.75rem;
+    @include type-caption;
+    @include type-link;
     letter-spacing: 0.05em;
     color: var(--ds-primary, var(--mc-primary-container));
     cursor: pointer;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 
   &__actions {
@@ -368,8 +350,8 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     span {
       flex-shrink: 0;
       margin: 0 var(--ds-space-4, 16px);
-      font-family: var(--mc-font-label);
-      font-size: 0.75rem;
+      @include type-caption;
+      font-weight: var(--font-weight-medium);
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--ds-text-muted, var(--mc-on-surface-variant));
@@ -409,9 +391,7 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   }
 
   &__label {
-    font-family: var(--mc-font-label);
-    font-size: 0.8125rem;
-    font-weight: 500;
+    @include type-button;
     letter-spacing: 0.02em;
     color: var(--ds-text-muted, var(--mc-on-surface-variant));
     transition: color var(--ds-motion-fast, 150ms) ease;
@@ -451,10 +431,7 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   &__label {
     position: static;
     padding: 0;
-    font-family: var(--mc-font-body);
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0;
+    @include type-form-label;
     text-transform: none;
     color: var(--ds-text-muted, var(--mc-on-surface-variant));
     background: transparent;
@@ -468,8 +445,7 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     width: 100%;
     height: var(--ds-input-height, 48px);
     padding: 0 var(--ds-space-4, 16px);
-    font-family: var(--mc-font-body);
-    font-size: 16px;
+    @include type-form-input;
     color: var(--ds-text, var(--mc-on-surface));
     background: var(--ds-surface-alt, var(--mc-surface-container));
     border: 1px solid #334155;
@@ -508,8 +484,8 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
 
   &__error {
     display: block;
-    font-family: var(--mc-font-label);
-    font-size: 12px;
+    @include type-form-helper;
+    font-weight: var(--font-weight-medium);
     color: var(--ds-error, #ef4444);
   }
 
@@ -519,8 +495,8 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     gap: 2px;
 
     span {
-      font-family: var(--mc-font-label);
-      font-size: 12px;
+      @include type-form-helper;
+      font-weight: var(--font-weight-medium);
       color: var(--ds-text-muted, var(--mc-on-surface-variant));
     }
   }
@@ -534,10 +510,8 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   width: 100%;
   min-height: 48px;
   padding: 0 24px;
-  font-family: var(--mc-font-body);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0;
+  @include type-button;
+  font-weight: var(--font-weight-semibold);
   text-transform: none;
   color: #ffffff;
   cursor: pointer;
@@ -578,9 +552,8 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   width: 100%;
   min-height: 48px;
   padding: 0 24px;
-  font-family: var(--mc-font-body);
-  font-size: 14px;
-  font-weight: 600;
+  @include type-button;
+  font-weight: var(--font-weight-semibold);
   color: #ffffff;
   cursor: pointer;
   background: var(--ds-surface, var(--mc-surface));
@@ -680,8 +653,8 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     top: 50%;
     transform: translateY(-50%);
     padding: var(--ds-space-2, 8px) var(--ds-space-4, 16px);
-    font-family: var(--mc-font-label);
-    font-size: 0.75rem;
+    @include type-caption;
+    font-weight: var(--font-weight-medium);
     letter-spacing: 0.05em;
     white-space: nowrap;
     color: var(--ds-text, var(--mc-on-surface));
@@ -721,12 +694,6 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     padding-bottom: calc(var(--ds-space-4, 16px) + env(safe-area-inset-bottom, 0px));
     padding-left: max(var(--ds-space-4, 16px), env(safe-area-inset-left, 0px));
     padding-right: max(var(--ds-space-4, 16px), env(safe-area-inset-right, 0px));
-  }
-
-  .login-card {
-    &__heading {
-      font-size: 1.75rem;
-    }
   }
 
   .login-help-fab {

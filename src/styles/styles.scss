@@ -1,6 +1,9 @@
 @import '../../src/styles/index';
 @import '~css-star-rating/css/star-rating.min.css';
 
+/* Global typography utilities (Inter scale) — once, not per-component */
+@include typography-utilities;
+
 ::-webkit-scrollbar {
   height: 8px;
   width: 8px;

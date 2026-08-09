@@ -9,15 +9,14 @@ html {
   box-sizing: border-box;
 }
 body {
-  font-family: var(--mc-font-body);
-  font-size: 16px;
-  line-height: 1.5;
+  @include type-body;
   height: 100vh;
   height: 100dvh;
   background: var(--ds-background, var(--bg-main));
   color: var(--ds-text, var(--mc-on-surface));
   @include common-margin;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 a,
 a:link,
@@ -25,6 +24,12 @@ a:visited,
 path {
   text-decoration: none;
   @include transition(color var(--ds-motion-fast, 150ms) ease-out);
+}
+a:not(.material-symbols-outlined):not([class*='fa-']) {
+  font-weight: var(--font-weight-medium);
+}
+a:hover:not(.material-symbols-outlined):not([class*='fa-']) {
+  text-decoration: underline;
 }
 a:focus:not(:focus-visible),
 button:focus:not(:focus-visible) {
@@ -38,15 +43,34 @@ img {
   height: auto;
   object-fit: contain;
 }
-h1,
-h2,
-h3,
-h4,
-h5,
+h1 {
+  @include type-h1;
+  @include common-margin;
+  color: var(--ds-text, var(--mc-on-surface));
+}
+h2 {
+  @include type-h2;
+  @include common-margin;
+  color: var(--ds-text, var(--mc-on-surface));
+}
+h3 {
+  @include type-h3;
+  @include common-margin;
+  color: var(--ds-text, var(--mc-on-surface));
+}
+h4 {
+  @include type-h4;
+  @include common-margin;
+  color: var(--ds-text, var(--mc-on-surface));
+}
+h5 {
+  @include type-h5;
+  @include common-margin;
+  color: var(--ds-text, var(--mc-on-surface));
+}
 h6 {
-  font-family: var(--mc-font-display);
-  font-weight: 700;
-  line-height: 1.2;
+  @include type-body-small;
+  font-weight: var(--font-weight-semibold);
   @include common-margin;
   color: var(--ds-text, var(--mc-on-surface));
 }

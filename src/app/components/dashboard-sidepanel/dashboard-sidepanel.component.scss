@@ -69,15 +69,15 @@
   }
 
   &__eyebrow {
-    font-family: var(--mc-font-label);
-    font-size: 0.6875rem;
+    @include type-caption;
+    @include type-weight-medium;
     letter-spacing: 0.14em;
     color: var(--ds-text-muted, var(--mc-on-surface-variant));
   }
 
   &__title {
-    font-family: var(--mc-font-display);
-    font-size: 0.8125rem;
+    @include type-metadata;
+    @include type-weight-semibold;
     letter-spacing: 0.08em;
     color: var(--ds-text, var(--white));
     line-height: 1.25;
@@ -88,6 +88,10 @@
   flex-grow: 1;
   min-height: 0;
   overflow-y: auto;
+
+  ul li a {
+    @include type-navigation;
+  }
 }
 
 .sidebar-bottom {
@@ -138,8 +142,8 @@
 
   &__eyebrow {
     margin: 0 0 4px;
-    font-family: var(--mc-font-label);
-    font-size: 0.625rem;
+    @include type-caption;
+    @include type-weight-medium;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-primary, #ff6b2c);
@@ -147,8 +151,8 @@
 
   &__message {
     margin: 0 0 16px;
-    font-family: var(--mc-font-display);
-    font-size: 0.875rem;
+    @include type-body-small;
+    @include type-weight-semibold;
     line-height: 1.35;
     color: var(--mc-on-surface);
   }
@@ -161,9 +165,7 @@
     @include border-radius(var(--ds-radius-full, 999px));
     background: var(--mc-brand-gradient);
     color: #fff;
-    font-family: var(--mc-font-body);
-    font-size: 0.75rem;
-    font-weight: 700;
+    @include type-button;
     letter-spacing: 0.04em;
     cursor: pointer;
     display: inline-flex;
@@ -186,7 +188,7 @@
 
   &__cta-icon {
     display: none;
-    font-size: 1.25rem;
+    @include type-h4;
   }
 }
 
@@ -262,8 +264,8 @@
     bottom: -2px;
     right: -2px;
     z-index: 2;
-    font-family: var(--mc-font-label);
-    font-size: 0.5625rem;
+    @include type-caption;
+    @include type-weight-medium;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--white);
@@ -275,7 +277,7 @@
     &--compact {
       bottom: -1px;
       right: -4px;
-      font-size: 0.4375rem;
+      @include type-caption;
       letter-spacing: 0.06em;
       padding: 1px 4px;
       box-shadow: 0 0 6px rgba(255, 107, 44, 0.45);
@@ -310,25 +312,23 @@
 
   .hologram-name {
     margin: 0;
-    font-family: var(--mc-font-headline);
-    font-size: 0.875rem;
-    font-weight: 600;
+    @include type-body-small;
+    @include type-weight-semibold;
     color: var(--mc-on-surface);
     line-height: 1.3;
   }
 
   .hologram-email {
     margin: 0;
-    font-family: var(--mc-font-body);
-    font-size: 0.8125rem;
+    @include type-metadata;
     color: var(--mc-on-surface-variant);
     word-break: break-all;
   }
 
   .hologram-account-type {
     display: inline-block;
-    font-family: var(--mc-font-label);
-    font-size: 0.625rem;
+    @include type-caption;
+    @include type-weight-medium;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--mc-on-surface);
@@ -340,15 +340,14 @@
 
   .hologram-label {
     margin: 0;
-    font-family: var(--mc-font-label);
-    font-size: 0.6875rem;
+    @include type-form-label;
+    @include type-weight-semibold;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     background: var(--mc-brand-text-gradient);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-weight: 600;
     word-break: break-word;
   }
 
@@ -359,8 +358,7 @@
     @include border-radius(8px);
     background: rgba(31, 31, 34, 0.75);
     color: var(--mc-on-surface);
-    font-family: var(--mc-font-body);
-    font-size: 0.75rem;
+    @include type-button;
     cursor: pointer;
     @include transition(all 0.2s ease);
 
@@ -386,7 +384,7 @@
   }
 
   &__text {
-    font-size: 1.125rem;
+    @include type-body-large;
     color: var(--mc-on-surface-variant);
     line-height: 1.25;
     white-space: nowrap;
@@ -394,7 +392,7 @@
     text-overflow: ellipsis;
 
     &--sub {
-      font-size: 1rem;
+      @include type-body;
     }
   }
 
@@ -489,7 +487,7 @@ ul {
   }
 
   li {
-    font-size: 1.125rem;
+    @include type-body-large;
     position: relative;
     margin-bottom: 4px;
 
@@ -506,8 +504,7 @@ ul {
       gap: var(--ds-space-3, 12px);
       padding: 12px 16px;
       color: var(--ds-text-muted, var(--mc-on-surface-variant));
-      font-family: var(--mc-font-body);
-      font-size: 14px;
+      @include type-body-small;
       @include flex(flex, null, null, center);
       @include border-radius(var(--ds-radius-nav, 10px));
       @include transition(background var(--ds-motion-fast, 150ms) ease-out, color var(--ds-motion-fast, 150ms) ease-out);
@@ -575,7 +572,7 @@ footer {
   flex-shrink: 0;
 
   span {
-    font-size: 0.75rem;
+    @include type-caption;
     color: inherit;
   }
 }
@@ -672,7 +669,7 @@ footer {
     padding: 14px;
 
     &__message {
-      font-size: 0.8125rem;
+      @include type-metadata;
       margin-bottom: 12px;
     }
   }
@@ -680,7 +677,7 @@ footer {
   .left-navigation {
     ul {
       li {
-        font-size: 1rem;
+        @include type-body;
 
         a {
           padding: 10px 15px;
@@ -707,3 +704,5 @@ footer {
     }
   }
 }
+
+

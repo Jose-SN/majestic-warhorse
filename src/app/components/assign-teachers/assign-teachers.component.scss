@@ -231,7 +231,7 @@
     .input-holder {
       position: relative;
       input {
-        font-family: $archivo-regular;
+        @include type-weight-regular;
         font-size: 1rem;
         color: var(--bg-label);
         border: 2px solid var(--bg-input-border);
@@ -258,7 +258,7 @@
         cursor: pointer;
       }
       select {
-        font-family: $archivo-regular;
+        @include type-weight-regular;
         font-size: 1rem;
         color: var(--white);
         width: 160px;
@@ -276,7 +276,7 @@
       }
     }
     h1 {
-      font-family: $poppins-bold;
+      @include type-weight-bold;
       font-size: 1.875rem;
       color: var(--white);
       line-height: 3.75rem;
@@ -321,7 +321,7 @@
     @include border-radius(8px);
     @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
     h1 {
-      font-family: $poppins-bold;
+      @include type-weight-bold;
       font-weight: normal;
       font-size: 1.875rem;
       color: var(--light-blue);
@@ -336,7 +336,7 @@
         display: block;
       }
       .refresh-date {
-        font-family: $archivo-medium;
+        @include type-weight-medium;
         font-size: 0.875rem;
         text-align: center;
         letter-spacing: 1px;
@@ -351,7 +351,7 @@
         overflow: hidden;
       }
       button {
-        font-family: $archivo-medium;
+        @include type-weight-medium;
         font-size: 0.875rem;
         color: var(--white);
         width: 211px;
@@ -391,7 +391,7 @@
           @include flex(flex, null, space-between, null);
           margin-bottom: 20px;
           h2 {
-            font-family: $poppins-bold;
+            @include type-weight-bold;
             font-size: 1.875rem;
             font-weight: normal;
             color: var(--white);
@@ -430,7 +430,7 @@
             @include border-radius(15px);
             @include flex(flex, null, null, center);
             li {
-              font-family: $archivo-light;
+              @include type-weight-regular;
               font-size: 0.875rem;
               font-weight: normal;
               @include border-radius(15px);
@@ -481,12 +481,12 @@
                 }
                 padding: 20px 20px 40px;
                 span {
-                  font-family: $league-spartan-light;
+                  @include type-weight-regular;
                   font-size: 0.75rem;
                   color: var(--bg-light-grey);
                 }
                 h3 {
-                  font-family: $league-spartan-regular;
+                  @include type-weight-regular;
                   font-size: 1.125rem;
                   color: var(--light-blue);
                   line-height: 1.25rem;
@@ -597,7 +597,7 @@
                     background-color: var(--bg-list-active);                      
                   }
                   h4 {
-                    font-family: $poppins-regular;
+                    @include type-weight-regular;
                     font-size: 0.938rem;
                     color: var(--light-blue);
                     font-weight: normal;
@@ -651,7 +651,7 @@
 
 .assign-footer {
   .btn-assign {
-    font-family: $archivo-regular;
+    @include type-weight-regular;
     font-size: 1rem;
     color: var(--white);
     margin: 0;

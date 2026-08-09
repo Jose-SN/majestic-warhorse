@@ -50,19 +50,17 @@
 
     &__title {
       margin: 0;
-      font-family: var(--mc-font-label);
-      font-size: 0.75rem;
+      @include type-caption;
+      @include type-weight-medium;
       letter-spacing: 0.05em;
       text-transform: uppercase;
       color: var(--mc-on-surface-variant);
-      font-weight: 500;
     }
     &__badge {
-      font-family: var(--mc-font-label);
-      font-size: 0.625rem;
+      @include type-caption;
+      @include type-weight-medium;
       letter-spacing: 0.04em;
       color: var(--mc-outline);
-      font-weight: 500;
 
       &.accent {
         color: var(--mc-primary);
@@ -137,10 +135,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: $archivo-medium;
-      font-size: 1.15rem;
+      @include type-body-large;
       color: var(--white);
-      font-weight: normal;
     }
   }
 
@@ -171,9 +167,7 @@
 
       h2 {
         margin: 0;
-        font-family: var(--mc-font-display);
-        font-size: 1rem;
-        font-weight: 600;
+        @include type-h5;
         color: var(--mc-primary);
         letter-spacing: 0.02em;
       }
@@ -192,8 +186,8 @@
 
     li {
       padding: 5px 12px;
-      font-family: var(--mc-font-label);
-      font-size: 0.875rem;
+      @include type-body-small;
+      @include type-weight-medium;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--mc-on-surface-variant);
@@ -337,10 +331,8 @@
 
       h3 {
         margin: 0;
-        font-family: var(--mc-font-display);
-        font-size: 0.9375rem;
+        @include type-h5;
         color: var(--mc-on-surface);
-        font-weight: 600;
         line-height: 1.2;
         flex-shrink: 1;
         min-width: 0;
@@ -349,8 +341,7 @@
 
       p {
         margin: 0;
-        font-family: var(--mc-font-body);
-        font-size: 0.6875rem;
+        @include type-caption;
         color: var(--mc-on-surface-variant);
         flex-shrink: 1;
         min-width: 0;
@@ -371,8 +362,7 @@
       background: rgba(42, 42, 45, 0.8);
       color: var(--mc-primary);
       cursor: pointer;
-      font-family: var(--mc-font-body);
-      font-size: 0.75rem;
+      @include type-caption;
       @include transition(all 0.2s ease);
 
       span {
@@ -422,10 +412,9 @@
 
     &__title {
       margin: 0 0 10px;
-      font-family: var(--mc-font-display);
-      font-size: 1.125rem;
+      @include type-body-large;
+      @include type-weight-semibold;
       color: var(--mc-on-surface);
-      font-weight: 600;
       flex-shrink: 0;
     }
   }
@@ -456,7 +445,7 @@
     }
 
     &__icon {
-      font-size: 2rem;
+      @include type-h1;
       line-height: 1;
       color: rgba(255, 107, 44, 0.75);
       filter: drop-shadow(0 0 10px rgba(255, 107, 44, 0.35));
@@ -464,8 +453,8 @@
 
     &__eyebrow {
       margin: 0;
-      font-family: var(--mc-font-label);
-      font-size: 0.6875rem;
+      @include type-caption;
+      @include type-weight-medium;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: #ff6b2c;
@@ -473,9 +462,8 @@
 
     &__message {
       margin: 0;
-      font-family: var(--mc-font-display);
-      font-size: 1rem;
-      font-weight: 600;
+      @include type-body;
+      @include type-weight-semibold;
       color: var(--white);
       line-height: 1.35;
     }
@@ -483,8 +471,7 @@
     &__hint {
       margin: 0;
       max-width: 28rem;
-      font-family: $archivo-regular;
-      font-size: 0.875rem;
+      @include type-body-small;
       line-height: 1.5;
       color: #94a3b8;
     }
@@ -600,8 +587,8 @@
       background: rgba(3, 3, 4, 0.6);
       -webkit-backdrop-filter: blur(12px);
       backdrop-filter: blur(12px);
-      font-family: var(--mc-font-label);
-      font-size: 0.625rem;
+      @include type-caption;
+      @include type-weight-medium;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--mc-on-surface);
@@ -617,8 +604,8 @@
       background: rgba(6, 78, 59, 0.55);
       -webkit-backdrop-filter: blur(12px);
       backdrop-filter: blur(12px);
-      font-family: var(--mc-font-label);
-      font-size: 0.625rem;
+      @include type-caption;
+      @include type-weight-medium;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: #a7f3d0;
@@ -649,9 +636,7 @@
         margin: 0;
         flex: 1;
         min-width: 0;
-        font-family: var(--mc-font-display);
-        font-size: 1.125rem;
-        font-weight: 600;
+        @include type-h5;
         line-height: 1.25;
         color: var(--mc-on-surface);
         cursor: pointer;
@@ -670,8 +655,8 @@
       gap: 4px;
       flex-shrink: 0;
       color: var(--mc-primary);
-      font-family: var(--mc-font-label);
-      font-size: 0.875rem;
+      @include type-body-small;
+      @include type-weight-medium;
 
       .material-symbols-outlined {
         font-size: 18px;
@@ -690,8 +675,8 @@
       margin: 0;
       flex: 1;
       min-width: 0;
-      font-family: var(--mc-font-label);
-      font-size: 0.6875rem;
+      @include type-caption;
+      @include type-weight-medium;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: #94a3b8;
@@ -704,8 +689,8 @@
       @include border-radius(2px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       background: rgba(3, 3, 4, 0.55);
-      font-family: var(--mc-font-label);
-      font-size: 0.625rem;
+      @include type-caption;
+      @include type-weight-medium;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--mc-on-surface);
@@ -737,8 +722,8 @@
       display: flex;
       justify-content: space-between;
       gap: 8px;
-      font-family: var(--mc-font-label);
-      font-size: 0.6875rem;
+      @include type-caption;
+      @include type-weight-medium;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--mc-on-surface-variant);
@@ -765,8 +750,7 @@
 
     &__lessons {
       margin: 0;
-      font-family: var(--mc-font-body);
-      font-size: 0.75rem;
+      @include type-caption;
       color: #94a3b8;
     }
 
@@ -784,9 +768,8 @@
       @include border-radius(2px);
       background: var(--mc-brand-gradient);
       color: var(--mc-on-surface);
-      font-family: var(--mc-font-label);
-      font-size: 0.6875rem;
-      font-weight: 700;
+      @include type-caption;
+      @include type-weight-bold;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       cursor: pointer;
@@ -832,3 +815,4 @@
     }
   }
 }
+

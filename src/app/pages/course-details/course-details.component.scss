@@ -62,20 +62,18 @@
           @include flex(flex, null, space-between, center);
           margin-bottom: 20px;
           h2 {
-            font-family: $titilliumWeb-bold;
-            font-size: 2rem;
-            font-weight: normal;
+            @include type-course-title;
             color: var(--white);
             letter-spacing: 1.5px;
             margin-bottom: 0;
             span {
-              font-family: $titilliumWeb-light;
-              font-size: 2rem;
+              @include type-course-title;
+              font-weight: var(--font-weight-regular);
               color: var(--white);
             }
           }
           span {
-            font-size: 1rem;
+            @include type-body;
             color: var(--bg-grey);
           }
           .tab-navigation {
@@ -87,9 +85,7 @@
             @include border-radius(15px);
             @include flex(flex, null, null, center);
             li {
-              font-family: $archivo-light;
-              font-size: 0.875rem;
-              font-weight: normal;
+              @include type-navigation;
               @include border-radius(15px);
               color: var(--white);
               padding: 15px 24px;
@@ -104,7 +100,7 @@
         .chapter-title {
           margin-bottom: 20px;
           span {
-            font-size: 1rem;
+            @include type-body;
             color: var(--bg-grey);
           }
         }
@@ -141,25 +137,19 @@
               overflow-y: auto;
               height: calc(100vh - 830px);
               h5 {
-                font-size: 0.75rem;
-                line-height: 1rem;
+                @include type-caption;
                 color: var(--btn-add);
                 margin-bottom: 8px;
                 position: relative;
               }
               strong {
-                font-family: $titilliumWeb-regular;
-                font-size: 1rem;
-                line-height: 1.3rem;
-                font-weight: normal;
+                @include type-body;
                 color: var(--white);
                 margin-bottom: 8px;
                 display: block;
               }
               p {
-                font-family: $titilliumWeb-light;
-                font-size: 0.875rem;
-                line-height: 1.5rem;
+                @include type-body-small;
                 color: rgba($color: #ffff, $alpha: 0.5);
               }
             }
@@ -168,8 +158,7 @@
               width: 100%;
               flex-shrink: 0;
               button {
-                font-family: $archivo-medium;
-                font-size: 0.875rem;
+                @include type-button;
                 color: var(--white);
                 width: 100%;
                 height: 50px;
@@ -213,8 +202,7 @@
           }
         }
         > span {
-          font-family: $archivo-bold;
-          font-size: 1.5rem;
+          @include type-h3;
           color: var(--light-blue);
           text-align: center;
           margin: 20px 0;
@@ -224,8 +212,7 @@
           display: block;
         }
         strong {
-          font-size: 0.813rem;
-          font-family: $archivo-regular;
+          @include type-metadata;
           color: var(--white);
           background: var(--bg-mit4);
           padding: 5px 10px;
@@ -242,8 +229,7 @@
             margin-bottom: 5px;
             display: block;
             a {
-              font-family: $archivo-regular;
-              font-size: 0.875rem;
+              @include type-body-small;
               color: var(--bg-blue);
               position: relative;
               @include transition(all 0.3s ease-in-out);
@@ -279,8 +265,7 @@
           .status-holder {
             @include flex(flex, column, null, center);
             .status {
-              font-family: $poppins-bold;
-              font-size: 1.5rem;
+              @include type-h3;
               width: 55px;
               height: 55px;
               color: var(--white);
@@ -295,16 +280,13 @@
               }
             }
             span {
-              font-family: $poppins-regular;
-              font-size: 0.875rem;
+              @include type-body-small;
               color: var(--white);
             }
           }
         }
         h3 {
-          font-family: $poppins-medium;
-          font-size: 1.25rem;
-          font-weight: normal;
+          @include type-h4;
           color: var(--light-blue);
           margin: 15px 0 15px 15px;
         }
@@ -327,11 +309,8 @@
               border-bottom: 1px solid var(--color-blue);
             }
             h4 {
-              font-family: $poppins-regular;
-              font-size: 0.938rem;
+              @include type-body;
               color: var(--light-blue);
-              font-weight: normal;
-              line-height: 18px;
               margin-bottom: 5px;
               @include text-ellipsis($lines: 2);
             }
@@ -342,8 +321,7 @@
               overflow: hidden;
             }
             span {
-              font-family: $league-spartan-light;
-              font-size: 1rem;
+              @include type-body;
               color: var(--bg-light-grey);
               display: block;
               &:not(:last-child) {
@@ -351,7 +329,7 @@
               }
             }
             button {
-              font-size: 0.75rem;
+              @include type-caption;
               width: 67px;
               height: 22px;
               @include border-radius(8px);
@@ -376,15 +354,14 @@
 
   .data-refreshed-holder {
     span {
-      font-size: 0.875rem;
+      @include type-body-small;
       white-space: nowrap;
       margin-right: 33px;
       color: var(--white);
       display: block;
     }
     .refresh-date {
-      font-family: $archivo-medium;
-      font-size: 0.875rem;
+      @include type-form-label;
       text-align: center;
       letter-spacing: 1px;
       color: var(--white);
@@ -398,8 +375,7 @@
       overflow: hidden;
     }
     button {
-      font-family: $archivo-medium;
-      font-size: 0.875rem;
+      @include type-button;
       color: var(--white);
       width: 211px;
       height: 44px;
@@ -419,9 +395,7 @@
 
   
 .accordion {
-  font-family: $archivo-regular;
-  font-size: 0.875rem;
-  font-weight: normal;
+  @include type-body-small;
   background: var(--bg-input);
   cursor: pointer;
   padding: 11px 14px;
@@ -441,7 +415,7 @@
   }
 }
 label {
-  font-size: 0.785rem;
+  @include type-form-label;
   color:  var(--white); 
   margin-bottom: 10px;
 }
@@ -471,7 +445,7 @@ label {
   }
   .panel-list {
     p {
-      font-size: 0.875rem;
+      @include type-body-small;
       color: rgba($color: #fff, $alpha: 0.3);
     }
     ul {
@@ -480,7 +454,7 @@ label {
       @include flex(flex, null, null, null);
       margin: 10px 0 0;
       li {
-        font-size: 0.785rem;
+        @include type-caption;
         color: var( --white);
         cursor: pointer;        
         &:not(:last-child){
@@ -534,13 +508,12 @@ label {
         margin-right: 10px;
       }
       span {
-        font-family: $titilliumWeb-semibold;
-        font-size: 0.875rem;
+        @include type-navigation;
+        font-weight: var(--font-weight-semibold);
         color: var(--white);
       }
       strong {
-        font-family: $archivo-light;
-        font-weight: normal;
+        @include type-body-small;
         color: rgba($color: #fff, $alpha: 0.4);
         position: absolute;
         right: 15px;
@@ -598,15 +571,12 @@ label {
       width: 115px;
       color: var(--white);
       span {
-        font-family: $titilliumWeb-regular;
-        font-size: 1rem;
+        @include type-body;
         @include text-ellipsis($lines: 1);
         display: block;
       }
       strong {
-        font-family: $titilliumWeb-regular;
-        font-size: 0.75rem;
-        font-weight: normal;
+        @include type-caption;
         display: block;
       }
     }
@@ -621,8 +591,7 @@ label {
       }
     }
     span {
-      font-family: $titilliumWeb-regular;
-      font-size: 0.75rem;
+      @include type-caption;
       color: var(--btn-add);
       white-space: nowrap;
     }
@@ -632,8 +601,7 @@ label {
     gap: 10px;
     padding: 0 10px;
     span {
-      font-family: $titilliumWeb-regular;
-      font-size: 0.75rem;
+      @include type-caption;
       color: var(--btn-add);
       white-space: nowrap;
     }
@@ -643,8 +611,7 @@ label {
     gap: 10px;
     padding: 0 10px;
     span {
-      font-family: $titilliumWeb-regular;
-      font-size: 0.75rem;
+      @include type-caption;
       color: var(--btn-add);
       white-space: nowrap;
     }
@@ -654,8 +621,7 @@ label {
     gap: 10px;
     padding: 0 10px;
     span {
-      font-family: $titilliumWeb-regular;
-      font-size: 0.75rem;
+      @include type-caption;
       color: var(--btn-add);
       white-space: nowrap;
     }
@@ -725,7 +691,7 @@ label {
     padding: 15px;
     ul {
       li {
-        font-size: 16px;
+        @include type-body;
         a {
           padding: 10px;
           figure {
@@ -744,7 +710,7 @@ label {
         gap: 11;
       }
       h2 {
-        font-size: 18px;
+        @include type-h5;
         width: 99%;
       }
       .icons {
@@ -753,17 +719,17 @@ label {
       }
       .detail-bottom {
         span {
-          font-size: 16px;
+          @include type-body;
         }
         .rate-content {
           strong {
-            font-size: 20px;
+            @include type-h4;
             line-height: 18px;
           }
         }
         .type {
           strong {
-            font-size: 13px;
+            @include type-metadata;
             line-height: 16px;
           }
         }
@@ -772,10 +738,11 @@ label {
         .card-content {
           &:last-child {
             span {
-              font-size: 14px;
+              @include type-body-small;
             }
             h3 {
-              font-size: 14px;
+              @include type-body-small;
+              font-weight: var(--font-weight-semibold);
             }
           }
         }
@@ -785,7 +752,7 @@ label {
   .dashboard-right {
     .title-holder {
       h1 {
-        font-size: 1.375rem;
+        @include type-h3;
       }
       .data-refreshed-holder {
         .refresh-date {
@@ -796,7 +763,7 @@ label {
     }
     .content-area {
       span {
-        font-size: 20px;
+        @include type-h4;
       }
       .content-right {
         max-width: 280px;
@@ -815,7 +782,6 @@ label {
           .course-top {
             flex-direction: column;
             h2 {
-              font-size: 1.375rem;
               text-align: center;
             }
             ul {
@@ -899,13 +865,6 @@ label {
     .content-left {
       max-width: 100%;
       width: 100%;
-      .courses-wrapper {
-        .course-top {
-          h2 {
-            font-size: 1.5rem;
-          }
-        }
-      }      
     }
     .content-right {
       max-width: 100%;

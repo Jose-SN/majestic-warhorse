@@ -1,5 +1,6 @@
 @import '../../../styles/mixins';
 @import '../../../styles/variables';
+@import '../../../styles/typography';
 
 $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5bBRqGkgaL6T_NuZj7s2VtCtDIUgdx_qYYPIILe42htWBhLi-cPMfsIXs9hEsrG_OCFSPq3Gjqj-bq1yjxtlM7hxT4XbeTVEKPcxvXyc0Ns3YV3Y1BZXKi12HeblABzB93Z7unaXiv_dfQdfx09-Z_RJEebeVfi1ChaBnCkmFBxroz0How8VMvlnFKldFRPE-Awfb3VfsyCOVckUjy0OcEtyodoIjh4oyyAUcBkCVq9uXWoH0sQZuYQ');
 
@@ -20,7 +21,7 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
   z-index: 1;
   background: var(--mc-surface-container-lowest, #030304);
   color: var(--mc-on-surface);
-  font-family: var(--mc-font-body);
+  @include type-body;
 }
 
 /* ── Left hero ── */
@@ -77,11 +78,7 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
 
   &__title {
     margin: 0 0 1.25rem;
-    font-family: var(--mc-font-display);
-    font-size: clamp(2.25rem, 3.5vw, 3rem);
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    @include type-display;
     color: #fff;
   }
 
@@ -95,8 +92,7 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
   &__subtitle {
     margin: 0 0 2rem;
     max-width: 26rem;
-    font-size: 1.0625rem;
-    line-height: 1.65;
+    @include type-body-large;
     color: var(--mc-on-surface-variant);
   }
 
@@ -115,8 +111,8 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
 
   &__stat-label {
     display: block;
-    font-family: var(--mc-font-label);
-    font-size: 0.6875rem;
+    @include type-caption;
+    font-weight: var(--font-weight-medium);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--mc-primary);
@@ -125,8 +121,8 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
   &__stat-value {
     display: block;
     margin-top: 0.2rem;
-    font-family: var(--mc-font-label);
-    font-size: 0.8125rem;
+    @include type-metadata;
+    font-weight: var(--font-weight-medium);
     color: var(--mc-on-surface);
   }
 
@@ -218,10 +214,7 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
 
   &__heading {
     margin: 0;
-    font-family: var(--mc-font-display);
-    font-size: 2rem;
-    font-weight: 600;
-    line-height: 1.2;
+    @include type-h2;
     color: var(--ds-text, var(--mc-on-surface));
   }
 
@@ -231,21 +224,17 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
 
     p {
       margin: 0;
-      font-family: var(--mc-font-label);
-      font-size: 0.75rem;
+      @include type-caption;
+      font-weight: var(--font-weight-medium);
       letter-spacing: 0.05em;
       color: var(--ds-text-muted, var(--mc-on-surface-variant));
     }
 
     a {
+      @include type-link;
       color: var(--ds-primary, var(--mc-primary-container));
-      font-weight: 700;
+      font-weight: var(--font-weight-bold);
       cursor: pointer;
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
     }
   }
 }
@@ -260,9 +249,8 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
   width: 100%;
   min-height: 48px;
   padding: 0 24px;
-  font-family: var(--mc-font-body);
-  font-size: 14px;
-  font-weight: 600;
+  @include type-button;
+  font-weight: var(--font-weight-semibold);
   color: #ffffff;
   cursor: pointer;
   background: var(--ds-surface, var(--mc-surface));
@@ -283,9 +271,8 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
     top: -0.55rem;
     right: 1rem;
     padding: 0.15rem 0.55rem;
-    font-family: var(--mc-font-label);
-    font-size: 0.625rem;
-    font-weight: 700;
+    @include type-caption;
+    font-weight: var(--font-weight-bold);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ds-background, #030304);
@@ -341,8 +328,8 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
   }
 
   &__chips-label {
-    font-family: var(--mc-font-label);
-    font-size: 0.6875rem;
+    @include type-caption;
+    font-weight: var(--font-weight-medium);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--mc-outline);
@@ -365,8 +352,8 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
     span {
       flex-shrink: 0;
       margin: 0 1rem;
-      font-family: var(--mc-font-label);
-      font-size: 0.75rem;
+      @include type-caption;
+      font-weight: var(--font-weight-medium);
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--mc-outline);
@@ -415,8 +402,8 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
   }
 
   &__label {
-    font-family: var(--mc-font-label);
-    font-size: 0.75rem;
+    @include type-caption;
+    font-weight: var(--font-weight-medium);
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
@@ -432,7 +419,8 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
     }
 
     .signup-role__label {
-      font-size: 0.6875rem;
+      @include type-caption;
+      font-weight: var(--font-weight-medium);
     }
   }
 
@@ -488,9 +476,8 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
   }
 
   span:last-child {
-    font-family: var(--mc-font-label);
-    font-size: 0.6875rem;
-    font-weight: 600;
+    @include type-caption;
+    font-weight: var(--font-weight-semibold);
     letter-spacing: 0.04em;
   }
 
@@ -522,10 +509,7 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
   }
 
   label {
-    font-family: var(--mc-font-body);
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0;
+    @include type-form-label;
     text-transform: none;
     color: var(--ds-text-muted, var(--mc-on-surface-variant));
   }
@@ -535,8 +519,7 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
     width: 100%;
     height: var(--ds-input-height, 48px);
     padding: 0 var(--ds-space-4, 16px);
-    font-family: var(--mc-font-body);
-    font-size: 16px;
+    @include type-form-input;
     color: var(--ds-text, var(--mc-on-surface));
     background: var(--ds-surface-alt, var(--mc-surface-container));
     border: 1px solid #334155;
@@ -611,7 +594,7 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
   }
 
   &__error {
-    font-size: 12px;
+    @include type-form-helper;
     color: var(--ds-error, #ef4444);
   }
 
@@ -621,7 +604,7 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
     gap: 0.15rem;
 
     span {
-      font-size: 12px;
+      @include type-form-helper;
       color: var(--ds-text-muted, var(--mc-on-surface-variant));
     }
   }
@@ -634,10 +617,8 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
   width: 100%;
   min-height: 48px;
   padding: 0 24px;
-  font-family: var(--mc-font-body);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0;
+  @include type-button;
+  font-weight: var(--font-weight-semibold);
   text-transform: none;
   color: #ffffff;
   cursor: pointer;

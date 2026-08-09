@@ -21,7 +21,7 @@
         @include box-shadow(2px, 2px, 15px, var(--bg-shadow));
         .dialog-header {
             h2 {
-                font-family: $archivo-regular;
+                @include type-weight-regular;
                 font-size: 1.25rem;
             }
             @include flex(flex, null, space-between, center);
@@ -82,7 +82,7 @@
         @include border-radius(15px);
         .dialog-header {
             h2 {
-                font-family: $archivo-regular;
+                @include type-weight-regular;
                 font-size: 1.25rem;
             }
             @include flex(flex, null, space-between, center);

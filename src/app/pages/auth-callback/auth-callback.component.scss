@@ -1,3 +1,5 @@
+@import '../../../styles/typography';
+
 .auth-callback {
   min-height: 100vh;
   display: flex;
@@ -16,15 +18,14 @@
 
     h2 {
       margin: 20px 0 8px;
-      font-size: 1.25rem;
+      @include type-h3;
       color: var(--white);
     }
 
     p {
       margin: 0;
-      font-size: 0.938rem;
+      @include type-body-small;
       color: var(--bg-light-grey);
-      line-height: 1.5;
     }
   }
 
@@ -36,7 +37,7 @@
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     color: var(--white);
     background: #e5484d;
     border-radius: 50%;
@@ -49,7 +50,7 @@
     border-radius: 20px;
     cursor: pointer;
     color: var(--white);
-    font-size: 0.938rem;
+    @include type-button;
     background: #fd7859;
   }
 }

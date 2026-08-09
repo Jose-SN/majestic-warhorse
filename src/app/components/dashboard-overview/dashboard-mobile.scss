@@ -61,11 +61,11 @@
           margin-bottom: 10px;
 
           .stat-widget__title {
-            font-size: 0.6875rem;
+            @include type-caption;
           }
 
           .stat-widget__badge {
-            font-size: 0.5625rem;
+            @include type-caption;
           }
         }
 
@@ -97,7 +97,7 @@
           }
 
           strong {
-            font-size: 0.875rem;
+            @include type-body-small;
           }
         }
       }
@@ -127,16 +127,15 @@
 
         .panel-block__view-all {
           display: inline-block;
-          font-family: var(--mc-font-label);
-          font-size: 0.75rem;
+          @include type-caption;
+          @include type-weight-medium;
           color: var(--mc-primary);
           text-decoration: none;
         }
 
         h2 {
-          font-family: var(--mc-font-display);
-          font-size: 1rem;
-          font-weight: 700;
+          @include type-h5;
+          @include type-weight-bold;
           color: var(--mc-on-surface);
           display: flex;
           align-items: center;
@@ -155,7 +154,7 @@
             &::before {
               content: 'neurology';
               font-family: 'Material Symbols Outlined';
-              font-size: 20px;
+              @include type-h4;
               color: var(--mc-primary);
               font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
             }
@@ -205,8 +204,8 @@
           border: 1px solid rgba(187, 123, 255, 0.35);
           background: rgba(255, 214, 0, 0.55);
           backdrop-filter: blur(10px);
-          font-family: var(--mc-font-label);
-          font-size: 0.625rem;
+          @include type-caption;
+          @include type-weight-medium;
           letter-spacing: 0.06em;
           text-transform: uppercase;
           color: #e9d5ff;
@@ -222,12 +221,12 @@
           background: linear-gradient(180deg, transparent 20%, rgba(19, 19, 22, 0.94) 100%);
 
           h3 {
-            font-size: 1.125rem;
+            @include type-h5;
             @include text-ellipsis($lines: 2);
           }
 
           p {
-            font-size: 0.8125rem;
+            @include type-metadata;
             @include text-ellipsis($lines: 2);
           }
         }
@@ -240,8 +239,8 @@
           margin-top: 4px;
 
           > span {
-            font-family: var(--mc-font-label);
-            font-size: 0.6875rem;
+            @include type-caption;
+            @include type-weight-medium;
             color: var(--mc-on-surface-variant);
           }
         }
@@ -250,7 +249,7 @@
           align-self: auto;
           min-height: 32px;
           padding: 7px 12px;
-          font-size: 0.75rem;
+          @include type-caption;
         }
       }
     }
@@ -273,7 +272,7 @@
         padding: 0 0 4px;
 
         h2 {
-          font-size: 1rem;
+          @include type-h5;
         }
 
         .filter-tabs {
@@ -313,7 +312,7 @@
         }
 
         &__head h3 {
-          font-size: 1.0625rem;
+          @include type-h5;
         }
       }
     }
@@ -329,3 +328,5 @@
     }
   }
 }
+
+

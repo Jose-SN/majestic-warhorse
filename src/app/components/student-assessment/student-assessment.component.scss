@@ -5,14 +5,12 @@
   .course-top {
     margin-bottom: 24px;
     h2 {
-      font-family: $titilliumWeb-bold;
-      font-size: 1.5rem;
-      font-weight: 600;
+      @include type-h3;
       color: var(--white);
       margin: 0 0 8px 0;
     }
     span {
-      font-size: 0.938rem;
+      @include type-body-small;
       color: var(--bg-light-grey);
     }
   }
@@ -23,7 +21,7 @@
     text-align: center;
     color: var(--bg-light-grey);
     .help-text {
-      font-size: 0.875rem;
+      @include type-body-small;
       margin-top: 12px;
       opacity: 0.8;
     }
@@ -46,9 +44,8 @@
 
     .sub-title {
       display: block;
-      font-size: 0.938rem;
+      @include type-quiz-question;
       color: var(--white);
-      line-height: 1.4;
       margin-bottom: 10px;
       &::before {
         counter-increment: q-counter;
@@ -57,8 +54,7 @@
     }
 
     input[type='text'] {
-      font-family: $archivo-regular;
-      font-size: 0.875rem;
+      @include type-form-input;
       color: var(--white);
       width: 100%;
       background: var(--bg-input);
@@ -68,8 +64,7 @@
     }
 
     textarea {
-      font-family: $archivo-regular;
-      font-size: 0.875rem;
+      @include type-form-input;
       color: var(--white);
       width: 100%;
       background: var(--bg-input);
@@ -80,8 +75,7 @@
     }
 
     select {
-      font-family: $archivo-regular;
-      font-size: 0.875rem;
+      @include type-form-input;
       color: var(--white);
       width: 100%;
       background: var(--bg-input);
@@ -99,7 +93,7 @@
       margin-bottom: 24px;
 
       .checkbox-label {
-        font-size: 0.938rem;
+        @include type-quiz-option;
         color: var(--white);
         display: block;
         position: relative;
@@ -149,12 +143,12 @@
           transform: rotate(45deg);
         }
         strong {
-          font-weight: 500;
+          @include type-weight-medium;
         }
       }
 
       .radio-label {
-        font-size: 0.938rem;
+        @include type-quiz-option;
         color: var(--white);
         display: block;
         position: relative;
@@ -177,7 +171,7 @@
           accent-color: #fd7859;
         }
         strong {
-          font-weight: 500;
+          @include type-weight-medium;
         }
       }
     }
@@ -191,17 +185,15 @@
     @include border-radius(8px);
     .disclaimer-text {
       margin: 0;
-      font-size: 0.875rem;
+      @include type-quiz-explanation;
       color: var(--bg-light-grey);
-      line-height: 1.5;
     }
   }
 
   .data-refreshed-holder {
     margin-top: 24px;
     button {
-      font-family: $archivo-medium;
-      font-size: 0.938rem;
+      @include type-button;
       color: var(--white);
       padding: 12px 32px;
       min-width: 180px;

@@ -12,7 +12,7 @@
     border-bottom: 1px solid var(--bg-input-border);
 
     h1 {
-      font-family: $poppins-bold;
+      @include type-weight-bold;
       font-size: 1.5rem;
       color: var(--light-blue);
       margin: 0 0 8px;
@@ -51,7 +51,7 @@
 
   input {
     width: 100%;
-    font-family: $archivo-regular;
+    @include type-weight-regular;
     font-size: 0.9375rem;
     color: var(--white);
     padding: 12px 14px;
@@ -81,7 +81,7 @@
 }
 
 .btn-submit {
-  font-family: $archivo-regular;
+  @include type-weight-regular;
   font-size: 0.9375rem;
   color: var(--white);
   padding: 12px 28px;
@@ -97,7 +97,7 @@
 }
 
 .btn-secondary {
-  font-family: $archivo-regular;
+  @include type-weight-regular;
   font-size: 0.9375rem;
   color: var(--bg-blue);
   padding: 12px 28px;

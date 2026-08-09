@@ -1,3 +1,5 @@
+@import '../styles/typography';
+
 .d-none {
   display: none !important;
 }
@@ -34,7 +36,7 @@
   &__text {
     strong {
       display: block;
-      font-family: var(--mc-font-display, 'Space Grotesk', sans-serif);
+      @include type-weight-semibold;
       font-size: 0.95rem;
       font-weight: 600;
       color: #fff;
@@ -59,7 +61,7 @@
   &__btn {
     min-height: 2rem;
     padding: 0.35rem 0.85rem;
-    font-family: var(--mc-font-label, 'JetBrains Mono', monospace);
+    @include type-weight-medium;
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.04em;

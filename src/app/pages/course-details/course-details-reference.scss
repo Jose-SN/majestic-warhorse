@@ -26,8 +26,7 @@
   li {
     padding: 8px 24px;
     @include border-radius(2px);
-    font-family: var(--mc-font-label);
-    font-size: 0.85rem;
+    @include type-navigation;
     letter-spacing: 0.05em;
     color: var(--mc-on-surface-variant);
     cursor: pointer;
@@ -39,7 +38,7 @@
 
     &.is-active {
       color: var(--mc-on-surface);
-      font-weight: 700;
+      font-weight: var(--font-weight-bold);
       background: var(--mc-surface-container-high);
       border: 1px solid var(--mc-outline-variant);
     }
@@ -61,7 +60,7 @@
   align-items: stretch;
 }
 
-// Left column — open layout (video frame only), no panel wrapper
+// Left column â€” open layout (video frame only), no panel wrapper
 .cd-main {
   display: grid;
   grid-template-rows: minmax(0, 1.08fr) auto auto minmax(0, 1fr);
@@ -111,8 +110,8 @@
     background: rgba(3, 3, 4, 0.72);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
-    font-family: $archivo-medium;
-    font-size: 0.625rem;
+    @include type-caption;
+    font-weight: var(--font-weight-medium);
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--white);
@@ -175,22 +174,18 @@
 
   h1 {
     margin: 0;
-    font-family: $poppins-bold;
-    font-size: clamp(1.75rem, 2.4vw, 2.25rem);
-    font-weight: normal;
+    @include type-course-title;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     background: linear-gradient(90deg, #f0932b 0%, #ff5c7a 42%, #d131a1 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    line-height: 1.05;
   }
 
   &__subtitle {
     margin: 0;
-    font-family: $archivo-regular;
-    font-size: 1.35rem;
+    @include type-body-large;
     color: rgba(255, 255, 255, 0.9);
   }
 
@@ -204,16 +199,15 @@
   }
 
   &__rating-label {
-    font-family: $archivo-medium;
-    font-size: 0.75rem;
+    @include type-caption;
+    font-weight: var(--font-weight-medium);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.55);
   }
 
   &__rating-value {
-    font-family: $archivo-medium;
-    font-size: 0.875rem;
+    @include type-form-label;
     color: var(--color-primary, #ff6b2c);
   }
 
@@ -237,8 +231,8 @@
   background: rgba(6, 78, 59, 0.55);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  font-family: $archivo-medium;
-  font-size: 0.625rem;
+  @include type-caption;
+  font-weight: var(--font-weight-medium);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #a7f3d0;
@@ -253,22 +247,20 @@
 .cd-description {
   p {
     margin: 0;
-    font-family: $archivo-regular;
-    font-size: 1rem;
+    @include type-body;
     line-height: 1.75;
     color: rgba(255, 255, 255, 0.74);
     max-width: 56rem;
 
     ::ng-deep .cd-highlight {
       color: #ff7a9a;
-      font-family: $archivo-medium;
+      font-weight: var(--font-weight-medium);
     }
   }
 }
 
 .cd-assessment-cta button {
-  font-family: $archivo-medium;
-  font-size: 0.8125rem;
+  @include type-button;
   color: var(--white);
   padding: 10px 20px;
   border: none;
@@ -320,7 +312,7 @@
   }
 }
 
-// Middle + right columns — glass panels like reference
+// Middle + right columns â€” glass panels like reference
 .cd-lessons,
 .cd-sidebar {
   // @include dashboard-glass-card;
@@ -340,9 +332,7 @@
 
 .cd-section-title {
   margin: 0;
-  font-family: $poppins-medium;
-  font-size: 1.25rem;
-  font-weight: normal;
+  @include type-h4;
   color: var(--white);
   flex-shrink: 0;
 
@@ -397,10 +387,8 @@
   }
 
   &__title {
-    font-family: $archivo-regular;
-    font-size: 1.15rem;
+    @include type-body-large;
     color: var(--white);
-    line-height: 1.4;
   }
 
   &__chevron {
@@ -428,8 +416,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: $archivo-medium;
-    font-size: calc(13px / var(--dashboard-scale));
+    @include type-metadata;
+    font-weight: var(--font-weight-medium);
     color: var(--white);
     line-height: 1;
     pointer-events: none;
@@ -466,8 +454,7 @@
   @include border-radius(8px);
   cursor: pointer;
   color: rgba(255, 255, 255, 0.72);
-  font-family: $archivo-regular;
-  font-size: 1.15rem;
+  @include type-body-large;
   text-align: left;
 
   span {
@@ -495,11 +482,8 @@
 
   &__title {
     margin: 0 0 calc(14px / var(--dashboard-scale));
-    font-family: $poppins-medium;
-    font-size: calc(18px / var(--dashboard-scale));
-    font-weight: normal;
+    @include type-h5;
     color: var(--white);
-    line-height: 1.3;
   }
 
   &__body {
@@ -530,11 +514,10 @@
 
   &__name {
     margin: 0;
-    font-family: $archivo-medium;
-    font-size: calc(11px / var(--dashboard-scale));
+    @include type-caption;
+    font-weight: var(--font-weight-medium);
     color: var(--white);
     text-align: center;
-    line-height: 1.3;
     max-width: 100%;
     @include text-ellipsis($lines: 2);
   }
@@ -546,18 +529,14 @@
     strong {
       display: block;
       margin-bottom: calc(6px / var(--dashboard-scale));
-      font-family: $archivo-medium;
-      font-size: calc(12px / var(--dashboard-scale));
+      @include type-caption;
+      font-weight: var(--font-weight-medium);
       color: var(--white);
-      font-weight: normal;
-      line-height: 1.3;
     }
 
     p {
       margin: 0;
-      font-family: $archivo-regular;
-      font-size: calc(12px / var(--dashboard-scale));
-      line-height: 1.55;
+      @include type-caption;
       color: rgba(160, 174, 192, 0.95);
     }
   }
@@ -596,8 +575,7 @@
 
 .cd-materials-empty {
   margin: 0;
-  font-family: $archivo-regular;
-  font-size: 0.875rem;
+  @include type-body-small;
   color: var(--bg-label);
   opacity: 0.85;
 }
@@ -609,8 +587,8 @@
 
   &__title {
     margin: 0;
-    font-family: $archivo-medium;
-    font-size: 0.6875rem;
+    @include type-caption;
+    font-weight: var(--font-weight-medium);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: rgba(255, 181, 154, 0.85);
@@ -638,8 +616,8 @@
     height: 46px;
     @include border-radius(8px);
     @include flex(flex, null, center, center);
-    font-family: $archivo-medium;
-    font-size: 0.6875rem;
+    @include type-caption;
+    font-weight: var(--font-weight-medium);
     letter-spacing: 0.04em;
     color: var(--white);
 
@@ -657,10 +635,8 @@
   }
 
   &__name {
-    font-family: $archivo-regular;
-    font-size: 0.95rem;
+    @include type-body;
     color: rgba(255, 255, 255, 0.9);
-    line-height: 1.35;
     @include text-ellipsis($lines: 2);
   }
 
@@ -713,8 +689,7 @@
 .cd-discussions-empty {
   margin: 0;
   padding: 16px 8px;
-  font-family: $archivo-regular;
-  font-size: 0.9rem;
+  @include type-body-small;
   color: rgba(255, 255, 255, 0.45);
   text-align: center;
 }
@@ -760,8 +735,8 @@
     }
 
     span {
-      font-family: $archivo-medium;
-      font-size: 0.75rem;
+      @include type-caption;
+      font-weight: var(--font-weight-medium);
       color: var(--white);
     }
   }
@@ -771,16 +746,13 @@
 
     strong {
       display: block;
-      font-family: $archivo-regular;
-      font-size: 0.95rem;
+      @include type-body;
       color: var(--white);
-      font-weight: normal;
     }
 
     small {
       display: block;
-      font-family: $archivo-regular;
-      font-size: 0.75rem;
+      @include type-caption;
       color: rgba(255, 255, 255, 0.5);
       @include text-ellipsis($lines: 1);
       padding-top: 5px;
@@ -795,9 +767,7 @@
 
   p {
     margin: 0 0 6px;
-    font-family: $archivo-regular;
-    font-size: 0.95rem;
-    line-height: 1.6;
+    @include type-chat-message;
     color: rgba(255, 255, 255, 0.64);
   }
 
@@ -805,8 +775,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-family: $archivo-regular;
-    font-size: 0.85rem;
+    @include type-metadata;
     color: rgba(255, 255, 255, 0.4);
 
     svg {
@@ -830,8 +799,7 @@
   @include border-radius(10px);
   border: 1px solid rgba(79, 137, 252, 0.2);
   background: rgba(8, 10, 22, 0.88);
-  font-family: $archivo-regular;
-  font-size: 1.25rem;
+  @include type-form-input;
   color: var(--white);
 
   &::placeholder {
@@ -907,7 +875,7 @@
     gap: 12px;
   }
 
-  /* First viewport: video + header ≈ 50% */
+  /* First viewport: video + header â‰ˆ 50% */
   .cd-hero {
     display: flex;
     flex-direction: column;
@@ -931,12 +899,7 @@
     flex-shrink: 0;
 
     h1 {
-      font-size: clamp(1.15rem, 5vw, 1.5rem);
       letter-spacing: 0.04em;
-    }
-
-    &__subtitle {
-      font-size: 0.95rem;
     }
 
     &__rating {

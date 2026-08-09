@@ -1,28 +1,5 @@
-@mixin font-face($font-family, $file-path, $weight: normal, $style: normal) {
-  @font-face {
-    font-family: $font-family;
-    src: url($file-path + $font-family + '.woff') format('woff');
-    font-weight: $weight;
-    font-style: $style;
-  }
-}
-@include font-face('Archivo-Regular', '../assets/fonts/');
-@include font-face('Archivo-Light', '../assets/fonts/');
-@include font-face('Archivo-Medium', '../assets/fonts/');
-@include font-face('Archivo-Bold', '../assets/fonts/');
-@include font-face('Archivo-SemiBold', '../assets/fonts/');
-@include font-face('League-spartan-Light', '../assets/fonts/');
-@include font-face('League-spartan-Regular', '../assets/fonts/');
-@include font-face('League-spartan-Medium', '../assets/fonts/');
-@include font-face('League-spartan-Bold', '../assets/fonts/');
-@include font-face('League-spartan-SemiBold', '../assets/fonts/');
-@include font-face('Poppins-Bold', '../assets/fonts/');
-@include font-face('Poppins-Medium', '../assets/fonts/');
-@include font-face('Poppins-Regular', '../assets/fonts/');
-@include font-face('TitilliumWeb-Regular', '../assets/fonts/');
-@include font-face('TitilliumWeb-SemiBold', '../assets/fonts/');
-@include font-face('TitilliumWeb-Light', '../assets/fonts/');
-@include font-face('TitilliumWeb-Bold', '../assets/fonts/');
+/* Local @font-face packs removed — app uses Inter via Google Fonts
+   (docs/design_v1/learning-web-app-typography.md). Use @include type-* mixins. */
 @mixin transition($property...) {
   -webkit-transition: $property;
   -moz-transition: $property;
