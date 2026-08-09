@@ -352,6 +352,9 @@
   }
 
   &__stat-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 1rem;
     background: color-mix(in srgb, var(--mc-surface-container) 90%, transparent);
     backdrop-filter: blur(20px);
