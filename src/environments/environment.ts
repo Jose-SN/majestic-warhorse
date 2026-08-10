@@ -11,7 +11,7 @@ export const environment: Environment = {
   appUrl: 'http://localhost:4200',
   // iamApi: 'https://iamapi.thechurchmanager.com/api/',//'http://localhost:8080/api/',
   iamApi: 'http://localhost:8080/auth/api/',
-  // majesticWarhorseApi: 'https://majesticapi.thechurchmanager.com/'//'http://localhost:3000/'// 'https://majesticapi.rehoboth.london/',
+  // majesticWarhorseApi: 'https://majesticapi.thechurchmanager.com/'//'http://localhost:8081/'// 'https://majesticapi.rehoboth.london/',
   majesticWarhorseApi: 'http://localhost:8081/',// 'https://majesticapi.rehoboth.london/',
   supabaseUrl: 'https://umskkgoddrmdqvvaiezu.supabase.co',
   supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtc2trZ29kZHJtZHF2dmFpZXp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNjg0NDMsImV4cCI6MjA5NTY0NDQ0M30.LlpGAktLK6nS7xjIWFNSMnuMq3VK6Qc2B2y8xwh9nVI',

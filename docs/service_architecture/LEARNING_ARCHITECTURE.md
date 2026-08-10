@@ -669,7 +669,7 @@ README also references `https://majesticapi.rehoboth.london/` and Docker on EC2 
 
 | Path | Detail |
 |------|--------|
-| GitHub Actions | `.github/workflows/main.yml` — on push to `main`: build Docker image `majesticwarhorse/node-app`, push Docker Hub, deploy on self-hosted `aws-ec2` runner (docker pull/run `-p 3000:3000`) |
+| GitHub Actions | `.github/workflows/main.yml` — on push to `main`: build Docker image `majesticwarhorse/node-app`, push Docker Hub, deploy on self-hosted `aws-ec2` runner (docker pull/run `-p 8081:8081`) |
 | Dockerfile | Node 18, `PORT=8080`, `npm run start` |
 | Netlify | `netlify.toml` + `deploy-netlify` script + serverless export — legacy/alternate |
 
