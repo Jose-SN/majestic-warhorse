@@ -145,7 +145,7 @@ There are **two application backends** the SPA talks to, plus Supabase as a plat
 | Field | Detail | Tier |
 |-------|--------|------|
 | Base path | `{HOST}/auth/api` | Documented + Observed (`environment.iamApi`) |
-| Local default | `http://localhost:5000/auth/api/` | Observed |
+| Local default | `http://localhost:8080/auth/api/` | Observed |
 | Production URL | `https://iam-production-e81f.up.railway.app/auth/api/` | Observed |
 | Framework | Express (TypeScript), `serverless-http` | Documented (`IAM_DOCUMENTATION.md` L27–31) |
 | Auth model | JWT Bearer + `x-app-id` application scoping | Documented + Observed interceptor |
@@ -555,7 +555,7 @@ flowchart TB
 | Majestic host | Railway hostname in `environment.prod.ts` | Observed |
 | Supabase project | `umskkgoddrmdqvvaiezu.supabase.co` | Observed |
 | Local SPA | `ng serve` :4200 | Observed |
-| Local IAM / Majestic | :5000 / :8081 | Observed env defaults |
+| Local IAM / Majestic | :8080 / :8081 | Observed env defaults |
 
 ### 11.2 CI/CD pipeline (**Observed**)
 
@@ -685,7 +685,7 @@ If Mermaid C4 rendering is unavailable in a viewer, use this equivalent flowchar
 flowchart TB
   user((User))
   spa[Container: Angular SPA\nEC2 / localhost:4200]
-  iam[Container: IAM API\nRailway / :5000]
+  iam[Container: IAM API\nRailway / :8080]
   mw[Container: Majestic API\nRailway / :8081]
   iamdb[(IAM Postgres)]
   mwdb[(Majestic Postgres)]
@@ -790,7 +790,7 @@ Note: The SPA always sends Bearer via interceptor; whether Majestic validates it
 flowchart TB
   subgraph Dev["Local development"]
     DEVSPA[ng serve :4200\nenvironment.ts]
-    DEVIAM[IAM :5000]
+    DEVIAM[IAM :8080]
     DEVMW[Majestic :8081]
     DEVSPA --> DEVIAM
     DEVSPA --> DEVMW

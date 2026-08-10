@@ -421,7 +421,7 @@ flowchart LR
 
 | Environment | `appUrl` | `iamApi` | `majesticWarhorseApi` | Source |
 |-------------|----------|----------|----------------------|--------|
-| Development | `http://localhost:4200` | `http://localhost:5000/auth/api/` | `http://localhost:8081/` | `environment.ts` |
+| Development | `http://localhost:4200` | `http://localhost:8080/auth/api/` | `http://localhost:8081/` | `environment.ts` |
 | Production | `https://majestic.petaxai.com` | Railway IAM host | Railway Majestic backend host | `environment.prod.ts` |
 
 Both envs share the same Supabase project URL and anon key (**Observed**).
@@ -742,7 +742,7 @@ flowchart TB
 |-------------|--------|----------|
 | Node.js | CI uses **20.x**; local engines field absent | `.github/workflows/main.yml` L11–14; `package.json` has no `engines` |
 | npm | Lockfile present → use `npm install` | `package-lock.json` |
-| Running IAM | Default `http://localhost:5000/auth/api/` | `environment.ts` |
+| Running IAM | Default `http://localhost:8080/auth/api/` | `environment.ts` |
 | Running Majestic API | Default `http://localhost:8081/` | `environment.ts` |
 | Supabase project | Google OAuth must be configured for Google login | environments + OAuth services |
 | Angular CLI | Invoked via `npm start` → `ng serve` | `package.json` scripts |
@@ -764,7 +764,7 @@ flowchart TB
 ```mermaid
 flowchart LR
   A[Clone repo] --> B[npm install]
-  B --> C[Start IAM :5000]
+  B --> C[Start IAM :8080]
   B --> D[Start Majestic API :8081]
   B --> E[npm start :4200]
   C --> E

@@ -2161,7 +2161,7 @@ idempotent — existing pairs are skipped (`summary.skipped`).
 | Variable | Purpose |
 |----------|---------|
 | `PORT` | Server port |
-| `IAM_BASE_URL` | IAM API root (default `http://localhost:5000/auth/api`) |
+| `IAM_BASE_URL` | IAM API root (default `http://localhost:8080/auth/api`) |
 | `IAM_APP_ID` | `x-app-id` for IAM calls |
 | `IAM_SYNC_ENABLED` | Sync identity on register/approve |
 | `IAM_SYNC_STRICT` | Fail local op if IAM fails |

@@ -509,7 +509,7 @@ Also older `--bg-*` variables coexist.
 
 | File | `production` | `appUrl` | `iamApi` | `majesticWarhorseApi` |
 |------|--------------|----------|----------|------------------------|
-| `environment.ts` | false | `http://localhost:4200` | `http://localhost:5000/auth/api/` | `http://localhost:8081/` |
+| `environment.ts` | false | `http://localhost:4200` | `http://localhost:8080/auth/api/` | `http://localhost:8081/` |
 | `environment.prod.ts` | true | `https://majestic.petaxai.com` | Railway IAM URL | Railway backend URL |
 
 Shared in both:
@@ -542,7 +542,7 @@ Other scripts: `npm run build`, `npm test`, `npm run lint`, `npm run prettier`.
 
 **Runtime dependencies not started by this repo:**
 
-- IAM at `environment.iamApi` (default `http://localhost:5000/auth/api/`)
+- IAM at `environment.iamApi` (default `http://localhost:8080/auth/api/`)
 - Majestic backend at `environment.majesticWarhorseApi` (default `http://localhost:8081/`)
 - Supabase project for Google OAuth (keys in environment)
 

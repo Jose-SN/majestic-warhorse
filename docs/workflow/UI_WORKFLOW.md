@@ -109,7 +109,7 @@ Think of the app like a **school** (or Sunday school / church class):
 - Roles live in the school app, not the login system
 - Everything stays separate per school
 
-**Base URLs:** IAM `http://localhost:5000/auth/api` · Course backend `http://localhost:{PORT}`
+**Base URLs:** IAM `http://localhost:8080/auth/api` · Course backend `http://localhost:{PORT}`
 
 ---
 
