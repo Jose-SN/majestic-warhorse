@@ -84,7 +84,7 @@
         <div class="forge-section">
           <h2 class="forge-section__title">Cover Image</h2>
           <label for="cover-image" class="forge-dropzone">
-            @if (mainCourseInfo.courseCoverImage?.trim()) {
+            @if (mainCourseInfo.courseCoverImage.trim()) {
               <img [src]="mainCourseInfo.courseCoverImage" alt="Course cover preview" class="forge-dropzone__preview" />
             } @else {
               <span class="material-symbols-outlined forge-dropzone__icon" aria-hidden="true">movie</span>
@@ -167,7 +167,7 @@
                     </button>
                   </div>
 
-                  @if (chapter.fileDetails?.length) {
+                  @if (chapter.fileDetails.length) {
                     <div class="curriculum-videos__list">
                       @for (item of chapter.fileDetails; track $index; let videoIndex = $index) {
                         <article class="curriculum-attachment-item curriculum-attachment-item--stacked">
@@ -195,7 +195,7 @@
                           </div>
 
                           <div class="curriculum-video-preview" aria-label="Video preview">
-                            @if (item.fileURL?.trim()) {
+                            @if (item.fileURL.trim()) {
                               <app-video-player [videoUrl]="item.fileURL"></app-video-player>
                             } @else {
                               <div class="curriculum-video-preview__empty">
@@ -268,7 +268,7 @@
                     </button>
                   </div>
 
-                  @if (chapter.attachments?.length) {
+                  @if (chapter.attachments.length) {
                     <div class="curriculum-attachments__list">
                       @for (attachment of chapter.attachments; track $index; let attachmentIndex = $index) {
                         <article class="curriculum-attachment-item">
@@ -342,7 +342,7 @@
 
           <article class="holographic-preview">
             <div class="holographic-preview__media">
-              @if (mainCourseInfo.courseCoverImage?.trim()) {
+              @if (mainCourseInfo.courseCoverImage.trim()) {
                 <img [src]="mainCourseInfo.courseCoverImage" [alt]="mainCourseInfo.courseTitle || 'Course cover'" />
               } @else {
                 <div class="holographic-preview__placeholder">
@@ -350,7 +350,7 @@
                 </div>
               }
               <div class="holographic-preview__overlay">
-                @if (mainCourseInfo.courseTitle?.trim()) {
+                @if (mainCourseInfo.courseTitle.trim()) {
                   <span class="holographic-preview__badge">{{ mainCourseInfo.access === 'private' ? 'Private' : 'Public' }}</span>
                 }
                 <h4>{{ mainCourseInfo.courseTitle || 'Untitled Course' }}</h4>
@@ -364,7 +364,7 @@
                 <img [src]="instructorAvatar" [alt]="instructorName" />
                 <span>{{ instructorName }}</span>
               </div>
-              @if (mainCourseInfo.courseDescription?.trim()) {
+              @if (mainCourseInfo.courseDescription.trim()) {
                 <p class="holographic-preview__description">{{ mainCourseInfo.courseDescription }}</p>
               }
               <div class="holographic-preview__progress-track">
@@ -386,7 +386,7 @@
                 </div>
                 <div class="preview-chapter-item__text">
                   <p>{{ (i + 1).toString().padStart(2, '0') }}. {{ chapter.chapterTitle || 'Untitled chapter' }}</p>
-                  <span>{{ chapter.fileDetails?.[0]?.name || (chapter.fileDetails?.[0]?.fileURL ? 'Video lesson' : 'Draft • No video uploaded') }}</span>
+                  <span>{{ getChapterPreviewMeta(chapter) }}</span>
                 </div>
                 <span class="material-symbols-outlined preview-chapter-item__lock">{{ i === 0 ? 'lock_open' : 'lock' }}</span>
               </div>
@@ -405,7 +405,7 @@
                 </figure>
                 <div class="recent-course-card__body">
                   <h4>{{ course.courseTitle }}</h4>
-                  <span>{{ course.chapterDetails?.length || 0 }} Chapters</span>
+                  <span>{{ course.chapterDetails.length || 0 }} Chapters</span>
                   <span class="recent-course-card__status">{{ course.access === 'private' ? 'Private' : 'Public' }}</span>
                 </div>
               </button>

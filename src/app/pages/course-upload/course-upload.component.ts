@@ -180,6 +180,17 @@ export class CourseUploadComponent implements OnChanges, OnInit, OnDestroy {
     return `Video ${(index + 1).toString().padStart(2, '0')}`;
   }
 
+  getChapterPreviewMeta(chapter: IChapterInfo): string {
+    const first = chapter.fileDetails[0];
+    if (!first) {
+      return 'Draft • No video uploaded';
+    }
+    if (first.name.trim()) {
+      return first.name;
+    }
+    return first.fileURL.trim() ? 'Video lesson' : 'Draft • No video uploaded';
+  }
+
   getVideoTypeLabel(item: IFileObjectInfo): string {
     if (item.name?.trim()) {
       return this.getFileTypeLabel(item.name);
