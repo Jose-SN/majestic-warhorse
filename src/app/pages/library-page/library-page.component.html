@@ -287,6 +287,8 @@
                     <span class="library-file__name">{{ file.name }}.{{ file.extension }}</span>
                     @if (file.storageKey) {
                     <span class="library-file__key" [title]="file.storageKey">{{ file.storageKey }}</span>
+                    } @else if (file.downloadUrl && file.downloadUrl !== '#') {
+                    <span class="library-file__key" [title]="file.downloadUrl">{{ file.downloadUrl }}</span>
                     }
                   </div>
                 </div>

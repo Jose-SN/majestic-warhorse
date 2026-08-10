@@ -37,8 +37,18 @@ export function titleFromPrompt(prompt: string): string {
 }
 
 export function formatCitationLabel(citation: AiChatCitation): string {
+  const name = (citation.file || 'Source').trim() || 'Source';
   if (citation.page != null && citation.page !== undefined) {
-    return `${citation.file} · p.${citation.page}`;
+    return `${name} · p.${citation.page}`;
   }
-  return citation.file;
+  return name;
+}
+
+/** Full citation tooltip: file, page, and file_id when present. */
+export function formatCitationTitle(citation: AiChatCitation): string {
+  const parts = [formatCitationLabel(citation)];
+  if (citation.fileId) {
+    parts.push(`file_id: ${citation.fileId}`);
+  }
+  return parts.join(' · ');
 }

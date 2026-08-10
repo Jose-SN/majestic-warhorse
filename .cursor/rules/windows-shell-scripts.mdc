@@ -1,0 +1,30 @@
+---
+description: On Windows, run shell scripts in the terminal — never open .sh in the editor
+alwaysApply: true
+---
+
+# Windows shell scripts
+
+Never open `.sh` files in the editor.
+
+When running a shell script:
+
+1. Execute in the integrated terminal via an explicit shell:
+   - `bash path/to/script.sh`
+   - `wsl bash path/to/script.sh`
+   - or convert to PowerShell and run with `pwsh` / `powershell`
+2. Do **not** use bare paths like `./script.sh` or `script.sh` if that opens the file.
+3. For long-running tasks, run them in the **background** in the terminal (`block_until_ms: 0` / background job). Do not block the chat on them, and do not open the script as a document.
+4. Prefer PowerShell one-liners or `.ps1` when the environment is Windows/PowerShell.
+5. Confirm the command is running in the terminal (process/output), not as a newly opened editor tab.
+
+```text
+# ❌ BAD — often opens the file on Windows
+./deploy.sh
+script.sh
+
+# ✅ GOOD
+bash scripts/deploy.sh
+wsl bash scripts/deploy.sh
+pwsh -File scripts/deploy.ps1
+```

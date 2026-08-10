@@ -146,10 +146,13 @@
                   }
                   @if (message.citations?.length) {
                     <ul class="ai-mode__msg-citations" aria-label="Citations">
-                      @for (citation of message.citations; track citation.file + (citation.page ?? '') + $index) {
-                        <li>
+                      @for (citation of message.citations; track citation.fileId || citation.file + (citation.page ?? '') + $index) {
+                        <li [attr.title]="formatCitationTitle(citation)">
                           <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
-                          {{ formatCitationLabel(citation) }}
+                          <span>{{ formatCitationLabel(citation) }}</span>
+                          @if (citation.fileId) {
+                            <span class="ai-mode__citation-id">{{ citation.fileId }}</span>
+                          }
                         </li>
                       }
                     </ul>

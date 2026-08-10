@@ -13,6 +13,17 @@ export type ChatCitation = {
   file_id?: string;
 };
 
+type LooseCitation = {
+  file?: string;
+  fileName?: string;
+  file_name?: string;
+  page?: number;
+  page_number?: number;
+  pageNumber?: number;
+  file_id?: string;
+  fileId?: string;
+};
+
 export type ChatMessage = {
   id: string;
   conversation_id: string;
@@ -120,13 +131,49 @@ export class ChatApiService {
     return {
       conversation_id: row.conversation_id || row.conversationId || row.message?.conversation_id || '',
       answer: row.answer || row.message?.content || '',
-      citations: Array.isArray(row.citations)
-        ? row.citations
-        : Array.isArray(row.message?.citations)
-          ? row.message!.citations!
-          : [],
-      message: row.message,
+      citations: this.normalizeCitations(
+        Array.isArray(row.citations)
+          ? row.citations
+          : Array.isArray(row.message?.citations)
+            ? row.message!.citations!
+            : []
+      ),
+      message: row.message
+        ? {
+            ...row.message,
+            citations: this.normalizeCitations(row.message.citations),
+          }
+        : undefined,
     };
+  }
+
+  private normalizeCitations(citations?: LooseCitation[] | ChatCitation[] | null): ChatCitation[] {
+    if (!Array.isArray(citations) || !citations.length) {
+      return [];
+    }
+    return citations
+      .map((raw) => {
+        const c = raw as LooseCitation;
+        const file = (c.file || c.fileName || c.file_name || '').toString().trim();
+        const page =
+          typeof c.page === 'number'
+            ? c.page
+            : typeof c.page_number === 'number'
+              ? c.page_number
+              : typeof c.pageNumber === 'number'
+                ? c.pageNumber
+                : undefined;
+        const file_id = (c.file_id || c.fileId || '').toString().trim() || undefined;
+        if (!file && !file_id) {
+          return null;
+        }
+        return {
+          file: file || 'Source',
+          ...(page !== undefined ? { page } : {}),
+          ...(file_id ? { file_id } : {}),
+        } as ChatCitation;
+      })
+      .filter((c): c is ChatCitation => !!c);
   }
 
   private unwrapConversationDetail(

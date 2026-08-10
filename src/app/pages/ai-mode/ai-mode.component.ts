@@ -33,6 +33,7 @@ import {
   AiChatThread,
   createMessageId,
   formatCitationLabel,
+  formatCitationTitle,
   titleFromPrompt,
 } from './data/ai-mode-history';
 
@@ -80,6 +81,7 @@ export class AiModeComponent implements OnInit, OnDestroy {
     { id: 'starred', label: 'Starred' },
   ];
   readonly formatCitationLabel = formatCitationLabel;
+  readonly formatCitationTitle = formatCitationTitle;
   readonly libraryRoute = DASHBOARD_NAV_ROUTES.library;
 
   query = '';
@@ -583,11 +585,36 @@ export class AiModeComponent implements OnInit, OnDestroy {
     if (!Array.isArray(citations) || !citations.length) {
       return undefined;
     }
-    return citations.map((c) => ({
-      file: c.file,
-      page: c.page,
-      fileId: c.file_id,
-    }));
+    const mapped = citations
+      .map((raw) => {
+        const c = raw as ChatCitation & {
+          fileName?: string;
+          file_name?: string;
+          fileId?: string;
+          page_number?: number;
+          pageNumber?: number;
+        };
+        const file = (c.file || c.fileName || c.file_name || '').toString().trim();
+        const page =
+          typeof c.page === 'number'
+            ? c.page
+            : typeof c.page_number === 'number'
+              ? c.page_number
+              : typeof c.pageNumber === 'number'
+                ? c.pageNumber
+                : undefined;
+        const fileId = (c.file_id || c.fileId || '').toString().trim() || undefined;
+        if (!file && !fileId) {
+          return null;
+        }
+        return {
+          file: file || 'Source',
+          page,
+          fileId,
+        } as AiChatCitation;
+      })
+      .filter((c): c is AiChatCitation => !!c);
+    return mapped.length ? mapped : undefined;
   }
 
   private toastError(err: unknown, fallback: string): void {

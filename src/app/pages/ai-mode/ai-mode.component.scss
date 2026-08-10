@@ -532,6 +532,16 @@
   }
 }
 
+.ai-mode__citation-id {
+  max-width: 7rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.7;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.7rem;
+}
+
 .ai-mode__msg-content--pending {
   color: var(--ai-muted);
   font-style: italic;
