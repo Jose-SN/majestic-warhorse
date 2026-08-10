@@ -7,9 +7,9 @@
 **Evidence tier:** **Observed** unless labelled otherwise  
 
 **Cross-references:**
-- [DOCUMENTATION-INDEX.md](./DOCUMENTATION-INDEX.md)
+- [DOCUMENTATION-INDEX.md](../DOCUMENTATION-INDEX.md)
 - [01_Project_Overview.md](./01_Project_Overview.md) — product/stack context
-- [FRONTEND-ARCHITECTURE.md](./FRONTEND-ARCHITECTURE.md) — runtime behaviour of code in these folders
+- [FRONTEND-ARCHITECTURE.md](../frontend_architecture/FRONTEND-ARCHITECTURE.md) — runtime behaviour
 
 ---
 

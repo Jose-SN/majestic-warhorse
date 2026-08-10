@@ -6,14 +6,15 @@
 **Evidence date:** 2026-07-27  
 
 **Cross-references:**
-- [DOCUMENTATION-INDEX.md](./DOCUMENTATION-INDEX.md)
+- [DOCUMENTATION-INDEX.md](../DOCUMENTATION-INDEX.md)
 - [01_Project_Overview.md](./01_Project_Overview.md)
 - [02_Folder_Structure.md](./02_Folder_Structure.md)
-- [FRONTEND-ARCHITECTURE.md](./FRONTEND-ARCHITECTURE.md)
+- [FRONTEND-ARCHITECTURE.md](../frontend_architecture/FRONTEND-ARCHITECTURE.md)
 - [05_AI_Tutor_Adaptive_Learning_Strategy.md](./05_AI_Tutor_Adaptive_Learning_Strategy.md) — future AI Diagnostic Engine / tutor (vision; not in current topology)
 - [MAJESTIC_WARHORSE_PRD.md](./MAJESTIC_WARHORSE_PRD.md)
-- [API_DOCUMENTATION.md](../API_DOCUMENTATION.md) — Majestic course backend (**Documented legacy**)
-- [IAM_DOCUMENTATION.md](../IAM_DOCUMENTATION.md) — PetaxAI IAM (**Documented legacy**)
+- [API_DOCUMENTATION.md](../API_DOCUMENTATION.md) — Logic HTTP + FE usage
+- [IAM-ARCHITECTURE.md](../service_architecture/IAM-ARCHITECTURE.md) — Shared IAM
+- [service_architecture/](../service_architecture/) — Logic / AI ownership
 
 **Evidence tiers:** **Observed** (this repo’s code/config) · **Documented (legacy)** (root API/IAM docs) · **Assumption** · **Unknown**
 

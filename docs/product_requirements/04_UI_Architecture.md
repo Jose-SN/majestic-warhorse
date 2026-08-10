@@ -7,13 +7,14 @@
 **Evidence tier:** **Observed** unless labelled otherwise  
 
 **Cross-references:**
-- [DOCUMENTATION-INDEX.md](./DOCUMENTATION-INDEX.md)
+- [DOCUMENTATION-INDEX.md](../DOCUMENTATION-INDEX.md)
 - [01_Project_Overview.md](./01_Project_Overview.md)
 - [02_Folder_Structure.md](./02_Folder_Structure.md)
 - [03_System_Architecture.md](./03_System_Architecture.md)
-- [FRONTEND-ARCHITECTURE.md](./FRONTEND-ARCHITECTURE.md)
-- [UI_WORKFLOW.md](../UI_WORKFLOW.md) — product screen/API intent
-- [src/assets/screens/DESIGN.md](../src/assets/screens/DESIGN.md) — “Majestic Cyber” design tokens
+- [FRONTEND-ARCHITECTURE.md](../frontend_architecture/FRONTEND-ARCHITECTURE.md)
+- [UI_WORKFLOW.md](../workflow/UI_WORKFLOW.md) — product screen/API intent
+- [design_v1/README.md](../design_v1/README.md) — design system
+- [src/assets/screens/DESIGN.md](../../src/assets/screens/DESIGN.md) — “Majestic Cyber” design tokens
 
 ---
 

@@ -4,7 +4,8 @@ Onboarding document for a Technical Architect joining PetaxAI.
 **Scope:** Angular frontend only. Claims are based on code that was read; unclear items are listed under [§19 Open Questions](#19-open-questions).
 
 **Repo root:** `majestic-warhorse`  
-**Document date:** 2026-07-24
+**Document date:** 2026-07-24  
+**Docs index:** [../DOCUMENTATION-INDEX.md](../DOCUMENTATION-INDEX.md) · **MVP:** [../FRONTEND-MVP.md](../FRONTEND-MVP.md) · **APIs:** [../API_DOCUMENTATION.md](../API_DOCUMENTATION.md)
 
 ---
 

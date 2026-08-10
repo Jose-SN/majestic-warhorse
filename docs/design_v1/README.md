@@ -4,6 +4,9 @@ Complete. **Canonical source:** root [`design.xml`](../../design.xml)
 Runtime CSS: `src/styles/_variables.scss` (maps XML colors → `--color-*` / `--ds-*` / `--mc-*`).  
 Org white-label overrides those color tokens via `BrandingService` after login.
 
+**Docs index:** [../DOCUMENTATION-INDEX.md](../DOCUMENTATION-INDEX.md)  
+**Angular architecture:** [../frontend_architecture/FRONTEND-ARCHITECTURE.md](../frontend_architecture/FRONTEND-ARCHITECTURE.md)
+
 **Visual language:** True Void background · Digital Gold accents · Orange energy · Glass surfaces · Technical precision · Enterprise usability
 
 ---

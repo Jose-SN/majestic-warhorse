@@ -12,8 +12,10 @@
 - [01_Project_Overview.md](./01_Project_Overview.md) — Class MVP (SPA today) vs Gold destination
 - [03_System_Architecture.md](./03_System_Architecture.md) — current technical topology
 - [04_UI_Architecture.md](./04_UI_Architecture.md) — UI architecture (AI Mode chat exists; diagnostic engine does not)
-- [FRONTEND-ARCHITECTURE.md](./FRONTEND-ARCHITECTURE.md) — code-truth frontend gaps
-- [UI_WORKFLOW.md](../UI_WORKFLOW.md) / [USER_WORKFLOW.md](../USER_WORKFLOW.md) — Class MVP school-loop docs
+- [FRONTEND-ARCHITECTURE.md](../frontend_architecture/FRONTEND-ARCHITECTURE.md) — code-truth frontend gaps
+- [UI_WORKFLOW.md](../workflow/UI_WORKFLOW.md) / [USER_WORKFLOW.md](../workflow/USER_WORKFLOW.md) — Class MVP school-loop docs
+- [PHASE-2-COURSE-RAG.md](../ai-architecture/PHASE-2-COURSE-RAG.md) — future course-file RAG
+- [DOCUMENTATION-INDEX.md](../DOCUMENTATION-INDEX.md)
 
 > **Evidence labelling:** Everything in §§1–14 below is **Product strategy / vision** unless marked **Observed**. **Observed Class MVP:** organisation–teacher–student school loop + AI Mode chat as support. **Gold** (goal capture, diagnostic/path engine, auto course fetch, no org/teacher) is **not** shipped.
 

@@ -1,9 +1,10 @@
-# Majestic Warhorse — Backend Architecture
+# Majestic Warhorse — Learning Architecture
 
 **Audience:** Technical Architect joining PetaxAI  
-**Repo:** `majestic-warhorse-backend`  
-**Document date:** 2026-07-24  
-**Method:** Code-first. Every claim cites a file path. Unverified items are in §20 Open Questions.
+**Repo:** `majestic-warhorse-backend` (Majestic Logic / learning domain)  
+**Document date:** 2026-08-10  
+**Method:** Code-first. Every claim cites a file path. Unverified items are in §20 Open Questions.  
+**Docs index:** [../DOCUMENTATION-INDEX.md](../DOCUMENTATION-INDEX.md)
 
 ---
 
@@ -12,12 +13,12 @@
 | Brief said | Code shows |
 |------------|------------|
 | Python backend services | **Node.js / TypeScript Express** (`package.json`, `server.ts`) |
-| Consumes IAM tokens for auth | Token is **forwarded to IAM on roster sync only**; route JWT middleware is **commented out** everywhere |
+| Consumes IAM tokens for auth | **Partial:** library + chat require JWT (`middleware/auth.ts`); most course/roster routes still have auth **commented out**. Token also **forwarded to IAM** on roster sync |
 | File storage Cloudflare R2 | **Confirmed** (`utils/fileStorage.ts`, `config.ts` `r2Storage`) |
 | PostgreSQL on Supabase | **Confirmed** (`dbhandler/postgres.ts` uses `DATABASE_URL`; pooler hostname handling) |
+| AI in this service | **Logic only** — RAG ingest/ask delegated to **Shared PetaxAI FastAPI** (`services/aiClient.ts`); see `docs/AI-MVP-SHARED-CONTRACT.md` |
 
-This document describes the **course domain backend** in this repository. It is not a Python service.
-
+This document describes the **course domain Logic Service** in this repository. It is not a Python service. Shared IAM and Shared AI are separate services.
 ---
 
 ## 1. Overview and service boundaries
@@ -27,23 +28,28 @@ This document describes the **course domain backend** in this repository. It is 
 | Domain | Evidence |
 |--------|----------|
 | Courses, chapters, files metadata | `routes/course.ts`, `routes/chapter.ts`, `routes/file.ts` |
-| Questions & answers (course-scoped) | `routes/question.ts`, `routes/answer.ts` |
+| Library (RAG) files + ingest-status callback | `routes/file.ts` (`/library`, `/ingest-status`); `scripts/create_files_table.sql` |
+| Questions & answers (course-scoped, **versioned**) | `routes/question.ts`, `routes/answer.ts` |
+| Teacher assessment feedback (**versioned**) | `routes/answers.ts` → `answerFeedbackControllers.ts` |
 | Progress / ratings (`statuses`) | `routes/status.ts` |
 | Favorites | `routes/favorites` via `routes/favorite.ts` |
 | Course discussions | `routes/discussion.ts` |
 | Org-scoped roster (teacher/student roles) | `routes/teachers`, `routes/students`, `routes/user-role` |
 | Teacher ↔ student assignment | `routes/teacherStudents.ts` |
 | Dashboard aggregates | `routes/dashboard.ts` |
+| Org branding | `routes/branding.ts` |
+| AI Mode chat (proxy + persist) | `routes/chat.ts`, `services/chatService.ts` |
 | Object upload to R2 + public URL enrichment | `controllers/fileControllers.ts`, `utils/fileStorage.ts` |
+| `document_chunks` **DDL** (pgvector); rows written by Shared AI | `scripts/create_document_chunks_table.sql` |
 
 ### What this service delegates
 
 | Concern | Owner | How |
 |---------|--------|-----|
-| Login, JWT issuance, user profile, organizations | Separate Node IAM | Documented in `IAM_DOCUMENTATION.md`; called via `services/iamClient.ts` |
-| App UI | Angular frontend (separate repo) | Not in this tree |
-| Email sending (OTP era) | Local Nodemailer in `services/emailService.ts` | OTP routes are **not mounted** (see §18) |
-
+| Login, JWT issuance, user profile, organizations | **Shared IAM** (Node) | `IAM_DOCUMENTATION.md`; `services/iamClient.ts`; `IAM_APP_ID` = `applications.id` |
+| Embeddings, chunking, RAG ask/ingest | **Shared PetaxAI AI** (FastAPI) | `services/aiClient.ts`; contract `docs/AI-MVP-SHARED-CONTRACT.md` |
+| App UI | Angular/React frontend (separate repo) | Not in this tree |
+| Email (OTP / feedback notify) | Local Nodemailer `services/emailService.ts` | OTP routes not mounted; feedback may send mail |
 ### Believed-built checklist (verified)
 
 | Claim | Status |
@@ -52,7 +58,10 @@ This document describes the **course domain backend** in this repository. It is 
 | Course listing | **Working** |
 | Course upload (create + R2 file upload) | **Working** |
 | Instructor questions | **Working** |
-| Student answers | **Working** |
+| Student answers | **Working** (version history: each save/update inserts new row) |
+| Teacher feedback publish / history | **Working** (`PUT/GET /answers/:studentUserId/feedback…`) |
+| Library RAG upload / list / delete | **Working** (JWT; triggers Shared AI ingest when `AI_ENABLED=true`) |
+| AI chat | **Working** (JWT; stubs answer if AI disabled) |
 | Approval of teachers and students | **Working** (data + IAM sync optional) |
 | Teacher assignment | **Working** (no roster-status gate) |
 | Certification / graduation / accreditation | **Absent** from schema and code |
@@ -81,12 +90,11 @@ majestic-warhorse-backend/
 ├── middleware/
 │   ├── auth.ts               # JWT verify (unused on routes)
 │   └── schemavalidate.ts     # express-validator result check
-├── utils/                    # fileStorage, extractAuthToken, queryParams
+├── utils/                    # fileStorage, authContext, extractAuthToken, queryParams
 ├── swagger/                  # OpenAPI annotations + UI at /api-docs
 ├── scripts/*.sql             # Manual Postgres migrations (source of schema truth)
 ├── migrations/               # migrate-mongo (legacy Mongo era)
-└── docs/                     # This document and related notes
-```
+└── docs/                     # Architecture, AI shared contract, etc.```
 
 ### How the app is served
 
@@ -174,38 +182,30 @@ IAM is a **separate HTTP API**. This service does **not** validate IAM-issued JW
 
 | Mechanism | Behaviour | Citation |
 |-----------|-----------|----------|
-| Outbound sync | When `IAM_SYNC_ENABLED=true` and `IAM_BASE_URL` + `IAM_APP_ID` set, roster register/approve call IAM | `config.ts` L56–63; `services/iamClient.ts` |
-| Headers | `x-app-id`, optional `Authorization: Bearer` | `iamClient.ts` L28–36 |
-| Endpoints used | `POST /user/sync`, `PUT /user/update`, `GET /user/get` | `iamClient.ts` L50–133 |
-| Timeout | 15_000 ms per call | `iamClient.ts` L75, L103, L122 |
-| Failure | Logs `[IAM] …`; if `IAM_SYNC_STRICT=true` throws, else continues | `iamClient.ts` L39–48 |
+| Outbound sync | When `IAM_SYNC_ENABLED=true` and `IAM_BASE_URL` + `IAM_APP_ID` set, roster register/approve call IAM | `config.ts`; `services/iamClient.ts` |
+| App id | `IAM_APP_ID` = IAM `applications.id` — also used as Shared AI `app_id` | `config.iam.appId`; `services/aiClient.ts` `resolveAppId` |
+| Headers | `x-app-id`, optional `Authorization: Bearer` | `iamClient.ts` |
+| Endpoints used | `POST /user/sync`, `PUT /user/update`, `GET /user/get` | `iamClient.ts` |
+| Timeout | 15_000 ms per call | `iamClient.ts` |
+| Failure | Logs `[IAM] …`; if `IAM_SYNC_STRICT=true` throws, else continues | `iamClient.ts` |
 | Caching | **None** | No cache layer in `iamClient.ts` |
-| Per-request identity | Bearer extracted only to **forward** to IAM | `utils/extractAuthToken.ts` L3–14 |
+| Per-request identity | Bearer extracted to **forward** to IAM; also verified locally for library/chat | `utils/extractAuthToken.ts`, `middleware/auth.ts` |
 
-### Local JWT middleware (unused)
+### Local JWT middleware (used on AI/library; unused on most course routes)
 
-`middleware/auth.ts` verifies tokens with **this service’s** `JWT_SECRET` via `jsonwebtoken.verify` — not by calling IAM, and not by validating an IAM public key.
+`middleware/auth.ts` verifies tokens with **this service’s** `JWT_SECRET` via `jsonwebtoken.verify` — not by calling IAM JWKS.
 
-```12:28:middleware/auth.ts
-export default (req: IUserAuthInfoRequest, res: Response, next: NextFunction) => {
-  const authToken = req.headers.authorization?.split(' ')[1] || '';
-  // ...
-  verify(authToken, JWT_SECRET, (err, decode) => {
-    // ...
-    req.user = decode as IValidatedUser
-    next();
-  })
-}
-```
+**Mounted with `auth`:** all `/chat/*`; `GET/DELETE /file/library`; library branch of `POST /file/upload` (`requireAuthIfLibrary`).
 
-That middleware is **commented out** on course/chapter/status/favorite/dashboard/question/answer routes (e.g. `routes/course.ts` L4–5). Teacher/student/file/user-role/teacher-students routes never import it.
+**Still commented out / absent:** course, chapter, status, favorite, dashboard, question, answer (CRUD), roster routes — see Appendix A.
 
+Tenant claims for library/chat are resolved from JWT only (`utils/authContext.ts`: `userId`, `organizationId`, `role`, optional `appId`).
 ### When IAM is slow or unreachable
 
 - Sync calls wait up to 15s then fail the axios call.
 - Default: local roster write **still succeeds**; IAM error is logged (`syncStrict` false).
 - With `IAM_SYNC_STRICT=true`: error is thrown and can fail the local operation (`iamClient.ts` L45–47).
-- Unreachable IAM does **not** block anonymous API access to courses/files — those routes do not call IAM.
+- Unreachable IAM does **not** block most course APIs — those routes do not call IAM. Library/chat still need a JWT signed with this service’s `JWT_SECRET`.
 
 ---
 
@@ -225,24 +225,25 @@ Roles live in **this** database, not IAM:
 | Check | Location | Enforced on writes? |
 |-------|----------|---------------------|
 | Permission middleware | **Does not exist** | No |
-| JWT middleware on routes | Commented out / absent | No |
+| JWT middleware on routes | **Partial** — chat + library only | Course/roster writes still open |
 | `getPermissionsForUser` | Exposed as `GET /user-role/permissions` for **UI gating** | Read-only API; not used as a gate in services |
 
 ### Endpoints reachable without a permission check
 
-**All mounted HTTP endpoints** are reachable without server-side auth/RBAC, including:
+**Most** mounted HTTP endpoints are reachable without server-side auth/RBAC (exceptions: `/chat/*`, `/file/library*`, library upload). Including:
 
 | Risk | Path | Why it matters |
 |------|------|----------------|
-| Student (or anyone) can create/update/delete courses | `POST /course/save`, `PUT /course/update`, `DELETE /course/delete/:courseid` | `routes/course.ts` L20–27 |
-| Anyone can approve teachers/students | `PUT /teachers/approve/:id`, `PUT /students/approve/:id` | `routes/teacher.ts` L25–29; `routes/student.ts` L25–29 |
+| Student (or anyone) can create/update/delete courses | `POST /course/save`, `PUT /course/update`, `DELETE /course/delete/:courseid` | `routes/course.ts` |
+| Anyone can approve teachers/students | `PUT /teachers/approve/:id`, `PUT /students/approve/:id` | `routes/teacher.ts`; `routes/student.ts` |
 | Anyone can assign teachers↔students | `POST /teacher-students/*` | `routes/teacherStudents.ts` |
-| Anyone can upload/delete files | `POST /file/upload`, `DELETE /file/delete/:fileId` | `routes/file.ts` |
-| Anyone can fetch any course by id | `GET /course/get/:id` | No enrollment check — `queries/course.ts` L92–97 |
-| Dashboard role chosen by client | `GET /dashboard/…` with `isAdmin` / `isTeacher` query flags | `controllers/dashboardControllers.ts` (client-supplied) |
+| Anyone can upload/delete **non-library** files | `POST /file/upload` (non-library), `DELETE /file/delete/:fileId` | `routes/file.ts` |
+| Anyone can fetch any course by id | `GET /course/get/:id` | No enrollment check |
+| Dashboard role chosen by client | `GET /dashboard/…` with `isAdmin` / `isTeacher` query flags | Client-supplied |
 
-**Conclusion:** A student can reach instructor functionality at the HTTP layer. Any protection today must be at the gateway, Angular UI, or network ACL — **not** in this codebase’s route stack.
+**Library / chat exception:** JWT required; org/user from claims (`utils/authContext.ts`). Feedback publish currently accepts reviewer ids in body (JWT temporarily off on `/answers` feedback).
 
+**Conclusion:** A student can still reach much instructor functionality at the HTTP layer for classic course APIs. Library/chat are gated. Other protection may be gateway/UI/network ACL.
 ---
 
 ## 7. Data model
@@ -270,19 +271,24 @@ After `add_organization_scoping.sql` + `add_rbac_tables.sql` (+ access/discussio
 | `courses` | Course | `course_title`, `created_by`, `organization_id`, `access` |
 | `chapters` | Lesson/chapter | `chapter_title`, `course_id`, `created_by`, `attachments` |
 | `course_chapters` | Course↔chapter M:N | `course_id`, `chapter_id` |
-| `files` | File metadata | `parent_id`, `parent_type`, `file_url`, `file_name` |
-| `chapter_files` | Chapter↔file | `chapter_id`, `file_id` |
+| `files` | File metadata (library + media) | **No** `parent_id`/`parent_type`. `library_files`, `organization_id`, `uploaded_by`, `mime_type`, `size_bytes`, `storage_key`, `visibility`, `status` (ingest) |
+| `course_files` | Course↔file junction | `course_id`, `file_id` |
+| `chapter_files` | Chapter↔file junction | `chapter_id`, `file_id` |
+| `document_chunks` | RAG chunks + embeddings | `app_id` (IAM applications.id), `organization_id`, `file_id` CASCADE, `embedding vector(1536)` — **AI writes** |
+| `conversations` / `messages` | AI Mode chat | Org + user scoped; citations JSONB on messages |
 | `questions` | Instructor questions | `course_id`, `question`, `type`, `options` |
-| `answers` | Student answers | `course_id`, `question_id`, `answer`, `submitted_by` |
-| `statuses` | Progress/rating | `parent_id`, `parent_type`, `percentage`, `rating`, `reward` |
+| `answers` | Student answers (**versioned**) | `course_id`, `question_id`, `answer`, `submitted_by`, **`version`** |
+| `answer_feedback` | Teacher feedback (**versioned**) | JSONB `review` / `item_feedback`; one new row per publish |
+| `statuses` | Progress/rating | `parent_id`, `parent_type` (Course\|Chapter\|File) — **not** on `files` |
 | `favorites` | Saved courses | `user_id`, `course_id` |
 | `course_discussions` | Comments | `course_id`, `comment`, `deleted_at` |
+| `organization_branding` | White-label | Branding routes |
 
 **Legacy:** `teachers` / `students` tables are created in org-scoping script then **migrated into `user_roles` and dropped** by `add_rbac_tables.sql`. Runtime code still exposes `/teachers` and `/students` as wrappers over `user_roles` filtered by role code.
 
 **No Postgres RLS** policies appear in any `scripts/*.sql` file.
 
-### ER diagram
+### ER diagram (core learning + AI)
 
 ```mermaid
 erDiagram
@@ -291,7 +297,6 @@ erDiagram
   app_roles ||--o{ role_permissions : grants
   modules ||--o{ permissions : contains
 
-  user_roles }o--|| app_roles : role_id
   user_roles {
     uuid id PK
     uuid organization_id
@@ -305,46 +310,55 @@ erDiagram
     uuid teacher_id
     uuid student_id
     uuid organization_id
-    uuid assigned_by
   }
 
   courses ||--o{ course_chapters : contains
   chapters ||--o{ course_chapters : in
-  courses {
-    uuid id PK
-    string course_title
-    uuid created_by
-    uuid organization_id
-    course_access access
-  }
-  chapters {
-    uuid id PK
-    string chapter_title
-    uuid course_id
-    uuid created_by
-  }
-
-  chapters ||--o{ chapter_files : has
+  courses ||--o{ course_files : media
+  chapters ||--o{ chapter_files : media
+  files ||--o{ course_files : linked
   files ||--o{ chapter_files : linked
+  files ||--o{ document_chunks : rag
+
   files {
     uuid id PK
-    uuid parent_id
-    string parent_type
-    string file_url
+    boolean library_files
+    uuid organization_id
+    text storage_key
+    text visibility
+    text status
+  }
+
+  document_chunks {
+    uuid id PK
+    text app_id
+    uuid organization_id
+    uuid file_id FK
+    vector embedding
   }
 
   courses ||--o{ questions : has
   questions ||--o{ answers : answered
-  questions {
-    uuid id PK
-    string course_id
-    string question
-  }
   answers {
     uuid id PK
     string course_id
     string question_id
     uuid submitted_by
+    int version
+  }
+
+  answer_feedback {
+    uuid id PK
+    uuid student_user_id
+    uuid course_id
+    int version
+  }
+
+  conversations ||--o{ messages : has
+  conversations {
+    uuid id PK
+    uuid organization_id
+    uuid created_by
   }
 
   courses ||--o{ statuses : progress
@@ -352,8 +366,7 @@ erDiagram
   courses ||--o{ course_discussions : discussed
 ```
 
-Logical (non-FK) links: `user_roles.user_id`, `courses.created_by`, `teacher_students.teacher_id`/`student_id` are **IAM user UUIDs** with no FK to an IAM table in this DB.
-
+Logical (non-FK) links: `user_roles.user_id`, `courses.created_by`, `teacher_students.teacher_id`/`student_id` are **IAM user UUIDs**. `document_chunks.app_id` is **IAM `applications.id`**.
 ---
 
 ## 8. The learning domain model
@@ -373,14 +386,20 @@ Course
   ├── organization_id (nullable)
   ├── created_by (teacher IAM user id)
   ├── chapters[] via course_chapters
-  │     └── files[] via chapter_files → files.file_url (R2 key)
-  ├── questions (course_id string)
-  │     └── answers (submitted_by)
+  │     └── files[] via chapter_files → files.storage_key / file_url (R2)
+  ├── course-level files via course_files (no parent columns on files)
+  ├── questions (course_id)
+  │     └── answers (submitted_by, version history)
+  ├── answer_feedback (teacher review versions)
   ├── statuses (parent_type Course|Chapter|File) — percentage, rating, comment, reward
   ├── favorites
   └── course_discussions
-```
 
+Library (RAG) — files.library_files = true
+  ├── visibility + status (pending|processing|ready|failed)
+  ├── Shared AI ingest → document_chunks (app_id = IAM_APP_ID)
+  └── AI Mode chat → conversations / messages
+```
 ### How the pieces relate in product language
 
 | Product idea | Implementation |
@@ -423,8 +442,10 @@ Columns that carry org scope:
 | `GET_COURSE_BY_ID` | Id only — cross-org fetch by UUID (`queries/course.ts` L92–97) |
 | `GET_STUDENT_TOTAL_COURSES` | `SELECT COUNT(*) FROM courses` — **all** courses (`queries/dashboard.ts` L54–57) |
 | Teacher dashboard counts | Filter by `created_by` / `teacher_id` only — no `organization_id` (`queries/dashboard.ts` L13–49) |
-| File list/get | No org column on `files` — global by id |
-| Questions/answers | No `organization_id` column; scoped only via `course_id` string |
+| File list/get (legacy R2) | No org filter on raw R2 list |
+| Library list | **Org + visibility + JWT role** (`GET /file/library`) |
+| Questions/answers | No `organization_id` column; scoped via `course_id` |
+| `document_chunks` | Filtered by Shared AI using `app_id` + `organization_id` |
 | `listTeacherStudents` without org | Lists all relationships (`teacherStudentsService.ts` L59–61) |
 
 Nullable `organization_id` on courses/assignments means rows can exist **outside** any tenant unless writers always set it.
@@ -477,14 +498,22 @@ Assignment is a **separate junction** with no status column. Docs say both parti
 
 ---
 
-## 11. Course content storage (Cloudflare R2)
+## 11. Course content storage (Cloudflare R2) + Library RAG
 
-### Upload path
+### Upload path (course media)
 
-1. Client `POST /file/upload` with multipart (`routes/file.ts` L22)
-2. Multer memory storage → AWS SDK `Upload` to R2 using `config.r2Storage` credentials (`controllers/fileControllers.ts`)
+1. Client `POST /file/upload` with multipart (`routes/file.ts`)
+2. Multer memory storage → AWS SDK `Upload` to R2 (`controllers/fileControllers.ts`)
 3. Object key typically `{prefix}/{timestamp}_{filename}`
-4. Optional `POST /file/save` persists metadata in `files` with `file_url` = object key (`services/fileService.ts` normalizes via `buildDbKey` / `normalizeStoredFileKey`)
+4. Optional `POST /file/save` persists metadata; course/chapter links via **`course_files` / `chapter_files`** (not `parent_id` on `files`)
+
+### Library upload path (RAG)
+
+1. `POST /file/upload` with `library_files=true` or `bucket_name=library` — **JWT required**
+2. Persist `files` row (`library_files=true`, `visibility`, `storage_key`, `status=pending`)
+3. If `AI_ENABLED=true`, call Shared AI `POST /ingest` with `app_id`=`IAM_APP_ID`, `callback_url`, `download_url` (`services/aiClient.ts`)
+4. AI callbacks `POST /file/ingest-status` → `ready` \| `failed` (optional `X-AI-Callback-Secret`)
+5. List/delete: `GET/DELETE /file/library` (JWT + visibility rules)
 
 ### Public URL enrichment
 
@@ -505,21 +534,21 @@ Course responses rewrite keys to `{R2_PUBLIC_URL}/{key}` (`courseService` + `enr
 
 | Control | Present? |
 |---------|----------|
-| Signed/private R2 URLs | **No** — design assumes public bucket CDN |
-| Auth on `/file/*` | **No** |
+| Signed/private R2 URLs | **No** — design assumes public bucket CDN (`download_url` for AI) |
+| Auth on `/file/library*` | **Yes** (JWT) |
+| Auth on legacy `/file/get`, `/file/delete` | **No** |
 | Enrolment check before stream/download | **No** |
-| Auth on `GET /course/get/:id` (which embeds chapter file URLs) | **No** |
+| Auth on `GET /course/get/:id` (embeds chapter file URLs) | **No** |
 
 ### Can a student retrieve content for a course they are not enrolled in?
 
-**Yes, by code path:**
+**Yes, by code path (course media):**
 
-1. Call `GET /course/get/{anyCourseId}` → populated `chapterDetails[].fileDetails[].fileURL` as public URLs (`GET_COURSE_BY_ID` has no assignment filter).
-2. Or call `GET /file/get/:fileId` / `POST /file/get-blob`.
-3. Or fetch the public CDN URL directly if the key is known or leaked.
+1. Call `GET /course/get/{anyCourseId}` → populated file URLs.
+2. Or call legacy `GET /file/get/:fileId` / `POST /file/get-blob`.
+3. Or fetch the public CDN URL if the key is known.
 
-Feed endpoints filter the **list**; they do not protect **direct access**.
-
+Library files are listed only via JWT + visibility; direct CDN URL access still possible if key leaks.
 ---
 
 ## 12. Certification readiness (exists vs missing)
@@ -558,14 +587,16 @@ Closest “completion” signal used today: dashboard counts answers as `courseC
 
 | Integration | Role | Credentials |
 |-------------|------|-------------|
-| Supabase Postgres | Primary DB | `DATABASE_URL` / `POSTGRESQL_*` |
-| Cloudflare R2 | Object storage | `R2_*` in env / `config.r2Storage` |
-| IAM HTTP API | User sync on roster | `IAM_BASE_URL`, `IAM_APP_ID`, forwarded Bearer |
-| Gmail SMTP | `emailService` / OTP (legacy) | `GMAIL_USERNAME`, `GMAIL_PASS` |
-| Firebase | Dependency present; not on live request path for course APIs | historically used |
-| `cron` package | Installed; **no in-repo job registration found** for course domain | — |
-| Queues / webhooks | **None** in this repo | — |
+| Supabase Postgres | Primary app DB (+ pgvector chunks MVP) | `DATABASE_URL` / `POSTGRESQL_*` |
+| Cloudflare R2 | Object storage | `R2_*` / `config.r2Storage` |
+| Shared IAM HTTP API | User sync on roster; `applications.id` as `IAM_APP_ID` | `IAM_BASE_URL`, `IAM_APP_ID`, Bearer |
+| Shared PetaxAI FastAPI | `/ingest`, `/ask`; callbacks to Logic | `AI_SERVICE_URL`, `AI_ENABLED`, `AI_CALLBACK_BASE_URL`, `AI_INGEST_CALLBACK_SECRET` |
+| Gmail SMTP | OTP / feedback notify | `GMAIL_USERNAME`, `GMAIL_PASS` |
+| Firebase | Dependency present; not on live course path | historically used |
+| `cron` package | Installed; **no in-repo job registration** for course domain | — |
+| Queues | **None** (MVP ingest is fire-and-forget HTTP) | — |
 
+There is **no** worker process in this repo; Shared AI owns embedding/retrieval work.
 ---
 
 ## 15. Testing
@@ -594,12 +625,14 @@ Honest assessment: there is no automated regression suite for this service.
 | `DB_SSL`, `POSTGRESQL_SSL`, `POSTGRESQL_SSL_REJECT_UNAUTHORIZED` | SSL behaviour |
 | `POSTGRESQL_DB_HOST/PORT/NAME/USER/PASSWORD` | Alternate Postgres config in `config.postgresql` |
 | `JWT_SECRET`, `JWT_EXPIRY` | Local JWT middleware (unused on routes); **default secret hardcoded** |
-| `IAM_BASE_URL`, `IAM_APP_ID`, `IAM_SYNC_ENABLED`, `IAM_SYNC_STRICT` | IAM client |
+| `IAM_BASE_URL`, `IAM_APP_ID`, `IAM_SYNC_ENABLED`, `IAM_SYNC_STRICT` | IAM client; **`IAM_APP_ID` also = Shared AI `app_id`** |
+| `AI_SERVICE_URL`, `AI_ENABLED`, `AI_TIMEOUT_MS` | Shared AI HTTP client |
+| `AI_CALLBACK_BASE_URL` | Public Logic base for ingest-status callbacks |
+| `AI_INGEST_CALLBACK_SECRET` | Optional secret for AI → Logic callback |
 | `R2_ENDPOINT`, `R2_REGION`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_URL` | R2 |
 | `FILEUPLOADLIMIT` | Body size GB default 5 |
 | `GMAIL_USERNAME`, `GMAIL_PASS` | Email |
 | `NODE_ENV` | Production redirects / SSL heuristics |
-
 ### Hardcoded / committed-secret risks
 
 | Item | Citation |
@@ -652,43 +685,48 @@ README also references `https://majesticapi.rehoboth.london/` and Docker on EC2 
 - Course list filters (org / access / teacher feed rule)
 - Student assigned-teacher feed
 - R2 upload + public URL enrichment
-- Questions / answers / favorites / discussions / statuses
+- **Library RAG** upload/list/delete + ingest-status callback
+- **AI Mode chat** (proxy to Shared AI when enabled)
+- Questions / **versioned answers** / favorites / discussions / statuses
+- **Teacher answer feedback** (versioned publish + history)
 - Roster register/approve (local DB) + optional IAM sync
 - Teacher–student assign/unassign
 - Dashboard aggregates (with caveats below)
+- Org branding
 - Swagger UI
 
 ### Partial / fragile
 
-- **AuthZ:** RBAC data exists; **not enforced** on routes
-- **Multi-tenancy:** filter-by-convention; many queries omit org
+- **AuthZ:** JWT on library/chat only; RBAC data exists but **not enforced** on course/roster writes
+- **Multi-tenancy:** filter-by-convention; many classic queries omit org
 - **Dashboard:** client chooses admin/teacher/student mode; student “total courses” is global count
-- **IAM:** optional soft-fail sync; no inbound token verification
+- **IAM:** optional soft-fail sync; JWT verified with local `JWT_SECRET` (not IAM JWKS)
+- **Shared AI:** requires `IAM_APP_ID` + `AI_ENABLED`; stubs when disabled
 - **`config.ts` still requires `MONGO_URI`** while runtime DB is Postgres
 - Docs occasionally say roster status `approved`; code enum is **`active`**
+- Feedback routes: JWT temporarily disabled (reviewer id in body)
 
 ### Scaffolded / unused / dead
 
 | Artifact | Status |
 |----------|--------|
-| `middleware/auth.ts` | Defined, unused on routes |
+| `middleware/auth.ts` | Used on chat + library; unused on course/roster |
 | `dbhandler/models/*.ts` (Mongoose) | Legacy; Postgres path does not use them |
-| `services/otpService.ts` | Exported from `services/index.ts` but **no route mounts OTP** |
-| `swagger/lesson.ts` | Annotations for lesson routes; no `lesson` router in `routes/index.ts` |
+| `services/otpService.ts` | Exported but **no OTP routes mounted** |
+| `swagger/lesson.ts` | Annotations; no `lesson` router |
 | `migrate-mongo` migrations | Mongo-era |
-| Commented `adminRouter` | `routes/index.ts` L4 |
-| Firebase / cron deps | Present in package.json; not part of live course request path observed |
+| Commented `adminRouter` | `routes/index.ts` |
+| Firebase / cron deps | Not part of live course request path |
 
 ### Tech debt (high signal)
 
-1. No server-side authentication/authorisation on write paths  
+1. No server-side auth/RBAC on most write paths (except library/chat)  
 2. Public R2 content + unauthenticated course-by-id  
 3. Manual SQL migrations, no ordered runner  
 4. Zero automated tests  
-5. Broken `.gitignore` for `.env`  
+5. Broken `.gitignore` for `.env` (verify)  
 6. Dual Mongo/Postgres configuration surface  
 7. Inconsistent ID types (`questions.course_id` VARCHAR vs `courses.id` UUID)
-
 ---
 
 ## 19. External contracts
@@ -699,31 +737,35 @@ Mounted under `routes/index.ts`:
 
 | Prefix | Consumers (assumed) |
 |--------|---------------------|
-| `/course`, `/chapter`, `/file` | Angular course UI |
-| `/question`, `/answer`, `/status`, `/favorites`, `/discussion` | Angular learning UI |
+| `/course`, `/chapter`, `/file` | Course UI + library UI |
+| `/file/library`, `/file/ingest-status` | Library UI; Shared AI callback |
+| `/chat` | AI Mode UI |
+| `/question`, `/answer`, `/answers`, `/status`, `/favorites`, `/discussion` | Learning + teacher feedback UI |
 | `/teachers`, `/students`, `/teacher-students`, `/user-role` | Org admin / teacher UI |
+| `/branding` | White-label |
 | `/dashboard` | Role home screens |
 | `/api-docs`, `/health-check`, `/` | Operators / probes |
 
-**No shared OpenAPI contract test** with the Angular repo or IAM was found in this repository.
+**No shared OpenAPI contract test** with the frontend or IAM was found in this repository.
 
 ### Outbound
 
 | Target | When |
 |--------|------|
 | IAM `baseUrl` | Roster register/approve when sync enabled |
+| Shared AI `AI_SERVICE_URL` | Library ingest + chat ask when `AI_ENABLED=true` |
 | R2 S3 API | File upload / get / delete |
-| Public R2 HTTP URL | Blob fetch via axios in some paths |
+| Public R2 HTTP URL | Blob fetch / AI `download_url` |
 | Gmail SMTP | Email service (if invoked) |
 
 ### Unenforced cross-service assumptions
 
-1. `user_id` / `created_by` / `teacher_id` / `student_id` are valid IAM UUIDs — **not verified** on most writes (optional `getUserById` only in IAM ensure path).  
+1. `user_id` / `created_by` / `teacher_id` / `student_id` are valid IAM UUIDs — **not verified** on most writes.  
 2. `organization_id` matches an IAM organization — **not verified**.  
-3. Client will only call endpoints appropriate to role — **not enforced**.  
-4. IAM JWT and this service’s `JWT_SECRET` relationship — **unclear**; local auth middleware uses local secret, not IAM JWKS.  
-5. `statuses.created_by` FK to `users(id)` in SQL script may fail if `users` table does not exist in this database (`scripts/create_statuses_table.sql` L16).
-
+3. Client will only call endpoints appropriate to role — **not enforced** except library/chat JWT.  
+4. IAM JWT and this service’s `JWT_SECRET` — local auth uses local secret, not IAM JWKS.  
+5. Shared AI and Logic agree on `IAM_APP_ID` and callback secret.  
+6. `statuses.created_by` FK to `users(id)` in SQL script may fail if `users` table does not exist here.
 ---
 
 ## 20. Open questions
@@ -739,36 +781,46 @@ Mounted under `routes/index.ts`:
 9. Should assignment APIs refuse pairs where either party’s `user_roles.status ≠ active`? (Docs imply yes; code does not.)  
 10. What is the intended meaning of dashboard `courseCompleted` (answers vs 100% status)?  
 11. Is `chapter` the long-term product term for “lesson”, or will a lessons table return?  
-12. Are `questions.course_id` / `answers.course_id` intentionally VARCHAR for legacy Mongo ids, or should they be UUID FKs?
+12. Are `questions.course_id` / `answers.course_id` intentionally VARCHAR for legacy Mongo ids, or should they be UUID FKs?  
+13. When will JWT auth be restored on `/answers/:id/feedback` (currently body reviewer ids)?  
+14. Will Shared AI keep writing `document_chunks` into this Logic DB long-term, or move to an AI-owned vector store (still keyed by `app_id`)?  
+15. Should course/roster routes adopt the same JWT + `resolveAuthContext` pattern as library/chat?
 
 ---
 
 ## Appendix A — Commented-out auth imports (inventory)
 
-| File | Line (approx.) |
-|------|----------------|
-| `routes/course.ts` | L4–5 |
-| `routes/chapter.ts` | L4–5 |
-| `routes/status.ts` | L4–5 |
-| `routes/favorite.ts` | L3–4 |
-| `routes/dashboard.ts` | L3 |
-| `routes/question.ts` | L5 |
-| `routes/answer.ts` | L4 |
+| File | Notes |
+|------|-------|
+| `routes/course.ts` | Auth commented |
+| `routes/chapter.ts` | Auth commented |
+| `routes/status.ts` | Auth commented |
+| `routes/favorite.ts` | Auth commented |
+| `routes/dashboard.ts` | Auth commented |
+| `routes/question.ts` | Auth commented |
+| `routes/answer.ts` | Auth commented |
+| `routes/file.ts` | **Auth used** for library + library upload |
+| `routes/chat.ts` | **Auth used** on all routes |
+| `routes/answers.ts` | Feedback JWT temporarily off |
 
 ## Appendix B — TODO / FIXME / mock inventory
 
 No `TODO`, `FIXME`, `HACK`, or `mock` markers were found in `.ts`/`.js`/`.sql` sources via repo search.
 
-Functional equivalents of “TODO” are **commented-out auth** and **unused Mongoose/OTP** modules listed in §18.
+Functional equivalents of “TODO” are **commented-out auth** on course routes and **unused Mongoose/OTP** modules listed in §18.
 
 ## Appendix C — Related docs in-repo
 
 | Doc | Use |
 |-----|-----|
-| `API_DOCUMENTATION.md` | Endpoint reference |
-| `UI_WORKFLOW.md` | Role flows |
-| `IAM_DOCUMENTATION.md` | External IAM |
-| `AI_IMPLEMENTATION.md` | Implementation notes (may lag code) |
-| `POSTGRESQL_MIGRATION.md` | Migration narrative |
+| [`../API_DOCUMENTATION.md`](../API_DOCUMENTATION.md) | Endpoint reference (prefer when current) |
+| [`../ai-architecture/AI-MVP-SHARED-CONTRACT.md`](../ai-architecture/AI-MVP-SHARED-CONTRACT.md) | FE + Logic + **Shared AI** contract (`app_id` = `IAM_APP_ID`) |
+| [`AI-ARCHITECTURE.md`](./AI-ARCHITECTURE.md) | PetaxAI platform / RAG architecture |
+| [`IAM-ARCHITECTURE.md`](./IAM-ARCHITECTURE.md) | Shared IAM platform architecture |
+| [`../FRONTEND-MVP.md`](../FRONTEND-MVP.md) | Frontend MVP checklist (Library + AI Mode) |
+| [`../workflow/UI_WORKFLOW.md`](../workflow/UI_WORKFLOW.md) | Role flows |
+| [`IAM-ARCHITECTURE.md`](./IAM-ARCHITECTURE.md) | Shared IAM platform architecture |
+| `AI_IMPLEMENTATION.md` | Older notes — **may lag**; prefer shared contract |
+| `POSTGRESQL_MIGRATION.md` / `FILE_POSTGRESQL_MIGRATION.md` | Migration narrative (may still mention dropped `files.parent_*`) |
 
-Prefer **this document + SQL scripts + route files** over narrative docs when they disagree (e.g. roster status `approved` vs `active`).
+Prefer **this document + SQL scripts + route files + the shared AI MVP contract** over narrative docs when they disagree (e.g. roster status `approved` vs `active`; `files.parent_id` — **removed**).

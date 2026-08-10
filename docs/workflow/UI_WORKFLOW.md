@@ -6,9 +6,9 @@
 |----------|---------|
 | **[UI_WORKFLOW.md](./UI_WORKFLOW.md)** *(this file)* | Screens, flows, stakeholders, MVP scope, roadmap |
 | **[USER_WORKFLOW.md](./USER_WORKFLOW.md)** | Non-technical / management presentation workflow |
-| **[API_DOCUMENTATION.md](./API_DOCUMENTATION.md)** | Request/response details, architecture |
-| **[IAM_DOCUMENTATION.md](./IAM_DOCUMENTATION.md)** | IAM login, users, orgs (external service) |
-| **[TCM_DOCUMENTATION.md](./TCM_DOCUMENTATION.md)** | Reference — same IAM + local RBAC pattern |
+| **[API_DOCUMENTATION.md](../API_DOCUMENTATION.md)** | Request/response details + FE usage map |
+| **[IAM-ARCHITECTURE.md](../service_architecture/IAM-ARCHITECTURE.md)** | Shared IAM platform |
+| **[DOCUMENTATION-INDEX.md](../DOCUMENTATION-INDEX.md)** | Master docs map |
 
 ---
 

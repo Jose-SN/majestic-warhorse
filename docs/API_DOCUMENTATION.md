@@ -1,11 +1,12 @@
 # Majestic Warhorse Backend — API Documentation
 
-Complete reference for the **course backend** HTTP API (rosters, RBAC, assignments, courses).
+Complete reference for the **Majestic Logic** HTTP API (rosters, RBAC, courses, files, library, chat).
 
 - **Base URL (local):** `http://localhost:{PORT}` (default `8080` / `8081` from `.env`)
-- **IAM service (external):** `http://localhost:5000/auth/api` — see [IAM_DOCUMENTATION.md](./IAM_DOCUMENTATION.md)
+- **IAM service (external):** see [service_architecture/IAM-ARCHITECTURE.md](./service_architecture/IAM-ARCHITECTURE.md) — FE uses `environment.iamApi`
 - **Interactive docs:** `GET /api-docs` (Swagger UI)
 - **Content type:** `application/json` unless noted (`multipart/form-data` for file uploads)
+- **Doc map:** [DOCUMENTATION-INDEX.md](./DOCUMENTATION-INDEX.md)
 
 ---
 
@@ -13,14 +14,14 @@ Complete reference for the **course backend** HTTP API (rosters, RBAC, assignmen
 
 | Document | Audience | Contents |
 |----------|----------|----------|
-| **[API_DOCUMENTATION.md](./API_DOCUMENTATION.md)** *(this file)* | Backend / API integrators | Endpoints, payloads, architecture, IAM integration |
-| **[UI_WORKFLOW.md](./UI_WORKFLOW.md)** | Frontend / UI | Screens, flows, which API when, plain-English overview |
-| **[IAM_DOCUMENTATION.md](./IAM_DOCUMENTATION.md)** | All | IAM service — login, users, organizations (external) |
-| **[TCM_DOCUMENTATION.md](./TCM_DOCUMENTATION.md)** | Reference | Sister project — same IAM + local RBAC pattern |
+| **[API_DOCUMENTATION.md](./API_DOCUMENTATION.md)** *(this file)* | Backend + FE integrators | Endpoints, payloads, **FE usage map**, **AI MVP API diffs** |
+| **[FRONTEND-MVP.md](./FRONTEND-MVP.md)** | Frontend | Library + AI Mode checklist (pointers only) |
+| **[ai-architecture/AI-MVP-SHARED-CONTRACT.md](./ai-architecture/AI-MVP-SHARED-CONTRACT.md)** | FE + Logic + Shared AI | Normative Library/Chat MVP contract |
+| **[workflow/UI_WORKFLOW.md](./workflow/UI_WORKFLOW.md)** | Frontend / UI | Screens, flows, which API when |
+| **[service_architecture/LEARNING_ARCHITECTURE.md](./service_architecture/LEARNING_ARCHITECTURE.md)** | Architects | Majestic Logic / learning domain |
+| **[service_architecture/](./service_architecture/)** | Architects | IAM / Learning / Shared AI ownership |
 
-> `WORKFLOW.md`, `HOW_IT_WORKS_SIMPLE.md`, and `TEACHER_STUDENT_MANAGEMENT.md` are merged into the two primary docs above.
-
-![API workflow](./docs/assets/api-workflow-diagram.png)
+> Do not copy full architecture into this file — link to `service_architecture/` and the shared AI contract.
 
 ---
 
@@ -28,6 +29,8 @@ Complete reference for the **course backend** HTTP API (rosters, RBAC, assignmen
 
 | Section | Path prefix |
 |---------|-------------|
+| [Frontend API usage map](#frontend-api-usage-map) | FE ↔ Logic / IAM |
+| [AI MVP API changes](#ai-mvp-api-changes) | Library + Chat diffs |
 | [Authentication & IAM](#authentication--iam) | — |
 | [Architecture & data model](#architecture--data-model) | — |
 | [IAM sync (identity only)](#iam-sync-identity-only) | — |
@@ -51,28 +54,104 @@ Complete reference for the **course backend** HTTP API (rosters, RBAC, assignmen
 | [Teacher–Students assignments](#teacherstudents--teacher-students) | `/teacher-students` |
 | [HTTP status codes](#http-status-codes) | — |
 
+---
+
+## Frontend API usage map
+
+Observed from Angular `src/` (`environment.majesticWarhorseApi` = **Logic**, `environment.iamApi` = **IAM**).  
+Bearer JWT attached via `header.interceptor` for authenticated calls. Prefer this table over guessing unused backend routes.
+
+### IAM (`environment.iamApi`)
+
+| FE source | Method | Path | Notes |
+|-----------|--------|------|-------|
+| `auth.service.ts` | GET | `user/get` | Profile |
+| `auth.service.ts` | POST | `user/login` | |
+| `auth.service.ts` | POST | `user/forgot-password` | |
+| `auth.service.ts` | POST | `user/confirm-password` | |
+| `auth.service.ts` | PUT | `user/update` | |
+| `registration-api.service.ts` | POST | `user/save` | |
+| `user-oauth.service.ts` | GET | `user/get?email=` | OAuth sync |
+| `user-oauth.service.ts` | POST | `user/sync` | |
+| `organization-api.service.ts` | GET/POST/PUT | `organization/get`, `save`, `update`, `login`, `forgot-password`, `confirm-password`, `get-for-users` | |
+| `organization-oauth.service.ts` | GET/POST | `organization/get?email=`, `organization/sync` | |
+| `application-api.service.ts` | GET | `application/get` | |
+| `common-api.service.ts` | DELETE | `user/delete` | |
+| `health-check.service.ts` | GET | `health` / `application/get` | Probes |
+
+### Logic (`environment.majesticWarhorseApi`)
+
+| FE source | Method | Path | Notes |
+|-----------|--------|------|-------|
+| `common-api.service.ts` | POST | `file/upload` | Course / general uploads |
+| `library.service.ts` | POST | `file/upload` | Library: `library_files=true`, `bucket_name=library`, `visibility` |
+| `library.service.ts` | GET | `file/library` | List + **poll ingest status** |
+| `library.service.ts` | DELETE | `file/library/:id` | |
+| `file-download-api.service.ts` | POST | `file/get-blob` | |
+| `chat-api.service.ts` | POST | `chat` | AI ask (`question`, optional `conversation_id`) |
+| `chat-api.service.ts` | GET | `chat/conversations` | |
+| `chat-api.service.ts` | GET | `chat/conversations/:id` | |
+| `chat-api.service.ts` | DELETE | `chat/conversations/:id` | |
+| `courses-api.service.ts` | GET/POST/PUT/DELETE | `course/*`, `status/*` | |
+| `course-discussions-api.service.ts` | GET/POST | `discussion/get`, `discussion/save` | |
+| `questionnaire-api.service.ts` | * | `question/*`, `answer/*`, `answers/*/feedback*` | |
+| `students-api.service.ts` / `teachers-api.service.ts` | * | `students/*`, `teachers/*` | Roster |
+| `user-role-api.service.ts` | GET/POST | `user-role/*` | |
+| `favorites-api.service.ts` | * | `favorites/*` | |
+| `branding-api.service.ts` | * | `branding/*` | |
+| `dashboard.service.ts` | GET | `dashboard/get` | |
+| `mail-api.service.ts` | POST | `mail/send-gmail` | |
+| `assign-teacher.service.ts` | * | `teacher-students/*` | |
+| `health-check.service.ts` | GET | `health` | Probe |
+
+**Not called by FE (AI MVP):** `POST /file/ingest-status` (Shared AI → Logic only). Shared AI `/ingest` and `/ask` are Logic→AI only.
+
+---
+
+## AI MVP API changes
+
+Normative detail: [AI-MVP-SHARED-CONTRACT.md](./ai-architecture/AI-MVP-SHARED-CONTRACT.md). Architecture: [AI-ARCHITECTURE.md](./service_architecture/AI-ARCHITECTURE.md). FE checklist: [FRONTEND-MVP.md](./FRONTEND-MVP.md).
+
+| Area | Before (legacy / course-media style) | After (AI MVP — Phase 1) |
+|------|--------------------------------------|---------------------------|
+| Library list | Often `GET /file/get?bucket_name=library` or generic file lists | **`GET /file/library`** (preferred for Library UI) |
+| Library delete | Generic `DELETE /file/delete/:id` | **`DELETE /file/library/:fileId`** |
+| Library upload | `POST /file/upload` file only | Same path + **`library_files=true`** and/or **`bucket_name=library`** + **`visibility`** (+ optional `description`); JWT required |
+| File model for AI | Docs historically mentioned `parentId` / `parentType` / file `role` / `r2Key` on library payloads | **Do not send** those on library/AI flows. Course media uses **`course_files` / `chapter_files`** junctions. Object path = **`storageKey`** |
+| Ingest progress | N/A or direct AI polling | Logic sets `status`: `pending` → `processing` → `ready` \| `failed`. FE **re-lists** `/file/library`. **Never** call `/file/ingest-status` from browser |
+| RAG corpus | — | Only `library_files=true` **and** `status=ready` (Phase 1). Course attachments = Phase 2 |
+| Chat | — / stubs | **`POST /chat`** `{ question, conversation_id? }` + conversations CRUD. No chat file uploads for RAG |
+| Auth body fields | Clients sometimes sent `organization_id` / `created_by` / uploader role | Logic resolves org/user/role from **JWT** |
+
+Phase 2 (course files in RAG): [PHASE-2-COURSE-RAG.md](./ai-architecture/PHASE-2-COURSE-RAG.md) — **do not change** Phase 1 library rules until scheduled.
+
 ### UI quick reference (most-used)
 
-**IAM service** (`{IAM_BASE_URL}`)
+**IAM service** (`{IAM_BASE_URL}` / `environment.iamApi`)
 
 | UI screen | Method | Path | Headers |
 |-----------|--------|------|---------|
 | User login | `POST` | `/user/login` | `x-app-id`, `Content-Type` |
 | Org login | `POST` | `/organization/login` | `x-app-id`, `Content-Type` |
 
-**Course backend** (`http://localhost:{PORT}`)
+**Logic** (`environment.majesticWarhorseApi`)
 
 | UI screen | Method | Path | Headers |
 |-----------|--------|------|---------|
-| Register / invite teacher | `POST` | `/teachers/save` | `Authorization: Bearer` (IAM sync) |
-| Register / invite student | `POST` | `/students/save` | `Authorization: Bearer` (IAM sync) |
+| Library list / poll | `GET` | `/file/library` | `Authorization: Bearer` |
+| Library upload | `POST` | `/file/upload` | Bearer + multipart (`library_files` / `bucket_name=library`, `visibility`) |
+| Library delete | `DELETE` | `/file/library/:fileId` | Bearer |
+| AI Mode ask | `POST` | `/chat` | Bearer |
+| AI Mode history | `GET`/`DELETE` | `/chat/conversations[/:id]` | Bearer |
+| Register / invite teacher | `POST` | `/teachers/save` | Bearer (IAM sync) |
+| Register / invite student | `POST` | `/students/save` | Bearer (IAM sync) |
 | Unapproved teachers | `GET` | `/teachers/get?organization_id=&status=pending&limit=&offset=` | — |
 | Unapproved students | `GET` | `/students/get?organization_id=&status=pending&limit=&offset=` | — |
-| Approve teacher | `PUT` | `/teachers/approve/:rosterRowId` | `Authorization: Bearer` (IAM sync) |
-| Approve student | `PUT` | `/students/approve/:rosterRowId` | `Authorization: Bearer` (IAM sync) |
+| Approve teacher | `PUT` | `/teachers/approve/:rosterRowId` | Bearer (IAM sync) |
+| Approve student | `PUT` | `/students/approve/:rosterRowId` | Bearer (IAM sync) |
 | User roles overview | `GET` | `/user-role/get-overview?organization_id=&user_id=` | — |
 | Effective permissions | `GET` | `/user-role/permissions?organization_id=&user_id=` | — |
-| Assign role (generic) | `POST` | `/user-role/save` | `Authorization: Bearer` (IAM sync) |
+| Assign role (generic) | `POST` | `/user-role/save` | Bearer (IAM sync) |
 | Assign students to teacher | `POST` | `/teacher-students/assign-students` | — |
 | Student course feed | `GET` | `/course/student/:studentUserId?organization_id=` | — |
 | Course discussions (list) | `GET` | `/discussion/get?course_id=&organization_id=` | — |
@@ -81,7 +160,7 @@ Complete reference for the **course backend** HTTP API (rosters, RBAC, assignmen
 | Get org branding | `GET` | `/branding/get?organization_id=` | — |
 | Save org branding | `POST` | `/branding/save` | `organization_id` required |
 
-See [UI_WORKFLOW.md](./UI_WORKFLOW.md) for step-by-step flows per role.
+See [workflow/UI_WORKFLOW.md](./workflow/UI_WORKFLOW.md) for step-by-step flows per role.
 
 **ID convention:** `teacher_id`, `student_id`, and `createdBy` are **IAM user UUIDs**.  
 Roster approve URLs use the roster row **`id`** from `GET /teachers/get` or `/students/get`.
@@ -92,17 +171,17 @@ When `IAM_SYNC_ENABLED=true`, register/approve syncs **account status and profil
 
 ## Authentication & IAM
 
-Same pattern as [TCM_DOCUMENTATION.md](./TCM_DOCUMENTATION.md#authentication--iam):
+IAM platform detail: [service_architecture/IAM-ARCHITECTURE.md](./service_architecture/IAM-ARCHITECTURE.md).
 
 | Service | Responsibility |
 |---------|----------------|
-| **IAM** (`IAM_DOCUMENTATION.md`) | Login, JWT, users, organizations, account status |
-| **This backend** | App roles, permissions, rosters, assignments, courses |
+| **IAM** | Login, JWT, users, organizations, account status, `applications` / `IAM_APP_ID` |
+| **This backend (Logic)** | App roles, permissions, rosters, assignments, courses, library, chat proxy |
 
-| Header | IAM | Course backend |
-|--------|-----|----------------|
+| Header | IAM | Logic |
+|--------|-----|-------|
 | `x-app-id` | Required on IAM calls | — |
-| `Authorization: Bearer <jwt>` | IAM protected routes | Forward on register/approve when `IAM_SYNC_ENABLED=true` |
+| `Authorization: Bearer <jwt>` | IAM protected routes | Library / chat (+ forward on register/approve when `IAM_SYNC_ENABLED=true`) |
 | `Content-Type: application/json` | POST/PUT bodies | POST/PUT bodies |
 
 Org scoping: pass `organization_id` in query or body on course-backend calls.  
@@ -585,12 +664,32 @@ Returns the courses created by the teachers the student is assigned to. When
 
 ## Files — `/file`
 
-Files are stored in Supabase Storage (S3-compatible). Upload returns a public URL.
+Object storage (R2 / S3-compatible). Upload returns a public CDN URL (and library metadata when applicable).
+
+**AI MVP:** Library UI must use `/file/library` + library upload fields. Do **not** send `parentId` / `parentType` / file `role` / `r2Key` on library flows. Full contract: [AI-MVP-SHARED-CONTRACT.md](./ai-architecture/AI-MVP-SHARED-CONTRACT.md). Diffs: [AI MVP API changes](#ai-mvp-api-changes).
+
+### Library list (preferred for Library UI)
+`GET /file/library` — **JWT required**
+
+Returns library files filtered for the caller (`visibility` + org). Includes `status`, `storageKey`, `visibility`.
+
+FE polls this while any file is `pending` / `processing` (never call `/file/ingest-status`).
+
+---
+
+### Library delete
+`DELETE /file/library/:fileId` — **JWT required**
+
+Deletes DB row + storage object. Chunks cascade when configured (`document_chunks.file_id` ON DELETE CASCADE).
+
+---
 
 ### List files (storage bucket)
 `GET /file/get`
 
 **Response `200`:** Array of `{ key, lastModified, size, url }`.
+
+> Prefer **`GET /file/library`** for the Library page.
 
 ---
 
@@ -618,11 +717,11 @@ Streams file content. Videos are streamed inline; other files are downloaded.
 ### Save file metadata (database record)
 `POST /file/save`
 
-**Body:**
+Used for course/chapter media metadata (not the Library RAG path). Course links use junction tables `course_files` / `chapter_files` — **not** `parentId` / `parentType` on `files` for AI.
+
+**Body (legacy shape may still appear in older clients):**
 ```json
 {
-  "parentId": "chapter-uuid",
-  "parentType": "Chapter",
   "description": "File description",
   "fileURL": "https://...",
   "fileName": "document.pdf",
@@ -630,7 +729,7 @@ Streams file content. Videos are streamed inline; other files are downloaded.
 }
 ```
 
-`parentType`: `"Course"` | `"Chapter"` | `"User"`
+> **AI MVP:** Do not rely on `parentId` / `parentType` for library or RAG. Progress/`statuses` may still use parent fields for course completion — unrelated to AI.
 
 **Response `200`:**
 ```json
@@ -650,15 +749,32 @@ Streams file content. Videos are streamed inline; other files are downloaded.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `file` | file | File to upload (max size: `FILEUPLOADLIMIT` GB from `.env`) |
+| `file` | file | Required |
+| `bucket_name` | string | e.g. `course`, or `library` for Library RAG |
+| `library_files` | string/bool | `true` for Library / RAG ingest |
+| `visibility` | string | `organization` \| `teacher` \| `student` \| `private` (library; default `private`) |
+| `description` | string | Optional (library) |
 
-**Response `200`:**
+**JWT required** when uploading as a library file.
+
+**Response `200` (library example):**
 ```json
 {
-  "message": "File uploaded successfully",
-  "url": "https://{project}.supabase.co/storage/v1/object/public/{bucket}/majestic-warhorse-uploads/{timestamp}_{filename}"
+  "message": "Library file uploaded successfully",
+  "key": "library/....",
+  "url": "https://...",
+  "data": { }
 }
 ```
+
+Logic then calls Shared AI `/ingest` when AI is enabled. FE must not call Shared AI.
+
+---
+
+### Ingest status callback (Shared AI → Logic only)
+`POST /file/ingest-status`
+
+**Not for browsers.** Optional shared secret. Updates `files.status` to `ready` or `failed`.
 
 ---
 
@@ -682,6 +798,8 @@ Streams file content. Videos are streamed inline; other files are downloaded.
 
 ### Delete file from storage
 `DELETE /file/delete/:fileId`
+
+Generic delete. Library UI should prefer **`DELETE /file/library/:fileId`**.
 
 **Response `200`:**
 ```json
@@ -1191,7 +1309,10 @@ When `notifications.notify_student` is `true` and visibility is `student_visible
 
 ## Chat (AI Mode) — `/chat`
 
-JWT required on all routes. Org/user from JWT. Proxies questions to the FastAPI AI service when `AI_ENABLED=true`. Details: [ai-architecture/AI-MVP-SHARED-CONTRACT.md](./ai-architecture/AI-MVP-SHARED-CONTRACT.md).
+JWT required on all routes. Org/user from JWT. Proxies questions to the Shared AI service when `AI_ENABLED=true`.
+
+**Contract:** [AI-MVP-SHARED-CONTRACT.md](./ai-architecture/AI-MVP-SHARED-CONTRACT.md) §3  
+**FE:** `chat-api.service.ts` — body is `question` + optional `conversation_id` only (no chat file uploads for RAG).
 
 ### Ask
 `POST /chat`
@@ -1204,7 +1325,7 @@ JWT required on all routes. Org/user from JWT. Proxies questions to the FastAPI 
 }
 ```
 
-**Response `200`:** Assistant message, `citations`, and conversation/message ids.
+**Response `200`:** `conversation_id`, `answer`, `citations[]`, optional persisted `message`.
 
 ### List conversations
 `GET /chat/conversations`

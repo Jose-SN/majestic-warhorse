@@ -5,15 +5,14 @@
 **Repository:** `majestic-warhorse` (Angular SPA)  
 **Evidence date:** 2026-07-27  
 **Cross-references:**
-- [DOCUMENTATION-INDEX.md](./DOCUMENTATION-INDEX.md) — program charter
-- [FRONTEND-ARCHITECTURE.md](./FRONTEND-ARCHITECTURE.md) — detailed frontend architecture
-- [UI_WORKFLOW.md](../UI_WORKFLOW.md) — product flows and MVP scope (**Documented legacy / product intent**)
-- [USER_WORKFLOW.md](../USER_WORKFLOW.md) — stakeholder journeys (**Documented legacy / product intent**)
-- [API_DOCUMENTATION.md](../API_DOCUMENTATION.md) — Majestic course-backend contract
-- [IAM_DOCUMENTATION.md](../IAM_DOCUMENTATION.md) — PetaxAI IAM contract
-- [TCM_DOCUMENTATION.md](../TCM_DOCUMENTATION.md) — sister-product pattern (The Church Manager)
+- [DOCUMENTATION-INDEX.md](../DOCUMENTATION-INDEX.md) — master docs map
+- [FRONTEND-ARCHITECTURE.md](../frontend_architecture/FRONTEND-ARCHITECTURE.md) — Angular architecture
+- [UI_WORKFLOW.md](../workflow/UI_WORKFLOW.md) — product flows and MVP scope
+- [USER_WORKFLOW.md](../workflow/USER_WORKFLOW.md) — stakeholder journeys
+- [API_DOCUMENTATION.md](../API_DOCUMENTATION.md) — Logic HTTP + FE usage
+- [IAM-ARCHITECTURE.md](../service_architecture/IAM-ARCHITECTURE.md) — Shared IAM platform
 
-**Evidence tiers** used below: **Observed** (this repo’s code/config), **Documented (legacy)** (root product/API docs), **Assumption**, **Unknown**.
+**Evidence tiers** used below: **Observed** (this repo’s code/config), **Documented (legacy)** (product/API docs), **Assumption**, **Unknown**.
 
 ---
 
