@@ -3,7 +3,15 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Subject, debounceTime, distinctUntilChanged, skip, takeUntil } from 'rxjs';
+import {
+  Subject,
+  Subscription,
+  debounceTime,
+  distinctUntilChanged,
+  interval,
+  skip,
+  takeUntil,
+} from 'rxjs';
 import { DemoModeService } from 'src/app/shared/services/demo-mode.service';
 import { DASHBOARD_NAV_ROUTES } from '../dashboard/dashboard-routes.config';
 import { UserModel } from '../login-page/model/user-model';
@@ -82,6 +90,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
 
   private destroy$ = new Subject<void>();
+  private ingestPollSub: Subscription | null = null;
+  private readonly ingestPollMs = 4000;
   private search$ = new Subject<string>();
 
   constructor(
@@ -168,6 +178,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.stopIngestPolling();
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -642,8 +653,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       });
   }
 
-  private loadFiles(): void {
-    this.loadingFiles = true;
+  private loadFiles(options: { silent?: boolean } = {}): void {
+    const silent = !!options.silent;
+    if (!silent) {
+      this.loadingFiles = true;
+    }
     const uploadedBy = this.route.snapshot.queryParamMap.get('uploadedBy') || undefined;
     if (uploadedBy && !this.selectedUsage) {
       this.selectedUsage = this.usageRows.find((row) => row.userId === uploadedBy) ?? null;
@@ -676,12 +690,36 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
           this.totalPages = res.totalPages;
           this.totalItems = res.totalItems;
           this.loadingFiles = false;
+          this.syncIngestPolling();
         },
         error: () => {
           this.loadingFiles = false;
-          this.toast('Could not load files', TOASTER_MESSAGE_TYPE.ERROR);
+          if (!silent) {
+            this.toast('Could not load files', TOASTER_MESSAGE_TYPE.ERROR);
+          }
         },
       });
+  }
+
+  /** Refresh via GET /file/library while ingest is pending/processing — never call /file/ingest-status. */
+  private syncIngestPolling(): void {
+    const needsPoll =
+      !this.isDemoMode && this.libraryService.needsIngestPolling(this.files);
+    if (!needsPoll) {
+      this.stopIngestPolling();
+      return;
+    }
+    if (this.ingestPollSub && !this.ingestPollSub.closed) {
+      return;
+    }
+    this.ingestPollSub = interval(this.ingestPollMs)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.loadFiles({ silent: true }));
+  }
+
+  private stopIngestPolling(): void {
+    this.ingestPollSub?.unsubscribe();
+    this.ingestPollSub = null;
   }
 
   private patchQuery(patch: Record<string, string | number | null>): void {

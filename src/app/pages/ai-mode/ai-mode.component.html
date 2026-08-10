@@ -357,49 +357,21 @@
     }
 
     @if (attachPanelOpen) {
-      <div class="ai-mode__attach-panel" role="dialog" aria-label="Add files" (click)="$event.stopPropagation()">
+      <div class="ai-mode__attach-panel" role="dialog" aria-label="Library files" (click)="$event.stopPropagation()">
         <div class="ai-mode__attach-head">
-          <p class="ai-mode__attach-title">Attach files</p>
+          <p class="ai-mode__attach-title">Library for RAG</p>
           <button type="button" class="ai-mode__icon-btn" aria-label="Close" (click)="attachPanelOpen = false">
             <span class="material-symbols-outlined">close</span>
           </button>
         </div>
-        <p class="ai-mode__attach-hint">Add documents, images, or notes to your prompt.</p>
-        <button type="button" class="ai-mode__attach-upload" (click)="openFilePicker($event)">
-          <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>
-          <span>Choose files</span>
+        <p class="ai-mode__attach-hint">
+          Chat does not accept file uploads. Upload documents in Library; answers use org files with status Ready.
+        </p>
+        <button type="button" class="ai-mode__attach-upload" (click)="goToLibrary($event)">
+          <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
+          <span>Open Library</span>
         </button>
-        @if (attachments.length) {
-          <ul class="ai-mode__attach-list">
-            @for (item of attachments; track item.id) {
-              <li class="ai-mode__attach-item">
-                <span class="material-symbols-outlined" aria-hidden="true">description</span>
-                <div class="ai-mode__attach-meta">
-                  <span class="ai-mode__attach-name">{{ item.name }}</span>
-                  <span class="ai-mode__attach-size">{{ item.sizeLabel }}</span>
-                </div>
-                <button
-                  type="button"
-                  class="ai-mode__chip-remove"
-                  [attr.aria-label]="'Remove ' + item.name"
-                  (click)="removeAttachment(item.id, $event)"
-                >
-                  <span class="material-symbols-outlined">close</span>
-                </button>
-              </li>
-            }
-          </ul>
-        }
       </div>
     }
-
-    <input
-      #fileInput
-      type="file"
-      class="ai-mode__file-input"
-      multiple
-      accept=".pdf,.doc,.docx,.txt,.md,.png,.jpg,.jpeg,.webp,.gif,.csv,.xlsx,.pptx"
-      (change)="onFilesSelected($event)"
-    />
   </div>
 </ng-template>

@@ -283,7 +283,12 @@
                     <span class="material-symbols-outlined">{{ fileIcon(file) }}</span>
                   </span>
                   }
-                  <span class="library-file__name">{{ file.name }}.{{ file.extension }}</span>
+                  <div class="library-file__meta">
+                    <span class="library-file__name">{{ file.name }}.{{ file.extension }}</span>
+                    @if (file.storageKey) {
+                    <span class="library-file__key" [title]="file.storageKey">{{ file.storageKey }}</span>
+                    }
+                  </div>
                 </div>
               </td>
               <td>
@@ -329,6 +334,9 @@
             </span>
             <div>
               <h3>{{ file.name }}.{{ file.extension }}</h3>
+              @if (file.storageKey) {
+              <p class="library-card__key" [title]="file.storageKey">{{ file.storageKey }}</p>
+              }
               <p>
                 {{ file.uploadedByName }} · {{ formatBytes(file.sizeBytes) }}
                 · {{ visibilityLabel(file.visibility) }}
@@ -378,6 +386,10 @@
         <div>
           <h2>{{ previewFile.name }}.{{ previewFile.extension }}</h2>
           <p>{{ previewFile.uploadedByName }} · {{ formatBytes(previewFile.sizeBytes) }}</p>
+          @if (previewFile.storageKey) {
+          <p class="library-card__key" [title]="previewFile.storageKey">{{ previewFile.storageKey }}</p>
+          }
+          <p>{{ visibilityLabel(previewFile.visibility) }} · {{ statusLabel(previewFile.status) }}</p>
         </div>
         <button type="button" class="library-icon-btn" aria-label="Close" (click)="closePreview()">
           <span class="material-symbols-outlined">close</span>

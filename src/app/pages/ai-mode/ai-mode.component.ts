@@ -8,8 +8,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { UserModel } from '../login-page/model/user-model';
+import { DASHBOARD_NAV_ROUTES } from '../dashboard/dashboard-routes.config';
 import {
   ChatApiService,
   ChatCitation,
@@ -78,6 +80,7 @@ export class AiModeComponent implements OnInit, OnDestroy {
     { id: 'starred', label: 'Starred' },
   ];
   readonly formatCitationLabel = formatCitationLabel;
+  readonly libraryRoute = DASHBOARD_NAV_ROUTES.library;
 
   query = '';
   commandSearch = '';
@@ -86,6 +89,7 @@ export class AiModeComponent implements OnInit, OnDestroy {
   menuOpen = false;
   attachPanelOpen = false;
   historyOpen = false;
+  /** Local-only chips; MVP `/chat` does not accept file uploads (use Library for RAG). */
   attachments: AiModeAttachment[] = [];
   activeGalleryTab: AiModeGalleryTab = 'suggested';
   starredIds = new Set<string>(['study-methods']);
@@ -104,7 +108,6 @@ export class AiModeComponent implements OnInit, OnDestroy {
   audioLevel = 0;
 
   @ViewChild('promptInput') promptInput?: ElementRef<HTMLTextAreaElement>;
-  @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
   @ViewChild('composerRoot') composerRoot?: ElementRef<HTMLElement>;
   @ViewChild('threadScroll') threadScroll?: ElementRef<HTMLElement>;
 
@@ -117,7 +120,8 @@ export class AiModeComponent implements OnInit, OnDestroy {
 
   constructor(
     public commonService: CommonService,
-    private chatApi: ChatApiService
+    private chatApi: ChatApiService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -258,28 +262,11 @@ export class AiModeComponent implements OnInit, OnDestroy {
     this.menuOpen = false;
   }
 
-  openFilePicker(event?: Event): void {
+  goToLibrary(event?: Event): void {
     event?.stopPropagation();
-    this.fileInput?.nativeElement.click();
-  }
-
-  onFilesSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const files = Array.from(input.files ?? []);
-    if (!files.length) {
-      return;
-    }
-
-    const next = files.map((file) => ({
-      id: `${file.name}-${file.size}-${file.lastModified}-${Math.random().toString(36).slice(2, 7)}`,
-      file,
-      name: file.name,
-      sizeLabel: this.formatFileSize(file.size),
-    }));
-    this.attachments = [...this.attachments, ...next];
-    input.value = '';
-    this.attachPanelOpen = true;
+    this.attachPanelOpen = false;
     this.menuOpen = false;
+    void this.router.navigate([this.libraryRoute]);
   }
 
   removeAttachment(id: string, event?: Event): void {
@@ -386,20 +373,18 @@ export class AiModeComponent implements OnInit, OnDestroy {
 
   submitPrompt(): void {
     const trimmed = this.query.trim();
-    const fileNames = this.attachments.map((item) => item.name);
-    if ((!trimmed && !fileNames.length) || this.isSending) {
+    if (!trimmed || this.isSending) {
       this.focusInput();
       return;
     }
 
-    const promptText = trimmed || `Attached: ${fileNames.join(', ')}`;
+    const promptText = trimmed;
     const now = new Date().toISOString();
     const userMessage: AiChatMessage = {
       id: createMessageId(),
       role: 'user',
       content: promptText,
       createdAt: now,
-      attachmentNames: fileNames.length ? fileNames : undefined,
     };
     const pendingAssistant: AiChatMessage = {
       id: createMessageId(),
@@ -766,16 +751,6 @@ export class AiModeComponent implements OnInit, OnDestroy {
       return null;
     }
     return new SpeechRecognitionCtor();
-  }
-
-  private formatFileSize(bytes: number): string {
-    if (bytes < 1024) {
-      return `${bytes} B`;
-    }
-    if (bytes < 1024 * 1024) {
-      return `${(bytes / 1024).toFixed(1)} KB`;
-    }
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   }
 
   private scrollThreadToBottom(): void {

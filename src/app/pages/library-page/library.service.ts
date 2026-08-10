@@ -196,11 +196,13 @@ export class LibraryService {
             return { item: mapped };
           }
 
+          // Fallback only when Logic returns key/url without a full `data` object.
           const extension = this.extensionOf(file.name);
           const category = this.categoryOf(extension);
           const url = res.url || '';
+          const storageKey = res.key || undefined;
           const item: LibraryFileItem = {
-            id: res.key || `f-${Date.now()}`,
+            id: storageKey || `f-${Date.now()}`,
             name: file.name.replace(/\.[^.]+$/, ''),
             extension,
             category,
@@ -208,14 +210,13 @@ export class LibraryService {
             sizeBytes: file.size,
             uploadedById: userId,
             uploadedByName: userName,
-            uploadedByRole: role,
             uploadedAt: new Date().toISOString(),
             previewUrl: category === 'image' ? url : undefined,
             downloadUrl: url,
             thumbnailUrl: category === 'image' ? url : undefined,
             visibility,
-            status: 'processing',
-            storageKey: res.key,
+            status: 'pending',
+            storageKey,
             description: options.description,
           };
           return { item };
@@ -286,6 +287,11 @@ export class LibraryService {
       default:
         return '—';
     }
+  }
+
+  /** True when any file is still waiting on Shared AI ingest (Logic status only — never poll ingest-status). */
+  needsIngestPolling(files: LibraryFileItem[]): boolean {
+    return files.some((f) => f.status === 'pending' || f.status === 'processing');
   }
 
   visibilityLabel(visibility?: LibraryVisibility): string {
@@ -399,7 +405,7 @@ export class LibraryService {
   ): LibraryFilesResponse {
     let items = [...source];
 
-    // Live library list is already visibility-scoped by Logic; keep light client filters for demo/tabs.
+    // Live list is visibility-scoped by Logic. Prefer `visibility` (+ owner id); `uploadedByRole` is demo-only.
     if (role === 'student') {
       items = items.filter(
         (f) =>
@@ -413,7 +419,6 @@ export class LibraryService {
         (f) =>
           f.uploadedById === currentUserId ||
           f.uploadedById === 'unknown' ||
-          f.uploadedByRole === 'student' ||
           f.visibility === 'teacher' ||
           f.visibility === 'organization' ||
           f.visibility === 'student'
@@ -429,21 +434,17 @@ export class LibraryService {
       items = items.filter((f) => f.category === 'image');
     } else if (tab === 'organizations') {
       items = items.filter(
-        (f) => f.uploadedByRole === 'organization' || f.visibility === 'organization'
+        (f) => f.visibility === 'organization' || f.uploadedByRole === 'organization'
       );
-    } else if (tab === 'teachers' || tab === 'my') {
-      if (tab === 'my') {
-        items = items.filter(
-          (f) => f.uploadedById === currentUserId || f.visibility === 'private'
-        );
-      } else {
-        items = items.filter(
-          (f) => f.uploadedByRole === 'teacher' || f.visibility === 'teacher'
-        );
-      }
+    } else if (tab === 'my') {
+      items = items.filter((f) => f.uploadedById === currentUserId);
+    } else if (tab === 'teachers') {
+      items = items.filter(
+        (f) => f.visibility === 'teacher' || f.uploadedByRole === 'teacher'
+      );
     } else if (tab === 'students' || tab === 'my-students') {
       items = items.filter(
-        (f) => f.uploadedByRole === 'student' || f.visibility === 'student'
+        (f) => f.visibility === 'student' || f.uploadedByRole === 'student'
       );
     }
 
@@ -456,9 +457,7 @@ export class LibraryService {
     }
 
     if (query.role && query.role !== 'all') {
-      items = items.filter(
-        (f) => f.uploadedByRole === query.role || f.visibility === query.role
-      );
+      items = items.filter((f) => f.visibility === query.role || f.uploadedByRole === query.role);
     }
 
     const search = query.search?.trim().toLowerCase();

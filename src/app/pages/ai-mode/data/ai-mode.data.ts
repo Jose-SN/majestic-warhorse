@@ -18,7 +18,7 @@ export interface AiModeCommandItem {
 }
 
 export const AI_MODE_COMMANDS: AiModeCommandItem[] = [
-  { id: 'attach', label: 'Attach', icon: 'attach_file', action: 'attach' },
+  { id: 'attach', label: 'Library', icon: 'folder_open', action: 'attach' },
   {
     id: 'courses',
     label: 'Courses',
