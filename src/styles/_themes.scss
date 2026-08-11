@@ -141,6 +141,40 @@ html[data-theme='light'] {
   [class*='__card']:hover {
     transform: none !important;
   }
+
+  .login-card,
+  .signup-card {
+    box-shadow: var(--shadow-card) !important;
+  }
+
+  .signup-hero__logo {
+    filter: none !important;
+  }
+
+  .signup-chip.is-active,
+  .btn-google__badge {
+    background: var(--ds-primary) !important;
+    color: var(--mc-on-primary, #ffffff) !important;
+    box-shadow: none !important;
+  }
+
+  .org-picker-hero .login-card__heading {
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    -webkit-text-fill-color: var(--ds-primary) !important;
+    color: var(--ds-primary) !important;
+  }
+
+  .org-picker-list {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    box-shadow: var(--shadow-card) !important;
+  }
+
+  .org-picker-role.is-selected {
+    box-shadow: none !important;
+  }
 }
 
 /* ── Dark-only surfaces ── */
@@ -299,7 +333,7 @@ html[data-theme='light'] {
   [class*='text-muted'],
   [class*='__subtitle'],
   [class*='__description'],
-  [class*='__label']:not(.role-btn__label) {
+  [class*='__label']:not(.role-btn__label):not(.signup-role__label) {
     color: var(--ds-text-muted, #64748b) !important;
   }
 
@@ -307,6 +341,7 @@ html[data-theme='light'] {
   .page-title,
   .page-title span,
   .login-card__heading,
+  .org-picker-card__title,
   .signup-hero__title,
   .theme-holder__popup-head h3,
   .notification-holder__popup-head h3,
@@ -464,6 +499,81 @@ html[data-theme='light'] {
   .theme-holder__popup,
   .notification-holder__popup {
     border: 1px solid var(--ds-border, #e2e8f0) !important;
+  }
+
+  .login-card,
+  .signup-card {
+    background: var(--ds-surface, #ffffff) !important;
+  }
+
+  /* Auth links must stay accent — footer `p { color: muted !important }` would wash them out */
+  .login-card__signup,
+  .login-card__link,
+  .login-card__how a,
+  .login-form__recover,
+  .login-form__back a,
+  .signup-card__footer a,
+  .org-picker-card__user strong,
+  .org-picker-item__check {
+    color: var(--ds-primary) !important;
+  }
+
+  .org-picker-hero .login-card__heading {
+    color: var(--ds-primary) !important;
+    -webkit-text-fill-color: var(--ds-primary) !important;
+  }
+
+  .signup-hero__stat,
+  .signup-chips,
+  .org-picker-card__user,
+  .org-picker-dropdown__trigger,
+  .org-picker-list,
+  .org-picker-item__badge,
+  .org-picker-back,
+  .org-picker-role {
+    background: var(--ds-surface, #ffffff) !important;
+    color: var(--ds-text, #0f172a) !important;
+    border-color: var(--ds-border, #e2e8f0) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .signup-chips {
+    background: var(--ds-surface-alt, #e2e8f0) !important;
+  }
+
+  .org-picker-dropdown__trigger,
+  .org-picker-item {
+    color: var(--ds-text, #0f172a) !important;
+  }
+
+  .org-picker-item:hover:not(:disabled),
+  .org-picker-item.is-selected {
+    background: color-mix(in srgb, var(--ds-primary) 10%, #ffffff) !important;
+  }
+
+  .org-picker-back:hover:not(:disabled),
+  .org-picker-back-link:hover {
+    color: var(--ds-primary) !important;
+    border-color: var(--ds-primary) !important;
+  }
+
+  .org-picker-loading__spinner {
+    border-color: var(--ds-border) !important;
+    border-top-color: var(--ds-primary) !important;
+  }
+
+  .signup-hero__stat-label {
+    color: var(--ds-primary) !important;
+  }
+
+  .signup-hero__stat-value {
+    color: var(--ds-text, #0f172a) !important;
+  }
+
+  .field-group:focus-within .field-group__label,
+  .signup-field:focus-within label {
+    color: var(--ds-primary) !important;
   }
 
   /* Keep primary CTAs white-on-brand */

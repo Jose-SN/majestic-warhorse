@@ -37,7 +37,7 @@
     @media (max-width: 1023px) {
       width: 100%;
       flex: 1;
-      background: rgba(14, 14, 17, 0.85);
+      background: var(--page-bg);
     }
   }
 }
@@ -54,7 +54,7 @@
     min-height: 100%;
     align-items: center;
     justify-content: flex-start;
-    padding: 4rem;
+    padding: var(--ds-space-9, 64px);
   }
 
   &__brand {
@@ -77,7 +77,7 @@
 
     .login-card__heading {
       @include type-h1;
-      background: var(--mc-brand-text-gradient);
+      background: var(--mc-brand-text-gradient, var(--mc-brand-gradient));
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -85,18 +85,18 @@
   }
 
   &__subtitle {
-    margin: 0.85rem 0 0;
+    margin: var(--ds-space-3, 12px) 0 0;
     @include type-body;
-    color: var(--mc-on-surface-variant);
+    color: var(--muted);
     max-width: 24rem;
   }
 }
 
 .org-picker-card {
   &__title {
-    margin: 0 0 0.5rem;
+    margin: 0 0 var(--ds-space-2, 8px);
     @include type-h3;
-    color: var(--mc-on-surface);
+    color: var(--ink);
     text-align: center;
 
     @media (min-width: 1024px) {
@@ -105,9 +105,9 @@
   }
 
   &__subtitle {
-    margin: 0 0 1rem;
+    margin: 0 0 var(--ds-space-4, 16px);
     @include type-body-small;
-    color: var(--mc-on-surface-variant);
+    color: var(--muted);
     text-align: center;
 
     @media (min-width: 1024px) {
@@ -116,13 +116,13 @@
   }
 
   &__user {
-    margin: 0 0 1.5rem;
-    padding: 0.65rem 0.85rem;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.03);
+    margin: 0 0 var(--ds-space-5, 24px);
+    padding: var(--ds-space-3, 12px) var(--ds-space-4, 16px);
+    border-radius: var(--radius-sm, 8px);
+    border: 1px solid var(--line);
+    background: var(--panel-alt);
     @include type-metadata;
-    color: var(--mc-on-surface-variant);
+    color: var(--muted);
     text-align: center;
     word-break: break-word;
 
@@ -132,23 +132,23 @@
 
     strong {
       @include type-weight-medium;
-      color: var(--mc-primary);
+      color: var(--accent);
     }
   }
 }
 
 .org-picker-loading {
   text-align: center;
-  padding: 2.5rem 1rem;
-  color: var(--mc-on-surface-variant);
+  padding: var(--ds-space-7, 40px) var(--ds-space-4, 16px);
+  color: var(--muted);
 
   &__spinner {
     display: inline-block;
-    width: 2rem;
-    height: 2rem;
-    margin-bottom: 0.75rem;
-    border: 2px solid rgba(255, 255, 255, 0.12);
-    border-top-color: var(--mc-primary-container);
+    width: var(--ds-space-6, 32px);
+    height: var(--ds-space-6, 32px);
+    margin-bottom: var(--ds-space-3, 12px);
+    border: 2px solid var(--line);
+    border-top-color: var(--accent);
     border-radius: 50%;
     animation: org-picker-spin 0.75s linear infinite;
   }
@@ -160,16 +160,16 @@
 }
 
 .org-picker-section {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--ds-space-5, 24px);
 
   &__label {
     display: block;
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--ds-space-3, 12px);
     @include type-caption;
-    font-weight: var(--font-weight-bold);
+    @include type-weight-bold;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--mc-on-surface-variant);
+    color: var(--muted);
   }
 }
 
@@ -184,24 +184,26 @@
   &__trigger {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--ds-space-3, 12px);
     width: 100%;
-    min-height: 3.25rem;
-    padding: 0.75rem 1rem;
+    min-height: var(--ds-input-height, 48px);
+    padding: var(--ds-space-3, 12px) var(--ds-space-4, 16px);
     text-align: left;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(0, 0, 0, 0.28);
+    border-radius: var(--radius-md, 12px);
+    border: 1px solid var(--line);
+    background: var(--panel-alt);
     color: inherit;
     cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      border-color var(--ds-motion-fast, 150ms) ease,
+      box-shadow var(--ds-motion-fast, 150ms) ease;
 
     &:hover:not(:disabled) {
-      border-color: rgba(255, 107, 44, 0.45);
+      border-color: var(--accent);
     }
 
     &.has-value {
-      border-color: rgba(255, 107, 44, 0.45);
+      border-color: var(--accent);
     }
 
     &:disabled {
@@ -211,8 +213,8 @@
   }
 
   &.is-open &__trigger {
-    border-color: var(--mc-primary-container);
-    box-shadow: 0 0 0 1px rgba(255, 107, 44, 0.25);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent);
   }
 
   &__value {
@@ -220,12 +222,12 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    gap: var(--ds-space-1, 4px);
 
     strong {
       @include type-form-input;
-      font-weight: var(--font-weight-semibold);
-      color: var(--mc-on-surface);
+      @include type-weight-semibold;
+      color: var(--ink);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -233,7 +235,7 @@
 
     small {
       @include type-caption;
-      color: var(--mc-on-surface-variant);
+      color: var(--muted);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -242,38 +244,36 @@
 
   &__placeholder {
     @include type-body-small;
-    color: var(--mc-on-surface-variant);
+    color: var(--muted);
   }
 
   &__chevron {
     flex-shrink: 0;
-    color: var(--mc-on-surface-variant);
-    font-size: 1.35rem;
+    color: var(--muted);
+    font-size: 22px;
   }
 }
 
 .org-picker-list {
   position: absolute;
-  top: calc(100% + 0.4rem);
+  top: calc(100% + var(--ds-space-2, 8px));
   left: 0;
   right: 0;
   z-index: 40;
   list-style: none;
   margin: 0;
-  padding: 0.35rem 0;
+  padding: var(--ds-space-1, 4px) 0;
   max-height: 250px;
   overflow-x: hidden;
   overflow-y: auto;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 0.75rem;
-  background: rgba(15, 17, 21, 0.96);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md, 12px);
+  background: var(--panel);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
-  box-shadow:
-    0 16px 40px rgba(0, 0, 0, 0.55),
-    0 0 24px -8px rgba(255, 107, 44, 0.2);
+  box-shadow: var(--shadow-card), 0 0 24px -8px color-mix(in srgb, var(--accent) 20%, transparent);
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 107, 44, 0.45) transparent;
+  scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent) transparent;
 
   > li {
     margin: 0;
@@ -283,23 +283,23 @@
 .org-picker-item {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: var(--ds-space-4, 16px);
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: var(--ds-space-3, 12px) var(--ds-space-4, 16px);
   text-align: left;
   border: 0;
   border-radius: 0;
   background: transparent;
   color: inherit;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background var(--ds-motion-fast, 150ms) ease;
 
   &:hover:not(:disabled) {
-    background: rgba(255, 107, 44, 0.1);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
   }
 
   &.is-selected {
-    background: rgba(255, 107, 44, 0.14);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
   }
 
   &.is-busy {
@@ -315,17 +315,17 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    gap: var(--ds-space-1, 4px);
 
     strong {
       @include type-body-small;
-      font-weight: var(--font-weight-semibold);
-      color: var(--mc-on-surface);
+      @include type-weight-semibold;
+      color: var(--ink);
     }
 
     small {
       @include type-caption;
-      color: var(--mc-on-surface-variant);
+      color: var(--muted);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -333,51 +333,54 @@
   }
 
   &__check {
-    color: var(--mc-primary-container);
-    font-size: 1.15rem;
+    color: var(--accent);
+    font-size: 18px;
   }
 
   &__badge {
     flex-shrink: 0;
     @include type-caption;
-    font-weight: var(--font-weight-medium);
+    @include type-weight-medium;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--mc-on-surface-variant);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 999px;
-    padding: 0.2rem 0.5rem;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: var(--ds-radius-full, 999px);
+    padding: var(--ds-space-1, 4px) var(--ds-space-2, 8px);
   }
 }
 
 .org-picker-roles {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.75rem;
+  gap: var(--ds-space-3, 12px);
 }
 
 .org-picker-role {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.85rem;
+  gap: var(--ds-space-4, 16px);
   text-align: left;
-  padding: 1rem;
-  border-radius: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.02);
+  padding: var(--ds-space-4, 16px);
+  border-radius: var(--radius-md, 12px);
+  border: 1px solid var(--line);
+  background: var(--panel-alt);
   color: inherit;
   cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color var(--ds-motion-fast, 150ms) ease,
+    background var(--ds-motion-fast, 150ms) ease,
+    box-shadow var(--ds-motion-fast, 150ms) ease;
 
   &:hover:not(:disabled) {
-    border-color: rgba(255, 107, 44, 0.45);
+    border-color: var(--accent);
   }
 
   &.is-selected {
-    border-color: var(--mc-primary-container);
-    background: rgba(255, 107, 44, 0.08);
-    box-shadow: 0 0 18px -6px rgba(255, 107, 44, 0.35);
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, var(--panel-alt));
+    box-shadow: 0 0 18px -6px color-mix(in srgb, var(--accent) 35%, transparent);
   }
 
   &:disabled {
@@ -390,7 +393,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.45rem;
+    gap: var(--ds-space-2, 8px);
     min-width: 4.25rem;
   }
 
@@ -400,24 +403,24 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 0.4rem;
-    color: var(--mc-secondary, #dcb8ff);
-    background: rgba(220, 184, 255, 0.12);
+    border-radius: var(--radius-sm, 8px);
+    color: var(--ds-primary-dark, var(--mc-secondary-container));
+    background: color-mix(in srgb, var(--ds-primary-dark, var(--mc-secondary-container)) 12%, transparent);
 
     .material-symbols-outlined {
-      font-size: 1.2rem;
+      font-size: 19px;
     }
 
     &--student {
-      color: var(--mc-primary-container);
-      background: rgba(255, 107, 44, 0.12);
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
     }
   }
 
   strong {
     @include type-body-small;
-    font-weight: var(--font-weight-semibold);
-    color: var(--mc-on-surface);
+    @include type-weight-semibold;
+    color: var(--ink);
     text-align: center;
   }
 
@@ -426,39 +429,41 @@
     min-width: 0;
     margin: 0;
     @include type-metadata;
-    color: var(--mc-on-surface-variant);
+    color: var(--muted);
   }
 }
 
 .org-picker-actions {
-  margin-top: 0.25rem;
+  margin-top: var(--ds-space-1, 4px);
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0.85rem;
+  gap: var(--ds-space-4, 16px);
 }
 
 .org-picker-footnote {
   margin: 0;
   text-align: center;
   @include type-caption;
-  color: var(--mc-on-surface-variant);
+  color: var(--muted);
 }
 
 .org-picker-back {
   align-self: center;
-  padding: 0.65rem 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
+  padding: var(--ds-space-3, 12px) var(--ds-space-5, 24px);
+  border: 1px solid var(--line);
+  border-radius: var(--ds-radius-full, 999px);
   background: transparent;
-  color: var(--mc-on-surface-variant);
+  color: var(--muted);
   @include type-button;
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition:
+    color var(--ds-motion-fast, 150ms) ease,
+    border-color var(--ds-motion-fast, 150ms) ease;
 
   &:hover:not(:disabled) {
-    color: var(--mc-primary);
-    border-color: rgba(255, 107, 44, 0.45);
+    color: var(--accent);
+    border-color: var(--accent);
   }
 
   &:disabled {
@@ -471,12 +476,12 @@
   align-self: center;
   @include type-body-small;
   @include type-link;
-  color: var(--mc-on-surface-variant);
+  color: var(--muted);
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color var(--ds-motion-fast, 150ms) ease;
 
   &:hover {
-    color: var(--mc-primary);
+    color: var(--accent);
   }
 }
 
