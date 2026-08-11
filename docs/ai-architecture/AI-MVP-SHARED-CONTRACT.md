@@ -79,6 +79,7 @@ Do **not** send `parentId` / `parentType` / file `role` / `r2Key` on library or 
   "storageKey": "library/....pdf",
   "visibility": "private",
   "status": "processing",
+  "role": "teacher",
   "creation_date": "...",
   "modification_date": "...",
   "key": "library/....pdf",
@@ -115,8 +116,19 @@ RAG uses only `library_files = true` and `status = ready`.
 | `file` | binary (required) |
 | `bucket_name` | `library` **or** |
 | `library_files` | `true` |
+| `role` | **required** — session login type: `organization` \| `teacher` \| `student` |
 | `visibility` | default `private` |
 | `description` | optional |
+
+Do **not** send `createdBy` / `uploadedBy` / `organizationId` — Logic derives them from JWT + `role`:
+
+| `role` | `createdBy` / `uploadedBy` | `organizationId` |
+| ------ | -------------------------- | ---------------- |
+| `organization` | org id (JWT) | org id (JWT) |
+| `teacher` | user id (JWT) | null |
+| `student` | user id (JWT) | null |
+
+Missing/invalid `role` → `400` `{ "error": "Library upload requires role", "details": "…" }`.
 
 **Success:**
 
@@ -133,8 +145,10 @@ Logic then calls Shared AI `POST {AI_SERVICE_URL}/ingest` with `app_id` + `callb
 
 ### List
 
-`GET /file/library` — JWT  
+`GET /file/library?role=organization|teacher|student` — JWT  
 `{ "success": true, "data": [ /* filtered library files */ ] }`
+
+`role` is the same session login type used on upload. Response objects include `role`, `status`, `storageKey` / URL.
 
 ### Delete
 
@@ -154,10 +168,17 @@ All `/chat/*` require JWT. Logic proxies ask to Shared AI and persists messages.
 `POST /chat`
 
 ```json
-{ "question": "What is Newton second law?", "conversation_id": "optional-uuid" }
+{
+  "question": "What is Newton second law?",
+  "conversation_id": "optional-uuid",
+  "role": "teacher"
+}
 ```
 
 (`message` alias for `question`.)
+
+**`role` required** — session login type: `organization` \| `teacher` \| `student` (same as library).  
+Do **not** send `organization_id` / `created_by` — Logic derives them from JWT + `role`.
 
 ```json
 {
@@ -200,11 +221,10 @@ Message `role` is `user` \| `assistant` \| `system` (not the app role).
 
 ## 5. Frontend checklist
 
-1. Library: `GET/DELETE /file/library`, upload with JWT + `library_files`/`bucket_name=library` + `visibility`; show `status` / `storageKey`.
-2. AI Mode: `/chat` + conversations CRUD; send Bearer; render `citations`.
-3. Do not send `parentId` / `parentType` / file `role` / `r2Key`.
+1. Library: `GET/DELETE /file/library` (list with `?role=`), upload with JWT + `library_files`/`bucket_name=library` + session **`role`** + `visibility`; show `status` / `storageKey`.
+2. AI Mode: `/chat` + conversations CRUD; send Bearer + session **`role`**; render `citations`.
+3. Do not send `parentId` / `parentType` / file `r2Key` / body `createdBy` / `uploadedBy` / `organizationId`. **Do** send session `role` on library upload/list and chat ask.
 4. Do **not** call Shared AI or `/file/ingest-status` directly.
-
 ---
 
 ## 6. Quick route map (Logic Service — browser facing)

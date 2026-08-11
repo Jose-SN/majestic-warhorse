@@ -28,6 +28,7 @@ import {
   LibraryUserRole,
   LibraryUserUsage,
   LibraryVisibility,
+  resolveLibrarySessionRole,
 } from './models/library.models';
 
 type LibraryTab = { id: LibraryTabId; label: string };
@@ -318,6 +319,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     if (!files.length) {
       return;
     }
+    this.resolveUser();
     this.uploading = true;
     this.uploadProgress = 8;
 
@@ -568,8 +570,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   private resolveUser(): void {
     const info: UserModel = this.commonService.loginedUserInfo ?? ({} as UserModel);
-    const role = (info.role || sessionStorage.getItem('loginType') || 'student') as LibraryUserRole;
-    this.role = ['organization', 'teacher', 'student'].includes(role) ? role : 'student';
+    this.role = resolveLibrarySessionRole(
+      info.role,
+      sessionStorage.getItem('loginType')
+    );
     this.currentUserId = String(info.id || `${this.role}-local`);
     if (this.role === 'organization') {
       this.currentUserName = info.name?.trim() || 'Organization';

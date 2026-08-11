@@ -84,11 +84,11 @@ Bearer JWT attached via `header.interceptor` for authenticated calls. Prefer thi
 | FE source | Method | Path | Notes |
 |-----------|--------|------|-------|
 | `common-api.service.ts` | POST | `file/upload` | Course / general uploads |
-| `library.service.ts` | POST | `file/upload` | Library: `library_files=true`, `bucket_name=library`, `visibility` |
-| `library.service.ts` | GET | `file/library` | List + **poll ingest status** |
+| `library.service.ts` | POST | `file/upload` | Library: `library_files=true`, `bucket_name=library`, session `role`, `visibility` |
+| `library.service.ts` | GET | `file/library?role=` | List + **poll ingest status** (session role) |
 | `library.service.ts` | DELETE | `file/library/:id` | |
 | `file-download-api.service.ts` | POST | `file/get-blob` | |
-| `chat-api.service.ts` | POST | `chat` | AI ask (`question`, optional `conversation_id`) |
+| `chat-api.service.ts` | POST | `chat` | AI ask (`question`, session `role`, optional `conversation_id`) |
 | `chat-api.service.ts` | GET | `chat/conversations` | |
 | `chat-api.service.ts` | GET | `chat/conversations/:id` | |
 | `chat-api.service.ts` | DELETE | `chat/conversations/:id` | |
@@ -114,14 +114,14 @@ Normative detail: [AI-MVP-SHARED-CONTRACT.md](./ai-architecture/AI-MVP-SHARED-CO
 
 | Area | Before (legacy / course-media style) | After (AI MVP — Phase 1) |
 |------|--------------------------------------|---------------------------|
-| Library list | Often `GET /file/get?bucket_name=library` or generic file lists | **`GET /file/library`** (preferred for Library UI) |
+| Library list | Often `GET /file/get?bucket_name=library` or generic file lists | **`GET /file/library?role=`** (session login type); preferred for Library UI |
 | Library delete | Generic `DELETE /file/delete/:id` | **`DELETE /file/library/:fileId`** |
-| Library upload | `POST /file/upload` file only | Same path + **`library_files=true`** and/or **`bucket_name=library`** + **`visibility`** (+ optional `description`); JWT required |
-| File model for AI | Docs historically mentioned `parentId` / `parentType` / file `role` / `r2Key` on library payloads | **Do not send** those on library/AI flows. Course media uses **`course_files` / `chapter_files`** junctions. Object path = **`storageKey`** |
-| Ingest progress | N/A or direct AI polling | Logic sets `status`: `pending` → `processing` → `ready` \| `failed`. FE **re-lists** `/file/library`. **Never** call `/file/ingest-status` from browser |
+| Library upload | `POST /file/upload` file only | Same path + **`library_files=true`** / **`bucket_name=library`** + session **`role`** + **`visibility`** (+ optional `description`); JWT required. Do **not** send `createdBy` / `uploadedBy` / `organizationId` |
+| File model for AI | Docs historically mentioned `parentId` / `parentType` / `r2Key` on library payloads | **Do not send** those. Session **`role`** (`organization`\|`teacher`\|`student`) **is required** for library. Course media uses junctions. Object path = **`storageKey`** |
+| Ingest progress | N/A or direct AI polling | Logic sets `status`: `pending` → `processing` → `ready` \| `failed`. FE **re-lists** `/file/library?role=`. **Never** call `/file/ingest-status` from browser |
 | RAG corpus | — | Only `library_files=true` **and** `status=ready` (Phase 1). Course attachments = Phase 2 |
-| Chat | — / stubs | **`POST /chat`** `{ question, conversation_id? }` + conversations CRUD. No chat file uploads for RAG |
-| Auth body fields | Clients sometimes sent `organization_id` / `created_by` / uploader role | Logic resolves org/user/role from **JWT** |
+| Chat | — / stubs | **`POST /chat`** `{ question, role, conversation_id? }` + conversations CRUD. No chat file uploads for RAG |
+| Auth body fields | Clients sometimes sent `organization_id` / `created_by` | Logic derives org/user from **JWT + session `role`** |
 
 Phase 2 (course files in RAG): [PHASE-2-COURSE-RAG.md](./ai-architecture/PHASE-2-COURSE-RAG.md) — **do not change** Phase 1 library rules until scheduled.
 
@@ -138,10 +138,10 @@ Phase 2 (course files in RAG): [PHASE-2-COURSE-RAG.md](./ai-architecture/PHASE-2
 
 | UI screen | Method | Path | Headers |
 |-----------|--------|------|---------|
-| Library list / poll | `GET` | `/file/library` | `Authorization: Bearer` |
-| Library upload | `POST` | `/file/upload` | Bearer + multipart (`library_files` / `bucket_name=library`, `visibility`) |
+| Library list / poll | `GET` | `/file/library?role=` | `Authorization: Bearer` |
+| Library upload | `POST` | `/file/upload` | Bearer + multipart (`library_files` / `bucket_name=library`, session `role`, `visibility`) |
 | Library delete | `DELETE` | `/file/library/:fileId` | Bearer |
-| AI Mode ask | `POST` | `/chat` | Bearer |
+| AI Mode ask | `POST` | `/chat` | Bearer + body `role` |
 | AI Mode history | `GET`/`DELETE` | `/chat/conversations[/:id]` | Bearer |
 | Register / invite teacher | `POST` | `/teachers/save` | Bearer (IAM sync) |
 | Register / invite student | `POST` | `/students/save` | Bearer (IAM sync) |
@@ -666,12 +666,12 @@ Returns the courses created by the teachers the student is assigned to. When
 
 Object storage (R2 / S3-compatible). Upload returns a public CDN URL (and library metadata when applicable).
 
-**AI MVP:** Library UI must use `/file/library` + library upload fields. Do **not** send `parentId` / `parentType` / file `role` / `r2Key` on library flows. Full contract: [AI-MVP-SHARED-CONTRACT.md](./ai-architecture/AI-MVP-SHARED-CONTRACT.md). Diffs: [AI MVP API changes](#ai-mvp-api-changes).
+**AI MVP:** Library UI must use `/file/library?role=` + library upload fields including session **`role`**. Do **not** send `parentId` / `parentType` / `r2Key` / `createdBy` / `uploadedBy` / `organizationId`. Full contract: [AI-MVP-SHARED-CONTRACT.md](./ai-architecture/AI-MVP-SHARED-CONTRACT.md). Diffs: [AI MVP API changes](#ai-mvp-api-changes).
 
 ### Library list (preferred for Library UI)
-`GET /file/library` — **JWT required**
+`GET /file/library?role=organization|teacher|student` — **JWT required**
 
-Returns library files filtered for the caller (`visibility` + org). Includes `status`, `storageKey`, `visibility`.
+`role` = session login type (same as upload). Returns library files for that role. Includes `role`, `status`, `storageKey`, `visibility`.
 
 FE polls this while any file is `pending` / `processing` (never call `/file/ingest-status`).
 
@@ -752,10 +752,14 @@ Used for course/chapter media metadata (not the Library RAG path). Course links 
 | `file` | file | Required |
 | `bucket_name` | string | e.g. `course`, or `library` for Library RAG |
 | `library_files` | string/bool | `true` for Library / RAG ingest |
+| `role` | string | **Required for library** — session login type: `organization` \| `teacher` \| `student` |
 | `visibility` | string | `organization` \| `teacher` \| `student` \| `private` (library; default `private`) |
 | `description` | string | Optional (library) |
 
-**JWT required** when uploading as a library file.
+**JWT required** when uploading as a library file.  
+Do **not** send `createdBy` / `uploadedBy` / `organizationId` — Logic derives them from JWT + `role`.
+
+Missing/invalid library `role` → `400` `{ "error": "Library upload requires role", "details": "…" }`.
 
 **Response `200` (library example):**
 ```json
@@ -1312,7 +1316,7 @@ When `notifications.notify_student` is `true` and visibility is `student_visible
 JWT required on all routes. Org/user from JWT. Proxies questions to the Shared AI service when `AI_ENABLED=true`.
 
 **Contract:** [AI-MVP-SHARED-CONTRACT.md](./ai-architecture/AI-MVP-SHARED-CONTRACT.md) §3  
-**FE:** `chat-api.service.ts` — body is `question` + optional `conversation_id` only (no chat file uploads for RAG).
+**FE:** `chat-api.service.ts` — body is `question` + session **`role`** + optional `conversation_id` (no chat file uploads for RAG).
 
 ### Ask
 `POST /chat`
@@ -1321,20 +1325,23 @@ JWT required on all routes. Org/user from JWT. Proxies questions to the Shared A
 ```json
 {
   "question": "What is covered in module 1?",
+  "role": "teacher",
   "conversation_id": "optional-uuid"
 }
 ```
 
+`role` required: `organization` \| `teacher` \| `student` (from login session). Do not send `organization_id` / `created_by`.
+
 **Response `200`:** `conversation_id`, `answer`, `citations[]`, optional persisted `message`.
 
 ### List conversations
-`GET /chat/conversations`
+`GET /chat/conversations?role=`
 
 ### Get conversation (+ messages)
-`GET /chat/conversations/:id`
+`GET /chat/conversations/:id?role=`
 
 ### Delete conversation
-`DELETE /chat/conversations/:id`
+`DELETE /chat/conversations/:id?role=`
 
 ---
 

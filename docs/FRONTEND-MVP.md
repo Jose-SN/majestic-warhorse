@@ -19,9 +19,10 @@ Do not duplicate API payloads or service internals here — use the links below.
 
 | Checklist item | Status |
 | -------------- | ------ |
-| Library `GET/DELETE /file/library`, upload with `library_files` / `bucket_name=library` + `visibility` | Done |
+| Library `GET/DELETE /file/library`, upload with `library_files` / `bucket_name=library` + session `role` + `visibility` | Done |
 | Show `status` + `storageKey`; poll list while `pending`/`processing` (never `/file/ingest-status`) | Done |
-| AI Mode `/chat` + conversations CRUD; Bearer via interceptor; render `citations` | Done |
-| Do not send `parentId` / `parentType` / file `role` / `r2Key` | Done |
+| AI Mode `/chat` + conversations CRUD; Bearer + session `role`; render `citations` | Done |
+| Do not send `parentId` / `parentType` / file `role` / `r2Key` / `createdBy` / `uploadedBy` / `organizationId` | Done |
 | Chat attachments not sent to `/chat` — use Library for RAG | Done |
 | Talk only to Logic — never Shared AI or `/file/ingest-status` | Done |
+| List with `GET /file/library?role=` from login type (`organization` \| `teacher` \| `student`) | Done |

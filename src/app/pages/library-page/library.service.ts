@@ -22,6 +22,7 @@ import {
   LibraryUserRole,
   LibraryUserUsage,
   LibraryVisibility,
+  resolveLibrarySessionRole,
 } from './models/library.models';
 
 /** Logic Service library file row (camelCase + snake_case tolerant). */
@@ -51,6 +52,8 @@ type BackendLibraryFile = {
   storage_key?: string;
   visibility?: LibraryVisibility | string;
   status?: LibraryIngestStatus | string;
+  /** Uploader session role returned by Logic (organization | teacher | student). */
+  role?: LibraryUserRole | string;
   creation_date?: string;
   modification_date?: string;
   created_at?: string;
@@ -94,7 +97,7 @@ export class LibraryService {
       return of({ ...this.demoStats }).pipe(delay(280));
     }
 
-    return this.fetchLibraryFiles().pipe(
+    return this.fetchLibraryFiles(role).pipe(
       map((files) => this.computeStats(files)),
       catchError(() => of(this.emptyStats()))
     );
@@ -121,7 +124,7 @@ export class LibraryService {
       );
     }
 
-    return this.fetchLibraryFiles().pipe(
+    return this.fetchLibraryFiles(role).pipe(
       map((files) => this.filterFiles(files, query, role, currentUserId)),
       catchError(() =>
         of({
@@ -147,6 +150,7 @@ export class LibraryService {
       return throwError(() => new Error(validationError));
     }
 
+    const sessionRole = resolveLibrarySessionRole(role);
     const visibility: LibraryVisibility = options.visibility || 'private';
 
     if (isDemoMode) {
@@ -161,7 +165,7 @@ export class LibraryService {
         sizeBytes: file.size,
         uploadedById: userId,
         uploadedByName: userName,
-        uploadedByRole: role,
+        uploadedByRole: sessionRole,
         uploadedAt: new Date().toISOString(),
         previewUrl: category === 'image' ? URL.createObjectURL(file) : undefined,
         downloadUrl: URL.createObjectURL(file),
@@ -177,13 +181,16 @@ export class LibraryService {
     }
 
     const formData = new FormData();
-    formData.append('file', file);
+    // Text fields first so multipart parsers always see `role` with the library file.
+    formData.append('role', sessionRole);
     formData.append('bucket_name', 'library');
     formData.append('library_files', 'true');
     formData.append('visibility', visibility);
     if (options.description?.trim()) {
       formData.append('description', options.description.trim());
     }
+    formData.append('file', file, file.name);
+    // Do NOT send createdBy / uploadedBy / organizationId — Logic derives from JWT + role.
 
     return this.http
       .post<LibraryUploadResponse>(`${this.apiUrl}file/upload`, formData)
@@ -210,6 +217,7 @@ export class LibraryService {
             sizeBytes: file.size,
             uploadedById: userId,
             uploadedByName: userName,
+            uploadedByRole: sessionRole,
             uploadedAt: new Date().toISOString(),
             previewUrl: category === 'image' ? url : undefined,
             downloadUrl: url,
@@ -220,6 +228,16 @@ export class LibraryService {
             description: options.description,
           };
           return { item };
+        }),
+        catchError((err) => {
+          const body = err?.error;
+          const details =
+            (typeof body?.details === 'string' && body.details) ||
+            (typeof body?.error === 'string' && body.error) ||
+            (typeof body?.message === 'string' && body.message) ||
+            err?.message ||
+            'Upload failed';
+          return throwError(() => new Error(details));
         })
       );
   }
@@ -309,8 +327,10 @@ export class LibraryService {
     }
   }
 
-  private fetchLibraryFiles(): Observable<LibraryFileItem[]> {
-    return this.http.get<LibraryListResponse>(`${this.apiUrl}file/library`).pipe(
+  private fetchLibraryFiles(sessionRole: LibraryUserRole): Observable<LibraryFileItem[]> {
+    const role = resolveLibrarySessionRole(sessionRole);
+    const params = { role };
+    return this.http.get<LibraryListResponse>(`${this.apiUrl}file/library`, { params }).pipe(
       map((res) => {
         const rows = Array.isArray(res)
           ? res
@@ -354,6 +374,7 @@ export class LibraryService {
     const uploadedById = (row.uploadedBy || row.uploaded_by || row.createdBy || row.created_by || 'unknown').toString();
     const visibility = this.normalizeVisibility(row.visibility);
     const status = this.normalizeStatus(row.status);
+    const uploadedByRole = this.normalizeUserRole(row.role);
 
     return {
       id: id || storageKey || fileName,
@@ -364,6 +385,7 @@ export class LibraryService {
       sizeBytes,
       uploadedById,
       uploadedByName: (row.uploadedByName || row.uploaded_by_name || 'Library').toString(),
+      uploadedByRole,
       uploadedAt: new Date(uploadedAt).toISOString(),
       previewUrl: url || undefined,
       downloadUrl: url || undefined,
@@ -373,6 +395,10 @@ export class LibraryService {
       storageKey: storageKey || undefined,
       description: row.description || undefined,
     };
+  }
+
+  private normalizeUserRole(value?: string): LibraryUserRole | undefined {
+    return value ? resolveLibrarySessionRole(value) : undefined;
   }
 
   private normalizeVisibility(value?: string): LibraryVisibility | undefined {

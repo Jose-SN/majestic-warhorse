@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CommonService } from 'src/app/shared/services/common.service';
+import { resolveSessionRole, type AppSessionRole } from 'src/app/shared/utils/session-role.util';
 import { environment } from 'src/environments/environment';
 
 export type ChatMessageRole = 'user' | 'assistant' | 'system';
@@ -45,6 +46,8 @@ export type ChatConversation = {
 export type ChatAskRequest = {
   question: string;
   conversation_id?: string;
+  /** Session login type — required by Logic. */
+  role?: AppSessionRole;
 };
 
 export type ChatAskResult = {
@@ -77,8 +80,10 @@ export class ChatApiService {
   ) {}
 
   ask(payload: ChatAskRequest): Observable<ChatAskResult> {
+    const role = payload.role || this.resolveCallerRole();
     const body: ChatAskRequest = {
       question: payload.question,
+      role,
       ...(payload.conversation_id ? { conversation_id: payload.conversation_id } : {}),
     };
 
@@ -91,8 +96,12 @@ export class ChatApiService {
   }
 
   listConversations(): Observable<ChatConversation[]> {
+    const role = this.resolveCallerRole();
     return this.http
-      .get<ApiEnvelope<ChatConversation[]> | ChatConversation[]>(`${this.apiUrl}chat/conversations`)
+      .get<ApiEnvelope<ChatConversation[]> | ChatConversation[]>(
+        `${this.apiUrl}chat/conversations`,
+        { params: { role } }
+      )
       .pipe(
         map((res) => this.asArray<ChatConversation>(res)),
         catchError(this.commonService.handleError)
@@ -100,12 +109,15 @@ export class ChatApiService {
   }
 
   getConversation(id: string): Observable<ChatConversationDetail> {
+    const role = this.resolveCallerRole();
     return this.http
       .get<
         | ApiEnvelope<ChatConversationDetail>
         | ChatConversationDetail
         | { conversation: ChatConversation; messages: ChatMessage[] }
-      >(`${this.apiUrl}chat/conversations/${encodeURIComponent(id)}`)
+      >(`${this.apiUrl}chat/conversations/${encodeURIComponent(id)}`, {
+        params: { role },
+      })
       .pipe(
         map((res) => this.unwrapConversationDetail(res)),
         catchError(this.commonService.handleError)
@@ -113,12 +125,20 @@ export class ChatApiService {
   }
 
   deleteConversation(id: string): Observable<void> {
+    const role = this.resolveCallerRole();
     return this.http
-      .delete(`${this.apiUrl}chat/conversations/${encodeURIComponent(id)}`)
+      .delete(`${this.apiUrl}chat/conversations/${encodeURIComponent(id)}`, {
+        params: { role },
+      })
       .pipe(
         map(() => void 0),
         catchError(this.commonService.handleError)
       );
+  }
+
+  private resolveCallerRole(): AppSessionRole {
+    const info = this.commonService.loginedUserInfo;
+    return resolveSessionRole(info?.role, sessionStorage.getItem('loginType'));
   }
 
   private unwrapAsk(res: ApiEnvelope<ChatAskResult> | ChatAskResult): ChatAskResult {

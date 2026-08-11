@@ -26,7 +26,7 @@ export type LibraryFileItem = {
   sizeBytes: number;
   uploadedById: string;
   uploadedByName: string;
-  /** Present in demo data; live library files use `visibility` instead of uploader role. */
+  /** Present in demo data; live library files use `visibility` + response `role`. */
   uploadedByRole?: LibraryUserRole;
   uploadedAt: string;
   previewUrl?: string;
@@ -74,6 +74,7 @@ export type LibraryFilesQuery = {
   type?: LibraryFileCategory | 'all';
   tab?: LibraryTabId;
   uploadedBy?: string;
+  /** Client-side usage filter only (org UI). Session login role is sent separately as `?role=` to Logic. */
   role?: LibraryUserRole | 'all';
 };
 
@@ -92,3 +93,9 @@ export type LibraryUploadOptions = {
   visibility?: LibraryVisibility;
   description?: string;
 };
+
+export {
+  resolveSessionRole as resolveLibrarySessionRole,
+  type AppSessionRole,
+} from 'src/app/shared/utils/session-role.util';
+
