@@ -66,7 +66,7 @@
   .search-left {
     @include flex(flex, null, space-between, center);
     flex: 1;
-    max-width: 480px;
+    max-width: 650px;
     justify-content: flex-end;
   }
 
@@ -78,7 +78,7 @@
     .input-holder {
       position: relative;
       width: 100%;
-      max-width: 320px;
+      max-width: 450px;
 
       input {
         @include type-form-input;

@@ -854,6 +854,19 @@ export class DashboardOverviewComponent implements OnDestroy {
     }
   }
 
+  openRecommendedCourse(item: RecommendedCourseItem, event?: Event): void {
+    event?.stopPropagation();
+    const title = (item.title || '').trim().toLowerCase();
+    const live =
+      this.courseLists.find((c) => c.id === item.id) ||
+      this.courseLists.find((c) => (c.courseTitle || '').trim().toLowerCase() === title);
+    if (live) {
+      this.openCourseDetailsPage(live);
+      return;
+    }
+    void this.router.navigate([DASHBOARD_NAV_ROUTES.courses]);
+  }
+
   getCurrentTime() {
     const currentDate = new Date();
     this.refreshTime = this.datePipe.transform(currentDate, 'MMMM dd, yyyy hh:mm a') ?? '';
