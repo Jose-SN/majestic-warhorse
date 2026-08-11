@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
-import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
+import { IamFacade } from 'src/app/store/iam/iam.facade';
 import { MailApiService } from 'src/app/services/api-service/mail-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
-import type { Organization } from 'src/app/models/organization.model';
 
 export interface StudentApprovalRecipient {
   rosterRowId: string;
@@ -15,7 +14,7 @@ export interface StudentApprovalRecipient {
 export class ApprovalNotificationService {
   constructor(
     private mailApi: MailApiService,
-    private organizationApi: OrganizationApiService,
+    private iam: IamFacade,
     private commonService: CommonService
   ) {}
 
@@ -68,22 +67,13 @@ export class ApprovalNotificationService {
       return of('Your organization');
     }
 
-    return this.organizationApi.getOrganizations().pipe(
-      map((response) => {
-        const organizations = this.extractOrganizations(response);
+    return this.iam.loadOrganizations().pipe(
+      map((organizations) => {
         const match = organizations.find((organization) => organization.id === organizationId);
         return match?.name?.trim() || 'Your organization';
       }),
       catchError(() => of('Your organization'))
     );
-  }
-
-  private extractOrganizations(response: unknown): Organization[] {
-    if (Array.isArray(response)) {
-      return response as Organization[];
-    }
-    const data = (response as { data?: Organization[] })?.data;
-    return Array.isArray(data) ? data : [];
   }
 
   private buildStudentApprovalEmailBody(organizationName: string, studentName?: string): string {

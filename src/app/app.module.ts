@@ -17,6 +17,12 @@ import { CommonDialogComponent } from './components/common-dialog/common-dialog.
 import { DatePipe } from '@angular/common';
 import { PortalModule } from '@angular/cdk/portal';
 import { FormsModule } from '@angular/forms';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from 'src/environments/environment';
+import { actionSanitizer, metaReducers, reducers, stateSanitizer } from './store';
+import { IamEffects } from './store/iam/iam.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,6 +43,32 @@ import { FormsModule } from '@angular/forms';
     StarRatingModule.forRoot(),
     CommonDialogComponent,
     PortalModule,
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true,
+        strictStateSerializability: !environment.production,
+        strictActionSerializability: !environment.production,
+        strictActionWithinNgZone: !environment.production,
+        strictActionTypeUniqueness: true,
+      },
+    }),
+    EffectsModule.forRoot([IamEffects]),
+    ...(environment.production
+      ? []
+      : [
+          StoreDevtoolsModule.instrument({
+            maxAge: 25,
+            logOnly: false,
+            connectInZone: true,
+            actionSanitizer,
+            stateSanitizer,
+            features: {
+              persist: false,
+            },
+          }),
+        ]),
   ],
   providers: [
     // { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true },

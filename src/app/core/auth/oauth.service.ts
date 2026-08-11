@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseService } from './supabase.service';
-import { IamUser, UserOAuthService, UserSyncPayload } from './user-oauth.service';
-import {
-  IamOrganization,
-  OrganizationOAuthService,
-  OrganizationSyncPayload,
-} from './organization-oauth.service';
+import { IamUser, UserSyncPayload } from './user-oauth.service';
+import { IamOrganization, OrganizationSyncPayload } from './organization-oauth.service';
+import { IamFacade } from 'src/app/store/iam/iam.facade';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { PostLoginWorkflowService } from './post-login-workflow.service';
 import { AppContextService } from '../app-context.service';
@@ -23,8 +20,7 @@ export class OAuthService {
 
   constructor(
     private supabaseService: SupabaseService,
-    private userOAuthService: UserOAuthService,
-    private organizationOAuthService: OrganizationOAuthService,
+    private iam: IamFacade,
     private postLoginWorkflow: PostLoginWorkflowService,
     private appContext: AppContextService,
     private commonService: CommonService,
@@ -145,7 +141,7 @@ export class OAuthService {
     accessToken: string;
   }): Promise<void> {
     // 1. Check whether the user already exists on the IAM backend.
-    let iamUser: IamUser | null = await this.userOAuthService.getUserByEmail(ctx.email);
+    let iamUser: IamUser | null = await this.iam.loadUserByEmail(ctx.email);
 
     // 2. If not found, create the user via user/sync (find-or-create).
     if (!iamUser) {
@@ -166,7 +162,7 @@ export class OAuthService {
         },
       };
 
-      const syncResponse = await this.userOAuthService.syncUser(payload);
+      const syncResponse = await this.iam.syncUser(payload);
       if (!syncResponse?.success) {
         throw new Error(syncResponse?.message || 'Failed to sync your account. Please try again.');
       }
@@ -174,7 +170,7 @@ export class OAuthService {
       iamUser = syncResponse.data ?? null;
       // user/sync may only echo { id, status }; re-fetch the full profile.
       if (!iamUser?.contact?.email) {
-        iamUser = (await this.userOAuthService.getUserByEmail(ctx.email)) ?? iamUser;
+        iamUser = (await this.iam.loadUserByEmail(ctx.email)) ?? iamUser;
       }
     }
 
@@ -202,7 +198,7 @@ export class OAuthService {
   }): Promise<void> {
     // 1. Check whether the organization already exists on the IAM backend.
     let iamOrg: IamOrganization | null =
-      await this.organizationOAuthService.getOrganizationByEmail(ctx.email);
+      await this.iam.loadOrganizationByEmail(ctx.email);
 
     // 2. If not found, create the organization via organization/sync.
     if (!iamOrg) {
@@ -220,7 +216,7 @@ export class OAuthService {
         },
       };
 
-      const syncResponse = await this.organizationOAuthService.syncOrganization(payload);
+      const syncResponse = await this.iam.syncOrganization(payload);
       if (!syncResponse?.success) {
         throw new Error(
           syncResponse?.message || 'Failed to sync your organization. Please try again.'
@@ -230,7 +226,7 @@ export class OAuthService {
       iamOrg = syncResponse.data ?? null;
       // organization/sync may only echo minimal fields; re-fetch the full profile.
       if (!iamOrg?.contact?.email) {
-        iamOrg = (await this.organizationOAuthService.getOrganizationByEmail(ctx.email)) ?? iamOrg;
+        iamOrg = (await this.iam.loadOrganizationByEmail(ctx.email)) ?? iamOrg;
       }
     }
 

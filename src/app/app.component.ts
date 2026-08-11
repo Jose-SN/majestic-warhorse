@@ -8,9 +8,8 @@ import { CommonDialogComponent } from './components/common-dialog/common-dialog.
 import { COMPONENT_NAME } from './constants/popup-constants';
 import { FileViwerComponent } from './components/file-viwer/file-viwer.component';
 import { AssignTeachersComponent } from './components/assign-teachers/assign-teachers.component';
-import { ApplicationApiService } from './services/api-service/application-api.service';
 import { AppContextService } from './core/app-context.service';
-import { environment } from 'src/environments/environment';
+import { AuthService } from './services/api-service/auth.service';
 import { DashboardService } from './pages/dashboard/dashboard.service';
 import {
   HealthCheckService,
@@ -37,8 +36,8 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private commonService: CommonService,
-    private applicationApiService: ApplicationApiService,
     private appContext: AppContextService,
+    private authService: AuthService,
     private dashboardService: DashboardService,
     private healthCheckService: HealthCheckService,
     private brandingService: BrandingService,
@@ -59,26 +58,6 @@ export class AppComponent implements OnInit, OnDestroy {
       console.error('Error loading application context:', error);
     });
 
-    // Legacy application bootstrap (kept for compatibility)
-    this.applicationApiService
-      .getApplications()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          if (response.data.length > 0) {
-            const app = response.data.find((item: any) => item.client_id === environment.client_id);
-            if (app) {
-              sessionStorage.setItem('application', JSON.stringify(app));
-              sessionStorage.setItem('client_id', app.client_id);
-              sessionStorage.setItem('app_id', app.id);
-            }
-          }
-        },
-        error: (error) => {
-          console.error('Error loading application data:', error);
-        },
-      });
-
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.activeRouteName = event?.url?.split('/')?.[1]?.toUpperCase();
@@ -96,7 +75,9 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.closeModel();
       });
-    this.dashboardService.getAllUsers();
+    if (this.authService.isLoggedIn()) {
+      this.dashboardService.getAllUsers();
+    }
   }
 
   retryHealthCheck(): void {

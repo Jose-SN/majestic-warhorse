@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { UserOAuthService } from 'src/app/core/auth/user-oauth.service';
+import { IamFacade } from 'src/app/store/iam/iam.facade';
 import { StudentsApiService } from './students-api.service';
 import { TeachersApiService } from './teachers-api.service';
 
@@ -20,7 +20,7 @@ export interface RegisterOnRosterInput {
 @Injectable({ providedIn: 'root' })
 export class RosterRegistrationService {
   constructor(
-    private userOAuth: UserOAuthService,
+    private iam: IamFacade,
     private teachersApi: TeachersApiService,
     private studentsApi: StudentsApiService
   ) {}
@@ -37,7 +37,7 @@ export class RosterRegistrationService {
     let lastName = input.lastName || '';
 
     if (!userId && input.email) {
-      const iamUser = await this.userOAuth.getUserByEmail(input.email);
+      const iamUser = await this.iam.loadUserByEmail(input.email);
       if (iamUser?.id) {
         userId = iamUser.id;
         firstName = firstName || iamUser.first_name || '';

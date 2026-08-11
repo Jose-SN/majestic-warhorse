@@ -15,7 +15,7 @@ import { UserModel, isOrganization } from '../login-page/model/user-model';
 import type { Organization } from 'src/app/models/organization.model';
 import { CommonModule } from '@angular/common';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
-import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
+import { IamFacade } from 'src/app/store/iam/iam.facade';
 import { decodeText } from 'src/app/shared/utils/utils';
 import { BrandingService } from 'src/app/core/branding/branding.service';
 import { AppBranding } from 'src/app/core/branding/branding.model';
@@ -63,7 +63,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     private formBuilder: FormBuilder,
     private commonService: CommonService,
     public registrationService: RegistrationPageService,
-    private organizationApiService: OrganizationApiService,
+    private iam: IamFacade,
     private oauthService: OAuthService,
     private brandingService: BrandingService
   ) {
@@ -238,14 +238,13 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   }
 
   loadOrganizations(): void {
-    this.organizationApiService
-      .getOrganizations()
+    this.iam
+      .loadOrganizations()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response) => {
-          const data = Array.isArray(response) ? response : (response as any)?.data;
-          this.organizationsList = data ?? [];
-          if (data.length > 0) {
+        next: (organizations) => {
+          this.organizationsList = organizations ?? [];
+          if (this.organizationsList.length > 0) {
             this.createAccountForm.get('organization_id')?.setValue(this.organizationsList[0].id);
           }
         },

@@ -1,34 +1,23 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from 'src/app/services/api-service/auth.service';
-import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
 import { IPassWordUpdate } from './model';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { IamFacade } from 'src/app/store/iam/iam.facade';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ForgotPasswordService {
   constructor(
-    private authService: AuthService,
-    private organizationApiService: OrganizationApiService,
+    private iam: IamFacade,
     private commonService: CommonService,
     private router: Router
   ) {}
 
   private getAppId(): string | null {
-    let appId = sessionStorage.getItem('app_id');
-    if (!appId) {
-      try {
-        const app = JSON.parse(sessionStorage.getItem('application') || '{}');
-        appId = app?.id || null;
-      } catch {
-        appId = null;
-      }
-    }
-    return appId;
+    return this.iam.appId || sessionStorage.getItem('app_id');
   }
 
   updatePassword(_destroy$: Subject<void>, passwordUpdatePayload: IPassWordUpdate, accountType: string = 'user') {
@@ -42,8 +31,8 @@ export class ForgotPasswordService {
         return;
       }
       const apiCall = accountType === 'organization'
-        ? this.organizationApiService.updatePassword(passwordUpdatePayload)
-        : this.authService.updatePassword(passwordUpdatePayload);
+        ? this.iam.updateOrganizationPassword(passwordUpdatePayload)
+        : this.iam.updateUserPassword(passwordUpdatePayload);
       apiCall
         .pipe(takeUntil(_destroy$))
         .subscribe({
@@ -74,8 +63,8 @@ export class ForgotPasswordService {
         password: passwordUpdatePayload.password
       };
       const apiCall = accountType === 'organization'
-        ? this.organizationApiService.validateOtp(otpPayload)
-        : this.authService.validateOtp(passwordUpdatePayload);
+        ? this.iam.confirmOrganizationPassword(otpPayload)
+        : this.iam.confirmUserPassword(passwordUpdatePayload);
       apiCall
         .pipe(takeUntil(_destroy$))
         .subscribe({

@@ -4,8 +4,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { PostLoginWorkflowService } from 'src/app/core/auth/post-login-workflow.service';
 import { UserOrganizationEntry } from 'src/app/models/organization-picker.model';
-import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
 import { AuthService } from 'src/app/services/api-service/auth.service';
+import { IamFacade } from 'src/app/store/iam/iam.facade';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { decodeText } from 'src/app/shared/utils/utils';
@@ -27,7 +27,7 @@ export class OrgPickerComponent implements OnInit {
   orgDropdownOpen = false;
 
   constructor(
-    private organizationApi: OrganizationApiService,
+    private iam: IamFacade,
     private postLoginWorkflow: PostLoginWorkflowService,
     private authService: AuthService,
     private commonService: CommonService,
@@ -133,22 +133,12 @@ export class OrgPickerComponent implements OnInit {
     }
 
     const user = this.commonService.loginedUserInfo ?? this.readUserFromSession();
-    const res: any = await firstValueFrom(
-      this.organizationApi.listOrganizationsForUser({
+    this.organizations = await firstValueFrom(
+      this.iam.loadOrganizationsForUser({
         userId: user?.id,
         email: user?.email || user?.contact?.email,
       })
     );
-    const data = res?.data ?? res ?? [];
-    const list = Array.isArray(data) ? data : [];
-    this.organizations = list
-      .map((entry: any) => ({
-        id: entry.organization?.id ?? entry.id ?? '',
-        name: entry.organization?.name ?? entry.name ?? 'Unnamed organization',
-        email: entry.organization?.contact?.email ?? entry.contact?.email,
-        membershipRole: entry.membership?.role ?? entry.role ?? entry.title,
-      }))
-      .filter((o: UserOrganizationEntry) => !!o.id);
   }
 
   displayName(name: string): string {

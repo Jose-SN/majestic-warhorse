@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from 'src/app/services/api-service/auth.service';
-import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { Subject, takeUntil } from 'rxjs';
 import { PostLoginWorkflowService } from 'src/app/core/auth/post-login-workflow.service';
+import { IamFacade } from 'src/app/store/iam/iam.facade';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ import { PostLoginWorkflowService } from 'src/app/core/auth/post-login-workflow.
 export class LoginService {
   constructor(
     private authService: AuthService,
-    private organizationApiService: OrganizationApiService,
+    private iam: IamFacade,
     private commonService: CommonService,
     private postLoginWorkflow: PostLoginWorkflowService
   ) {}
@@ -30,19 +30,7 @@ export class LoginService {
   }
 
   private getAppId(): string | null {
-    let appId = sessionStorage.getItem('app_id');
-    if (!appId) {
-      try {
-        const app = JSON.parse(sessionStorage.getItem('application') || '{}');
-        appId = app?.id || null;
-        if (appId) {
-          sessionStorage.setItem('app_id', appId);
-        }
-      } catch {
-        appId = null;
-      }
-    }
-    return appId;
+    return this.iam.appId || sessionStorage.getItem('app_id');
   }
 
   private organizationLogin(_destroy$: Subject<void>, credentials: { email: string; password: string }) {
@@ -54,14 +42,15 @@ export class LoginService {
       });
       return;
     }
-    this.organizationApiService
-      .login(credentials)
+    this.iam
+      .loginOrganization(credentials)
       .pipe(takeUntil(_destroy$))
       .subscribe({
         next: async (response) => {
-          const orgData = response?.data ?? response;
-          if (orgData && (orgData.id || orgData.name)) {
-            const jwt = orgData.jwt || orgData.token || '';
+          const orgData = ((response as { data?: Record<string, unknown> })?.data ??
+            response) as Record<string, unknown>;
+          if (orgData && (orgData['id'] || orgData['name'])) {
+            const jwt = String(orgData['jwt'] || orgData['token'] || '');
             await this.postLoginWorkflow.completeLogin({
               jwt,
               loginType: 'organization',
@@ -79,20 +68,22 @@ export class LoginService {
   }
 
   private userLogin(_destroy$: Subject<void>, credentials: { email: string; password: string }) {
-    this.authService
+    this.iam
       .loginUser(credentials)
       .pipe(takeUntil(_destroy$))
       .subscribe({
         next: async (response) => {
-          const userExist =
-            response.success === true || response.success === false ? response.data : response;
+          const body = response as { success?: boolean; data?: Record<string, unknown> };
+          const userExist = (body.success === true || body.success === false
+            ? body.data
+            : response) as Record<string, unknown> | undefined;
           if (Object.keys(userExist || {}).length) {
-            const jwt = userExist.jwt || '';
+            const jwt = String(userExist?.['jwt'] || '');
             const roleIntent = sessionStorage.getItem('pendingRoleIntent') as 'teacher' | 'student' | null;
             await this.postLoginWorkflow.completeLogin({
               jwt,
               loginType: 'user',
-              profile: userExist,
+              profile: userExist || {},
               authProvider: 'password',
               roleIntent: roleIntent ?? undefined,
             });

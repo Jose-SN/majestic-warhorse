@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { RegistrationApiService } from 'src/app/services/api-service/registration-api.service';
-import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
-import { AuthService } from 'src/app/services/api-service/auth.service';
 import { PostLoginWorkflowService } from 'src/app/core/auth/post-login-workflow.service';
 import { CommonApiService } from 'src/app/shared/api-service/common-api.service';
+import { IamFacade } from 'src/app/store/iam/iam.facade';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
 import { IRegistrationModel } from './model/registration-model';
@@ -19,9 +17,7 @@ export class RegistrationPageService {
   public MAX_FILE_SIZE: number = 5 * 1024 * 1024; // 5 MB
   public ALLOWED_FILE_TYPES: string[] = ['image/png', 'image/jpeg', 'image/jpg'];
   constructor(
-    private registrationApiService: RegistrationApiService,
-    private organizationApiService: OrganizationApiService,
-    private authService: AuthService,
+    private iam: IamFacade,
     private commonApiService: CommonApiService,
     private commonService: CommonService,
     private postLoginWorkflow: PostLoginWorkflowService
@@ -105,15 +101,7 @@ export class RegistrationPageService {
         orgPayload.profile_image = registrationInfo.profileImage;
       }
       // app_id required for organization creation
-      let appId = sessionStorage.getItem('app_id');
-      if (!appId) {
-        try {
-          const app = JSON.parse(sessionStorage.getItem('application') || '{}');
-          appId = app?.id || null;
-        } catch {
-          appId = null;
-        }
-      }
+      const appId = this.iam.appId || sessionStorage.getItem('app_id');
       if (appId) {
         orgPayload.app_id = appId;
       }
@@ -194,8 +182,8 @@ export class RegistrationPageService {
           if (shouldInclude(registrationInfo.password)) {
             orgUpdatePayload.password = registrationInfo.password;
           }
-          this.organizationApiService
-            .update(orgUpdatePayload)
+          this.iam
+            .updateOrganization(orgUpdatePayload)
             .pipe(takeUntil(_destroy$))
             .subscribe({
               next: () => {
@@ -213,8 +201,8 @@ export class RegistrationPageService {
               },
             });
         } else {
-          this.authService
-            .updateUserInfo(transformedPayload)
+          this.iam
+            .updateUser(transformedPayload as Record<string, unknown>)
             .pipe(takeUntil(_destroy$))
             .subscribe({
               next: (userUpdated) => {
@@ -239,15 +227,7 @@ export class RegistrationPageService {
       } else {
         // Organization API requires app_id in header
         if (isOrganization) {
-          let appId = sessionStorage.getItem('app_id');
-          if (!appId) {
-            try {
-              const app = JSON.parse(sessionStorage.getItem('application') || '{}');
-              appId = app?.id || null;
-            } catch {
-              appId = null;
-            }
-          }
+          const appId = this.iam.appId || sessionStorage.getItem('app_id');
           if (!appId) {
             this.showToasterMessage(
               'Application not loaded. Please refresh the page and try again.',
@@ -257,11 +237,10 @@ export class RegistrationPageService {
             return;
           }
         }
-        const apiService = isOrganization
-          ? this.organizationApiService
-          : this.registrationApiService;
-        apiService
-          .saveUserInfo(transformedPayload)
+        const save$ = isOrganization
+          ? this.iam.saveOrganization(transformedPayload as OrganizationCreatePayload)
+          : this.iam.saveUser(transformedPayload as Record<string, unknown>);
+        save$
           .pipe(takeUntil(_destroy$))
           .subscribe({
             next: async (userAdded) => {
@@ -281,7 +260,7 @@ export class RegistrationPageService {
                   sessionStorage.setItem('pendingOrganizationId', registrationInfo.organization_id);
                 }
 
-                this.authService
+                this.iam
                   .loginUser({
                     email: registrationInfo.email!,
                     password: registrationInfo.password!,
@@ -289,13 +268,13 @@ export class RegistrationPageService {
                   .pipe(takeUntil(_destroy$))
                   .subscribe({
                     next: async (response) => {
-                      const userExist =
-                        response.success === true || response.success === false
-                          ? response.data
-                          : response;
+                      const body = response as { success?: boolean; data?: Record<string, unknown> };
+                      const userExist = (body.success === true || body.success === false
+                        ? body.data
+                        : response) as Record<string, unknown> | undefined;
                       if (userExist && Object.keys(userExist).length) {
                         await this.postLoginWorkflow.completeLogin({
-                          jwt: userExist.jwt || '',
+                          jwt: String(userExist['jwt'] || ''),
                           loginType: 'user',
                           profile: userExist,
                           authProvider: 'password',

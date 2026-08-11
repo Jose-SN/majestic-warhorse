@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ISidepanel } from './modal/dashboard-modal';
 import { Subject, catchError, lastValueFrom } from 'rxjs';
-import { AuthService } from 'src/app/services/api-service/auth.service';
+import { IamFacade } from 'src/app/store/iam/iam.facade';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { ICourseList } from '../courses/modal/course-list';
 import { HttpClient } from '@angular/common/http';
@@ -36,14 +36,14 @@ export class DashboardService {
   public courseDetailsInfo: Subject<{ [key: string]: boolean | ICourseList }> = new Subject();
   private _apiUrl: string = environment.majesticWarhorseApi;
   constructor(
-    private authService: AuthService,
+    private iam: IamFacade,
     private commonService: CommonService,
     private http: HttpClient,
     private assignTeacherService: AssignTeacherService,
     private rosterDisplay: RosterDisplayService
   ) {}
   async getAllUsers() {
-    this.commonService.alluserList = await this.authService.getAllUsers();
+    this.commonService.alluserList = await this.iam.loadUsers();
   }
   setCourseDetailsInfo(courseInfo: { [key: string]: boolean | ICourseList }) {
     this.courseDetailsInfo.next(courseInfo);

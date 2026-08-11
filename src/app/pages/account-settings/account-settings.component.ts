@@ -10,7 +10,7 @@ import { Subject, takeUntil } from 'rxjs';
 import type { Organization } from 'src/app/models/organization.model';
 import { UserModel, isOrganization } from '../login-page/model/user-model';
 import { RegistrationPageService } from '../registration-page/registration-page.service';
-import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
+import { IamFacade } from 'src/app/store/iam/iam.facade';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { FormValidators } from 'src/app/shared/form-validators';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
@@ -45,7 +45,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private commonService: CommonService,
     private registrationService: RegistrationPageService,
-    private organizationApiService: OrganizationApiService
+    private iam: IamFacade
   ) {
     this.accountForm = this.formBuilder.group(
       {
@@ -361,13 +361,12 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   private loadOrganizations(): void {
-    this.organizationApiService
-      .getOrganizations()
+    this.iam
+      .loadOrganizations()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response) => {
-          const data = Array.isArray(response) ? response : (response as { data?: Organization[] })?.data;
-          this.organizationsList = data ?? [];
+        next: (organizations) => {
+          this.organizationsList = organizations ?? [];
         },
         error: (err) => {
           console.error('Error loading organizations:', err);

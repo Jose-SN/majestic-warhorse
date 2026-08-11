@@ -7,6 +7,7 @@ import { CoursesService } from '../courses/courses.service';
 import { CourseUploadService } from '../course-upload/course-upload.service';
 import { ICourseList } from '../courses/modal/course-list';
 import { AuthService } from 'src/app/services/api-service/auth.service';
+import { IamFacade } from 'src/app/store/iam/iam.facade';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { CourseDetailsService } from '../course-details/course-details.service';
@@ -48,6 +49,7 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
   constructor(
     private courseUploadService: CourseUploadService,
     private authService: AuthService,
+    private iam: IamFacade,
     public commonService: CommonService,
     public dashboardService: DashboardService,
     private courseDetailsService: CourseDetailsService,
@@ -66,7 +68,7 @@ export class CourseOverviewComponent implements OnInit, OnDestroy {
         this.isOnline = status;
       });
     // Fetch all users first to populate allUsersList
-    this.commonService.alluserList = await this.authService.getAllUsers();
+    this.commonService.alluserList = await this.iam.loadUsers();
     if (this.commonService?.allUsersList.length) {
       this.commonService.allUsersList.forEach((user) => {
         switch (user.role) {

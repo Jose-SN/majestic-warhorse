@@ -26,7 +26,7 @@ import { COURSE_DETAILS_DEMO, ChapterMaterialsGroup, CourseMaterialItem } from '
 import { DemoModeService } from 'src/app/shared/services/demo-mode.service';
 import { UserModel } from '../login-page/model/user-model';
 import { Organization } from 'src/app/models/organization.model';
-import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
+import { IamFacade } from 'src/app/store/iam/iam.facade';
 import { CourseDiscussionsApiService } from 'src/app/services/api-service/course-discussions-api.service';
 import {
   CourseDiscussionItem,
@@ -96,7 +96,7 @@ export class CourseDetailsComponent {
     private router: Router,
     private favoritesApiService: FavoritesApiService,
     private courseDiscussionsApi: CourseDiscussionsApiService,
-    private organizationApiService: OrganizationApiService,
+    private iam: IamFacade,
     public demoModeService: DemoModeService,
     private cdr: ChangeDetectorRef
   ) {
@@ -173,8 +173,8 @@ export class CourseDetailsComponent {
 
     if (!this.commonService.allUsersList?.length) {
       tasks.push(
-        this.authService
-          .getAllUsers()
+        this.iam
+          .loadUsers()
           .then((users) => {
             this.commonService.allUsersList = users ?? [];
           })
@@ -185,10 +185,9 @@ export class CourseDetailsComponent {
     }
 
     tasks.push(
-      firstValueFrom(this.organizationApiService.getOrganizations())
-        .then((response) => {
-          const data = Array.isArray(response) ? response : (response as { data?: Organization[] })?.data;
-          this.organizationsList = data ?? [];
+      firstValueFrom(this.iam.loadOrganizations())
+        .then((organizations) => {
+          this.organizationsList = organizations ?? [];
         })
         .catch(() => {
           this.organizationsList = [];
@@ -429,7 +428,7 @@ export class CourseDetailsComponent {
       return;
     }
 
-    const fetchedUser = await this.authService.getUserById(creatorId);
+    const fetchedUser = await this.iam.loadUserById(creatorId);
     if (fetchedUser) {
       this.teacherDetails = this.mapUserToTeacher(fetchedUser);
     }

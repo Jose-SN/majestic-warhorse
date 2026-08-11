@@ -3,7 +3,7 @@ import { firstValueFrom } from 'rxjs';
 import { RosterRow } from 'src/app/models/roster.model';
 import { normalizeUserStatus } from 'src/app/models/user-status.model';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
-import { AuthService } from 'src/app/services/api-service/auth.service';
+import { IamFacade } from 'src/app/store/iam/iam.facade';
 import { StudentsApiService } from 'src/app/services/api-service/students-api.service';
 import { TeachersApiService } from 'src/app/services/api-service/teachers-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
@@ -20,7 +20,7 @@ export class RosterDisplayService {
   constructor(
     private teachersApi: TeachersApiService,
     private studentsApi: StudentsApiService,
-    private authService: AuthService,
+    private iam: IamFacade,
     private commonService: CommonService
   ) {}
 
@@ -29,7 +29,7 @@ export class RosterDisplayService {
       firstValueFrom(
         this.teachersApi.listTeachers({ organization_id: orgId, status, limit: 500 })
       ),
-      this.authService.resolveUsersForOrganization(orgId, this.commonService.allUsersList),
+      this.iam.resolveUsersForOrganization(orgId, this.commonService.allUsersList),
     ]);
 
     if (iamUsers.length) {
@@ -44,7 +44,7 @@ export class RosterDisplayService {
       firstValueFrom(
         this.studentsApi.listStudents({ organization_id: orgId, status, limit: 500 })
       ),
-      this.authService.resolveUsersForOrganization(orgId, this.commonService.allUsersList),
+      this.iam.resolveUsersForOrganization(orgId, this.commonService.allUsersList),
     ]);
 
     if (iamUsers.length) {

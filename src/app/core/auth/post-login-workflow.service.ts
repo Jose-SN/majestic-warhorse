@@ -6,7 +6,7 @@ import { isActiveStatus, isPendingStatus, normalizeUserStatus } from 'src/app/mo
 import { UserOrganizationEntry } from 'src/app/models/organization-picker.model';
 import { UserModel } from 'src/app/pages/login-page/model/user-model';
 import { AuthService } from 'src/app/services/api-service/auth.service';
-import { OrganizationApiService } from 'src/app/services/api-service/organization-api.service';
+import { IamFacade } from 'src/app/store/iam/iam.facade';
 import { UserRoleApiService } from 'src/app/services/api-service/user-role-api.service';
 import { AssignTeacherService } from 'src/app/components/assign-teachers/assign-teacher.service';
 import { RosterRegistrationService } from 'src/app/services/api-service/roster-registration.service';
@@ -31,7 +31,7 @@ export class PostLoginWorkflowService {
     private router: Router,
     private commonService: CommonService,
     private authService: AuthService,
-    private organizationApiService: OrganizationApiService,
+    private iam: IamFacade,
     private userRoleApi: UserRoleApiService,
     private assignTeacherService: AssignTeacherService,
     private rosterRegistration: RosterRegistrationService,
@@ -45,7 +45,7 @@ export class PostLoginWorkflowService {
     if (loginType === 'organization') {
       this.persistOrganizationSession(jwt, profile, authProvider);
       await this.brandingService.reloadForOrganization();
-      await this.authService.getAllUsers().then((users) => {
+      await this.iam.loadUsers().then((users) => {
         this.commonService.allUsersList = users || [];
       }).catch(() => {});
       this.router.navigate(['/dashboard']);
@@ -166,7 +166,7 @@ export class PostLoginWorkflowService {
     sessionStorage.setItem('login_details', JSON.stringify(mappedUser));
     this.commonService.loginedUserInfo = mappedUser;
 
-    await this.authService.getAllUsers().then((users) => {
+    await this.iam.loadUsers().then((users) => {
       this.commonService.allUsersList = users || [];
     }).catch(() => {});
 
@@ -244,7 +244,7 @@ export class PostLoginWorkflowService {
     user.organization_id = organizationId;
     try {
       await firstValueFrom(
-        this.authService.updateUserInfo({
+        this.iam.updateUser({
           id: user.id,
           organization_id: organizationId,
         })
@@ -291,19 +291,9 @@ export class PostLoginWorkflowService {
 
   private async fetchUserOrganizations(userId?: string, email?: string): Promise<UserOrganizationEntry[]> {
     try {
-      const res: any = await firstValueFrom(
-        this.organizationApiService.listOrganizationsForUser({ userId, email })
+      return await firstValueFrom(
+        this.iam.loadOrganizationsForUser({ userId, email })
       );
-      const data = res?.data ?? res ?? [];
-      const list = Array.isArray(data) ? data : [];
-      return list
-        .map((entry: any) => ({
-          id: entry.organization?.id ?? entry.id ?? '',
-          name: entry.organization?.name ?? entry.name ?? 'Unnamed organization',
-          email: entry.organization?.contact?.email ?? entry.contact?.email,
-          membershipRole: entry.membership?.role ?? entry.role,
-        }))
-        .filter((o: UserOrganizationEntry) => !!o.id);
     } catch {
       return [];
     }
