@@ -11,12 +11,12 @@
   <div class="approval-grid-page__content">
     <!-- <header class="approval-grid-page__header">
       <div class="approval-grid-page__header-text">
-        <h2>Instructor Grid</h2>
+        <h2>Teachers</h2>
         <div class="approval-grid-page__header-meta">
-          <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+          <span class="material-symbols-outlined" aria-hidden="true">school</span>
           <span>Teachers directory</span>
           <span>|</span>
-          <span class="is-muted">Showing {{ displayedCount }} Active Records</span>
+          <span class="is-muted">Showing {{ displayedCount }} teachers</span>
         </div>
       </div>
     </header> -->
@@ -24,11 +24,11 @@
     <div class="approval-grid-page__header-actions">
       <div class="approval-grid-page__stats">
         <div class="approval-grid-page__stat">
-          <p>Active Instructors</p>
+          <p>Active Teachers</p>
           <p>{{ teachersList.length }}</p>
         </div>
         <div class="approval-grid-page__stat">
-          <p>Visible Records</p>
+          <p>Showing</p>
           <p class="is-accent">{{ displayedCount }}</p>
         </div>
       </div>
@@ -37,14 +37,14 @@
     @if (rosterLoading) {
       <div class="approval-grid-page__empty approval-grid-page__empty--loading" role="status" aria-live="polite">
         <div class="approval-grid-page__spinner" aria-hidden="true"></div>
-        <h3>Loading Instructors</h3>
-        <p>Fetching active instructor nodes from the network…</p>
+        <h3>Loading Teachers</h3>
+        <p>Loading your teachers…</p>
       </div>
     } @else if (teachersList.length === 0) {
       <div class="approval-grid-page__empty">
         <span class="material-symbols-outlined" aria-hidden="true">groups</span>
         <h3>No Approved Teachers Found</h3>
-        <p>No active instructors are registered yet, or all teachers may still be pending approval.</p>
+        <p>No active teachers are registered yet, or all teachers may still be pending approval.</p>
       </div>
     } @else {
       @if (teachersList | searchFilter: searchText : 'USER_LIST'; as filteredList) {
@@ -53,7 +53,7 @@
             <div class="approval-grid-page__list-head" aria-hidden="true">
               <span>Name</span>
               <span>Email</span>
-              <span>Member ID</span>
+              <span>ID</span>
               <span>Status</span>
               <span>Action</span>
             </div>
@@ -72,7 +72,7 @@
                   <div class="approval-grid-page__list-user-text">
                     <h3>{{ getTeacherName(teacher) }}</h3>
                     <p class="approval-grid-page__role">
-                      <span class="material-symbols-outlined" aria-hidden="true">memory</span>
+                      <span class="material-symbols-outlined" aria-hidden="true">school</span>
                       Teacher
                     </p>
                   </div>
@@ -111,8 +111,8 @@
         } @else {
           <div class="approval-grid-page__empty">
             <span class="material-symbols-outlined" aria-hidden="true">search_off</span>
-            <h3>No Matching Instructors</h3>
-            <p>We couldn't find any instructors matching your search. Try adjusting your search terms.</p>
+            <h3>No Matching Teachers</h3>
+            <p>We couldn't find any teachers matching your search. Try adjusting your search terms.</p>
           </div>
         }
       }
@@ -121,7 +121,7 @@
     <!-- <footer class="approval-grid-page__footer">
       <div class="approval-grid-page__stats">
         <div class="approval-grid-page__stat">
-          <p>Network Capacity</p>
+          <p>Total</p>
           <p>{{ teachersList.length }}</p>
         </div>
         <div class="approval-grid-page__stat">
@@ -131,7 +131,7 @@
       </div>
       <div class="approval-grid-page__sync">
         <span aria-hidden="true"></span>
-        <span>Central Core Synchronized</span>
+        <span>All records up to date</span>
       </div>
     </footer> -->
   </div>

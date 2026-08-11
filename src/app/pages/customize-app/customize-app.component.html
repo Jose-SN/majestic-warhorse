@@ -1,43 +1,43 @@
 <section class="customize-app" [class.customize-app--embedded]="embedded" *ngIf="draft">
-  <div class="customize-app__grid">
-    <header class="customize-app__toolbar">
-      @if (!embedded) {
-        <div class="customize-app__heading">
-          <p class="customize-app__eyebrow">White-label</p>
-          <h1 class="customize-app__title">Customize your app</h1>
-          <p class="customize-app__lead">
-            Brand identity and theme tokens for your organisation. Preview live, then save.
-          </p>
-        </div>
-      }
-      <div class="customize-app__actions" role="group" aria-label="Branding actions">
-        <button
-          type="button"
-          class="customize-app__btn customize-app__btn--ghost"
-          (click)="reset()"
-          [disabled]="saving"
-        >
-          Reset
-        </button>
-        <button
-          type="button"
-          class="customize-app__btn customize-app__btn--secondary"
-          (click)="previewLive()"
-          [disabled]="saving"
-        >
-          Preview
-        </button>
-        <button
-          type="button"
-          class="customize-app__btn customize-app__btn--primary"
-          [disabled]="saving"
-          (click)="save()"
-        >
-          {{ saving ? 'Saving…' : 'Save changes' }}
-        </button>
+  <header class="customize-app__toolbar">
+    @if (!embedded) {
+      <div class="customize-app__heading">
+        <p class="customize-app__eyebrow">White-label</p>
+        <h1 class="customize-app__title">Customize your app</h1>
+        <p class="customize-app__lead">
+          Brand identity and theme tokens for your organisation. Preview live, then save.
+        </p>
       </div>
-    </header>
+    }
+    <div class="customize-app__actions" role="group" aria-label="Branding actions">
+      <button
+        type="button"
+        class="customize-app__btn customize-app__btn--ghost"
+        (click)="reset()"
+        [disabled]="saving"
+      >
+        Reset
+      </button>
+      <button
+        type="button"
+        class="customize-app__btn customize-app__btn--secondary"
+        (click)="previewLive()"
+        [disabled]="saving"
+      >
+        Preview
+      </button>
+      <button
+        type="button"
+        class="customize-app__btn customize-app__btn--primary"
+        [disabled]="saving"
+        (click)="save()"
+      >
+        {{ saving ? 'Saving…' : 'Save changes' }}
+      </button>
+    </div>
+  </header>
 
+  <div class="customize-app__grid">
     <div class="customize-app__editor">
       <section class="customize-app__card">
         <h2 class="customize-app__card-title">Identity</h2>
@@ -159,6 +159,8 @@
           [style.--preview-border]="draft.colors.outline"
           [style.--preview-text]="draft.colors.onSurface"
           [style.--preview-muted]="draft.colors.onSurfaceVariant"
+          [style.--preview-secondary]="draft.colors.secondary"
+          [style.--preview-secondary-container]="draft.colors.secondaryContainer"
           [style.--preview-gradient]="
             'linear-gradient(135deg,' +
             draft.colors.gradientStart +
@@ -188,8 +190,7 @@
           </div>
         </div>
         <p class="customize-app__note">
-          Primary actions use the brand gradient. Secondary uses surface + border per design system
-          buttons.
+          Primary actions use the brand gradient. Secondary uses the organisation secondary colour.
         </p>
       </div>
     </aside>

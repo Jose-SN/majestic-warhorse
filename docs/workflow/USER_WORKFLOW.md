@@ -154,7 +154,7 @@ There are **three login types**:
 | Login type | Who it is for | What they mainly do |
 |------------|---------------|---------------------|
 | **Organization** | Church / school / community admin | Approve people, manage teachers & students, oversee courses and assignments |
-| **Teacher** | Instructors (individual accounts) | Create courses, set questions, review answers, give feedback |
+| **Teacher** | Teachers (individual accounts) | Create courses, set questions, review answers, give feedback |
 | **Student** | Learners (individual accounts) | Take assigned courses, answer questions, wait for teacher review |
 
 **Important:** Teachers and students use an **individual login**. They do **not** use the organization login. The organization only **approves** them and manages the school or program.
@@ -185,7 +185,7 @@ There are **three login types**:
 
 - **Organization** — create a school / church / community account → land on the organization dashboard  
 - **Individual → Student** — join as a learner → see public courses while waiting; full access after approval  
-- **Individual → Teacher** — join as an instructor → see public courses while waiting; full access after approval  
+- **Individual → Teacher** — join as an teacher → see public courses while waiting; full access after approval  
 
 Optional: **Continue with Google** is available as a recommended sign-up / sign-in option.
 
@@ -217,7 +217,7 @@ Plans and purchase are **not in the Beta application yet**. Later, organizations
 |-----------------|---------|
 | **Dashboard** | Overview of the organization |
 | **Approvals** | Teachers and students waiting to be accepted — approve them here |
-| **Directory → Teachers** | Approved instructors; manage who they teach |
+| **Directory → Teachers** | Approved teachers; manage who they teach |
 | **Directory → Students** | Approved learners; manage which teachers they learn with |
 | **Courses** | See and manage course content in the school |
 | **Invite Teacher / Invite Student** | Add people to the organization |

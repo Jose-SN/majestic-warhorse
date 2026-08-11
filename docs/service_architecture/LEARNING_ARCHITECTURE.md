@@ -57,7 +57,7 @@ This document describes the **course domain Logic Service** in this repository. 
 | Dashboard data | **Working** (client-supplied role flags; see §8 / §18) |
 | Course listing | **Working** |
 | Course upload (create + R2 file upload) | **Working** |
-| Instructor questions | **Working** |
+| Teacher questions | **Working** |
 | Student answers | **Working** (version history: each save/update inserts new row) |
 | Teacher feedback publish / history | **Working** (`PUT/GET /answers/:studentUserId/feedback…`) |
 | Library RAG upload / list / delete | **Working** (JWT; triggers Shared AI ingest when `AI_ENABLED=true`) |
@@ -243,7 +243,7 @@ Roles live in **this** database, not IAM:
 
 **Library / chat exception:** JWT required; org/user from claims (`utils/authContext.ts`). Feedback publish currently accepts reviewer ids in body (JWT temporarily off on `/answers` feedback).
 
-**Conclusion:** A student can still reach much instructor functionality at the HTTP layer for classic course APIs. Library/chat are gated. Other protection may be gateway/UI/network ACL.
+**Conclusion:** A student can still reach much teacher functionality at the HTTP layer for classic course APIs. Library/chat are gated. Other protection may be gateway/UI/network ACL.
 ---
 
 ## 7. Data model
@@ -276,7 +276,7 @@ After `add_organization_scoping.sql` + `add_rbac_tables.sql` (+ access/discussio
 | `chapter_files` | Chapter↔file junction | `chapter_id`, `file_id` |
 | `document_chunks` | RAG chunks + embeddings | `app_id` (IAM applications.id), `organization_id`, `file_id` CASCADE, `embedding vector(1536)` — **AI writes** |
 | `conversations` / `messages` | AI Mode chat | Org + user scoped; citations JSONB on messages |
-| `questions` | Instructor questions | `course_id`, `question`, `type`, `options` |
+| `questions` | Teacher questions | `course_id`, `question`, `type`, `options` |
 | `answers` | Student answers (**versioned**) | `course_id`, `question_id`, `answer`, `submitted_by`, **`version`** |
 | `answer_feedback` | Teacher feedback (**versioned**) | JSONB `review` / `item_feedback`; one new row per publish |
 | `statuses` | Progress/rating | `parent_id`, `parent_type` (Course\|Chapter\|File) — **not** on `files` |

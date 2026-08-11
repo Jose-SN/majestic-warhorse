@@ -5,6 +5,14 @@
   </div>
 
   <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" class="account-profile__split-form">
+    <div class="account-profile__actions">
+      <button type="button" class="account-profile__reset" (click)="resetForm()">Reset</button>
+      <button class="account-profile__submit" type="submit">
+        <span class="material-symbols-outlined" aria-hidden="true">save</span>
+        Save changes
+      </button>
+    </div>
+
     <div class="account-profile__split">
       <aside class="account-profile__identity">
         <label class="account-profile__avatar-large" for="profileImageInput">
@@ -109,14 +117,6 @@
         </div>
 
         <div class="account-profile__workspace-inner">
-          <!-- <div class="account-profile__workspace-header">
-            <div class="account-profile__workspace-title">
-              <span class="material-symbols-outlined" aria-hidden="true">manage_accounts</span>
-              <h2>Update Account Details</h2>
-            </div>
-            <p>Update your profile details for PetaxAI Learning.</p>
-          </div> -->
-
           <div class="account-profile__form-block">
             <div class="account-profile__form-block-head">
               <span class="account-profile__form-block-badge account-profile__form-block-badge--primary">01</span>
@@ -288,13 +288,6 @@
             </div>
           </div>
 
-          <div class="account-profile__actions">
-            <button type="button" class="account-profile__reset" (click)="resetForm()">Reset</button>
-            <button class="account-profile__submit" type="submit">
-              <span class="material-symbols-outlined" aria-hidden="true">save</span>
-              Commit Changes
-            </button>
-          </div>
         </div>
       </section>
     </div>

@@ -108,7 +108,7 @@
       } @else {
         <div class="ai-mode__chat">
           <div class="ai-mode__chat-scroll" #threadScroll>
-            <div class="ai-mode__chat-title">{{ activeThread?.title }}</div>
+            <h2 class="ai-mode__chat-title">{{ activeThread?.title }}</h2>
             @if (loadingThread) {
               <p class="ai-mode__chat-loading">Loading conversation…</p>
             }

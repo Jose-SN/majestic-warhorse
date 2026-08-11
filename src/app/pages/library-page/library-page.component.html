@@ -403,20 +403,30 @@
         @case ('pdf') {
         @if (safePreviewUrl(previewFile); as url) {
         <iframe [src]="url" title="PDF preview"></iframe>
+        } @else {
+        <div class="library-preview__fallback">
+          <span class="material-symbols-outlined" aria-hidden="true">picture_as_pdf</span>
+          <p>Preview is not available for this file. Download to open locally.</p>
+        </div>
         }
         }
         @case ('image') {
-        <img [src]="previewFile.previewUrl || previewFile.thumbnailUrl" [alt]="previewFile.name" />
+        <img [src]="previewFile.previewUrl || previewFile.thumbnailUrl || previewFile.downloadUrl" [alt]="previewFile.name" />
         }
         @case ('video') {
-        <video controls [src]="previewFile.previewUrl"></video>
+        <video controls [src]="previewFile.previewUrl || previewFile.downloadUrl"></video>
         }
         @case ('audio') {
-        <audio controls [src]="previewFile.previewUrl"></audio>
+        <audio controls [src]="previewFile.previewUrl || previewFile.downloadUrl"></audio>
         }
         @case ('text') {
         @if (safePreviewUrl(previewFile); as url) {
         <iframe [src]="url" title="Text preview"></iframe>
+        } @else {
+        <div class="library-preview__fallback">
+          <span class="material-symbols-outlined" aria-hidden="true">draft</span>
+          <p>Preview is not available for this file. Download to open locally.</p>
+        </div>
         }
         }
         @default {

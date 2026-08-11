@@ -360,9 +360,9 @@
               </div>
             </div>
             <div class="holographic-preview__body">
-              <div class="holographic-preview__instructor">
-                <img [src]="instructorAvatar" [alt]="instructorName" />
-                <span>{{ instructorName }}</span>
+              <div class="holographic-preview__teacher">
+                <img [src]="teacherAvatar" [alt]="teacherName" />
+                <span>{{ teacherName }}</span>
               </div>
               @if (mainCourseInfo.courseDescription.trim()) {
                 <p class="holographic-preview__description">{{ mainCourseInfo.courseDescription }}</p>
@@ -422,7 +422,7 @@
       <div class="preview-pane__footer">
         <div class="preview-sync">
           <span class="preview-sync__dot" aria-hidden="true"></span>
-          <span>Live Sync Active</span>
+          <span>Preview up to date</span>
         </div>
         <div class="preview-pane__actions">
           @if (isEditMode) {
@@ -455,8 +455,8 @@
               Save Changes
               <span class="material-symbols-outlined" aria-hidden="true">save</span>
             } @else {
-              Publish to Academy
-              <span class="material-symbols-outlined" aria-hidden="true">rocket_launch</span>
+              Publish course
+              <span class="material-symbols-outlined" aria-hidden="true">publish</span>
             }
           </button>
         </div>

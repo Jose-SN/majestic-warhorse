@@ -499,10 +499,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   safePreviewUrl(file: LibraryFileItem | null): SafeResourceUrl | null {
-    if (!file?.previewUrl) {
+    const src = file?.previewUrl || file?.downloadUrl;
+    if (!src || src === '#') {
       return null;
     }
-    return this.sanitizer.bypassSecurityTrustResourceUrl(file.previewUrl);
+    return this.sanitizer.bypassSecurityTrustResourceUrl(src);
   }
 
   roleLabel(role: string): string {

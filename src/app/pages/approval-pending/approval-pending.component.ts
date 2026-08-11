@@ -147,7 +147,7 @@ export class ApprovalPendingComponent implements OnInit, OnDestroy {
       this.commonService.loginedUserInfo = user;
 
       this.commonService.openToaster({
-        message: 'Access granted. Redirecting to your dashboard.',
+        message: "You're approved. Redirecting to your dashboard.",
         messageType: TOASTER_MESSAGE_TYPE.SUCCESS,
       });
       this.isPolling = false;

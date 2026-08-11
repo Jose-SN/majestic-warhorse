@@ -71,7 +71,7 @@ export class TeachersListComponent implements OnInit, OnDestroy {
     const first = teacher.firstName || teacher.first_name || '';
     const last = teacher.lastName || teacher.last_name || '';
     const fullName = `${first} ${last}`.trim();
-    return fullName || teacher.name?.trim() || 'Instructor';
+    return fullName || teacher.name?.trim() || 'Teacher';
   }
 
   getTeacherEmail(teacher: RosterDisplayUser): string {
@@ -86,7 +86,7 @@ export class TeachersListComponent implements OnInit, OnDestroy {
 
     const label = this.getTeacherName(teacher);
     const email = this.getTeacherEmail(teacher);
-    const name = label !== 'Instructor' ? label : email || 'Instructor';
+    const name = label !== 'Teacher' ? label : email || 'Teacher';
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=ff6b2c&color=fff&size=128`;
   }
 

@@ -35,7 +35,7 @@
       <div class="courses-empty-state courses-empty-state--loading">
         <div class="courses-empty-state__spinner" aria-hidden="true"></div>
         <h3>Loading Courses</h3>
-        <p>Fetching course data from the network…</p>
+        <p>Loading your courses…</p>
       </div>
     } @else if (courseList.length === 0) {
       <div class="courses-empty-state">
@@ -81,7 +81,7 @@
 
                   <div class="course-glass-card__author-row">
                     <p class="course-glass-card__author">
-                      A course by
+                      Course by
                       {{ course.createdBy.firstName || course.createdBy.first_name }}
                       {{ course.createdBy.lastName || course.createdBy.last_name }}
                     </p>

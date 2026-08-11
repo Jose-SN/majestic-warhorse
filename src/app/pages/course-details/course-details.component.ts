@@ -73,7 +73,7 @@ export class CourseDetailsComponent {
   public isCourseFavorited: boolean = false;
   private favoriteId: string | null = null;
   public isOrganization: boolean = false;
-  public instructorDetails: UserModel | null = null;
+  public teacherDetails: UserModel | null = null;
   public discussions: CourseDiscussionItem[] = [];
   public discussionsLoading = false;
   public newCommentText = '';
@@ -160,7 +160,7 @@ export class CourseDetailsComponent {
     // this.checkAssesmentView();
     this.checkFavoriteStatus();
     await this.ensureAuthorDirectory();
-    await this.loadInstructorDetails();
+    await this.loadTeacherDetails();
     await this.loadDiscussions();
   }
 
@@ -389,7 +389,7 @@ export class CourseDetailsComponent {
     return creator.id?.trim() || null;
   }
 
-  private mapUserToInstructor(user: UserModel | CreatedBy): UserModel {
+  private mapUserToTeacher(user: UserModel | CreatedBy): UserModel {
     return {
       id: user.id,
       first_name: user.first_name ?? user.firstName ?? '',
@@ -405,12 +405,12 @@ export class CourseDetailsComponent {
     };
   }
 
-  private async loadInstructorDetails(): Promise<void> {
+  private async loadTeacherDetails(): Promise<void> {
     const creatorId = this.resolveCreatorId();
     const embeddedCreator = this.courseCreator;
 
     if (embeddedCreator?.first_name || embeddedCreator?.firstName) {
-      this.instructorDetails = this.mapUserToInstructor(embeddedCreator);
+      this.teacherDetails = this.mapUserToTeacher(embeddedCreator);
     }
 
     if (!creatorId) {
@@ -419,19 +419,19 @@ export class CourseDetailsComponent {
 
     const cachedUser = this.commonService.allUsersList?.find((user) => user.id === creatorId);
     if (cachedUser) {
-      this.instructorDetails = this.mapUserToInstructor(cachedUser);
+      this.teacherDetails = this.mapUserToTeacher(cachedUser);
       return;
     }
 
     const cachedOrganization = this.organizationsList.find((org) => org.id === creatorId);
     if (cachedOrganization) {
-      this.instructorDetails = this.mapUserToInstructor(mapOrganizationToUserShape(cachedOrganization));
+      this.teacherDetails = this.mapUserToTeacher(mapOrganizationToUserShape(cachedOrganization));
       return;
     }
 
     const fetchedUser = await this.authService.getUserById(creatorId);
     if (fetchedUser) {
-      this.instructorDetails = this.mapUserToInstructor(fetchedUser);
+      this.teacherDetails = this.mapUserToTeacher(fetchedUser);
     }
   }
 
@@ -855,28 +855,28 @@ export class CourseDetailsComponent {
     return creator;
   }
 
-  get instructorName(): string {
-    const creator = this.instructorDetails ?? this.courseCreator;
+  get teacherName(): string {
+    const creator = this.teacherDetails ?? this.courseCreator;
     if (!creator) {
-      return 'Instructor';
+      return 'Teacher';
     }
     const first = (creator.firstName || creator.first_name || '').trim();
     const last = (creator.lastName || creator.last_name || '').trim();
-    return `${first} ${last}`.trim() || 'Instructor';
+    return `${first} ${last}`.trim() || 'Teacher';
   }
 
-  get instructorImage(): string {
-    const creator = this.instructorDetails ?? this.courseCreator;
+  get teacherImage(): string {
+    const creator = this.teacherDetails ?? this.courseCreator;
     const img = creator?.profileImage || creator?.profile_image || '';
     return img ? this.commonService.decodeUrl(img) : '../../../assets/images/logo-majestic-hourse.svg';
   }
 
-  get instructorBio(): string {
-    const about = this.instructorDetails?.about?.trim();
+  get teacherBio(): string {
+    const about = this.teacherDetails?.about?.trim();
     if (about) {
       return about;
     }
-    return this.demoModeService.isDemoMode ? this.demo.instructorBio : '';
+    return this.demoModeService.isDemoMode ? this.demo.teacherBio : '';
   }
 
   get courseStatusLevel(): string {

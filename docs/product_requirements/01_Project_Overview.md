@@ -125,7 +125,7 @@ These are optional Class MVP upgrades. **Gold** (solo AI goal path) is a separat
 | Gold property | Meaning |
 |---------------|---------|
 | No organization required | Solo learner can start without an org gate |
-| No teacher required | Core loop does not depend on a human instructor |
+| No teacher required | Core loop does not depend on a human teacher |
 | Goal-driven | Learner sets an end goal (exam, skill, outcome) |
 | AI fetches courses & materials | Aligned content assembled for the goal and gaps |
 | Path + assessment | Diagnostic/path engine continuous assessment |

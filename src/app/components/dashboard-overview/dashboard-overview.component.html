@@ -6,7 +6,7 @@
         @for (widget of viewModel.statWidgets; track widget.id) {
           <div class="stat-widget" [class]="'stat-widget--' + widget.variant">
             <div class="stat-widget__header">
-              <h4 class="stat-widget__title">{{ widget.title }}</h4>
+              <p class="stat-widget__title">{{ widget.title }}</p>
               @if (widget.headerRight) {
                 <span class="stat-widget__badge" [class.accent]="widget.headerRightAccent">{{ widget.headerRight }}</span>
               }
@@ -26,14 +26,14 @@
                       @if (ring.style === 'concentric') {
                         <div class="progress-ring-wrap concentric">
                           <svg viewBox="0 0 36 36" class="progress-ring">
-                            <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
-                            <circle cx="18" cy="18" r="10.5" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
-                            <circle cx="18" cy="18" r="7" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
-                            <circle cx="18" cy="18" r="14" fill="none" stroke="#ff6b2c" stroke-width="2.5" stroke-linecap="round"
+                            <circle cx="18" cy="18" r="14" fill="none" class="progress-ring__track" stroke-width="2"/>
+                            <circle cx="18" cy="18" r="10.5" fill="none" class="progress-ring__track" stroke-width="2"/>
+                            <circle cx="18" cy="18" r="7" fill="none" class="progress-ring__track progress-ring__track--soft" stroke-width="1.5"/>
+                            <circle cx="18" cy="18" r="14" fill="none" class="progress-ring__fill" stroke-width="2.5" stroke-linecap="round"
                               [attr.stroke-dasharray]="ringCircumferenceFor(14)"
                               [attr.stroke-dashoffset]="ringOffset(ring.value, 14)"
                               transform="rotate(-90 18 18)"/>
-                            <circle cx="18" cy="18" r="10.5" fill="none" stroke="#ab0063" stroke-width="2" stroke-linecap="round"
+                            <circle cx="18" cy="18" r="10.5" fill="none" class="progress-ring__fill--alt" stroke-width="2" stroke-linecap="round"
                               [attr.stroke-dasharray]="ringCircumferenceFor(10.5)"
                               [attr.stroke-dashoffset]="ringOffset(ring.value * 0.75, 10.5)"
                               transform="rotate(-90 18 18)" opacity="0.85"/>
@@ -43,8 +43,8 @@
                       } @else {
                         <div class="progress-ring-wrap">
                           <svg viewBox="0 0 36 36" class="progress-ring">
-                            <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
-                            <circle cx="18" cy="18" r="15" fill="none" [attr.stroke]="ring.color || '#ff6b2c'"
+                            <circle cx="18" cy="18" r="15" fill="none" class="progress-ring__track" stroke-width="3"/>
+                            <circle cx="18" cy="18" r="15" fill="none" class="progress-ring__fill"
                               stroke-width="3" stroke-linecap="round"
                               [attr.stroke-dasharray]="ringCircumference"
                               [attr.stroke-dashoffset]="ringOffset(ring.value)"
@@ -60,8 +60,8 @@
                   <div class="ring-bars-mix">
                     <div class="progress-ring-wrap large gold">
                       <svg viewBox="0 0 36 36" class="progress-ring">
-                        <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
-                        <circle cx="18" cy="18" r="15" fill="none" [attr.stroke]="widget.ringColor || '#ff6b2c'" stroke-width="3" stroke-linecap="round"
+                        <circle cx="18" cy="18" r="15" fill="none" class="progress-ring__track" stroke-width="3"/>
+                        <circle cx="18" cy="18" r="15" fill="none" class="progress-ring__fill" stroke-width="3" stroke-linecap="round"
                           [attr.stroke-dasharray]="ringCircumference"
                           [attr.stroke-dashoffset]="ringOffset(widget.ringValue || 0)"
                           transform="rotate(-90 18 18)"/>
@@ -81,18 +81,18 @@
                       @if (ring.style === 'concentric') {
                         <div class="progress-ring-wrap concentric radar">
                           <svg viewBox="0 0 36 36" class="progress-ring">
-                            <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
-                            <circle cx="18" cy="18" r="10.5" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
-                            <circle cx="18" cy="18" r="7" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
-                            <circle cx="18" cy="18" r="14" fill="none" stroke="#ff6b2c" stroke-width="2.5" stroke-linecap="round"
+                            <circle cx="18" cy="18" r="14" fill="none" class="progress-ring__track" stroke-width="2"/>
+                            <circle cx="18" cy="18" r="10.5" fill="none" class="progress-ring__track" stroke-width="2"/>
+                            <circle cx="18" cy="18" r="7" fill="none" class="progress-ring__track progress-ring__track--soft" stroke-width="1.5"/>
+                            <circle cx="18" cy="18" r="14" fill="none" class="progress-ring__fill" stroke-width="2.5" stroke-linecap="round"
                               [attr.stroke-dasharray]="ringCircumferenceFor(14)"
                               [attr.stroke-dashoffset]="ringOffset(ring.value, 14)"
                               transform="rotate(-90 18 18)"/>
-                            <circle cx="18" cy="18" r="10.5" fill="none" stroke="#ab0063" stroke-width="2" stroke-linecap="round"
+                            <circle cx="18" cy="18" r="10.5" fill="none" class="progress-ring__fill--alt" stroke-width="2" stroke-linecap="round"
                               [attr.stroke-dasharray]="ringCircumferenceFor(10.5)"
                               [attr.stroke-dashoffset]="ringOffset(ring.value * 0.6, 10.5)"
                               transform="rotate(-90 18 18)" opacity="0.9"/>
-                            <circle cx="18" cy="18" r="7" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-linecap="round"
+                            <circle cx="18" cy="18" r="7" fill="none" class="progress-ring__track progress-ring__track--strong" stroke-width="1.5" stroke-linecap="round"
                               [attr.stroke-dasharray]="ringCircumferenceFor(7)"
                               [attr.stroke-dashoffset]="ringOffset(ring.value * 0.4, 7)"
                               transform="rotate(-90 18 18)"/>
@@ -102,8 +102,8 @@
                       } @else {
                         <div class="progress-ring-wrap gold">
                           <svg viewBox="0 0 36 36" class="progress-ring">
-                            <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
-                            <circle cx="18" cy="18" r="15" fill="none" [attr.stroke]="ring.color || '#ff6b2c'"
+                            <circle cx="18" cy="18" r="15" fill="none" class="progress-ring__track" stroke-width="3"/>
+                            <circle cx="18" cy="18" r="15" fill="none" class="progress-ring__fill"
                               stroke-width="3" stroke-linecap="round"
                               [attr.stroke-dasharray]="ringCircumference"
                               [attr.stroke-dashoffset]="ringOffset(ring.value)"
@@ -130,11 +130,11 @@
                 <svg viewBox="0 0 80 80" class="progress-ring">
                   <defs>
                     <linearGradient [attr.id]="'mobile-ring-' + widget.id" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#ff6b2c"></stop>
-                      <stop offset="100%" stop-color="#ab0063"></stop>
+                      <stop offset="0%" stop-color="var(--ds-primary, #ff6b2c)"></stop>
+                      <stop offset="100%" stop-color="var(--ds-primary-dark, #ab0063)"></stop>
                     </linearGradient>
                   </defs>
-                  <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+                  <circle cx="40" cy="40" r="34" fill="none" class="progress-ring__track" stroke-width="4"/>
                   <circle cx="40" cy="40" r="34" fill="none" [attr.stroke]="'url(#mobile-ring-' + widget.id + ')'"
                     stroke-width="6" stroke-linecap="round"
                     [attr.stroke-dasharray]="ringCircumferenceFor(34)"
@@ -150,11 +150,11 @@
                 <svg viewBox="0 0 80 80" class="progress-ring">
                   <defs>
                     <linearGradient [attr.id]="'mobile-ring-' + widget.id" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#ab0063"></stop>
-                      <stop offset="100%" stop-color="#ffb0cc"></stop>
+                      <stop offset="0%" stop-color="var(--ds-primary-dark, #ab0063)"></stop>
+                      <stop offset="100%" stop-color="var(--ds-gold, #ffb0cc)"></stop>
                     </linearGradient>
                   </defs>
-                  <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+                  <circle cx="40" cy="40" r="34" fill="none" class="progress-ring__track" stroke-width="4"/>
                   <circle cx="40" cy="40" r="34" fill="none" [attr.stroke]="'url(#mobile-ring-' + widget.id + ')'"
                     stroke-width="6" stroke-linecap="round"
                     [attr.stroke-dasharray]="ringCircumferenceFor(34)"
@@ -176,18 +176,18 @@
             <span class="panel-block__title-desktop">AI-Personalized Recommendations</span>
             <span class="panel-block__title-mobile">AI Recommendations</span>
           </h2>
-          <a class="panel-block__view-all" href="javascript:void(0)">View All</a>
+          <a class="panel-block__view-all" [routerLink]="coursesRoute">View All</a>
         </div>
         @if (isCoursesContentLoading) {
           <div class="panel-state panel-state--loading" role="status" aria-live="polite">
             <div class="panel-state__spinner" aria-hidden="true"></div>
-            <p class="panel-state__eyebrow">{{ isDemoTransitionLoading ? 'Preparing' : 'Syncing' }}</p>
+            <p class="panel-state__eyebrow">{{ isDemoTransitionLoading ? 'Preparing' : 'Loading' }}</p>
             @if (isDemoTransitionLoading) {
               <p class="panel-state__message">Loading demo recommendations…</p>
               <p class="panel-state__hint">Preparing sample course recommendations for preview.</p>
             } @else {
               <p class="panel-state__message">Loading AI recommendations…</p>
-              <p class="panel-state__hint">Fetching personalized course matches from the network.</p>
+              <p class="panel-state__hint">Finding courses that match your learning progress.</p>
             }
           </div>
         } @else if (isRecommendationsEmpty) {
@@ -206,47 +206,85 @@
           </div>
         } @else {
         <div class="recommendations-carousel">
-          <button type="button" class="carousel-nav prev" (click)="slideRecommendations(-1)" [disabled]="!canSlideRecommendationsPrev" aria-label="Previous">
+          <button type="button" class="carousel-nav prev" (click)="slideRecommendations(-1)" [disabled]="!canSlideRecommendationsPrev" aria-label="Previous recommendations">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
           </button>
           <div class="carousel-track">
             @for (item of visibleRecommendations; track item.id; let i = $index) {
-              <article class="recommendation-card" [class.active]="carouselOffset + i === recommendationIndex"
-                [style.background]="item.coverStyle">
-                <div class="recommendation-card__overlay">
-                  <h3>{{ item.title }}</h3>
-                  <p>{{ item.subtitle }}</p>
-                  <button type="button" class="recommendation-card__cta" aria-label="Open course" (click)="openRecommendedCourse(item, $event)">
-                    <span>{{ item.ctaLabel || 'Open' }}</span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                  </button>
+              <article
+                class="course-glass-card recommendation-card"
+                [class.active]="carouselOffset + i === recommendationIndex"
+              >
+                <div class="course-glass-card__media">
+                  @if (item.imageUrl) {
+                    <img [src]="item.imageUrl" alt="" />
+                  } @else {
+                    <div
+                      class="course-glass-card__media-fallback"
+                      [style.background]="item.coverStyle"
+                      aria-hidden="true"
+                    >
+                      <img [src]="brandLogo" alt="" />
+                    </div>
+                  }
+                  <div class="recommendation-card__overlay">
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.subtitle }}</p>
+                    <button
+                      type="button"
+                      class="recommendation-card__cta"
+                      [attr.aria-label]="'Open ' + item.title"
+                      (click)="openRecommendedCourse(item, $event)"
+                    >
+                      <span>{{ item.ctaLabel || 'Open' }}</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </button>
+                  </div>
                 </div>
               </article>
             }
           </div>
-          <button type="button" class="carousel-nav next" (click)="slideRecommendations(1)" [disabled]="!canSlideRecommendationsNext" aria-label="Next">
+          <button type="button" class="carousel-nav next" (click)="slideRecommendations(1)" [disabled]="!canSlideRecommendationsNext" aria-label="Next recommendations">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
           </button>
         </div>
         <div class="carousel-dots">
           @for (item of recommendationsDisplay; track item.id; let i = $index) {
-            <button type="button" [class.active]="i === recommendationIndex" (click)="goToRecommendation(i)"></button>
+            <button
+              type="button"
+              [class.active]="i === recommendationIndex"
+              [attr.aria-label]="'Show recommendation ' + (i + 1) + ' of ' + recommendationsDisplay.length"
+              [attr.title]="'Show recommendation ' + (i + 1)"
+              [attr.aria-current]="i === recommendationIndex ? 'true' : null"
+              (click)="goToRecommendation(i)"
+            ></button>
           }
         </div>
 
         <div class="recommendations-stack">
           @for (item of recommendationsDisplay; track item.id; let i = $index) {
-            <article class="recommendation-card" [style.background]="item.coverStyle">
-              <div class="recommendation-card__overlay">
-                <span class="recommendation-card__badge">
-                  <span class="material-symbols-outlined" aria-hidden="true">bolt</span>
-                  {{ recMatchPercent(i) }}% Match
-                </span>
-                <h3>{{ item.title }}</h3>
-                <p>{{ item.subtitle }}</p>
-                <div class="recommendation-card__meta">
-                  <span>{{ recReadTime(i) }}</span>
-                  <button type="button" class="recommendation-card__cta" aria-label="Open course" (click)="openRecommendedCourse(item, $event)">
+            <article class="course-glass-card recommendation-card">
+              <div class="course-glass-card__media">
+                @if (item.imageUrl) {
+                  <img [src]="item.imageUrl" alt="" />
+                } @else {
+                  <div
+                    class="course-glass-card__media-fallback"
+                    [style.background]="item.coverStyle"
+                    aria-hidden="true"
+                  >
+                    <img [src]="brandLogo" alt="" />
+                  </div>
+                }
+                <div class="recommendation-card__overlay">
+                  <h3>{{ item.title }}</h3>
+                  <p>{{ item.subtitle }}</p>
+                  <button
+                    type="button"
+                    class="recommendation-card__cta"
+                    [attr.aria-label]="'Open ' + item.title"
+                    (click)="openRecommendedCourse(item, $event)"
+                  >
                     <span>{{ item.ctaLabel || 'Open' }}</span>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                   </button>
@@ -262,22 +300,29 @@
       <section class="panel-block subscribed-panel">
         <div class="panel-block__header">
           <h2>Subscribed Courses</h2>
-          <ul class="filter-tabs">
+          <div class="filter-tabs" role="group" aria-label="Filter subscribed courses">
             @for (filter of filterList; track filter) {
-              <li [class.active]="activeFilterTab === filter" (click)="setActiveFilterTab(filter)">{{ filter }}</li>
+              <button
+                type="button"
+                [class.active]="activeFilterTab === filter"
+                [attr.aria-pressed]="activeFilterTab === filter"
+                (click)="setActiveFilterTab(filter)"
+              >
+                {{ filter }}
+              </button>
             }
-          </ul>
+          </div>
         </div>
         @if (isCoursesContentLoading) {
           <div class="panel-state panel-state--loading" role="status" aria-live="polite">
             <div class="panel-state__spinner" aria-hidden="true"></div>
-            <p class="panel-state__eyebrow">{{ isDemoTransitionLoading ? 'Preparing' : 'Syncing' }}</p>
+            <p class="panel-state__eyebrow">{{ isDemoTransitionLoading ? 'Preparing' : 'Loading' }}</p>
             @if (isDemoTransitionLoading) {
               <p class="panel-state__message">Loading demo courses…</p>
               <p class="panel-state__hint">Preparing sample subscribed courses for preview.</p>
             } @else {
               <p class="panel-state__message">Loading subscribed courses…</p>
-              <p class="panel-state__hint">Fetching your enrolled courses from the network.</p>
+              <p class="panel-state__hint">Loading your enrolled courses.</p>
             }
           </div>
         } @else if (isSubscribedCoursesEmpty) {
@@ -311,9 +356,14 @@
           <div class="subscribed-grid">
           @for (course of subscribedCoursesDisplay; track course.id) {
             <article class="course-glass-card">
-              <div class="course-glass-card__media" (click)="openSubscribedCourse(course)">
+              <button
+                type="button"
+                class="course-glass-card__media"
+                [attr.aria-label]="'Open course ' + course.title"
+                (click)="openSubscribedCourse(course)"
+              >
                 @if (course.imageUrl) {
-                  <img [src]="course.imageUrl" [alt]="course.title || 'Course cover'" />
+                  <img [src]="course.imageUrl" alt="" />
                 } @else {
                   <div
                     class="course-glass-card__media-fallback"
@@ -333,11 +383,15 @@
                 >
                   {{ course.access === 'private' ? 'Private' : 'Public' }}
                 </span>
-              </div>
+              </button>
 
               <div class="course-glass-card__body">
                 <div class="course-glass-card__head">
-                  <h3 (click)="openSubscribedCourse(course)">{{ course.title }}</h3>
+                  <h3>
+                    <button type="button" class="course-glass-card__title-btn" (click)="openSubscribedCourse(course)">
+                      {{ course.title }}
+                    </button>
+                  </h3>
                   @if (course.averageRating || course.ratingStars) {
                     <div class="course-glass-card__rating">
                       <span class="material-symbols-outlined" aria-hidden="true">star</span>
@@ -348,8 +402,8 @@
 
                 <div class="course-glass-card__author-row">
                   <p class="course-glass-card__author">
-                    A course by
-                    {{ getSubscribedAuthor(course) }}
+                    Course by
+                    <span class="course-glass-card__author-name">{{ getSubscribedAuthor(course) }}</span>
                   </p>
                   @if (getSubscribedStatus(course); as status) {
                     <span
@@ -391,7 +445,36 @@
     </div>
   </div>
 
-  <aside class="content-right right-insights-panel">
+  <button
+    type="button"
+    class="insights-fab"
+    [class.is-open]="insightsPanelOpen"
+    [attr.aria-expanded]="insightsPanelOpen"
+    aria-controls="dashboard-insights-panel"
+    [attr.aria-label]="insightsPanelOpen ? 'Close activity panel' : 'Open activity panel'"
+    (click)="toggleInsightsPanel()"
+  >
+    <span class="insights-fab__chevrons" aria-hidden="true">{{ insightsPanelOpen ? '»' : '«' }}</span>
+  </button>
+
+  @if (insightsPanelOpen) {
+    <div class="insights-backdrop" (click)="closeInsightsPanel()" aria-hidden="true"></div>
+  }
+
+  <aside
+    id="dashboard-insights-panel"
+    class="content-right right-insights-panel"
+    [class.is-open]="insightsPanelOpen"
+    [attr.aria-hidden]="!insightsPanelOpen"
+    [attr.inert]="insightsPanelOpen ? null : ''"
+  >
+    <div class="insights-panel__header">
+      <h2>Activity</h2>
+      <button type="button" class="insights-panel__close" aria-label="Close activity panel" (click)="closeInsightsPanel()">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+
     <!-- <div class="insight-card hologram-card">
       <div class="hologram-ring">
         <div class="hologram-ring__glow" aria-hidden="true"></div>
@@ -416,7 +499,6 @@
     <div class="insight-card">
       <div class="insight-title-row">
         <h3 class="insight-title">Badge Awards</h3>
-        <a class="insight-link" href="javascript:void(0)">View All</a>
       </div>
       <div class="badge-row" [class.is-empty]="!hasBadgeAwards">
         <span class="badge-icon ribbon" [class.is-empty]="!hasBadgeAwards">
@@ -460,13 +542,13 @@
       @if (isDailyGoalsLoading) {
         <div class="panel-state panel-state--compact panel-state--loading" role="status" aria-live="polite">
           <div class="panel-state__spinner" aria-hidden="true"></div>
-          <p class="panel-state__eyebrow">{{ isDemoTransitionLoading ? 'Preparing' : 'Syncing' }}</p>
+          <p class="panel-state__eyebrow">{{ isDemoTransitionLoading ? 'Preparing' : 'Loading' }}</p>
           @if (isDemoTransitionLoading) {
             <p class="panel-state__message">Loading demo goals…</p>
             <p class="panel-state__hint">Preparing sample daily goals for preview.</p>
           } @else {
             <p class="panel-state__message">Loading daily goals…</p>
-            <p class="panel-state__hint">Fetching AI-suggested targets for today.</p>
+            <p class="panel-state__hint">Loading suggested goals for today.</p>
           }
         </div>
       } @else if (isDailyGoalsEmpty) {
@@ -504,13 +586,13 @@
       @if (isActivityFeedLoading) {
         <div class="panel-state panel-state--compact panel-state--loading" role="status" aria-live="polite">
           <div class="panel-state__spinner" aria-hidden="true"></div>
-          <p class="panel-state__eyebrow">{{ isDemoTransitionLoading ? 'Preparing' : 'Syncing' }}</p>
+          <p class="panel-state__eyebrow">{{ isDemoTransitionLoading ? 'Preparing' : 'Loading' }}</p>
           @if (isDemoTransitionLoading) {
             <p class="panel-state__message">Loading demo activity…</p>
             <p class="panel-state__hint">Preparing sample activity feed for preview.</p>
           } @else {
             <p class="panel-state__message">Loading activity feed…</p>
-            <p class="panel-state__hint">Fetching your recent learning activity.</p>
+            <p class="panel-state__hint">Loading your recent learning activity.</p>
           }
         </div>
       } @else if (isActivityFeedEmpty) {
@@ -556,8 +638,8 @@
               <stop offset="100%" stop-color="#4a0084"/>
             </linearGradient>
           </defs>
-          <line x1="30" y1="10" x2="30" y2="95" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-          <line x1="30" y1="95" x2="270" y2="95" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          <line x1="30" y1="10" x2="30" y2="95" class="progress-ring__track" stroke-width="1"/>
+          <line x1="30" y1="95" x2="270" y2="95" class="progress-ring__track" stroke-width="1"/>
           @for (label of chartYLabels; track label.text) {
             <text x="22" [attr.y]="label.y" fill="rgba(168,180,199,0.7)" font-size="8" text-anchor="end">{{ label.text }}</text>
           }

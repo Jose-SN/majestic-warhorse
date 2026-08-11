@@ -36,7 +36,7 @@ There is **no separate “admin” role string** in code. Organization accounts 
 | Dashboard | **Working** (demo fixtures optional) | `DashboardOverviewComponent` + live APIs / `DASHBOARD_DEMO_DATA` |
 | Course listing | **Working** | `CoursesComponent` + `CoursesApiService` |
 | Course upload | **Working** (some Promise edge cases) | `CourseUploadComponent` + `CourseUploadService` |
-| Instructors setting questions | **Working** | `QuestionnaireComponent` + `question/*` APIs |
+| Teachers setting questions | **Working** | `QuestionnaireComponent` + `question/*` APIs |
 | Students submitting answers | **Working** | `StudentAssessmentComponent` + `answer/save` |
 | Approval of teachers/students | **Working** | `ApprovalPageComponent` + `teachers/approve`, `students/approve` |
 | Teacher assignment | **Working** (route live; sidenav entry commented) | `AssignTeacherService` + `/dashboard/assign-teacher` |

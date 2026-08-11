@@ -12,12 +12,12 @@
         <div class="ap-status-indicator__core">
           <div class="ap-status-indicator__scan"></div>
           <div class="ap-status-indicator__icon-wrap">
-            <span class="material-symbols-outlined ap-status-indicator__icon">shield_person</span>
+            <span class="material-symbols-outlined ap-status-indicator__icon">how_to_reg</span>
             <div class="ap-status-indicator__label">Awaiting approval</div>
           </div>
           <div class="ap-status-indicator__meta">
             <span>Request: {{ ticketId }}</span>
-            <span>Auto-check every {{ pollIntervalSeconds }}s</span>
+            <span>Checking every {{ pollIntervalSeconds }}s</span>
           </div>
         </div>
 
@@ -26,7 +26,7 @@
 
       <div class="ap-copy">
         <h1 class="ap-copy__title">
-          Access pending:
+          Approval pending:
           <span class="ap-copy__title-accent">{{ headlineStatus }}</span>
         </h1>
         <div class="ap-copy__divider" aria-hidden="true"></div>

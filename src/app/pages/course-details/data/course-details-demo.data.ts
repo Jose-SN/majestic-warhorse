@@ -14,8 +14,8 @@ export interface ChapterMaterialsGroup {
 
 export const COURSE_DETAILS_DEMO = {
   heroSubtitle: 'Course Details & Concept Art',
-  instructorBio:
-    'Expert instructor specializing in 3D concept art and digital sculpting. Passionate about teaching the full pipeline from sketch to final render.',
+  teacherBio:
+    'Expert teacher specializing in 3D concept art and digital sculpting. Passionate about teaching the full pipeline from sketch to final render.',
   descriptionFallback:
     'In this course, students will learn about the complete 3D sculpting process, starting from the initial concept sketch all the way to the topology, rendering, and final presented render. This horse sculpture serves as the foundation for the entire PetaxAI Learning project.',
   materials: [

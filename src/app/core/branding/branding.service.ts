@@ -201,8 +201,9 @@ export class BrandingService {
   }
 
   private applyLocal(branding: AppBranding): void {
-    this.brandingSubject.next(branding);
+    // Paint tokens first, then notify — ThemeService light/dark overlays must win.
     this.applyToDom(branding);
+    this.brandingSubject.next(branding);
   }
 
   /** Re-paint current branding tokens on :root (used when restoring Default / Cyber theme). */

@@ -25,10 +25,6 @@
       overflow: visible !important;
     }
 
-    .content-right.right-insights-panel {
-      display: none !important;
-    }
-
     .futuristic-dashboard {
       display: flex !important;
       flex-direction: column !important;
@@ -182,74 +178,13 @@
         overflow: visible;
       }
 
-      .recommendation-card {
-        position: relative;
+      .recommendation-card.course-glass-card {
         width: 100%;
         min-height: 220px;
         height: 220px;
-        @include border-radius(12px);
-        background-size: cover !important;
-        background-position: center !important;
 
-        &__badge {
-          position: absolute;
-          top: 14px;
-          left: 14px;
-          z-index: 2;
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          padding: 4px 10px;
-          @include border-radius(999px);
-          border: 1px solid rgba(187, 123, 255, 0.35);
-          background: rgba(255, 214, 0, 0.55);
-          backdrop-filter: blur(10px);
-          @include type-caption;
-          @include type-weight-medium;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-          color: #e9d5ff;
-
-          .material-symbols-outlined {
-            font-size: 12px;
-          }
-        }
-
-        &__overlay {
-          padding: 16px;
-          gap: 6px;
-          background: linear-gradient(180deg, transparent 20%, rgba(19, 19, 22, 0.94) 100%);
-
-          h3 {
-            @include type-h5;
-            @include text-ellipsis($lines: 2);
-          }
-
-          p {
-            @include type-metadata;
-            @include text-ellipsis($lines: 2);
-          }
-        }
-
-        &__meta {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 12px;
-          margin-top: 4px;
-
-          > span {
-            @include type-caption;
-            @include type-weight-medium;
-            color: var(--mc-on-surface-variant);
-          }
-        }
-
-        &__cta {
-          align-self: auto;
-          min-height: 32px;
-          padding: 7px 12px;
-          @include type-caption;
+        .course-glass-card__media {
+          height: 100%;
         }
       }
     }

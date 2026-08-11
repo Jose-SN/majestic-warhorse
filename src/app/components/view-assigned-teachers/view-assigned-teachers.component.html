@@ -16,7 +16,7 @@
       <div class="approval-grid-page__empty approval-grid-page__empty--loading" role="status" aria-live="polite">
         <div class="approval-grid-page__spinner" aria-hidden="true"></div>
         <h3>Loading assigned teachers</h3>
-        <p>Fetching instructor nodes for this student…</p>
+        <p>Loading teachers assigned to this student…</p>
       </div>
     } @else {
       <div class="enrollment-context-bar">
@@ -36,12 +36,12 @@
         <div class="approval-grid-page__header-text">
           <h2>Teachers Listing</h2>
           <div class="approval-grid-page__header-meta">
-            <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-            <span>Assignment Management Queue</span>
+            <span class="material-symbols-outlined" aria-hidden="true">school</span>
+            <span>Assigned teachers</span>
             <span>|</span>
             <span class="is-muted">
               Showing {{ displayedCount }}
-              {{ getAssignmentFilterMetaLabel() }} Records
+              {{ getAssignmentFilterMetaLabel() }}
             </span>
           </div>
         </div>
@@ -114,7 +114,7 @@
             <p>{{ unassignedCount }}</p>
           </div>
           <div class="approval-grid-page__stat">
-            <p>Visible Records</p>
+            <p>Showing</p>
             <p class="is-accent">{{ displayedCount }}</p>
           </div>
         </div>
@@ -149,18 +149,18 @@
       @if (teachersList.length === 0) {
         <div class="approval-grid-page__empty">
           <span class="material-symbols-outlined" aria-hidden="true">groups</span>
-          <h3>No Instructors Found</h3>
-          <p>No active instructors are registered in this organization yet.</p>
+          <h3>No Teachers Found</h3>
+          <p>No active teachers are registered in this organization yet.</p>
         </div>
       } @else if (filteredTeachersList.length === 0) {
         <div class="approval-grid-page__empty">
           <span class="material-symbols-outlined" aria-hidden="true">search_off</span>
-          <h3>No Matching Instructors</h3>
+          <h3>No Matching Teachers</h3>
           <p>
             @if (assignmentTab === null) {
-              No instructors match your search. Try adjusting your search terms.
+              No teachers match your search. Try adjusting your search terms.
             } @else {
-              No {{ assignmentTab === 'assigned' ? 'assigned' : 'unassigned' }} instructors match your filter.
+              No {{ assignmentTab === 'assigned' ? 'assigned' : 'unassigned' }} teachers match your filter.
               Try adjusting your search terms or change the assignment filter.
             }
           </p>
@@ -171,7 +171,7 @@
             <span></span>
             <span>Name</span>
             <span>Email</span>
-            <span>Member ID</span>
+            <span>ID</span>
             <span>Status</span>
             <span>Action</span>
           </div>
@@ -216,7 +216,7 @@
                 <div class="approval-grid-page__list-user-text">
                   <h3>{{ getTeacherName(teacher) }}</h3>
                   <p class="approval-grid-page__role">
-                    <span class="material-symbols-outlined" aria-hidden="true">memory</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">school</span>
                     Teacher
                   </p>
                 </div>

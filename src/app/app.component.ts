@@ -46,8 +46,8 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.brandingService.init();
     this.themeService.init();
+    this.brandingService.init();
 
     this.healthCheckService.state$.pipe(takeUntil(this.destroy$)).subscribe((state) => {
       this.healthState = state;

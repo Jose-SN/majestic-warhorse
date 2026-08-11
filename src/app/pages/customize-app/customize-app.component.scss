@@ -1,4 +1,5 @@
 @import '../../../styles/typography';
+@import '../../../styles/dashboard-scale';
 
 :host {
   display: flex;
@@ -50,16 +51,21 @@
     min-height: 0;
     width: 100%;
     align-content: start;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--ds-primary, #ff6b2c) 45%, transparent) transparent;
   }
 
   &__toolbar {
-    grid-column: 1 / -1;
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: var(--ds-space-5, 24px);
     row-gap: var(--ds-space-4, 16px);
     align-items: start;
     flex-shrink: 0;
+    z-index: 4;
+    padding-bottom: var(--ds-space-4, 16px);
+    background: var(--ds-background, var(--mc-surface-container-low));
   }
 
   &__heading {
@@ -78,13 +84,10 @@
 
   &__title {
     margin: var(--ds-space-2, 8px) 0 0;
-    @include type-h1;
+    @include type-h2;
     @include type-weight-bold;
     line-height: 1.2;
-    background: var(--mc-brand-text-gradient, var(--mc-brand-gradient));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--mc-on-surface);
   }
 
   &__lead {
@@ -155,7 +158,7 @@
 
     &--primary {
       background: var(--mc-brand-gradient);
-      color: #ffffff;
+      color: var(--mc-on-primary, #ffffff);
       border-color: transparent;
       box-shadow: 0 0 20px color-mix(in srgb, var(--ds-primary, #ff6b2c) 40%, transparent);
 
@@ -166,8 +169,8 @@
 
     &--secondary {
       background: var(--ds-surface, var(--mc-surface));
-      color: #ffffff;
-      border-color: #334155;
+      color: var(--ds-text, var(--mc-on-surface));
+      border-color: var(--ds-border, var(--mc-outline-variant));
 
       &:not(:disabled):hover {
         background: var(--ds-surface-alt, var(--mc-surface-container));
@@ -187,8 +190,8 @@
     }
 
     &--danger {
-      background: #ef4444;
-      color: #ffffff;
+      background: var(--mc-error, #ef4444);
+      color: var(--mc-on-primary, #ffffff);
 
       &:not(:disabled):hover {
         box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
@@ -203,9 +206,6 @@
     flex-direction: column;
     gap: var(--ds-space-5, 24px);
     min-height: 0;
-    overflow: auto;
-    scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--ds-primary, #ff6b2c) 45%, transparent) transparent;
   }
 
   &__preview {
@@ -223,11 +223,9 @@
   }
 
   &__card {
-    // background: var(--ds-surface, var(--mc-surface));
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    @include dashboard-glass-card;
     border-radius: var(--ds-radius-card, 16px);
     padding: var(--ds-space-5, 24px);
-    box-shadow: var(--shadow-card);
     transition:
       transform var(--ds-motion-fast, 150ms) ease,
       box-shadow var(--ds-motion-fast, 150ms) ease;
@@ -254,7 +252,7 @@
 
   &__card-title {
     margin: 0 0 var(--ds-space-2, 8px);
-    @include type-h4;
+    @include type-h5;
     color: var(--ds-text, var(--mc-on-surface));
   }
 
@@ -403,7 +401,7 @@
     height: 40px;
     border-radius: 12px;
     flex-shrink: 0;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--ds-border, var(--mc-outline-variant));
   }
 
   &__preset-meta {
@@ -589,7 +587,7 @@
     border: none;
     border-radius: 999px;
     background: var(--preview-gradient, var(--mc-brand-gradient));
-    color: #ffffff;
+    color: var(--mc-on-primary, #ffffff);
     font: inherit;
     @include type-button;
     @include type-weight-semibold;
@@ -597,9 +595,9 @@
     box-shadow: 0 0 20px color-mix(in srgb, var(--ds-primary, #ff6b2c) 35%, transparent);
 
     &--secondary {
-      background: var(--preview-surface, var(--ds-surface));
-      color: #ffffff;
-      border: 1px solid #334155;
+      background: var(--preview-secondary-container, var(--preview-secondary, var(--ds-secondary, #ab0063)));
+      color: var(--mc-on-primary, #ffffff);
+      border: 1px solid transparent;
       box-shadow: none;
     }
   }

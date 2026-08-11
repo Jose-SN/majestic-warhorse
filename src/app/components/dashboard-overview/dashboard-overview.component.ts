@@ -1,7 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Subject, skip, takeUntil } from 'rxjs';
 import { CourseUploadService } from 'src/app/pages/course-upload/course-upload.service';
 import { ICourseList } from 'src/app/pages/courses/modal/course-list';
@@ -26,7 +26,7 @@ import { DemoModeService } from 'src/app/shared/services/demo-mode.service';
 @Component({
   selector: 'app-dashboard-overview',
   standalone: true,
-  imports: [FormsModule, CommonModule, StarRatingModule],
+  imports: [FormsModule, CommonModule, RouterLink, StarRatingModule],
   templateUrl: './dashboard-overview.component.html',
   styleUrl: './dashboard-overview.component.scss',
 })
@@ -51,6 +51,7 @@ export class DashboardOverviewComponent implements OnDestroy {
   readonly carouselPageSize = 4;
   readonly ringCircumference = 2 * Math.PI * 15;
   readonly brandLogo = 'assets/images/logo-majestic-hourse.svg';
+  readonly coursesRoute = DASHBOARD_NAV_ROUTES.courses;
 
   readonly chartYLabels = [
     { text: '100%', y: 18 },
@@ -74,6 +75,7 @@ export class DashboardOverviewComponent implements OnDestroy {
   public coursesLoaded = false;
   public coursesContentLoading = false;
   public searchText = '';
+  public insightsPanelOpen = false;
 
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   @ViewChild('futuristicDashboard') futuristicDashboard?: ElementRef<HTMLElement>;
@@ -374,7 +376,7 @@ export class DashboardOverviewComponent implements OnDestroy {
   }
 
   recIcon(index: number): string {
-    return ['terminal', 'dataset', 'shield_lock'][index % 3];
+    return ['menu_book', 'quiz', 'school'][index % 3];
   }
 
   recMatchPercent(index: number): number {
@@ -666,10 +668,14 @@ export class DashboardOverviewComponent implements OnDestroy {
     const chapterCount = course.chapterDetails?.length || 0;
     const completedCount = course.chapterCompletedCount ?? 0;
     const createdBy = course.createdBy;
-    const authorName = [createdBy?.firstName || createdBy?.first_name, createdBy?.lastName || createdBy?.last_name]
-      .filter(Boolean)
-      .join(' ')
-      .trim();
+    const authorName =
+      [createdBy?.firstName || createdBy?.first_name, createdBy?.lastName || createdBy?.last_name]
+        .filter(Boolean)
+        .join(' ')
+        .trim() ||
+      createdBy?.contact?.email?.split('@')[0] ||
+      createdBy?.email?.split('@')[0] ||
+      '';
     const statusLevel =
       course.courseStatusLevel ||
       this.courseDetailsService.resolveCourseStatusLevel(course);
@@ -680,7 +686,7 @@ export class DashboardOverviewComponent implements OnDestroy {
       authorName,
       statusLevel,
       access: course.access === 'private' ? 'private' : 'public',
-      categoryLabel: 'A Course by',
+      categoryLabel: 'Course by',
       categoryTitle: authorName,
       coverStyle: 'linear-gradient(135deg, #3a2458 0%, #1a1230 100%)',
       imageUrl: course.courseCoverImage,
@@ -712,13 +718,14 @@ export class DashboardOverviewComponent implements OnDestroy {
   }
 
   getSubscribedAuthor(course: SubscribedCourseItem): string {
-    if (course.authorName) {
-      return course.authorName;
+    const label = (course.categoryLabel || '').trim().toLowerCase();
+    if (course.authorName?.trim()) {
+      return course.authorName.trim();
     }
-    if (course.categoryLabel === 'A Course by' && course.categoryTitle) {
-      return course.categoryTitle;
+    if ((label === 'course by' || label === 'a course by') && course.categoryTitle?.trim()) {
+      return course.categoryTitle.trim();
     }
-    return '';
+    return course.categoryTitle?.trim() || 'Unknown';
   }
 
   getSubscribedLessons(course: SubscribedCourseItem): { completed: number; total: number } | null {
@@ -771,6 +778,21 @@ export class DashboardOverviewComponent implements OnDestroy {
 
   toggleFavoriteSection(): void {
     this.favoriteSectionExpanded = !this.favoriteSectionExpanded;
+  }
+
+  toggleInsightsPanel(): void {
+    this.insightsPanelOpen = !this.insightsPanelOpen;
+  }
+
+  closeInsightsPanel(): void {
+    this.insightsPanelOpen = false;
+  }
+
+  @HostListener('document:keydown.escape')
+  onInsightsEscape(): void {
+    if (this.insightsPanelOpen) {
+      this.closeInsightsPanel();
+    }
   }
 
   navigateToFavorites(): void {

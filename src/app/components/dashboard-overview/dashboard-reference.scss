@@ -129,6 +129,26 @@
       height: 100%;
     }
 
+    .progress-ring__track {
+      stroke: color-mix(in srgb, var(--mc-on-surface) 16%, transparent);
+
+      &--soft {
+        stroke: color-mix(in srgb, var(--mc-on-surface) 8%, transparent);
+      }
+
+      &--strong {
+        stroke: color-mix(in srgb, var(--mc-on-surface) 35%, transparent);
+      }
+    }
+
+    .progress-ring__fill {
+      stroke: var(--ds-primary, #ff6b2c);
+
+      &--alt {
+        stroke: var(--ds-primary-dark, #ab0063);
+      }
+    }
+
     strong {
       position: absolute;
       inset: 0;
@@ -136,7 +156,7 @@
       align-items: center;
       justify-content: center;
       @include type-body-large;
-      color: var(--white);
+      color: var(--mc-on-surface);
     }
   }
 
@@ -168,14 +188,13 @@
       h2 {
         margin: 0;
         @include type-h5;
-        color: var(--mc-primary);
+        color: var(--mc-on-surface);
         letter-spacing: 0.02em;
       }
     }
   }
 
   .filter-tabs {
-    list-style: none;
     margin: 0;
     padding: 4px;
     display: flex;
@@ -184,7 +203,10 @@
     background: var(--mc-surface-container-low);
     border: 1px solid rgba(89, 65, 57, 0.35);
 
-    li {
+    button {
+      appearance: none;
+      border: none;
+      background: transparent;
       padding: 5px 12px;
       @include type-body-small;
       @include type-weight-medium;
@@ -201,9 +223,10 @@
         box-shadow: 0 0 12px rgba(255, 107, 44, 0.35);
       }
 
-      &:not(.active):hover {
+      &:not(.active):hover,
+      &:not(.active):focus-visible {
         color: var(--mc-on-surface);
-        background: rgba(53, 52, 56, 0.65);
+        background: color-mix(in srgb, var(--mc-on-surface) 8%, transparent);
       }
     }
   }
@@ -211,6 +234,17 @@
   .recommendations-panel {
     min-height: 0;
     overflow: hidden;
+
+    .panel-block__view-all {
+      display: inline-flex;
+      align-items: center;
+      margin-left: auto;
+      @include type-caption;
+      @include type-weight-medium;
+      color: var(--mc-primary);
+      text-decoration: none;
+      white-space: nowrap;
+    }
 
     .panel-state {
       min-height: 180px;
@@ -230,10 +264,15 @@
       align-content: stretch;
     }
 
-    .recommendation-card {
+    .recommendation-card.course-glass-card {
       height: 100%;
       max-height: 100%;
       min-height: 0;
+
+      .course-glass-card__media {
+        height: 100%;
+        flex: 1;
+      }
     }
 
     .carousel-dots {
@@ -256,7 +295,7 @@
     z-index: 2;
     width: 28px;
     flex-shrink: 0;
-    background: rgba(31, 31, 34, 0.7);
+    background: color-mix(in srgb, var(--ds-surface, var(--mc-surface)) 82%, transparent);
     border: 1px solid var(--mc-outline-variant);
     color: var(--mc-primary);
     @include border-radius(50%);
@@ -294,47 +333,34 @@
     align-items: stretch;
   }
 
-  .recommendation-card {
-    position: relative;
+  .recommendation-card.course-glass-card {
+    height: 100%;
     min-height: 0;
-    @include border-radius(8px);
-    overflow: hidden;
-    border: 1px solid rgba(89, 65, 57, 0.45);
-    @include transition(border-color 0.25s ease, box-shadow 0.25s ease);
 
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 35%, rgba(255, 107, 44, 0.08) 0%, transparent 50%),
-        linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(19, 19, 22, 0.88) 100%);
-      pointer-events: none;
+    .course-glass-card__media {
+      height: 100%;
+      flex: 1;
+      cursor: default;
     }
 
-    &.active,
-    &:hover {
-      border-color: rgba(255, 107, 44, 0.45);
-      box-shadow: 0 0 20px rgba(255, 107, 44, 0.18);
-    }
-
-    &__overlay {
+    .recommendation-card__overlay {
       position: absolute;
       inset: 0;
+      z-index: 1;
       padding: 10px;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       gap: 4px;
       overflow: hidden;
+      color: #fff;
       background: linear-gradient(180deg, transparent 25%, rgba(19, 19, 22, 0.92) 100%);
 
       h3 {
         margin: 0;
         @include type-h5;
-        color: var(--mc-on-surface);
+        color: #fff;
         line-height: 1.2;
-        flex-shrink: 1;
         min-width: 0;
         @include text-ellipsis($lines: 2);
       }
@@ -342,14 +368,13 @@
       p {
         margin: 0;
         @include type-caption;
-        color: var(--mc-on-surface-variant);
-        flex-shrink: 1;
+        color: rgba(255, 255, 255, 0.82);
         min-width: 0;
         @include text-ellipsis($lines: 1);
       }
     }
 
-    &__cta {
+    .recommendation-card__cta {
       display: inline-flex;
       align-items: center;
       gap: 4px;
@@ -358,9 +383,9 @@
       flex-shrink: 0;
       align-self: flex-end;
       @include border-radius(6px);
-      border: 1px solid rgba(89, 65, 57, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.28);
       background: rgba(42, 42, 45, 0.8);
-      color: var(--mc-primary);
+      color: #fff;
       cursor: pointer;
       @include type-caption;
       @include transition(all 0.2s ease);
@@ -390,7 +415,7 @@
       padding: 0;
       border: none;
       @include border-radius(4px);
-      background: rgba(255, 255, 255, 0.25);
+      background: color-mix(in srgb, var(--mc-on-surface) 22%, transparent);
       cursor: pointer;
       @include transition(all 0.2s ease);
 
@@ -428,27 +453,26 @@
     @include flex(flex, column, center, center);
     gap: 8px;
     @include border-radius(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(15, 17, 21, 0.72);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 0 30px -10px rgba(255, 107, 44, 0.12);
+    border: 1px solid var(--ds-border, var(--mc-outline-variant));
+    background: var(--ds-surface-alt, var(--mc-surface-container));
+    box-shadow: var(--shadow-card, none);
 
     &__spinner {
       width: 40px;
       height: 40px;
       margin-bottom: 4px;
-      border: 3px solid rgba(255, 107, 44, 0.2);
-      border-top-color: #ff6b2c;
+      border: 3px solid color-mix(in srgb, var(--ds-primary, #ff6b2c) 20%, transparent);
+      border-top-color: var(--ds-primary, #ff6b2c);
       border-radius: 50%;
       animation: panel-state-spin 0.8s linear infinite;
-      box-shadow: 0 0 20px -5px rgba(255, 107, 44, 0.45);
+      box-shadow: 0 0 20px -5px color-mix(in srgb, var(--ds-primary, #ff6b2c) 45%, transparent);
     }
 
     &__icon {
       @include type-h1;
       line-height: 1;
-      color: rgba(255, 107, 44, 0.75);
-      filter: drop-shadow(0 0 10px rgba(255, 107, 44, 0.35));
+      color: color-mix(in srgb, var(--ds-primary, #ff6b2c) 75%, transparent);
+      filter: drop-shadow(0 0 10px color-mix(in srgb, var(--ds-primary, #ff6b2c) 35%, transparent));
     }
 
     &__eyebrow {
@@ -457,14 +481,14 @@
       @include type-weight-medium;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: #ff6b2c;
+      color: var(--ds-primary, #ff6b2c);
     }
 
     &__message {
       margin: 0;
       @include type-body;
       @include type-weight-semibold;
-      color: var(--white);
+      color: var(--mc-on-surface);
       line-height: 1.35;
     }
 
@@ -473,13 +497,13 @@
       max-width: 28rem;
       @include type-body-small;
       line-height: 1.5;
-      color: #94a3b8;
+      color: var(--mc-on-surface-variant);
     }
 
     &--empty {
       border-style: dashed;
-      border-color: rgba(255, 255, 255, 0.12);
-      background: rgba(15, 17, 21, 0.55);
+      border-color: var(--ds-border, var(--mc-outline-variant));
+      background: color-mix(in srgb, var(--ds-surface, var(--mc-surface)) 88%, var(--ds-background, var(--mc-surface-container-low)));
     }
   }
 
@@ -497,7 +521,8 @@
     overflow-x: hidden;
     padding-right: 4px;
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 107, 44, 0.45) rgba(255, 255, 255, 0.06);
+    scrollbar-color: color-mix(in srgb, var(--ds-primary, #ff6b2c) 45%, transparent)
+      color-mix(in srgb, var(--mc-on-surface) 8%, transparent);
 
     &::-webkit-scrollbar {
       width: 6px;
@@ -509,7 +534,7 @@
     }
 
     &::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.06);
+      background: color-mix(in srgb, var(--mc-on-surface) 8%, transparent);
     }
   }
 
@@ -537,6 +562,12 @@
     }
 
     &__media {
+      appearance: none;
+      border: none;
+      padding: 0;
+      display: block;
+      width: 100%;
+      text-align: left;
       position: relative;
       height: 180px;
       overflow: hidden;
@@ -573,7 +604,7 @@
       position: absolute;
       inset: auto 0 0;
       height: 50%;
-      background: linear-gradient(to top, #030304, transparent);
+      background: linear-gradient(to top, var(--ds-surface, var(--mc-surface-container-lowest)), transparent);
       pointer-events: none;
     }
 
@@ -583,15 +614,15 @@
       left: 16px;
       padding: 4px 12px;
       @include border-radius(2px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(3, 3, 4, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(3, 3, 4, 0.72);
       -webkit-backdrop-filter: blur(12px);
       backdrop-filter: blur(12px);
       @include type-caption;
       @include type-weight-medium;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--mc-on-surface);
+      color: #fff;
     }
 
     &__access {
@@ -639,13 +670,27 @@
         @include type-h5;
         line-height: 1.25;
         color: var(--mc-on-surface);
-        cursor: pointer;
         @include transition(color 0.2s ease);
-        @include text-ellipsis($lines: 2);
 
         .course-glass-card:hover & {
           color: var(--mc-primary);
         }
+      }
+
+      .course-glass-card__title-btn {
+        appearance: none;
+        border: none;
+        background: transparent;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        text-align: left;
+        font: inherit;
+        color: inherit;
+        letter-spacing: inherit;
+        line-height: inherit;
+        cursor: pointer;
+        @include text-ellipsis($lines: 2);
       }
     }
 
@@ -679,16 +724,22 @@
       @include type-weight-medium;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: #94a3b8;
+      color: var(--mc-on-surface-variant);
       @include text-ellipsis($lines: 1);
+
+      .course-glass-card__author-name {
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--mc-on-surface);
+      }
     }
 
     &__status {
       flex-shrink: 0;
       padding: 4px 10px;
       @include border-radius(2px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(3, 3, 4, 0.55);
+      border: 1px solid var(--ds-border, var(--mc-outline-variant));
+      background: var(--mc-surface-container);
       @include type-caption;
       @include type-weight-medium;
       letter-spacing: 0.12em;
@@ -696,18 +747,21 @@
       color: var(--mc-on-surface);
 
       &--new {
-        border-color: rgba(79, 137, 252, 0.35);
-        color: rgba(181, 205, 255, 0.95);
+        border-color: color-mix(in srgb, var(--dashboard-accent-cyan, #3b82f6) 45%, var(--ds-border));
+        color: var(--dashboard-accent-cyan, #3b82f6);
+        background: color-mix(in srgb, var(--dashboard-accent-cyan, #3b82f6) 12%, var(--ds-surface, #fff));
       }
 
       &--progress {
-        border-color: rgba(255, 107, 44, 0.45);
-        color: rgba(255, 181, 154, 0.98);
+        border-color: color-mix(in srgb, var(--ds-primary, #ff6b2c) 45%, var(--ds-border));
+        color: var(--ds-primary, #ff6b2c);
+        background: color-mix(in srgb, var(--ds-primary, #ff6b2c) 12%, var(--ds-surface, #fff));
       }
 
       &--completed {
-        border-color: rgba(72, 199, 142, 0.45);
-        color: rgba(168, 255, 214, 0.98);
+        border-color: color-mix(in srgb, var(--mc-success) 45%, var(--ds-border));
+        color: var(--mc-success);
+        background: color-mix(in srgb, var(--mc-success) 12%, var(--ds-surface, #fff));
       }
     }
 
@@ -751,7 +805,7 @@
     &__lessons {
       margin: 0;
       @include type-caption;
-      color: #94a3b8;
+      color: var(--mc-on-surface-variant);
     }
 
     &__actions {
@@ -767,7 +821,7 @@
       border: 0;
       @include border-radius(2px);
       background: var(--mc-brand-gradient);
-      color: var(--mc-on-surface);
+      color: var(--mc-on-primary, #fff);
       @include type-caption;
       @include type-weight-bold;
       letter-spacing: 0.1em;
@@ -779,6 +833,12 @@
         opacity: 0.92;
         box-shadow: 0 0 20px rgba(255, 107, 44, 0.35);
       }
+    }
+  }
+
+  html[data-theme='light'] & {
+    .panel-block__view-all {
+      color: color-mix(in srgb, var(--ds-primary, #ff6b2c) 68%, #9a3412);
     }
   }
 }
@@ -808,11 +868,6 @@
       overflow: visible;
     }
 
-    .content-right.right-insights-panel {
-      display: none;
-      width: 100%;
-      max-width: 100%;
-    }
   }
 }
 

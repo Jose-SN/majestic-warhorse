@@ -311,6 +311,7 @@
         type="button"
         class="sidebar-upgrade-pro__cta"
         [attr.title]="collapsed ? 'Upgrade to Pro' : null"
+        [attr.aria-label]="collapsed ? 'Upgrade to Pro' : null"
         (click)="onUpgradeToPro()"
       >
         <span class="material-symbols-outlined sidebar-upgrade-pro__cta-icon" aria-hidden="true">workspace_premium</span>
@@ -351,7 +352,7 @@
       }
 
       <div class="sidenav-user__actions">
-        <button
+        <!-- <button
           type="button"
           class="hologram-profile-btn"
           role="menuitem"
@@ -366,7 +367,7 @@
           (click)="goToWebsite()"
         >
           Website
-        </button>
+        </button> -->
         <button
           type="button"
           class="hologram-profile-btn"

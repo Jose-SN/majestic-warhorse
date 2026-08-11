@@ -76,14 +76,14 @@ export class CourseUploadComponent implements OnChanges, OnInit, OnDestroy {
 
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
 
-  get instructorName(): string {
+  get teacherName(): string {
     const info = this.commonService.loginedUserInfo;
     const first = (info?.firstName || info?.first_name || '').trim();
     const last = (info?.lastName || info?.last_name || '').trim();
-    return [first, last].filter(Boolean).join(' ') || info?.name || 'Instructor';
+    return [first, last].filter(Boolean).join(' ') || info?.name || 'Teacher';
   }
 
-  get instructorAvatar(): string {
+  get teacherAvatar(): string {
     const raw = this.commonService.loginedUserInfo?.profileImage || this.commonService.loginedUserInfo?.profile_image;
     return this.commonService.decodeUrl(raw ?? '') || 'assets/images/logo-majestic-hourse.svg';
   }
@@ -403,7 +403,7 @@ export class CourseUploadComponent implements OnChanges, OnInit, OnDestroy {
       return 'description';
     }
     if (['sh', 'bash', 'js', 'ts', 'py'].includes(ext)) {
-      return 'terminal';
+      return 'code';
     }
     if (['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext)) {
       return 'image';

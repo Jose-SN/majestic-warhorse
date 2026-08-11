@@ -57,7 +57,7 @@ export const AI_MODE_SUGGESTIONS: AiModeSuggestion[] = [
     text: 'What are the best study techniques for my enrolled courses?',
     badge: 'Study',
     tone: 'gold',
-    icon: 'psychology',
+    icon: 'lightbulb',
   },
   {
     id: 'activity-summary',

@@ -230,13 +230,13 @@ export class ViewAssignedStudentsComponent implements OnInit, OnDestroy {
   getTeacherName(): string {
     const teacher = this.contextUser;
     if (!teacher) {
-      return 'Unknown Instructor';
+      return 'Unknown Teacher';
     }
 
     const first = teacher.firstName || teacher.first_name || '';
     const last = teacher.lastName || teacher.last_name || '';
     const fullName = `${first} ${last}`.trim();
-    return fullName || teacher.name?.trim() || 'Unknown Instructor';
+    return fullName || teacher.name?.trim() || 'Unknown Teacher';
   }
 
   getTeacherEmail(): string {
@@ -253,7 +253,7 @@ export class ViewAssignedStudentsComponent implements OnInit, OnDestroy {
 
     const label = this.getTeacherName();
     const email = this.getTeacherEmail();
-    const name = label !== 'Unknown Instructor' ? label : email || 'Instructor';
+    const name = label !== 'Unknown Teacher' ? label : email || 'Teacher';
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=ff6b2c&color=fff&size=128`;
   }
 

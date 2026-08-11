@@ -62,7 +62,7 @@ export class ApprovalListComponent implements OnInit, OnDestroy {
   getTeacherName(teacher: RosterDisplayUser): string {
     const first = teacher.firstName || teacher.first_name || '';
     const last = teacher.lastName || teacher.last_name || '';
-    return `${first} ${last}`.trim() || 'Instructor';
+    return `${first} ${last}`.trim() || 'Teacher';
   }
 
   getTeacherEmail(teacher: RosterDisplayUser): string {

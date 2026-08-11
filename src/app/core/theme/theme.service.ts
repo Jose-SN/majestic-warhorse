@@ -33,9 +33,12 @@ export class ThemeService {
       this.brandingSubActive = true;
       this.brandingService.branding$.subscribe(() => {
         // Org branding updates must not wipe light/dark surface overlays.
-        if (this.mode !== 'default') {
-          this.applySurfaceOverlay(this.mode);
-        }
+        // Defer so this always runs after BrandingService.applyToDom in the same turn.
+        queueMicrotask(() => {
+          if (this.mode === 'dark' || this.mode === 'light') {
+            this.applySurfaceOverlay(this.mode);
+          }
+        });
       });
     }
   }

@@ -188,7 +188,11 @@
 
   &__cta-icon {
     display: none;
-    @include type-h4;
+    font-family: 'Material Symbols Outlined';
+    font-size: 22px;
+    font-weight: normal;
+    line-height: 1;
+    letter-spacing: normal;
   }
 }
 
@@ -616,10 +620,29 @@ footer {
   }
 
   .sidebar-upgrade-pro {
-    padding: 8px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+
+    &::before {
+      display: none;
+    }
+
+    &__content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &:hover {
+      box-shadow: none;
+      border-color: transparent;
+    }
 
     &__eyebrow,
-    &__message {
+    &__message,
+    &__cta-label {
       display: none;
     }
 
@@ -629,14 +652,11 @@ footer {
       padding: 0;
       margin: 0 auto;
       border-radius: 999px;
+      gap: 0;
     }
 
     &__cta-icon {
       display: block;
-    }
-
-    &__cta-label {
-      display: none;
     }
   }
 

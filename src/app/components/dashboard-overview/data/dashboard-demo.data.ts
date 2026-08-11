@@ -33,7 +33,7 @@ export interface RecommendedCourseItem {
 export interface SubscribedCourseItem {
   id: string;
   title: string;
-  /** Instructor display name for the glass-card author row. */
+  /** Teacher display name for the glass-card author row. */
   authorName?: string;
   /** Course status label: New | Progress | Completed */
   statusLevel?: string;
@@ -274,8 +274,9 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
     {
       id: 'sub-6',
       title: 'Demo Course 6',
-      categoryLabel: 'A Course by',
+      categoryLabel: 'Course by',
       categoryTitle: 'Strategy Course 1',
+      authorName: 'Strategy Course 1',
       usePlaceholderIcon: true,
       coverStyle: 'linear-gradient(135deg, #4a3a6b 0%, #2a1a44 100%)',
       filledStars: 4,
@@ -288,8 +289,9 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
     {
       id: 'sub-7',
       title: 'Demo Course 7',
-      categoryLabel: 'A Course by',
+      categoryLabel: 'Course by',
       categoryTitle: 'Strategy Course 1',
+      authorName: 'Strategy Course 1',
       usePlaceholderIcon: true,
       coverStyle: 'linear-gradient(135deg, #3a5a6b 0%, #1a3444 100%)',
       filledStars: 4,
@@ -342,8 +344,9 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
     {
       id: 'sub-11',
       title: 'Demo Course 11',
-      categoryLabel: 'A Course by',
+      categoryLabel: 'Course by',
       categoryTitle: 'Strategy Course 1',
+      authorName: 'Strategy Course 1',
       usePlaceholderIcon: true,
       coverStyle: 'linear-gradient(135deg, #3a5a6b 0%, #1a3444 100%)',
       filledStars: 4,
@@ -356,8 +359,9 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
     {
       id: 'sub-12',
       title: 'Demo Course 12',
-      categoryLabel: 'A Course by',
+      categoryLabel: 'Course by',
       categoryTitle: 'Strategy Course 1',
+      authorName: 'Strategy Course 1',
       usePlaceholderIcon: true,
       coverStyle: 'linear-gradient(135deg, #5a4a3b 0%, #3a2a1b 100%)',
       filledStars: 4,
@@ -384,8 +388,9 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
     {
       id: 'sub-14',
       title: 'Demo Course 14',
-      categoryLabel: 'A Course by',
+      categoryLabel: 'Course by',
       categoryTitle: 'Strategy Course 1',
+      authorName: 'Strategy Course 1',
       usePlaceholderIcon: true,
       coverStyle: 'linear-gradient(135deg, #4a3a6b 0%, #2a1a44 100%)',
       filledStars: 4,
@@ -398,8 +403,9 @@ export const DASHBOARD_DEMO_DATA: DashboardDemoViewModel = {
     {
       id: 'sub-15',
       title: 'Demo Course 15',
-      categoryLabel: 'A Course by',
+      categoryLabel: 'Course by',
       categoryTitle: 'Strategy Course 1',
+      authorName: 'Strategy Course 1',
       usePlaceholderIcon: true,
       coverStyle: 'linear-gradient(135deg, #3a5a6b 0%, #1a3444 100%)',
       filledStars: 4,

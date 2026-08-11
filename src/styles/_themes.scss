@@ -49,7 +49,14 @@ html[data-theme='light'] {
   .login-card__accent,
   .signup-card__accent,
   .login-card__logo-glow,
-  .login-help-fab__glow {
+  .login-help-fab__glow,
+  .ai-mode__aurora,
+  .ai-mode__glow,
+  .account-profile__ambient,
+  .pricing-page__backdrop,
+  .pricing-page__glow,
+  .library-page__backdrop,
+  .library-page__glow {
     display: none !important;
   }
 
@@ -58,7 +65,12 @@ html[data-theme='light'] {
   .dashboard-right.has-technical-backdrop,
   .customize-app,
   .login-pane,
-  .signup-pane {
+  .signup-pane,
+  .pricing-page,
+  .library-page,
+  .approval-grid-page,
+  .directory-page,
+  app-courses .dashboard-inner {
     background: var(--ds-background) !important;
   }
 
@@ -73,6 +85,16 @@ html[data-theme='light'] {
   .btn-deploy,
   .customize-app__btn--primary,
   .customize-app__preview-cta:not(.customize-app__preview-cta--secondary),
+  .pricing-card__cta--primary,
+  .pricing-trial__cta,
+  .pricing-page__billing-btn.is-active,
+  .pricing-card__badge,
+  .pricing-trial__icon,
+  .courses-upload-btn,
+  .course-glass-card__cta,
+  .courses-filter-tabs li.active,
+  .library-page__upload-btn,
+  .library-usage__avatar,
   .approval-grid-page__approve-btn,
   button[class*='btn-primary'],
   a[class*='btn-primary'] {
@@ -114,6 +136,8 @@ html[data-theme='light'] {
 
   .customize-app__card,
   .ds-card,
+  .course-glass-card,
+  .library-stats__card,
   [class*='__card']:hover {
     transform: none !important;
   }
@@ -168,14 +192,78 @@ html[data-theme='light'] {
   .approval-grid-page__list-row,
   .approval-grid-page__stat,
   .ap-page,
-  [class*='glass'],
-  [class*='__card']:not([class*='preview']) {
+  [class*='__card']:not([class*='preview']):not(.recommendation-card):not([class*='ai-mode']) {
     // background: var(--ds-surface, #ffffff) !important;
     color: var(--ds-text, #0f172a) !important;
-    border-color: var(--ds-border, #e2e8f0) !important;
-    box-shadow: var(--shadow-card) !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
+  }
+
+  [class*='glass']:not(.recommendation-card) {
+    color: var(--ds-text, #0f172a) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .account-profile,
+  .account-profile__identity,
+  .account-profile__workspace {
+    background: var(--ds-background, #f1f5f9) !important;
+    color: var(--ds-text, #0f172a) !important;
+  }
+
+  .account-profile__stat-card {
+    background: var(--ds-surface, #ffffff) !important;
+    border-color: var(--ds-border, #e2e8f0) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .customize-app__card,
+  .pricing-card,
+  .pricing-trial,
+  .courses-empty-state,
+  .library-stats__card,
+  .library-table-wrap,
+  .library-card,
+  .library-empty,
+  .library-files__loading,
+  .library-user-filter__popup,
+  .library-preview__panel,
+  .library-files__bulk,
+  .approval-grid-page__list,
+  .approval-grid-page__header-actions,
+  .approval-grid-page__footer {
+    background: var(--ds-surface, #ffffff) !important;
+  }
+
+  .courses-filter-tabs {
+    background: var(--ds-surface-alt, #e2e8f0) !important;
+    border-color: var(--ds-border, #cbd5e1) !important;
+  }
+
+  .pricing-card.is-featured,
+  .pricing-trial {
+    background: color-mix(in srgb, var(--ds-primary, #ff6b2c) 8%, var(--ds-surface, #ffffff)) !important;
+  }
+
+  .pricing-page__billing {
+    background: var(--ds-surface-alt, #e2e8f0) !important;
+    border-color: var(--ds-border, #cbd5e1) !important;
+  }
+
+  .activity-item,
+  .sidebar-upgrade-pro,
+  .notification-holder__popup,
+  .hologram-profile-btn,
+  .course-glass-card__badge {
+    background: var(--ds-background) !important;
+  }
+
+  .sidepanel--collapsed .sidebar-upgrade-pro {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
   }
 
   /* Inputs / fields */
@@ -223,6 +311,19 @@ html[data-theme='light'] {
   .theme-holder__popup-head h3,
   .notification-holder__popup-head h3,
   .customize-app__card-title,
+  .approval-grid-page__header-text h2,
+  .approval-grid-page__list-user-text h3,
+  .approval-grid-page__stat p:last-child,
+  .library-page__title,
+  .library-stats__value,
+  .library-preview__head h2,
+  .library-card h3,
+  .courses-page-header__title,
+  .course-glass-card__head h3,
+  .pricing-page__title,
+  .pricing-card__name,
+  .pricing-card__amount,
+  .pricing-trial__title,
   .left-navigation a span,
   .dashboard-mobile-nav__item span {
     color: var(--ds-text, #0f172a) !important;
@@ -267,11 +368,30 @@ html[data-theme='light'] {
   .btn-google,
   .customize-app__btn--secondary,
   .customize-app__btn--ghost,
-  .customize-app__preview-cta--secondary,
-  .approval-grid-page__action-btn {
+  .pricing-card__cta--secondary,
+  .pricing-card__cta--ghost,
+  .course-glass-card__menu,
+  .library-page__btn-secondary,
+  .library-user-filter__trigger,
+  .library-user-filter__clear,
+  .approval-grid-page__action-btn,
+  .approval-grid-page__card-edit {
     background: var(--ds-surface, #ffffff) !important;
     color: var(--ds-text, #0f172a) !important;
     border: 1px solid var(--ds-border, #cbd5e1) !important;
+    box-shadow: none !important;
+  }
+
+  .customize-app__preview-eyebrow,
+  .customize-app__preview-body h3,
+  .customize-app__preview-nav span {
+    color: var(--ds-text, #0f172a) !important;
+  }
+
+  .customize-app__preview-cta--secondary {
+    background: var(--preview-secondary-container, var(--preview-secondary, var(--ds-secondary, #ab0063))) !important;
+    color: #ffffff !important;
+    border: 1px solid transparent !important;
     box-shadow: none !important;
   }
 
@@ -321,7 +441,8 @@ html[data-theme='light'] {
   }
 
   .notification-holder__item small,
-  .approval-grid-page__header-meta,
+  .approval-grid-page__header-meta .is-muted,
+  .approval-grid-page__stat p:first-child,
   .approval-grid-page__stat small {
     color: var(--ds-text-muted, #64748b) !important;
   }
@@ -351,5 +472,26 @@ html[data-theme='light'] {
   .customize-app__btn--primary,
   .approval-grid-page__approve-btn {
     color: #ffffff !important;
+  }
+
+  /* AI Mode — light surfaces (global so Angular encapsulation cannot drop them) */
+  .ai-mode__history-search {
+    background: var(--ds-surface, #ffffff) !important;
+  }
+
+  .ai-mode__history-item {
+    background: var(--ds-background) !important;
+  }
+
+  .ai-mode__history,
+  #ai-mode-history {
+    position: absolute !important;
+    right: 0 !important;
+    min-height: 500px !important;
+    z-index: 999 !important;
+  }
+
+  .ai-mode__composer {
+    background: var(--ai-panel, var(--ds-surface, #ffffff)) !important;
   }
 }

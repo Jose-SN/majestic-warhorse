@@ -8,10 +8,20 @@
 }
 
 .approval-page {
+  display: flex;
+  flex-direction: column;
+
   .approval-grid-page__content {
     display: flex;
     flex-direction: column;
+    flex: 1;
     min-height: 0;
+    overflow: hidden;
+  }
+
+  .approval-grid-page__header,
+  .approval-grid-page__header-actions {
+    flex-shrink: 0;
   }
 
   &__tabs {
@@ -71,6 +81,12 @@
 
 @media screen and (max-width: 1024px) {
   .approval-page {
+    .approval-grid-page__content {
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
     .approval-grid-page__header-actions {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -87,6 +103,34 @@
       li {
         padding: 0 12px;
         text-align: center;
+      }
+    }
+
+    .approval-page__panel {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: visible;
+
+      app-approval-list,
+      app-student-approval-list {
+        display: block;
+        height: auto;
+        min-height: min-content;
+        flex: none;
+      }
+
+      .approval-grid-page--embedded,
+      .approval-grid-page__content {
+        height: auto;
+        min-height: min-content;
+        overflow: visible;
+      }
+
+      .approval-grid-page__list,
+      .approval-grid-page__list-row {
+        flex-shrink: 0;
+        height: auto;
+        min-height: min-content;
       }
     }
   }
