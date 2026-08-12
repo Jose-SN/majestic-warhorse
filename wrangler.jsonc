@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "majestic-warhorse",
+  "compatibility_date": "2026-08-12",
+  "assets": {
+    "directory": "./dist/majestic-warhorse",
+    "not_found_handling": "single-page-application"
+  }
+}

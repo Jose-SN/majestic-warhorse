@@ -1,10 +1,14 @@
 {
   "name": "majestic-warhorse",
   "version": "0.0.0",
+  "packageManager": "npm@10.9.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:cloudflare": "ng build --configuration production",
+    "deploy:cloudflare": "npm run build:cloudflare && wrangler deploy",
+    "preview:static": "npx --yes serve dist/majestic-warhorse",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
@@ -53,6 +57,7 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "lint-staged": "^15.2.9",
     "prettier": "^3.3.3",
-    "typescript": "~5.4.5"
+    "typescript": "~5.4.5",
+    "wrangler": "^4.122.0"
   }
 }
