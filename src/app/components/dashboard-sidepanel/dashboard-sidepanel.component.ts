@@ -285,6 +285,10 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
     void this.router.navigate([DASHBOARD_NAV_ROUTES.pricing]);
   }
 
+  openPetaxAiSite(): void {
+    window.open('https://www.petaxai.com', '_blank', 'noopener,noreferrer');
+  }
+
   private withCacheBust(url: string, version?: string): string {
     if (!url || url.startsWith('data:') || url.startsWith('blob:') || url.startsWith('assets/')) {
       return url;

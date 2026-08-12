@@ -440,6 +440,6 @@
 
 <footer>
   <!-- {{ commonService.transformText(loginedUserPrivilege) }} Dashboard<br /> -->
-  <span>PetaxAI © {{ currentYear }} All Rights Reserved</span><br>
+  <span><div class="footer-brand" role="link" tabindex="0" (click)="openPetaxAiSite()" (keydown.enter)="openPetaxAiSite()">PetaxAI</div> © {{ currentYear }} All Rights Reserved</span><br>
   <span> App Version: {{ appService.getAppVersion() }}</span>
 </footer>
