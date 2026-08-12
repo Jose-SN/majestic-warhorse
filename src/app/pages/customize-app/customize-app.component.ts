@@ -47,6 +47,14 @@ export class CustomizeAppComponent implements OnInit, OnDestroy {
     return this.brandingService.resolveOrganizationId();
   }
 
+  get previewLogoUrl(): string {
+    return this.brandingService.displayLogoUrl(this.draft ?? this.brandingService.branding);
+  }
+
+  get previewFaviconUrl(): string {
+    return this.brandingService.displayFaviconUrl(this.draft ?? this.brandingService.branding);
+  }
+
   async ngOnInit(): Promise<void> {
     if (!this.isOrganization) {
       void this.router.navigate(

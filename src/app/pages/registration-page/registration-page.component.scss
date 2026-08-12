@@ -7,7 +7,7 @@
  * Calm light/dark overrides live in _themes.scss (not html[data-theme] here).
  */
 
-$signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5bBRqGkgaL6T_NuZj7s2VtCtDIUgdx_qYYPIILe42htWBhLi-cPMfsIXs9hEsrG_OCFSPq3Gjqj-bq1yjxtlM7hxT4XbeTVEKPcxvXyc0Ns3YV3Y1BZXKi12HeblABzB93Z7unaXiv_dfQdfx09-Z_RJEebeVfi1ChaBnCkmFBxroz0How8VMvlnFKldFRPE-Awfb3VfsyCOVckUjy0OcEtyodoIjh4oyyAUcBkCVq9uXWoH0sQZuYQ');
+$signup-hero-image: url('/assets/images/hero-image-map.png');
 
 :host {
   --ink: var(--ds-text, var(--mc-on-surface));
@@ -52,7 +52,7 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    width: 48%;
+    width: 60%;
     flex-shrink: 0;
     padding: var(--ds-space-8, 48px);
   }
@@ -77,7 +77,7 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
   &__content {
     position: relative;
     z-index: 2;
-    max-width: 36rem;
+    max-width: 50rem;
   }
 
   &__brand {
@@ -108,7 +108,7 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
 
   &__subtitle {
     margin: 0 0 var(--ds-space-6, 32px);
-    max-width: 26rem;
+    max-width: 50rem;
     @include type-body-large;
     color: var(--muted);
   }
@@ -158,7 +158,7 @@ $signup-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5b
   background: var(--panel);
 
   @media (min-width: 1024px) {
-    width: 52%;
+    width: 40%;
     align-items: center;
     padding: var(--ds-space-7, 40px) var(--ds-space-8, 48px);
   }

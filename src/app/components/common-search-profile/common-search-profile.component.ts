@@ -38,7 +38,7 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
   @Output() mobNavchild = new EventEmitter<void>();
   public mobMenu: boolean = false;
   public loginedUserInfo: UserModel = {} as UserModel;
-  brandLogo = 'assets/images/logo-majestic-hourse.svg';
+  brandLogo = 'assets/images/petaxai-learning-logo.svg';
   appName = 'PetaxAI Learning';
   private destroy$ = new Subject<void>();
   private readonly mobileViewportMq =
@@ -93,7 +93,7 @@ export class CommonSearchProfileComponent implements OnInit, OnDestroy {
       });
 
     this.brandingService.branding$.pipe(takeUntil(this.destroy$)).subscribe((branding) => {
-      this.brandLogo = this.withCacheBust(branding.logoUrl, branding.updatedAt);
+      this.brandLogo = this.withCacheBust(this.brandingService.displayLogoUrl(branding), branding.updatedAt);
       this.appName = branding.appName;
     });
 

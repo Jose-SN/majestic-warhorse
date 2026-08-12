@@ -31,6 +31,10 @@
       overflow-x: visible;
       overflow-y: auto;
     }
+
+    &.is-dropdown-open {
+      overflow: visible !important;
+    }
   }
 
   .login-pane {
@@ -160,7 +164,13 @@
 }
 
 .org-picker-section {
+  position: relative;
+  z-index: 1;
   margin-bottom: var(--ds-space-5, 24px);
+
+  &:has(.org-picker-dropdown.is-open) {
+    z-index: 30;
+  }
 
   &__label {
     display: block;
@@ -254,24 +264,65 @@
   }
 }
 
-.org-picker-list {
-  position: absolute;
-  top: calc(100% + var(--ds-space-2, 8px));
-  left: 0;
-  right: 0;
-  z-index: 40;
-  list-style: none;
-  margin: 0;
-  padding: var(--ds-space-1, 4px) 0;
-  max-height: 250px;
-  overflow-x: hidden;
-  overflow-y: auto;
+.org-picker-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-md, 12px);
   background: var(--panel);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
-  box-shadow: var(--shadow-card), 0 0 24px -8px color-mix(in srgb, var(--accent) 20%, transparent);
+  box-shadow: var(--shadow-card), 0 12px 40px rgba(0, 0, 0, 0.35);
+
+  &__search {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-space-2, 8px);
+    flex-shrink: 0;
+    padding: var(--ds-space-3, 12px);
+    border-bottom: 1px solid var(--line);
+    background: var(--panel-alt);
+
+    .material-symbols-outlined {
+      flex-shrink: 0;
+      font-size: 20px;
+      color: var(--muted);
+    }
+  }
+
+  &__search-input {
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--ink);
+    @include type-form-input;
+
+    &::placeholder {
+      color: var(--muted);
+    }
+  }
+
+  &__empty {
+    margin: 0;
+    padding: var(--ds-space-5, 24px) var(--ds-space-4, 16px);
+    text-align: center;
+    @include type-body-small;
+    color: var(--muted);
+  }
+}
+
+.org-picker-list {
+  flex: 1;
+  min-height: 0;
+  list-style: none;
+  margin: 0;
+  padding: var(--ds-space-1, 4px) 0;
+  overflow-x: hidden;
+  overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent) transparent;
 

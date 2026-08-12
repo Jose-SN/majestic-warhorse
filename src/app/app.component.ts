@@ -17,6 +17,7 @@ import {
 } from './services/api-service/health-check.service';
 import { BrandingService } from './core/branding/branding.service';
 import { ThemeService } from './core/theme/theme.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public activeRouteName: string = '';
   public isDialogOpen: boolean = false;
   public healthState: ServicesHealthState | null = null;
+  public betaVersionText = `BETA v${environment.appVersion}`;
   private destroy$ = new Subject<void>();
   @ViewChild(CommonDialogComponent) commonDialogComponent!: CommonDialogComponent;
   public popupModelInfo: IModelInfo = {} as IModelInfo;

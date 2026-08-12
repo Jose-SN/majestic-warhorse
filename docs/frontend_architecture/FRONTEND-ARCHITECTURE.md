@@ -476,7 +476,7 @@ Also older `--bg-*` variables coexist.
 |-------------|-----------------|
 | Swap colors/fonts | Possible via `--mc-*` CSS variables |
 | Per-tenant runtime theme | **Missing** — no org-id → theme loader |
-| Logos | **Hardcoded** asset paths (`logo-majestic-hourse.svg`, etc.) |
+| Logos | **Hardcoded** asset paths (`petaxai-learning-logo.svg`, etc.) |
 | Product name copy | **Hardcoded** in templates |
 | App identity | Fixed `client_id: 'majestic-warhorse'` in environments |
 

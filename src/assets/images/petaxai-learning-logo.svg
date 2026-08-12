@@ -1,0 +1,48 @@
+<svg width="222" height="72" viewBox="0 0 222 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- LEFT ICON GRADIENT — Majestic brand (runtime theming via BrandingService) -->
+    <linearGradient id="iconGradient" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ff6b2c"/>
+      <stop offset="100%" stop-color="#ab0063"/>
+    </linearGradient>
+
+    <!-- RIGHT TEXT GRADIENT -->
+    <linearGradient id="textGradient" x1="84" y1="0" x2="222" y2="72" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ff6b2c"/>
+      <stop offset="50%" stop-color="#ab0063"/>
+      <stop offset="100%" stop-color="#4a0084"/>
+    </linearGradient>
+  </defs>
+
+  <!-- LEFT ICON -->
+  <rect x="1" y="1" width="70" height="70" rx="18"
+        fill="#0F1115"
+        stroke="url(#iconGradient)"
+        stroke-width="2"/>
+
+  <text x="36" y="50"
+        text-anchor="middle"
+        font-family="Inter, Arial, Helvetica, sans-serif"
+        font-size="40"
+        font-weight="800"
+        fill="url(#iconGradient)">P</text>
+
+  <!-- RIGHT TEXT -->
+  <text x="84" y="32"
+        font-family="Inter, Arial, Helvetica, sans-serif"
+        font-size="36"
+        font-weight="700"
+        letter-spacing="-0.6"
+        textLength="136"
+        lengthAdjust="spacingAndGlyphs"
+        fill="url(#textGradient)">PetaxAI</text>
+
+  <text x="84" y="62"
+        font-family="Inter, Arial, Helvetica, sans-serif"
+        font-size="24"
+        font-weight="500"
+        letter-spacing="-0.2"
+        textLength="136"
+        lengthAdjust="spacingAndGlyphs"
+        fill="url(#textGradient)">Learning</text>
+</svg>

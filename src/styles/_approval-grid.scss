@@ -342,6 +342,7 @@
     backdrop-filter: blur(16px);
     @include border-radius(var(--radius-card));
     overflow: hidden;
+    overflow-y: auto;
   }
 
   &__list-head,
@@ -354,6 +355,9 @@
   }
 
   &__list-head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
     border-bottom: 1px solid var(--ds-border, var(--mc-outline-variant));
     background: var(--ds-surface-alt, var(--mc-surface-container-high));
     @include type-caption;

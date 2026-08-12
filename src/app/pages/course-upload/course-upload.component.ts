@@ -85,7 +85,7 @@ export class CourseUploadComponent implements OnChanges, OnInit, OnDestroy {
 
   get teacherAvatar(): string {
     const raw = this.commonService.loginedUserInfo?.profileImage || this.commonService.loginedUserInfo?.profile_image;
-    return this.commonService.decodeUrl(raw ?? '') || 'assets/images/logo-majestic-hourse.svg';
+    return this.commonService.decodeUrl(raw ?? '') || 'assets/images/petaxai-learning-logo.svg';
   }
 
   get previewProgressPercent(): number {

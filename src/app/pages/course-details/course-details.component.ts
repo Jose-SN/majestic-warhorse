@@ -34,6 +34,7 @@ import {
 } from './model/course-discussion.model';
 import { mapOrganizationToUserShape } from 'src/app/shared/utils/user-mapper.util';
 import { firstValueFrom } from 'rxjs';
+import { BrandingService } from 'src/app/core/branding/branding.service';
 
 @Component({
   selector: 'app-course-detils',
@@ -83,6 +84,7 @@ export class CourseDetailsComponent {
   private expandedChapterIds = new Set<string>();
   readonly demo = COURSE_DETAILS_DEMO;
   readonly ringCircumference = 2 * Math.PI * 15;
+  brandLogo = 'assets/images/petaxai-learning-logo.svg';
   @Input() selectedCourseInfo: ICourseList = {} as ICourseList;
   @ViewChild('btnTrigger', { static: true }) btnTrigger!: ElementRef<HTMLButtonElement>;
   @ViewChild(VideoPlayerComponent) videoPlayerComponent!: VideoPlayerComponent;
@@ -98,13 +100,18 @@ export class CourseDetailsComponent {
     private courseDiscussionsApi: CourseDiscussionsApiService,
     private iam: IamFacade,
     public demoModeService: DemoModeService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private brandingService: BrandingService
   ) {
     this.profileUrl = this.commonService.decodeUrl(
       (this.commonService.loginedUserInfo.profileImage || this.commonService.loginedUserInfo.profile_image) ?? ''
     );
   }
   async ngOnInit(): Promise<void> {
+    this.brandLogo = this.brandingService.displayLogoUrl();
+    this.brandingService.branding$.pipe(takeUntil(this.destroy$)).subscribe((branding) => {
+      this.brandLogo = this.brandingService.displayLogoUrl(branding);
+    });
     // Get selected course from route state
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras?.state) {
@@ -867,7 +874,7 @@ export class CourseDetailsComponent {
   get teacherImage(): string {
     const creator = this.teacherDetails ?? this.courseCreator;
     const img = creator?.profileImage || creator?.profile_image || '';
-    return img ? this.commonService.decodeUrl(img) : '../../../assets/images/logo-majestic-hourse.svg';
+    return img ? this.commonService.decodeUrl(img) : this.brandLogo;
   }
 
   get teacherBio(): string {

@@ -46,7 +46,8 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
   public currentYear: number = new Date().getFullYear();
   private destroy$ = new Subject<void>();
   public showAssigningPopup: boolean = false;
-  brandLogo = 'assets/images/logo-majestic-hourse.svg';
+  brandLogo = 'assets/images/petaxai-learning-logo.svg';
+  brandIcon = 'assets/images/petaxai-learning-icon.svg';
   appName = 'PetaxAI Learning';
   readonly navRoutes = DASHBOARD_NAV_ROUTES;
   readonly navActiveSegments = DASHBOARD_NAV_ACTIVE_SEGMENTS;
@@ -75,7 +76,8 @@ export class DashboardSidepanelComponent implements OnInit, OnDestroy {
       (this.loginedUserInfo.profileImage || this.loginedUserInfo.profile_image) ?? ''
     );
     this.brandingService.branding$.pipe(takeUntil(this.destroy$)).subscribe((branding) => {
-      this.brandLogo = this.withCacheBust(branding.logoUrl, branding.updatedAt);
+      this.brandLogo = this.withCacheBust(this.brandingService.displayLogoUrl(branding), branding.updatedAt);
+      this.brandIcon = this.withCacheBust(this.brandingService.displayFaviconUrl(branding), branding.updatedAt);
       this.appName = branding.appName;
     });
 

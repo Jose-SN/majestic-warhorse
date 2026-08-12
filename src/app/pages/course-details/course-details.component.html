@@ -52,7 +52,7 @@
             >
               {{ courseStatusLevel }}
             </span>
-            <img class="cd-video-block__logo" src="../../../assets/images/logo-majestic-hourse.svg" alt="" />
+            <img class="cd-video-block__logo" [src]="brandLogo" alt="" />
             @for (video of [activeVideoInfo]; track video.id || video.fileURL) {
               <app-video-player
                 [videoUrl]="video.fileURL"
@@ -231,7 +231,7 @@
                       <strong>{{ item.author }}</strong>
                       <small>{{ item.chapterLabel }}: {{ item.chapterTitle }}</small>
                     </div>
-                    <img class="cd-discussion-card__logo" src="../../../assets/images/logo-majestic-hourse.svg" alt="" />
+                    <img class="cd-discussion-card__logo" [src]="brandLogo" alt="" />
                   </div>
                   <p>{{ item.comment }}</p>
                   <div class="cd-discussion-card__footer">

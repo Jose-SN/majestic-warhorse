@@ -4,6 +4,34 @@
   display: none !important;
 }
 
+.app-beta-version-badge {
+  position: fixed;
+  right: max(1.25rem, env(safe-area-inset-right, 0px));
+  bottom: max(0.85rem, env(safe-area-inset-bottom, 0px));
+  left: auto;
+  z-index: 10001;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2, 8px);
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: var(--ds-success, #22c55e);
+  border: 1px solid var(--ds-success, #22c55e);
+  color: #ffffff;
+  @include type-caption;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .app-beta-version-badge {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+}
+
 .service-health-banner {
   position: sticky;
   top: 0;

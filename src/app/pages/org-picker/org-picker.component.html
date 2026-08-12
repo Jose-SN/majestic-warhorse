@@ -27,7 +27,7 @@
   <section class="login-pane">
     <div class="login-pane__mobile-bg" aria-hidden="true"></div>
 
-    <div class="login-card org-picker-card">
+    <div class="login-card org-picker-card" [class.is-dropdown-open]="orgDropdownOpen">
       <div class="login-card__accent"></div>
 
       <h2 class="org-picker-card__title">
@@ -58,6 +58,7 @@
 
           <div class="org-picker-dropdown" [class.is-open]="orgDropdownOpen">
             <button
+              #orgDropdownTrigger
               type="button"
               class="org-picker-dropdown__trigger"
               [class.has-value]="!!selectedOrganization"
@@ -82,45 +83,70 @@
                 aria-hidden="true"
               >{{ orgDropdownOpen ? 'expand_less' : 'expand_more' }}</span>
             </button>
-
-            @if (orgDropdownOpen) {
-              <ul
-                class="org-picker-list"
-                role="listbox"
-                aria-labelledby="org-list-label"
-                [attr.aria-activedescendant]="selectedOrgId ? 'org-option-' + selectedOrgId : null"
-              >
-                @for (org of organizations; track org.id) {
-                  <li role="presentation">
-                    <button
-                      type="button"
-                      class="org-picker-item"
-                      role="option"
-                      [id]="'org-option-' + org.id"
-                      [attr.aria-selected]="org.id === selectedOrgId"
-                      [class.is-selected]="org.id === selectedOrgId"
-                      [class.is-current]="org.id === activeOrgId"
-                      [class.is-busy]="submitting && org.id === selectedOrgId"
-                      [disabled]="submitting"
-                      (click)="pickOrganization(org.id)"
-                    >
-                      <span class="org-picker-item__details">
-                        <strong>{{ displayName(org.name) }}</strong>
-                        @if (org.email) {
-                          <small>{{ org.email }}</small>
-                        }
-                      </span>
-                      @if (org.id === selectedOrgId) {
-                        <span class="material-symbols-outlined org-picker-item__check" aria-hidden="true">check</span>
-                      } @else if (org.id === activeOrgId) {
-                        <span class="org-picker-item__badge">Current</span>
-                      }
-                    </button>
-                  </li>
-                }
-              </ul>
-            }
           </div>
+
+          @if (orgDropdownOpen) {
+            <div
+              class="org-picker-panel"
+              [ngStyle]="dropdownPanelStyle"
+              (click)="$event.stopPropagation()"
+            >
+              <div class="org-picker-panel__search">
+                <span class="material-symbols-outlined" aria-hidden="true">search</span>
+                <input
+                  #orgSearchInput
+                  type="search"
+                  class="org-picker-panel__search-input"
+                  placeholder="Search organizations..."
+                  autocomplete="off"
+                  spellcheck="false"
+                  [value]="orgSearchQuery"
+                  (input)="onOrgSearchInput($event)"
+                  (keydown.escape)="closeOrgDropdown()"
+                />
+              </div>
+
+              @if (filteredOrganizations.length) {
+                <ul
+                  class="org-picker-list"
+                  role="listbox"
+                  aria-labelledby="org-list-label"
+                  [attr.aria-activedescendant]="selectedOrgId ? 'org-option-' + selectedOrgId : null"
+                >
+                  @for (org of filteredOrganizations; track org.id) {
+                    <li role="presentation">
+                      <button
+                        type="button"
+                        class="org-picker-item"
+                        role="option"
+                        [id]="'org-option-' + org.id"
+                        [attr.aria-selected]="org.id === selectedOrgId"
+                        [class.is-selected]="org.id === selectedOrgId"
+                        [class.is-current]="org.id === activeOrgId"
+                        [class.is-busy]="submitting && org.id === selectedOrgId"
+                        [disabled]="submitting"
+                        (click)="pickOrganization(org.id)"
+                      >
+                        <span class="org-picker-item__details">
+                          <strong>{{ displayName(org.name) }}</strong>
+                          @if (org.email) {
+                            <small>{{ org.email }}</small>
+                          }
+                        </span>
+                        @if (org.id === selectedOrgId) {
+                          <span class="material-symbols-outlined org-picker-item__check" aria-hidden="true">check</span>
+                        } @else if (org.id === activeOrgId) {
+                          <span class="org-picker-item__badge">Current</span>
+                        }
+                      </button>
+                    </li>
+                  }
+                </ul>
+              } @else {
+                <p class="org-picker-panel__empty">No organizations match your search.</p>
+              }
+            </div>
+          }
         </div>
 
         <div class="login-form__actions org-picker-actions">

@@ -59,7 +59,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
   private applyBrand(branding: AppBranding): void {
-    this.brandLogo = this.withCacheBust(branding.logoUrl, branding.updatedAt);
+    this.brandLogo = this.withCacheBust(this.brandingService.displayLogoUrl(branding), branding.updatedAt);
     this.appName = branding.appName;
     this.tagline = branding.tagline;
   }

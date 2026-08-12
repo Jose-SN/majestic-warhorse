@@ -10,7 +10,7 @@
  * prefixes them. Calm light/dark overrides live in _themes.scss.
  */
 
-$login-hero-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB1KPaNHKXSvmcTZuoCSi7T2wMwiRLBjwt9mOe4qz1s9OAuuHHlCTHY-oPCs9hpM34hJTuQle7s_YbGf3Q7sKFo5cLDIgEKpp4pKuPfLlLfQ-CNTixG31PUOmxcv_l5z6CY3a72yff7XyTWOJQKssZaIqnFXt_Lccl3s6A93Ge3K2_Id-GUPigCfltHOWz7sGnMTYE-yMzgFlECMl4Gp5zcCPpIP7TW3ooOICLjnWp9H9YMYngz1Qr0iA');
+$login-hero-image: url('/assets/images/hero-image-map.png');
 $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6dB1s4N1S6jRuCkorVgydIjDPefUwP2kilWhGZ8SMhsgzT1WvGH_kybpCOLRoVD9a2jlvHPQkMca5Ay5btBCtxGevToFAcRUdJwyBQTv4iQRzszrSLNytaFa5IHWfV5IfQyKCbnDdfLw0a5YEaVUJXjN7lSUF_J_TkziuFC9y5ovph6E0TKmmcfd-ZA2nbXo3aaD1lwdPew2RjC-T0bqrmh0ujxwO_pFMdrzpg5v8DkOBJ7M888J2mg');
 
 :host {
@@ -45,9 +45,12 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   overflow: hidden;
 
   @media (min-width: 1024px) {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     width: 60%;
     flex-shrink: 0;
+    padding: var(--ds-space-8, 48px);
   }
 
   &__bg {
@@ -64,12 +67,9 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   &__overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      to right,
-      var(--page-bg) 0%,
-      color-mix(in srgb, var(--page-bg) 40%, transparent) 50%,
-      transparent 100%
-    );
+    background:
+      linear-gradient(to top, var(--page-bg) 0%, transparent 55%),
+      color-mix(in srgb, var(--page-bg) 35%, transparent);
   }
 
   &__glow {
@@ -100,18 +100,29 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
     }
   }
 
-  &__narrative {
-    position: absolute;
-    bottom: var(--ds-space-8, 48px);
-    left: var(--ds-space-8, 48px);
-    z-index: 10;
-    max-width: 32rem;
+  &__content {
+    position: relative;
+    z-index: 2;
+    max-width: 50rem;
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--ds-space-6, 32px);
+  }
+
+  &__logo {
+    display: block;
+    width: min(100%, 280px);
+    height: auto;
+    filter: drop-shadow(0 0 24px color-mix(in srgb, var(--accent) 35%, transparent));
   }
 
   &__title {
+    margin: 0 0 var(--ds-space-5, 24px);
     @include type-display;
     color: var(--ink);
-    margin: 0;
   }
 
   &__title-accent {
@@ -122,10 +133,40 @@ $login-mobile-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6
   }
 
   &__subtitle {
-    margin: var(--ds-space-4, 16px) 0 0;
-    @include type-body;
+    margin: 0 0 var(--ds-space-6, 32px);
+    max-width: 50rem;
+    @include type-body-large;
     color: var(--muted);
-    max-width: 24rem;
+  }
+
+  &__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-4, 16px);
+  }
+
+  &__stat {
+    padding: var(--ds-space-3, 12px) var(--ds-space-4, 16px);
+    background: color-mix(in srgb, var(--panel) 70%, transparent);
+    border: 1px solid var(--line);
+    @include border-radius(12px);
+  }
+
+  &__stat-label {
+    display: block;
+    @include type-caption;
+    @include type-weight-medium;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  &__stat-value {
+    display: block;
+    margin-top: var(--ds-space-1, 4px);
+    @include type-metadata;
+    @include type-weight-medium;
+    color: var(--ink);
   }
 }
 

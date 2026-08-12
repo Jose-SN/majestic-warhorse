@@ -928,7 +928,7 @@ PWA/manifest icons: `favicon-196.png`, `apple-icon-180.png`, maskable 192/512.
 
 ### 16.3 `assets/images/` — **ACTIVE**
 
-Logos (`logo-majestic-hourse.svg` — note spelling), UI SVG icons, placeholders, `under-construction.png`, `pending-approval.png`, sample images.
+Logos (`petaxai-learning-logo.svg` — note spelling), UI SVG icons, placeholders, `under-construction.png`, `pending-approval.png`, sample images.
 
 ### 16.4 `assets/screens/` — **SUPPORT / design reference**
 
@@ -1021,7 +1021,7 @@ flowchart TD
 | `file-viwer` typo | `components/file-viwer` | Rename only with project-wide import update |
 | `forgetpassword` route spelling | routing | Keep unless coordinated redirect added |
 | `modal/` meaning “models” | `courses/modal`, `dashboard/modal` | New code should use `model/` |
-| Logo filename `hourse` | `assets/images/logo-majestic-hourse.svg` | Spelling is baked into templates |
+| Logo filename `hourse` | `assets/images/petaxai-learning-logo.svg` | Spelling is baked into templates |
 | Duplicate `UnderConstructionComponent` | pages vs components | Router uses **components** |
 
 ### 21.3 Dependency rules (enforce in review)

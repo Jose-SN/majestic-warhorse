@@ -1,7 +1,8 @@
 import { AppBranding, BrandingPreset, BrandingThemeColors } from './branding.model';
 
-export const DEFAULT_BRAND_LOGO = 'assets/images/logo-majestic-hourse.svg';
-export const DEFAULT_BRAND_FAVICON = 'assets/icons/favicon-196.png';
+export const DEFAULT_BRAND_LOGO = 'assets/images/petaxai-learning-logo.svg';
+export const DEFAULT_BRAND_ICON = 'assets/images/petaxai-learning-icon.svg';
+export const DEFAULT_BRAND_FAVICON = DEFAULT_BRAND_ICON;
 
 /** Canonical brand gradient used across the product. */
 export const BRAND_GRADIENT =

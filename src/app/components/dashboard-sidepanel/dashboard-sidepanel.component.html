@@ -1,6 +1,6 @@
 <header>
   <figure class="logo-main" (click)="navigateToHome()" [attr.title]="appName">
-    <img class="logo-main__mark" [src]="brandLogo" [alt]="appName" />
+    <img class="logo-main__mark" [src]="collapsed ? brandIcon : brandLogo" [alt]="appName" />
   </figure>
   <button
     type="button"

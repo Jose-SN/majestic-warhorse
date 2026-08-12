@@ -54,14 +54,14 @@
           <label class="customize-app__field customize-app__field--span-6 customize-app__field--upload">
             <span>Logo</span>
             <div class="customize-app__upload-box">
-              <img [src]="draft.logoUrl" [alt]="draft.appName || 'Logo'" />
+              <img [src]="previewLogoUrl" [alt]="draft.appName || 'Logo'" />
               <input type="file" accept="image/*" (change)="onLogoSelected($event)" aria-label="Upload logo" />
             </div>
           </label>
           <label class="customize-app__field customize-app__field--span-6 customize-app__field--upload">
             <span>Favicon</span>
             <div class="customize-app__upload-box customize-app__upload-box--favicon">
-              <img [src]="draft.faviconUrl" alt="Favicon" />
+              <img [src]="previewFaviconUrl" alt="Favicon" />
               <input
                 type="file"
                 accept="image/*"
@@ -172,7 +172,7 @@
           "
         >
           <div class="customize-app__preview-nav">
-            <img [src]="draft.logoUrl" [alt]="draft.appName" />
+            <img [src]="previewLogoUrl" [alt]="draft.appName" />
             <span>{{ draft.appName || 'App name' }}</span>
           </div>
           <div class="customize-app__preview-body">

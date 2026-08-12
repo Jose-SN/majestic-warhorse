@@ -7,6 +7,7 @@ import {
   DEFAULT_BRAND_LOGO,
   DEFAULT_THEME_COLORS,
 } from './branding.defaults';
+import { resolveDisplayFaviconUrl, resolveDisplayLogoUrl } from './themed-logo';
 import { BrandingApiService } from 'src/app/services/api-service/branding-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 
@@ -34,11 +35,27 @@ export class BrandingService {
   }
 
   get logoUrl(): string {
-    return this.branding.logoUrl || DEFAULT_BRAND_LOGO;
+    return this.displayLogoUrl(this.branding);
+  }
+
+  /**
+   * Logo for <img> tags. The default PetaxAI SVG is recolored to the org
+   * gradient; custom uploaded logos are returned unchanged.
+   */
+  displayLogoUrl(branding: AppBranding = this.branding): string {
+    return resolveDisplayLogoUrl(branding.logoUrl, branding.colors);
   }
 
   get faviconUrl(): string {
-    return this.branding.faviconUrl || DEFAULT_BRAND_FAVICON;
+    return this.displayFaviconUrl(this.branding);
+  }
+
+  /**
+   * Favicon / collapsed mark. Default PetaxAI icon is recolored to the org
+   * gradient; custom uploaded favicons are returned unchanged.
+   */
+  displayFaviconUrl(branding: AppBranding = this.branding): string {
+    return resolveDisplayFaviconUrl(branding.faviconUrl, branding.colors);
   }
 
   /** Active organization id (session first, then logged-in context). */
@@ -374,8 +391,8 @@ export class BrandingService {
 
     document.title = branding.appName || DEFAULT_APP_BRANDING.appName;
     const version = branding.updatedAt || String(Date.now());
-    this.updateFavicon(branding.faviconUrl || DEFAULT_BRAND_FAVICON, version);
-    this.updateAppleTouchIcon(branding.logoUrl || DEFAULT_BRAND_LOGO, version);
+    this.updateFavicon(this.displayFaviconUrl(branding), version);
+    this.updateAppleTouchIcon(this.displayFaviconUrl(branding), version);
     this.updateThemeColor(c.surfaceContainerLow);
   }
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { PostLoginWorkflowService } from 'src/app/core/auth/post-login-workflow.service';
@@ -25,6 +25,11 @@ export class OrgPickerComponent implements OnInit {
   activeOrgId = '';
   selectedOrgId: string | null = null;
   orgDropdownOpen = false;
+  orgSearchQuery = '';
+  dropdownPanelStyle: Record<string, string> = {};
+
+  @ViewChild('orgDropdownTrigger') orgDropdownTrigger?: ElementRef<HTMLButtonElement>;
+  @ViewChild('orgSearchInput') orgSearchInput?: ElementRef<HTMLInputElement>;
 
   constructor(
     private iam: IamFacade,
@@ -64,14 +69,37 @@ export class OrgPickerComponent implements OnInit {
     return !!this.selectedOrgId && !this.submitting;
   }
 
+  get filteredOrganizations(): UserOrganizationEntry[] {
+    const query = this.orgSearchQuery.trim().toLowerCase();
+    if (!query) {
+      return this.organizations;
+    }
+
+    return this.organizations.filter((org) => {
+      const name = this.displayName(org.name).toLowerCase();
+      const email = (org.email || '').toLowerCase();
+      return name.includes(query) || email.includes(query);
+    });
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if (!this.orgDropdownOpen) {
       return;
     }
     const target = event.target as Node | null;
-    if (target && !this.host.nativeElement.querySelector('.org-picker-dropdown')?.contains(target)) {
-      this.orgDropdownOpen = false;
+    const section = this.host.nativeElement.querySelector('.org-picker-section');
+    if (target && section?.contains(target)) {
+      return;
+    }
+    this.closeOrgDropdown();
+  }
+
+  @HostListener('window:resize')
+  @HostListener('window:scroll')
+  onViewportChange(): void {
+    if (this.orgDropdownOpen) {
+      this.syncDropdownPanelPosition();
     }
   }
 
@@ -79,7 +107,50 @@ export class OrgPickerComponent implements OnInit {
     if (this.submitting) {
       return;
     }
-    this.orgDropdownOpen = !this.orgDropdownOpen;
+    if (this.orgDropdownOpen) {
+      this.closeOrgDropdown();
+      return;
+    }
+    this.openOrgDropdown();
+  }
+
+  openOrgDropdown(): void {
+    this.orgSearchQuery = '';
+    this.orgDropdownOpen = true;
+    requestAnimationFrame(() => {
+      this.syncDropdownPanelPosition();
+      this.orgSearchInput?.nativeElement.focus();
+    });
+  }
+
+  closeOrgDropdown(): void {
+    this.orgDropdownOpen = false;
+    this.orgSearchQuery = '';
+  }
+
+  onOrgSearchInput(event: Event): void {
+    this.orgSearchQuery = (event.target as HTMLInputElement).value;
+  }
+
+  private syncDropdownPanelPosition(): void {
+    const trigger = this.orgDropdownTrigger?.nativeElement;
+    if (!trigger) {
+      return;
+    }
+
+    const rect = trigger.getBoundingClientRect();
+    const maxPanelHeight = 320;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const openUp = spaceBelow < 200 && spaceAbove > spaceBelow;
+    const availableHeight = Math.max(180, Math.min(maxPanelHeight, openUp ? spaceAbove : spaceBelow));
+
+    this.dropdownPanelStyle = {
+      position: 'fixed',
+      width: `${rect.width}px`,
+      maxHeight: `${availableHeight}px`,
+      zIndex: '1200',
+    };
   }
 
   private async loadOrganizations(): Promise<void> {
@@ -148,7 +219,7 @@ export class OrgPickerComponent implements OnInit {
   pickOrganization(orgId: string): void {
     if (this.submitting) return;
     this.selectedOrgId = orgId;
-    this.orgDropdownOpen = false;
+    this.closeOrgDropdown();
 
     // Switch mode still applies immediately on pick.
     if (this.isSwitchMode) {

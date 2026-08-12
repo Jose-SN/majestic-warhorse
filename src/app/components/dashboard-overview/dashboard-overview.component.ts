@@ -22,6 +22,7 @@ import {
   SubscribedCourseItem,
 } from './data/dashboard-demo.data';
 import { DemoModeService } from 'src/app/shared/services/demo-mode.service';
+import { BrandingService } from 'src/app/core/branding/branding.service';
 
 @Component({
   selector: 'app-dashboard-overview',
@@ -50,7 +51,7 @@ export class DashboardOverviewComponent implements OnDestroy {
   carouselOffset = 0;
   readonly carouselPageSize = 4;
   readonly ringCircumference = 2 * Math.PI * 15;
-  readonly brandLogo = 'assets/images/logo-majestic-hourse.svg';
+  brandLogo = 'assets/images/petaxai-learning-logo.svg';
   readonly coursesRoute = DASHBOARD_NAV_ROUTES.courses;
 
   readonly chartYLabels = [
@@ -89,12 +90,17 @@ export class DashboardOverviewComponent implements OnDestroy {
     private courseDetailsService: CourseDetailsService,
     private favoritesApiService: FavoritesApiService,
     private router: Router,
-    private demoModeService: DemoModeService
+    private demoModeService: DemoModeService,
+    private brandingService: BrandingService
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.loginedUserPrivilege = this.commonService.loginedUserInfo?.role || '';
     this.activeFilterTab = this.viewModel.filterTabs[0];
+    this.brandLogo = this.brandingService.displayLogoUrl();
+    this.brandingService.branding$.pipe(takeUntil(this.destroy$)).subscribe((branding) => {
+      this.brandLogo = this.brandingService.displayLogoUrl(branding);
+    });
 
     this.demoModeService.demoLoading$
       .pipe(takeUntil(this.destroy$))

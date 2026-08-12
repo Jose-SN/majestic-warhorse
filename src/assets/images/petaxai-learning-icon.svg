@@ -1,0 +1,20 @@
+<svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="iconGradient" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ff6b2c"/>
+      <stop offset="100%" stop-color="#ab0063"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="1" y="1" width="70" height="70" rx="18"
+        fill="#0F1115"
+        stroke="url(#iconGradient)"
+        stroke-width="2"/>
+
+  <text x="36" y="50"
+        text-anchor="middle"
+        font-family="Inter, Arial, Helvetica, sans-serif"
+        font-size="40"
+        font-weight="800"
+        fill="url(#iconGradient)">P</text>
+</svg>

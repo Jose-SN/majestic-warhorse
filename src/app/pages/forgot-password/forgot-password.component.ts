@@ -70,7 +70,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
   }
 
   private applyBrand(branding: AppBranding): void {
-    this.brandLogo = branding.logoUrl;
+    this.brandLogo = this.brandingService.displayLogoUrl(branding);
     this.appName = branding.appName;
     this.tagline = branding.tagline;
   }
