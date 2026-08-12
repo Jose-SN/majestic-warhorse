@@ -246,7 +246,9 @@ Or: `npm run deploy:cloudflare`
 | Wrangler name mismatch | `"name"` in `wrangler.jsonc` = Cloudflare project name |
 | Bun used on CI | Remove committed `bun.lock`; keep it gitignored |
 | Lockfile out of sync | Run `npm install`, commit `package-lock.json` |
-| Node version errors | Set `NODE_VERSION=22` in Cloudflare build variables |
+| Node version errors | Set `NODE_VERSION=22` in Cloudflare build variables (or keep `engines` allowing Node 24) |
+| `npm ci` lockfile out of sync | Run `npm install` locally, commit `package.json` + `package-lock.json`, push |
+| Missing eslint / typescript-eslint from lock file | Peer deps of `@angular-eslint` — keep `eslint` and `@typescript-eslint/*` in `devDependencies` |
 | Old API URLs in prod | Update `environment.prod.ts` and redeploy |
 
 ---
