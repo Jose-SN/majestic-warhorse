@@ -3,7 +3,7 @@
 Deploy this **Angular 18 SPA** to Cloudflare via **Workers Builds (static assets)**.
 
 **Repo:** [Jose-SN/majestic-warhorse](https://github.com/Jose-SN/majestic-warhorse)  
-**Production URL (current):** https://majestic.petaxai.com
+**Production URL (current):** https://learning.petaxai.com
 
 ---
 
@@ -94,7 +94,7 @@ If you create the project under a different name in the dashboard, update `wrang
 After first successful deploy:
 
 1. Project → **Settings** → **Domains & Routes**
-2. Add `majestic.petaxai.com` (or your domain)
+2. Add `learning.petaxai.com` (or your domain)
 3. Update DNS as Cloudflare instructs
 
 Also keep `src/environments/environment.prod.ts` → `appUrl` aligned with the live domain.
@@ -263,7 +263,7 @@ Or: `npm run deploy:cloudflare`
 - [ ] Build variable: `NODE_VERSION=22`
 - [ ] `wrangler.jsonc` `"name"` matches Cloudflare project name
 - [ ] Push to production branch and verify build logs
-- [ ] Add custom domain (e.g. `majestic.petaxai.com`)
+- [ ] Add custom domain (e.g. `learning.petaxai.com`)
 - [ ] Confirm `environment.prod.ts` `appUrl` matches the live domain
 
 ---

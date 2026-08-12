@@ -90,7 +90,7 @@ flowchart LR
 | Framework | Angular ^18 | `package.json` |
 | Delivery | Static files under `dist/majestic-warhorse` | `angular.json` |
 | Hosting (CI) | SSH deploy of `dist/` to EC2 | `.github/workflows/main.yml` |
-| Public URL (prod env) | `https://majestic.petaxai.com` | `environment.prod.ts` |
+| Public URL (prod env) | `https://learning.petaxai.com` | `environment.prod.ts` |
 
 ### 2.2 Internal structure (**Observed**)
 
@@ -548,7 +548,7 @@ flowchart TB
 
 | Piece | Evidence | Tier |
 |-------|----------|------|
-| SPA URL | `https://majestic.petaxai.com` | Observed env |
+| SPA URL | `https://learning.petaxai.com` | Observed env |
 | SPA deploy | GitHub Actions → SSH → `DEPLOY_TARGET` with `SOURCE: dist/` | Observed workflow |
 | NGINX SPA fallback | README `try_files $uri /index.html` | Documented legacy (README) |
 | IAM host | Railway hostname in `environment.prod.ts` | Observed |
@@ -877,7 +877,7 @@ flowchart LR
 | SA-1 | Majestic backend language/framework version as deployed | Only API docs + Railway URL in this repo | Backend repository |
 | SA-2 | Whether IAM and Majestic share one Supabase Postgres | Not stated | Infra/backend env |
 | SA-3 | Production API gateway / JWT enforcement in front of Majestic | API doc says JWT not enforced in backend | Security architecture |
-| SA-4 | CORS allowlist for `majestic.petaxai.com` | Not in this repo | Backend/gateway config |
+| SA-4 | CORS allowlist for `learning.petaxai.com` | Not in this repo | Backend/gateway config |
 | SA-5 | IAM WebSocket purpose for this product | IAM has WS; SPA unused | Product decision |
 | SA-6 | Message queues between IAM and Majestic | No evidence | Backend repos |
 | SA-7 | Redis/CDN caching on APIs | No evidence | Infra |

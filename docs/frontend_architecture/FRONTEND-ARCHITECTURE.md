@@ -510,7 +510,7 @@ Also older `--bg-*` variables coexist.
 | File | `production` | `appUrl` | `iamApi` | `majesticWarhorseApi` |
 |------|--------------|----------|----------|------------------------|
 | `environment.ts` | false | `http://localhost:4200` | `http://localhost:8080/auth/api/` | `http://localhost:8081/` |
-| `environment.prod.ts` | true | `https://majestic.petaxai.com` | Railway IAM URL | Railway backend URL |
+| `environment.prod.ts` | true | `https://learning.petaxai.com` | Railway IAM URL | Railway backend URL |
 
 Shared in both:
 

@@ -40,7 +40,7 @@ IAM is a multi-tenant identity and membership service. It:
 | Product | Frontend | Backend | `applications.client_id` |
 |---|---|---|---|
 | The Church Manager | React (`localhost:5173` / `thechurchmanager.com`) | Python course backend | `thechurchmanager` |
-| Majestic Warhorse | Angular (`localhost:4200` / `majestic.petaxai.com`) | Python course backend | `majestic-warhorse` |
+| Majestic Warhorse | Angular (`localhost:4200` / `learning.petaxai.com`) | Python course backend | `majestic-warhorse` |
 
 Seeds: [`scripts/applications.sql`](../scripts/applications.sql) L28–30; [`scripts/migrate_majestic_warhorse_application.sql`](../scripts/migrate_majestic_warhorse_application.sql).
 

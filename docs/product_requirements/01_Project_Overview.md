@@ -147,7 +147,7 @@ Gold-vision themes from `USER_WORKFLOW.md` L57–87 that align with Gold (not Cl
 - Solo learning loop that does not depend on org or teacher
 - Responsible monetization / program sustainability later
 
-**Assumption:** “Majestic Warhorse” is being positioned under PetaxAI (`environment.prod.ts` → `https://majestic.petaxai.com`) as a reusable learning front-end for communities, schools, and (later, Gold) independent learners. Music-instruction positioning appears in prior architecture briefings; product workflow docs emphasize churches/Sunday schools/schools/communities. Treat music as an **Assumption** unless product marketing assets in-repo state it explicitly (none found under `src/` copy beyond generic learning).
+**Assumption:** “Majestic Warhorse” is being positioned under PetaxAI (`environment.prod.ts` → `https://learning.petaxai.com`) as a reusable learning front-end for communities, schools, and (later, Gold) independent learners. Music-instruction positioning appears in prior architecture briefings; product workflow docs emphasize churches/Sunday schools/schools/communities. Treat music as an **Assumption** unless product marketing assets in-repo state it explicitly (none found under `src/` copy beyond generic learning).
 
 ### 2.3 Goals explicitly out of current Class MVP (**Documented legacy**)
 
@@ -422,7 +422,7 @@ flowchart LR
 | Environment | `appUrl` | `iamApi` | `majesticWarhorseApi` | Source |
 |-------------|----------|----------|----------------------|--------|
 | Development | `http://localhost:4200` | `http://localhost:8080/auth/api/` | `http://localhost:8081/` | `environment.ts` |
-| Production | `https://majestic.petaxai.com` | Railway IAM host | Railway Majestic backend host | `environment.prod.ts` |
+| Production | `https://learning.petaxai.com` | Railway IAM host | Railway Majestic backend host | `environment.prod.ts` |
 
 Both envs share the same Supabase project URL and anon key (**Observed**).
 
@@ -530,7 +530,7 @@ flowchart LR
 | **Google Fonts / Material Symbols** | Typography & icons | `src/index.html` L19–20 | CDN |
 | **cdnjs Font Awesome** | Icon CSS | `src/index.html` L18 | CDN |
 
-**Assumption:** Production users hit `https://majestic.petaxai.com` (SPA) while APIs remain on Railway hostnames. Whether DNS/CDN sits in front of EC2 is **Unknown** (no Terraform/CloudFront config in this repo).
+**Assumption:** Production users hit `https://learning.petaxai.com` (SPA) while APIs remain on Railway hostnames. Whether DNS/CDN sits in front of EC2 is **Unknown** (no Terraform/CloudFront config in this repo).
 
 ---
 
@@ -860,7 +860,7 @@ This is a static site: HTML/JS/CSS/assets. No Node server is required to *serve*
 
 `environment.prod.ts`:
 
-- SPA: `https://majestic.petaxai.com`
+- SPA: `https://learning.petaxai.com`
 - IAM: `https://iam-production-e81f.up.railway.app/auth/api/`
 - Majestic API: `https://majestic-warhorse-backend-production.up.railway.app/`
 
@@ -914,7 +914,7 @@ Also documents Certbot SSL for a domain. Exact production NGINX root path and wh
 | IAM API | Railway hostname in prod env (**Observed** URL) |
 | Majestic API | Railway hostname in prod env (**Observed** URL) |
 
-**Assumption:** Frontend and APIs are deliberately split hosts; CORS and HTTPS must be configured on the API side for `https://majestic.petaxai.com`. CORS configuration is **not** in this repo (**Unknown** here; check backend repos / API docs).
+**Assumption:** Frontend and APIs are deliberately split hosts; CORS and HTTPS must be configured on the API side for `https://learning.petaxai.com`. CORS configuration is **not** in this repo (**Unknown** here; check backend repos / API docs).
 
 ### 15.5 Service worker / cache posture in production
 
