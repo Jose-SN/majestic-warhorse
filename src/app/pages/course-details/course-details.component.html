@@ -118,8 +118,8 @@
               <button type="button" class="cd-lesson-item__head" (click)="openCourseAccordian(chapterDetails, i)">
                 <span class="cd-lesson-ring">
                   <svg viewBox="0 0 36 36" aria-hidden="true">
-                    <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
-                    <circle cx="18" cy="18" r="15" fill="none" stroke="url(#lessonRingGrad)" stroke-width="3" stroke-linecap="round"
+                    <circle class="cd-lesson-ring__track" cx="18" cy="18" r="15" fill="none" stroke-width="3"/>
+                    <circle class="cd-lesson-ring__progress" cx="18" cy="18" r="15" fill="none" stroke-width="3" stroke-linecap="round"
                       [attr.stroke-dasharray]="ringCircumference"
                       [attr.stroke-dashoffset]="ringOffset(chapterProgress(chapterDetails))"
                       transform="rotate(-90 18 18)"/>
