@@ -28,6 +28,8 @@ export type AiChatMessage = {
   citations?: AiChatCitation[];
   reasoning?: AiChatReasoning | null;
   pending?: boolean;
+  streaming?: boolean;
+  streamStatus?: string;
 };
 
 export type AiChatThread = {

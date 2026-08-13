@@ -129,10 +129,15 @@
                     <span>{{ message.role === 'user' ? 'You' : 'PetaxAI' }}</span>
                     <time [attr.datetime]="message.createdAt">{{ formatThreadTime(message.createdAt) }}</time>
                   </div>
-                  @if (message.pending) {
-                    <div class="ai-mode__msg-content ai-mode__msg-content--pending">Thinking…</div>
+                  @if (message.pending && !message.content) {
+                    <div class="ai-mode__msg-content ai-mode__msg-content--pending">
+                      {{ message.streamStatus || 'Thinking…' }}
+                    </div>
                   } @else {
                     <div class="ai-mode__msg-content">{{ formatMessage(message.content) }}</div>
+                    @if (message.streaming && message.streamStatus) {
+                      <div class="ai-mode__msg-content ai-mode__msg-content--pending">{{ message.streamStatus }}</div>
+                    }
                   }
                   @if (message.attachmentNames?.length) {
                     <ul class="ai-mode__msg-files">
