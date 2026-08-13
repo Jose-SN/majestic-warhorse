@@ -157,6 +157,36 @@
                       }
                     </ul>
                   }
+                  @if (message.role === 'assistant' && message.reasoning) {
+                    <details class="ai-mode__reasoning">
+                      <summary>
+                        <span class="ai-mode__reasoning-label">How this was found</span>
+                        @if (message.reasoning.summary) {
+                          <span class="ai-mode__reasoning-summary">{{ message.reasoning.summary }}</span>
+                        }
+                      </summary>
+                      @if (message.reasoning.steps.length) {
+                        <ul class="ai-mode__reasoning-steps">
+                          @for (step of message.reasoning.steps; track $index) {
+                            <li>{{ step }}</li>
+                          }
+                        </ul>
+                      }
+                      @if (message.reasoning.retrieval.length) {
+                        <p class="ai-mode__reasoning-sources-label">Sources used</p>
+                        <ul class="ai-mode__reasoning-hits">
+                          @for (hit of message.reasoning.retrieval; track hit.file + (hit.page ?? '') + $index) {
+                            <li [attr.title]="hit.snippet || formatReasoningHitLabel(hit)">
+                              <span>{{ formatReasoningHitLabel(hit) }}</span>
+                              @if (hit.snippet) {
+                                <span class="ai-mode__reasoning-snippet">{{ hit.snippet }}</span>
+                              }
+                            </li>
+                          }
+                        </ul>
+                      }
+                    </details>
+                  }
                 </div>
               </article>
             }

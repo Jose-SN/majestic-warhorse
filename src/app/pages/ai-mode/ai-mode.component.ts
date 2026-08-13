@@ -17,6 +17,7 @@ import {
   ChatCitation,
   ChatConversation,
   ChatMessage,
+  ChatReasoning,
 } from 'src/app/services/api-service/chat-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
@@ -30,10 +31,12 @@ import {
 import {
   AiChatCitation,
   AiChatMessage,
+  AiChatReasoning,
   AiChatThread,
   createMessageId,
   formatCitationLabel,
   formatCitationTitle,
+  formatReasoningHitLabel,
   titleFromPrompt,
 } from './data/ai-mode-history';
 
@@ -82,6 +85,7 @@ export class AiModeComponent implements OnInit, OnDestroy {
   ];
   readonly formatCitationLabel = formatCitationLabel;
   readonly formatCitationTitle = formatCitationTitle;
+  readonly formatReasoningHitLabel = formatReasoningHitLabel;
   readonly libraryRoute = DASHBOARD_NAV_ROUTES.library;
 
   query = '';
@@ -440,6 +444,7 @@ export class AiModeComponent implements OnInit, OnDestroy {
                 content: result.answer || 'No answer returned.',
                 createdAt: new Date().toISOString(),
                 citations: this.mapCitations(result.citations),
+                reasoning: this.mapReasoning(result.reasoning),
               };
 
           const previousId = thread!.id;
@@ -578,7 +583,32 @@ export class AiModeComponent implements OnInit, OnDestroy {
       content: msg.content || '',
       createdAt: msg.created_at || new Date().toISOString(),
       citations: this.mapCitations(msg.citations),
+      reasoning: this.mapReasoning(msg.reasoning),
     };
+  }
+
+  private mapReasoning(raw?: ChatReasoning | null): AiChatReasoning | undefined {
+    if (!raw) {
+      return undefined;
+    }
+    const summary = (raw.summary || '').trim();
+    const steps = Array.isArray(raw.steps)
+      ? raw.steps.filter((step) => typeof step === 'string' && !!step.trim())
+      : [];
+    const retrieval = Array.isArray(raw.retrieval)
+      ? raw.retrieval
+          .map((hit) => ({
+            file: (hit.file || 'Source').trim() || 'Source',
+            page: hit.page ?? null,
+            score: typeof hit.score === 'number' ? hit.score : null,
+            snippet: hit.snippet?.trim() || null,
+          }))
+          .filter((hit) => !!hit.file)
+      : [];
+    if (!summary && !steps.length && !retrieval.length) {
+      return undefined;
+    }
+    return { summary, steps, retrieval };
   }
 
   private mapCitations(citations?: ChatCitation[] | null): AiChatCitation[] | undefined {
