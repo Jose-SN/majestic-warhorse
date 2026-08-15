@@ -331,8 +331,12 @@ $signup-hero-image: url('/assets/images/hero-image-map.png');
   &__roles {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--ds-space-3, 12px);
+    gap: var(--ds-space-2, 8px);
     margin-bottom: var(--ds-space-5, 24px);
+
+    .signup-role:last-child {
+      grid-column: 1 / -1;
+    }
   }
 
   &__chips {
