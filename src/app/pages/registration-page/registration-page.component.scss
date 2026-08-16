@@ -196,6 +196,7 @@ $signup-hero-image: url('/assets/images/hero-image-map.png');
   max-width: 420px;
   padding: var(--ds-space-6, 32px);
   overflow: hidden;
+  zoom: 0.9;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius-xl, 24px);
