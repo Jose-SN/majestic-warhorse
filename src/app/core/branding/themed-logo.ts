@@ -94,12 +94,13 @@ export function buildThemedPetaxLogoDataUrl(colors: BrandingThemeColors): string
         textLength="136"
         lengthAdjust="spacingAndGlyphs"
         fill="url(#textGradient)">PetaxAI</text>
-  <text x="84" y="62"
+  <text x="152" y="62"
+        text-anchor="middle"
         font-family="Inter, Arial, Helvetica, sans-serif"
         font-size="24"
         font-weight="500"
         letter-spacing="-0.2"
-        textLength="136"
+        textLength="100"
         lengthAdjust="spacingAndGlyphs"
         fill="url(#textGradient)">Learning</text>
 </svg>`;

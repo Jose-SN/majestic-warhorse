@@ -14,9 +14,12 @@ import { UserModel } from '../login-page/model/user-model';
 import { DASHBOARD_NAV_ROUTES } from '../dashboard/dashboard-routes.config';
 import {
   ChatApiService,
+  ChatAskResult,
   ChatCitation,
   ChatConversation,
   ChatMessage,
+  ChatReasoning,
+  ChatStreamEvent,
 } from 'src/app/services/api-service/chat-api.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { TOASTER_MESSAGE_TYPE } from 'src/app/shared/toaster/toaster-info';
@@ -30,10 +33,12 @@ import {
 import {
   AiChatCitation,
   AiChatMessage,
+  AiChatReasoning,
   AiChatThread,
   createMessageId,
   formatCitationLabel,
   formatCitationTitle,
+  formatReasoningHitLabel,
   titleFromPrompt,
 } from './data/ai-mode-history';
 
@@ -82,6 +87,7 @@ export class AiModeComponent implements OnInit, OnDestroy {
   ];
   readonly formatCitationLabel = formatCitationLabel;
   readonly formatCitationTitle = formatCitationTitle;
+  readonly formatReasoningHitLabel = formatReasoningHitLabel;
   readonly libraryRoute = DASHBOARD_NAV_ROUTES.library;
 
   query = '';
@@ -118,6 +124,7 @@ export class AiModeComponent implements OnInit, OnDestroy {
   private audioContext: AudioContext | null = null;
   private analyser: AnalyserNode | null = null;
   private levelRaf = 0;
+  private streamAbort: AbortController | null = null;
   private readonly destroy$ = new Subject<void>();
 
   constructor(
@@ -135,6 +142,7 @@ export class AiModeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.streamAbort?.abort();
     this.stopListening(true);
   }
 
@@ -394,6 +402,8 @@ export class AiModeComponent implements OnInit, OnDestroy {
       content: '',
       createdAt: now,
       pending: true,
+      streaming: true,
+      streamStatus: 'Searching your library…',
     };
 
     let thread = this.activeThread;
@@ -423,50 +433,142 @@ export class AiModeComponent implements OnInit, OnDestroy {
     queueMicrotask(() => this.scrollThreadToBottom());
 
     const conversationId = thread.id.startsWith('pending-') ? undefined : thread.id;
+    this.streamAbort?.abort();
+    this.streamAbort = new AbortController();
+    const pendingId = pendingAssistant.id;
+    const draft = { text: '' };
+
     this.chatApi
-      .ask({
-        question: promptText,
-        conversation_id: conversationId,
-      })
+      .askStream(
+        {
+          question: promptText,
+          conversation_id: conversationId,
+        },
+        this.streamAbort.signal
+      )
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (result) => {
-          this.isSending = false;
-          const assistantMessage: AiChatMessage = result.message
-            ? this.mapApiMessage(result.message)
-            : {
-                id: createMessageId(),
-                role: 'assistant',
-                content: result.answer || 'No answer returned.',
-                createdAt: new Date().toISOString(),
-                citations: this.mapCitations(result.citations),
-              };
-
-          const previousId = thread!.id;
-          const nextId = result.conversation_id || previousId;
-          thread!.id = nextId;
-          thread!.messagesLoaded = true;
-          thread!.updatedAt = assistantMessage.createdAt || new Date().toISOString();
-          thread!.messages = thread!.messages
-            .filter((msg) => !msg.pending)
-            .concat(assistantMessage);
-          if (!thread!.title || thread!.title === 'New chat') {
-            thread!.title = titleFromPrompt(promptText);
-          }
-
-          this.threads = this.threads.map((item) =>
-            item.id === previousId || item.id === nextId ? { ...thread! } : item
-          );
-          this.activeThreadId = nextId;
-          queueMicrotask(() => this.scrollThreadToBottom());
-        },
+        next: (event) => this.onStreamEvent(thread!, pendingId, promptText, event, draft),
         error: (err) => {
           this.isSending = false;
-          thread!.messages = thread!.messages.filter((msg) => !msg.pending);
+          if (!draft.text) {
+            thread!.messages = thread!.messages.filter((msg) => msg.id !== pendingId);
+          } else {
+            this.patchAssistant(thread!, pendingId, {
+              pending: false,
+              streaming: false,
+              streamStatus: undefined,
+              content: draft.text,
+            });
+          }
           this.threads = this.threads.map((item) => (item.id === thread!.id ? { ...thread! } : item));
           this.toastError(err, 'Could not get an answer');
         },
+        complete: () => {
+          this.isSending = false;
+        },
       });
+  }
+
+  private onStreamEvent(
+    thread: AiChatThread,
+    pendingId: string,
+    promptText: string,
+    event: ChatStreamEvent,
+    draft: { text: string }
+  ): void {
+    if (event.type === 'status') {
+      this.patchAssistant(thread, pendingId, {
+        pending: !draft.text,
+        streaming: true,
+        streamStatus: event.phase === 'generating' ? 'Writing…' : 'Searching your library…',
+      });
+      return;
+    }
+    if (event.type === 'reasoning') {
+      this.patchAssistant(thread, pendingId, {
+        pending: !draft.text,
+        streaming: true,
+        reasoning: this.mapReasoning(event.reasoning),
+        ...(event.citations.length ? { citations: this.mapCitations(event.citations) } : {}),
+      });
+      return;
+    }
+    if (event.type === 'token') {
+      draft.text += event.text;
+      this.patchAssistant(thread, pendingId, {
+        pending: false,
+        streaming: true,
+        streamStatus: 'Writing…',
+        content: draft.text,
+      });
+      queueMicrotask(() => this.scrollThreadToBottom());
+      return;
+    }
+    if (event.type === 'error') {
+      this.isSending = false;
+      if (!draft.text) {
+        thread.messages = thread.messages.filter((msg) => msg.id !== pendingId);
+        this.threads = this.threads.map((item) => (item.id === thread.id ? { ...thread } : item));
+      } else {
+        this.patchAssistant(thread, pendingId, {
+          pending: false,
+          streaming: false,
+          streamStatus: undefined,
+          content: draft.text,
+        });
+      }
+      this.toastError({ message: event.message }, event.message || 'Could not get an answer');
+      return;
+    }
+    if (event.type === 'done') {
+      this.isSending = false;
+      this.applyDoneResult(thread, pendingId, promptText, event.result, draft.text);
+    }
+  }
+
+  private applyDoneResult(
+    thread: AiChatThread,
+    pendingId: string,
+    promptText: string,
+    result: ChatAskResult,
+    streamedText: string
+  ): void {
+    const mapped = result.message ? this.mapApiMessage(result.message) : null;
+    const assistantMessage: AiChatMessage = {
+      id: mapped?.id || pendingId,
+      role: 'assistant',
+      content: mapped?.content || result.answer || streamedText || 'No answer returned.',
+      createdAt: mapped?.createdAt || new Date().toISOString(),
+      citations: mapped?.citations || this.mapCitations(result.citations),
+      reasoning: mapped?.reasoning || this.mapReasoning(result.reasoning),
+      pending: false,
+      streaming: false,
+      streamStatus: undefined,
+    };
+
+    const previousId = thread.id;
+    const nextId = result.conversation_id || previousId;
+    thread.id = nextId;
+    thread.messagesLoaded = true;
+    thread.updatedAt = assistantMessage.createdAt;
+    thread.messages = thread.messages
+      .filter((msg) => msg.id !== pendingId)
+      .concat(assistantMessage);
+    if (!thread.title || thread.title === 'New chat') {
+      thread.title = titleFromPrompt(promptText);
+    }
+
+    this.threads = this.threads.map((item) =>
+      item.id === previousId || item.id === nextId ? { ...thread } : item
+    );
+    this.activeThreadId = nextId;
+    queueMicrotask(() => this.scrollThreadToBottom());
+  }
+
+  private patchAssistant(thread: AiChatThread, messageId: string, patch: Partial<AiChatMessage>): void {
+    thread.messages = thread.messages.map((msg) => (msg.id === messageId ? { ...msg, ...patch } : msg));
+    this.threads = this.threads.map((item) => (item.id === thread.id ? { ...thread } : item));
   }
 
   onPromptKeydown(event: KeyboardEvent): void {
@@ -578,7 +680,32 @@ export class AiModeComponent implements OnInit, OnDestroy {
       content: msg.content || '',
       createdAt: msg.created_at || new Date().toISOString(),
       citations: this.mapCitations(msg.citations),
+      reasoning: this.mapReasoning(msg.reasoning),
     };
+  }
+
+  private mapReasoning(raw?: ChatReasoning | null): AiChatReasoning | undefined {
+    if (!raw) {
+      return undefined;
+    }
+    const summary = (raw.summary || '').trim();
+    const steps = Array.isArray(raw.steps)
+      ? raw.steps.filter((step) => typeof step === 'string' && !!step.trim())
+      : [];
+    const retrieval = Array.isArray(raw.retrieval)
+      ? raw.retrieval
+          .map((hit) => ({
+            file: (hit.file || 'Source').trim() || 'Source',
+            page: hit.page ?? null,
+            score: typeof hit.score === 'number' ? hit.score : null,
+            snippet: hit.snippet?.trim() || null,
+          }))
+          .filter((hit) => !!hit.file)
+      : [];
+    if (!summary && !steps.length && !retrieval.length) {
+      return undefined;
+    }
+    return { summary, steps, retrieval };
   }
 
   private mapCitations(citations?: ChatCitation[] | null): AiChatCitation[] | undefined {

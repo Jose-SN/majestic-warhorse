@@ -1,1 +1,6 @@
 @import '../../../styles/auth-layout';
+
+/* Match 90% browser zoom at 100%: scale card/type/buttons, keep pane width. */
+.login-card {
+  zoom: 0.9;
+}

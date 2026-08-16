@@ -196,6 +196,7 @@ $signup-hero-image: url('/assets/images/hero-image-map.png');
   max-width: 420px;
   padding: var(--ds-space-6, 32px);
   overflow: hidden;
+  zoom: 0.9;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius-xl, 24px);
@@ -331,8 +332,12 @@ $signup-hero-image: url('/assets/images/hero-image-map.png');
   &__roles {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--ds-space-3, 12px);
+    gap: var(--ds-space-2, 8px);
     margin-bottom: var(--ds-space-5, 24px);
+
+    .signup-role:last-child {
+      grid-column: 1 / -1;
+    }
   }
 
   &__chips {

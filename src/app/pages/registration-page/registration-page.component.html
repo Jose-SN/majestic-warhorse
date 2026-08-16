@@ -43,44 +43,38 @@
       </div> -->
 
       <form class="signup-form" [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
-        <div class="signup-form__roles" role="group" aria-label="Account type">
+        <div class="signup-form__roles" role="radiogroup" aria-label="Account type">
           <button
             type="button"
             class="signup-role signup-role--compact"
-            [class.is-active]="!isAdminLogin"
-            (click)="setRegistrationMode('user'); loadOrganizations()"
+            [class.is-active]="selectedRole === 'student'"
+            [disabled]="createAccountForm.get('role')?.disabled"
+            (click)="setRegistrationRole('student')"
           >
-            <span class="material-symbols-outlined" aria-hidden="true">person</span>
-            <span class="signup-role__label">Individual</span>
+            <span class="material-symbols-outlined" aria-hidden="true">school</span>
+            <span class="signup-role__label">Student</span>
           </button>
           <button
             type="button"
             class="signup-role signup-role--compact"
-            [class.is-active]="isAdminLogin"
-            (click)="setRegistrationMode('organization')"
+            [class.is-active]="selectedRole === 'teacher'"
+            [disabled]="createAccountForm.get('role')?.disabled"
+            (click)="setRegistrationRole('teacher')"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
+            <span class="signup-role__label">Teacher</span>
+          </button>
+          <button
+            type="button"
+            class="signup-role signup-role--compact"
+            [class.is-active]="selectedRole === 'organization'"
+            [disabled]="createAccountForm.get('role')?.disabled"
+            (click)="setRegistrationRole('organization')"
           >
             <span class="material-symbols-outlined" aria-hidden="true">corporate_fare</span>
             <span class="signup-role__label">Organization</span>
           </button>
         </div>
-
-        @if (!isAdminLogin) {
-          <div class="signup-form__chips" role="group" aria-label="Role">
-            <span class="signup-form__chips-label">I am a</span>
-            <div class="signup-chips">
-              <label class="signup-chip" [class.is-active]="createAccountForm.get('role')?.value === 'student'">
-                <input type="radio" name="role" formControlName="role" value="student" />
-                <span class="material-symbols-outlined" aria-hidden="true">school</span>
-                <span>Student</span>
-              </label>
-              <label class="signup-chip" [class.is-active]="createAccountForm.get('role')?.value === 'teacher'">
-                <input type="radio" name="role" formControlName="role" value="teacher" />
-                <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
-                <span>Teacher</span>
-              </label>
-            </div>
-          </div>
-        }
 
         <button
           type="button"

@@ -129,10 +129,15 @@
                     <span>{{ message.role === 'user' ? 'You' : 'PetaxAI' }}</span>
                     <time [attr.datetime]="message.createdAt">{{ formatThreadTime(message.createdAt) }}</time>
                   </div>
-                  @if (message.pending) {
-                    <div class="ai-mode__msg-content ai-mode__msg-content--pending">Thinking…</div>
+                  @if (message.pending && !message.content) {
+                    <div class="ai-mode__msg-content ai-mode__msg-content--pending">
+                      {{ message.streamStatus || 'Thinking…' }}
+                    </div>
                   } @else {
                     <div class="ai-mode__msg-content">{{ formatMessage(message.content) }}</div>
+                    @if (message.streaming && message.streamStatus) {
+                      <div class="ai-mode__msg-content ai-mode__msg-content--pending">{{ message.streamStatus }}</div>
+                    }
                   }
                   @if (message.attachmentNames?.length) {
                     <ul class="ai-mode__msg-files">
@@ -156,6 +161,36 @@
                         </li>
                       }
                     </ul>
+                  }
+                  @if (message.role === 'assistant' && message.reasoning) {
+                    <details class="ai-mode__reasoning">
+                      <summary>
+                        <span class="ai-mode__reasoning-label">How this was found</span>
+                        @if (message.reasoning.summary) {
+                          <span class="ai-mode__reasoning-summary">{{ message.reasoning.summary }}</span>
+                        }
+                      </summary>
+                      @if (message.reasoning.steps.length) {
+                        <ul class="ai-mode__reasoning-steps">
+                          @for (step of message.reasoning.steps; track $index) {
+                            <li>{{ step }}</li>
+                          }
+                        </ul>
+                      }
+                      @if (message.reasoning.retrieval.length) {
+                        <p class="ai-mode__reasoning-sources-label">Sources used</p>
+                        <ul class="ai-mode__reasoning-hits">
+                          @for (hit of message.reasoning.retrieval; track hit.file + (hit.page ?? '') + $index) {
+                            <li [attr.title]="hit.snippet || formatReasoningHitLabel(hit)">
+                              <span>{{ formatReasoningHitLabel(hit) }}</span>
+                              @if (hit.snippet) {
+                                <span class="ai-mode__reasoning-snippet">{{ hit.snippet }}</span>
+                              }
+                            </li>
+                          }
+                        </ul>
+                      }
+                    </details>
                   }
                 </div>
               </article>

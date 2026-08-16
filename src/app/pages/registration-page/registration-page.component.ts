@@ -38,16 +38,21 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   public createAccountForm!: FormGroup;
   private formValidator = new FormValidators();
   private destroy$ = new Subject<void>();
-  /** true when org is logged in OR user chose to register organization (public signup) */
+  /** true when org is logged in OR user chose to register as organization (public signup) */
   public isAdminLogin: boolean = false;
-  /** Toggle for public: register as user (student/teacher) vs organization */
-  public registrationMode: 'user' | 'organization' = 'user';
-  public profileUrl: string = '../../../../assets/images/img-placeholder.jpg';
+  public registrationMode: 'student' | 'teacher' | 'organization' = 'student';
 
-  setRegistrationMode(mode: 'user' | 'organization') {
-    this.registrationMode = mode;
-    this.isAdminLogin = mode === 'organization';
-    this.createAccountForm.patchValue({ role: mode === 'organization' ? 'organization' : 'student' });
+  get selectedRole(): string {
+    return this.createAccountForm?.get('role')?.value || this.registrationMode;
+  }
+
+  setRegistrationRole(role: 'student' | 'teacher' | 'organization'): void {
+    this.registrationMode = role;
+    this.isAdminLogin = role === 'organization';
+    this.createAccountForm.patchValue({ role });
+    if (role !== 'organization') {
+      this.loadOrganizations();
+    }
   }
   public showPassword: boolean = false;
   public showConfirmPassword: boolean = false;
@@ -56,6 +61,7 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
   public brandLogo = '';
   public appName = '';
   public tagline = '';
+  public profileUrl: string = '../../../../assets/images/img-placeholder.jpg';
   @ViewChild('profileImageInput') profileImageInput!: ElementRef<HTMLInputElement>;
 
   constructor(
@@ -148,10 +154,9 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
       }
     } else {
       const params = new URLSearchParams(window.location.search);
-      if (params.get('type') === 'organization') {
-        this.registrationMode = 'organization';
-        this.isAdminLogin = true;
-        this.createAccountForm.patchValue({ role: 'organization' });
+      const type = params.get('type');
+      if (type === 'organization' || type === 'teacher' || type === 'student') {
+        this.setRegistrationRole(type);
       }
     }
   }
@@ -258,7 +263,13 @@ export class RegistrationPageComponent implements OnDestroy, OnInit {
     if (this.isGoogleLoading) return;
     this.isGoogleLoading = true;
     try {
-      const accountType = this.isAdminLogin ? 'organization' : 'user';
+      const role = this.selectedRole;
+      const accountType = role === 'organization' ? 'organization' : 'user';
+      if (role === 'student' || role === 'teacher') {
+        sessionStorage.setItem('pendingRoleIntent', role);
+      } else {
+        sessionStorage.removeItem('pendingRoleIntent');
+      }
       await this.oauthService.signInWithGoogle(accountType);
     } catch (error: any) {
       this.isGoogleLoading = false;

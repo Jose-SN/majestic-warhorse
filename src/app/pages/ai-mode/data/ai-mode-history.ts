@@ -6,6 +6,19 @@ export type AiChatCitation = {
   fileId?: string;
 };
 
+export type AiChatReasoningHit = {
+  file: string;
+  page?: number | null;
+  score?: number | null;
+  snippet?: string | null;
+};
+
+export type AiChatReasoning = {
+  summary: string;
+  steps: string[];
+  retrieval: AiChatReasoningHit[];
+};
+
 export type AiChatMessage = {
   id: string;
   role: AiChatRole;
@@ -13,7 +26,10 @@ export type AiChatMessage = {
   createdAt: string;
   attachmentNames?: string[];
   citations?: AiChatCitation[];
+  reasoning?: AiChatReasoning | null;
   pending?: boolean;
+  streaming?: boolean;
+  streamStatus?: string;
 };
 
 export type AiChatThread = {
@@ -49,6 +65,19 @@ export function formatCitationTitle(citation: AiChatCitation): string {
   const parts = [formatCitationLabel(citation)];
   if (citation.fileId) {
     parts.push(`file_id: ${citation.fileId}`);
+  }
+  return parts.join(' · ');
+}
+
+export function formatReasoningHitLabel(hit: AiChatReasoningHit): string {
+  const name = (hit.file || 'Source').trim() || 'Source';
+  const parts = [name];
+  if (hit.page != null) {
+    parts.push(`p.${hit.page}`);
+  }
+  if (typeof hit.score === 'number') {
+    const score = hit.score <= 1 ? Math.round(hit.score * 100) : Math.round(hit.score);
+    parts.push(`${score}%`);
   }
   return parts.join(' · ');
 }
