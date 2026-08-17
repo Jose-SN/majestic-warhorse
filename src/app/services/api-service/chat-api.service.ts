@@ -76,9 +76,17 @@ export type ChatAskResult = {
 
 export type ChatStreamStatusPhase = 'retrieving' | 'generating';
 
+export type ChatStreamReasoningPhase = 'retrieval' | 'model';
+
 export type ChatStreamEvent =
   | { type: 'status'; phase: ChatStreamStatusPhase }
-  | { type: 'reasoning'; reasoning: ChatReasoning | null; citations: ChatCitation[] }
+  | {
+      type: 'reasoning';
+      phase: ChatStreamReasoningPhase;
+      reasoning: ChatReasoning | null;
+      modelText?: string;
+      citations: ChatCitation[];
+    }
   | { type: 'token'; text: string }
   | { type: 'done'; result: ChatAskResult }
   | { type: 'error'; message: string; code?: string };
@@ -509,11 +517,18 @@ export class ChatApiService {
       return text ? { type: 'token', text } : null;
     }
     if (event === 'reasoning') {
+      if (row['phase'] === 'model') {
+        const modelText = typeof row['text'] === 'string' ? row['text'] : '';
+        return modelText
+          ? { type: 'reasoning', phase: 'model', reasoning: null, modelText, citations: [] }
+          : null;
+      }
       const citations = this.normalizeCitations(
         (row['citations'] as LooseCitation[] | undefined) ?? null
       );
       return {
         type: 'reasoning',
+        phase: 'retrieval',
         reasoning: this.normalizeReasoning(row['reasoning'] ?? row),
         citations,
       };

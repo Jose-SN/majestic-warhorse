@@ -129,15 +129,52 @@
                     <span>{{ message.role === 'user' ? 'You' : 'PetaxAI' }}</span>
                     <time [attr.datetime]="message.createdAt">{{ formatThreadTime(message.createdAt) }}</time>
                   </div>
-                  @if (message.pending && !message.content) {
+                  @if (message.role === 'assistant' && message.thinkingVisible) {
+                    <div class="ai-mode__thinking" aria-live="polite">
+                      <div class="ai-mode__thinking-header">
+                        <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+                        <span class="ai-mode__thinking-title">Thinking</span>
+                        @if (message.streaming) {
+                          <span class="ai-mode__thinking-pulse" aria-hidden="true"></span>
+                        }
+                      </div>
+                      @if (message.streamStatus && !message.modelThinking && !message.reasoning?.summary && !message.reasoning?.retrieval?.length) {
+                        <p class="ai-mode__thinking-status">{{ message.streamStatus }}</p>
+                      }
+                      @if (message.reasoning?.summary) {
+                        <p class="ai-mode__thinking-summary">{{ message.reasoning.summary }}</p>
+                      }
+                      @if (message.reasoning?.steps?.length) {
+                        <ul class="ai-mode__thinking-steps">
+                          @for (step of message.reasoning.steps; track $index) {
+                            <li>{{ step }}</li>
+                          }
+                        </ul>
+                      }
+                      @if (message.reasoning?.retrieval?.length) {
+                        <p class="ai-mode__thinking-sources-label">Sources found</p>
+                        <ul class="ai-mode__thinking-hits">
+                          @for (hit of message.reasoning.retrieval; track hit.file + (hit.page ?? '') + $index) {
+                            <li [attr.title]="hit.snippet || formatReasoningHitLabel(hit)">
+                              <span>{{ formatReasoningHitLabel(hit) }}</span>
+                              @if (hit.snippet) {
+                                <span class="ai-mode__thinking-snippet">{{ hit.snippet }}</span>
+                              }
+                            </li>
+                          }
+                        </ul>
+                      }
+                      @if (message.modelThinking) {
+                        <div class="ai-mode__thinking-text">{{ message.modelThinking }}</div>
+                      }
+                    </div>
+                  }
+                  @if (message.content) {
+                    <div class="ai-mode__msg-content">{{ formatMessage(message.content) }}</div>
+                  } @else if (message.pending && !message.thinkingVisible) {
                     <div class="ai-mode__msg-content ai-mode__msg-content--pending">
                       {{ message.streamStatus || 'Thinking…' }}
                     </div>
-                  } @else {
-                    <div class="ai-mode__msg-content">{{ formatMessage(message.content) }}</div>
-                    @if (message.streaming && message.streamStatus) {
-                      <div class="ai-mode__msg-content ai-mode__msg-content--pending">{{ message.streamStatus }}</div>
-                    }
                   }
                   @if (message.attachmentNames?.length) {
                     <ul class="ai-mode__msg-files">
@@ -149,7 +186,7 @@
                       }
                     </ul>
                   }
-                  @if (message.citations?.length) {
+                  @if (message.citations?.length && !message.thinkingVisible) {
                     <ul class="ai-mode__msg-citations" aria-label="Citations">
                       @for (citation of message.citations; track citation.fileId || citation.file + (citation.page ?? '') + $index) {
                         <li [attr.title]="formatCitationTitle(citation)">
@@ -162,7 +199,7 @@
                       }
                     </ul>
                   }
-                  @if (message.role === 'assistant' && message.reasoning) {
+                  @if (message.role === 'assistant' && message.reasoning && !message.thinkingVisible) {
                     <details class="ai-mode__reasoning">
                       <summary>
                         <span class="ai-mode__reasoning-label">How this was found</span>

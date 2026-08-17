@@ -403,6 +403,7 @@ export class AiModeComponent implements OnInit, OnDestroy {
       createdAt: now,
       pending: true,
       streaming: true,
+      thinkingVisible: true,
       streamStatus: 'Searching your library…',
     };
 
@@ -436,7 +437,7 @@ export class AiModeComponent implements OnInit, OnDestroy {
     this.streamAbort?.abort();
     this.streamAbort = new AbortController();
     const pendingId = pendingAssistant.id;
-    const draft = { text: '' };
+    const draft = { text: '', modelThinking: '' };
 
     this.chatApi
       .askStream(
@@ -475,23 +476,39 @@ export class AiModeComponent implements OnInit, OnDestroy {
     pendingId: string,
     promptText: string,
     event: ChatStreamEvent,
-    draft: { text: string }
+    draft: { text: string; modelThinking: string }
   ): void {
     if (event.type === 'status') {
       this.patchAssistant(thread, pendingId, {
         pending: !draft.text,
         streaming: true,
-        streamStatus: event.phase === 'generating' ? 'Writing…' : 'Searching your library…',
+        thinkingVisible: !draft.text,
+        streamStatus: event.phase === 'generating' ? 'Thinking…' : 'Searching your library…',
       });
+      queueMicrotask(() => this.scrollThreadToBottom());
       return;
     }
     if (event.type === 'reasoning') {
-      this.patchAssistant(thread, pendingId, {
-        pending: !draft.text,
-        streaming: true,
-        reasoning: this.mapReasoning(event.reasoning),
-        ...(event.citations.length ? { citations: this.mapCitations(event.citations) } : {}),
-      });
+      if (event.phase === 'model' && event.modelText) {
+        draft.modelThinking += event.modelText;
+        this.patchAssistant(thread, pendingId, {
+          pending: !draft.text,
+          streaming: true,
+          thinkingVisible: !draft.text,
+          modelThinking: draft.modelThinking,
+          streamStatus: 'Thinking…',
+        });
+      } else {
+        this.patchAssistant(thread, pendingId, {
+          pending: !draft.text,
+          streaming: true,
+          thinkingVisible: !draft.text,
+          reasoning: this.mapReasoning(event.reasoning),
+          streamStatus: event.reasoning?.summary ? undefined : 'Searching your library…',
+          ...(event.citations.length ? { citations: this.mapCitations(event.citations) } : {}),
+        });
+      }
+      queueMicrotask(() => this.scrollThreadToBottom());
       return;
     }
     if (event.type === 'token') {
@@ -499,7 +516,9 @@ export class AiModeComponent implements OnInit, OnDestroy {
       this.patchAssistant(thread, pendingId, {
         pending: false,
         streaming: true,
-        streamStatus: 'Writing…',
+        thinkingVisible: false,
+        modelThinking: undefined,
+        streamStatus: undefined,
         content: draft.text,
       });
       queueMicrotask(() => this.scrollThreadToBottom());
@@ -544,6 +563,8 @@ export class AiModeComponent implements OnInit, OnDestroy {
       reasoning: mapped?.reasoning || this.mapReasoning(result.reasoning),
       pending: false,
       streaming: false,
+      thinkingVisible: false,
+      modelThinking: undefined,
       streamStatus: undefined,
     };
 

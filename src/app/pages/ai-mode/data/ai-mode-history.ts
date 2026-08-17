@@ -27,6 +27,10 @@ export type AiChatMessage = {
   attachmentNames?: string[];
   citations?: AiChatCitation[];
   reasoning?: AiChatReasoning | null;
+  /** Live model-phase reasoning text (hidden once answer tokens arrive). */
+  modelThinking?: string;
+  /** Show the pre-answer thinking panel (retrieval + model reasoning). */
+  thinkingVisible?: boolean;
   pending?: boolean;
   streaming?: boolean;
   streamStatus?: string;

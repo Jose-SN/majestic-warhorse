@@ -25,7 +25,7 @@ Cost: streaming does **not** add LLM calls. Gemini “thinking tokens” or a se
 
 Same body and headers as `POST /ask`:
 
-- JSON `AskRequest` (`app_id`, `question`, `organization_id`, `created_by`, `role`, optional `conversation_id`)
+- JSON `AskRequest` (`app_id`, `question`, `organization_id`, `created_by`, `role`, optional `conversation_id`, optional `skill`)
 - `X-App-Id` (and optional service secret, same as `/ask`)
 - Auth: Logic service caller only
 
@@ -53,8 +53,8 @@ data: <json>
 | Event | When | `data` |
 |-------|------|--------|
 | `status` | Pipeline phase | `{ "phase": "retrieving" \| "generating" }` |
-| `reasoning` | After retrieval (before tokens) | Same shape as `AskResponse.reasoning` plus optional `citations` on the early event |
-| `token` | Answer deltas | `{ "text": "…" }` — concatenate in order; **never** show `REASONING:` labels |
+| `reasoning` | **(1)** After retrieval **(2)** During generation | **(1)** `{ "phase": "retrieval", summary, steps, retrieval, citations? }` **(2)** `{ "phase": "model", "text": "…" }` — append model `text` for live “thinking”; never show `REASONING:` / `ANSWER:` labels |
+| `token` | Answer deltas (after model `ANSWER:`) | `{ "text": "…" }` — concatenate in order |
 | `done` | Success | Full `AskResponse`: `answer`, `citations`, `reasoning` |
 | `error` | LLM down after stream started | `{ "code": "LLM_UNAVAILABLE", "message": "…" }` |
 
@@ -176,10 +176,11 @@ Do **not** use browser `EventSource` for this: `EventSource` is GET-only. Use `f
 | SSE event | UI |
 |-----------|-----|
 | `status.phase = retrieving` | “Searching your library…” |
-| `reasoning` | Collapsible “How this was found” (hits + steps). Can show **before** tokens |
-| `status.phase = generating` | “Writing…” |
-| `token` | Append `data.text` to the assistant bubble |
-| `done` | Replace draft with `answer`; render `citations`; keep final `reasoning` |
+| `reasoning` + `phase: retrieval` | Sources panel (hits, scores, snippets) |
+| `status.phase = generating` | “Thinking…” |
+| `reasoning` + `phase: model` | Live thinking panel — append `data.text`; collapse when first `token` arrives |
+| `token` | Append `data.text` to the assistant answer bubble |
+| `done` | Finalize with `answer`, `citations`, full `reasoning` |
 | `error` | Error state; offer retry via JSON `/chat` if you want |
 
 Do not render raw `REASONING:` / `ANSWER:` — AI already strips those from `token` / `done.answer`.
@@ -200,6 +201,7 @@ const reader = res.body!.getReader();
 const decoder = new TextDecoder();
 let buf = "";
 let answer = "";
+let modelThinking = "";
 
 while (true) {
   const { done, value } = await reader.read();
@@ -214,11 +216,18 @@ while (true) {
       .find((l) => l.startsWith("data: "));
     if (!event || !dataLine) continue;
     const data = JSON.parse(dataLine.slice(6));
+    if (event === "reasoning" && data.phase === "model") {
+      modelThinking += data.text;
+      setThinking(modelThinking);
+    }
+    if (event === "reasoning" && data.phase === "retrieval") {
+      setRetrievalReasoning(data);
+    }
     if (event === "token") {
+      setThinkingOpen(false);
       answer += data.text;
       setDraft(answer);
     }
-    if (event === "reasoning") setReasoning(data);
     if (event === "done") {
       setDraft(data.answer);
       setCitations(data.citations);
@@ -237,12 +246,11 @@ If `/chat/stream` is missing or returns 404/501: call existing `POST /chat` and 
 
 ### 3.5 Frontend checklist
 
-- [x] Stream via Logic only (`fetch`, not `EventSource`)
-- [x] Append `token.text`; finalize on `done`
-- [x] Show retrieval `reasoning` early (optional but recommended)
-- [x] Citations from `done` only (or from the early `reasoning.citations` if you show sources before the answer finishes)
-- [x] Abort + error UI
-- [x] Keep JSON chat as fallback
+- [ ] Stream via Logic only (`fetch`, not `EventSource`)
+- [ ] Append `reasoning` events with `phase: model` into a thinking panel; append `token.text` into the answer
+- [ ] Citations from `done` only (or from the early `reasoning.citations` if you show sources before the answer finishes)
+- [ ] Abort + error UI
+- [ ] Keep JSON chat as fallback
 
 ---
 

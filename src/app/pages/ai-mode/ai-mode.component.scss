@@ -546,6 +546,123 @@
   font-family: var(--font-family-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
 }
 
+.ai-mode__thinking {
+  margin: 0 0 0.5rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--ai-line) 85%, var(--ai-accent, #6366f1) 15%);
+  background: color-mix(in srgb, var(--ai-soft) 92%, transparent);
+}
+
+.ai-mode__thinking-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.55rem;
+
+  .material-symbols-outlined {
+    font-size: 1.05rem;
+    color: var(--ai-muted);
+  }
+}
+
+.ai-mode__thinking-title {
+  @include type-caption;
+  @include type-weight-medium;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ai-muted);
+}
+
+.ai-mode__thinking-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ai-accent, #6366f1);
+  animation: ai-mode-thinking-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes ai-mode-thinking-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+.ai-mode__thinking-status,
+.ai-mode__thinking-summary {
+  margin: 0;
+  @include type-body-small;
+  color: var(--ai-muted);
+  font-style: italic;
+}
+
+.ai-mode__thinking-summary {
+  font-style: normal;
+  color: var(--ai-ink);
+}
+
+.ai-mode__thinking-steps {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+  @include type-body-small;
+  color: var(--ai-ink);
+
+  li + li {
+    margin-top: 0.3rem;
+  }
+}
+
+.ai-mode__thinking-sources-label {
+  margin: 0.65rem 0 0.35rem;
+  @include type-caption;
+  @include type-weight-medium;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ai-muted);
+}
+
+.ai-mode__thinking-hits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.12rem;
+    @include type-caption;
+    color: var(--ai-ink);
+  }
+}
+
+.ai-mode__thinking-snippet {
+  color: var(--ai-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ai-mode__thinking-text {
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--ai-line);
+  @include type-body-small;
+  color: var(--ai-muted);
+  white-space: pre-wrap;
+  max-height: 12rem;
+  overflow-y: auto;
+}
+
 .ai-mode__reasoning {
   margin: 0.75rem 0 0;
   padding: 0.55rem 0.7rem;
